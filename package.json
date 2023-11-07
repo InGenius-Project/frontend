@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.17",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -12,9 +16,58 @@
     "@types/react-dom": "^18.2.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
+  },
+  "rules": {
+    "indent": [
+      "error",
+      2,
+      {
+        "ObjectExpression": 1
+      }
+    ],
+    "react/jsx-newline": [
+      "error",
+      {
+        "prevent": true,
+        "allowMultilines": true
+      }
+    ],
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "declaration": "parens-new-line",
+        "assignment": "parens-new-line",
+        "return": "parens-new-line",
+        "arrow": "parens-new-line",
+        "condition": "parens-new-line",
+        "logical": "parens-new-line",
+        "prop": "parens-new-line"
+      }
+    ],
+    "react/jsx-one-expression-per-line": [
+      "error",
+      {
+        "allow": "literal"
+      }
+    ],
+    "react/jsx-max-props-per-line": [
+      "error"
+    ],
+    "react/jsx-indent-props": [
+      "error",
+      2
+    ],
+    "react/jsx-first-prop-new-line": [
+      "error",
+      "multiline"
+    ],
+    "object-property-newline": [
+      "error"
+    ]
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +92,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
