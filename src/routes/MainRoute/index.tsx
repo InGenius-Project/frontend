@@ -17,9 +17,9 @@ export default function MainRoute() {
       <Box
         py={2}
         sx={{
-          flexGrow:1
+          flexGrow: 1,
         }}
-      > 
+      >
         <Outlet />
       </Box>
     </Box>
