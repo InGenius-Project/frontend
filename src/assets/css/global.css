@@ -1,0 +1,3 @@
+body{
+  background: radial-gradient(circle, var(--lng-palette-common-background) 35%, var(--lng-palette-common-white) 100%);
+}

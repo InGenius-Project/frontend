@@ -1,19 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "assets/css/global.css";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./utils/router";
-import { ThemeProvider } from "@mui/material";
-import theme from "./utils/theme";
+import { router } from "./routes/router";
+import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import theme from "./assets/theme/theme";
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
+  <CssVarsProvider theme={theme}>
+    <React.StrictMode>
       <RouterProvider router={router} />
-    </ThemeProvider>
-  </React.StrictMode>,
+    </React.StrictMode>
+  </CssVarsProvider>
 );

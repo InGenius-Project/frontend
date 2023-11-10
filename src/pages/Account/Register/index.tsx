@@ -9,7 +9,7 @@ import {
 
 export default function Register() {
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Typography variant="h4" mb={2}>
         Register
       </Typography>
