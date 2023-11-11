@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as WorkInProgress } from "assets/images/work-in-progress.svg";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import Typography from "@mui/material/Typography";
 import { Box, Button, useTheme } from "@mui/material";
 

@@ -12,9 +12,6 @@ declare module "@mui/material/styles" {
     laptop: true;
     desktop: true;
   }
-  interface Shape {
-    height: string | number;
-  }
 }
 
 let theme = extendTheme({
