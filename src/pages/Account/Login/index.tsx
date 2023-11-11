@@ -12,7 +12,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Typography variant="h4" mb={2}>
         Login
       </Typography>

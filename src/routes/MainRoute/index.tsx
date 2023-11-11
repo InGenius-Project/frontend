@@ -15,7 +15,6 @@ export default function MainRoute() {
       <Navbar />
 
       <Box
-        py={2}
         sx={{
           flexGrow: 1,
         }}

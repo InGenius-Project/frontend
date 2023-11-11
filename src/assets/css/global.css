@@ -1,0 +1,9 @@
+:root {
+  --lng-height-navbar: 80px;
+}
+
+
+body{
+  margin:0;
+  background: radial-gradient(circle, var(--lng-palette-common-background) 35%, var(--lng-palette-common-white) 100%);
+}
