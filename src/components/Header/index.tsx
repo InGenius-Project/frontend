@@ -48,7 +48,12 @@ export default function Header() {
 
         {/* Right Control */}
         <Box>
-          <Button variant="contained">登入</Button>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/Account/Login")}
+          >
+            登入
+          </Button>
         </Box>
       </Box>
     </Container>

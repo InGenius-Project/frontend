@@ -3,6 +3,7 @@ import MainRoute from "./MainRoute";
 import Root from "../pages";
 import Register from "../pages/Account/Register";
 import Login from "../pages/Account/Login";
+import ForgetPassword from "pages/Account/ForgetPassword";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
           {
             path: "Register",
             element: <Register />,
+          },
+          {
+            path: "ForgetPassword",
+            element: <ForgetPassword />,
           },
         ],
       },

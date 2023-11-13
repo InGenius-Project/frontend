@@ -27,6 +27,7 @@ export default function Root() {
   return (
     <Box
       sx={{
+        flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         gap: theme.spacing(6),

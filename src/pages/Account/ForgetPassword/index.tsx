@@ -41,7 +41,7 @@ export default function Register() {
           </Grid>
           <Grid mobile={12} tablet={6}>
             <Stack spacing={3}>
-              <Typography variant="h3">註冊</Typography>
+              <Typography variant="h3">忘記密碼</Typography>
               <Stack spacing={2} direction="row">
                 <Link>一般</Link>
                 <Link>企業</Link>
@@ -57,32 +57,9 @@ export default function Register() {
                   ),
                 }}
               />
-              <TextField
-                label="密碼"
-                required
-                type="password"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock color="primary" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                label="確認密碼"
-                required
-                type="password"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock color="primary" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
               <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                <Button>註冊</Button>
+                <Button>送出</Button>
+                <Button variant="outlined">重新送出驗證碼</Button>
                 <Link component={RouterLink} to="/Account/Login">
                   已有帳號，直接登入
                 </Link>

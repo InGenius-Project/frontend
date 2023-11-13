@@ -17,7 +17,9 @@ export default function MainRoute() {
 
       <Box
         sx={{
+          display: "flex",
           flexGrow: 1,
+          minHeight: "calc(100vh - var(--lng-height-navbar))",
         }}
       >
         <Outlet />
