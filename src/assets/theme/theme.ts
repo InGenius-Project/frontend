@@ -28,6 +28,9 @@ let theme = extendTheme({
         common: {
           background: "#fcebfb",
         },
+        text: {
+          primary: "#404040",
+        },
       },
     },
   },
@@ -53,11 +56,21 @@ let theme = extendTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(","),
-    h2: {
+    h1: {
+      fontSize: "5rem",
       fontWeight: "bold",
     },
-    h3: {
+    h2: {
+      fontSize: "3.5rem",
       fontWeight: "default",
+    },
+    h3: {
+      fontSize: "2rem",
+      fontWeight: "bold",
+    },
+    h4: {
+      fontSize: "1.3rem",
+      fontWeight: "bold",
     },
   },
   components: {
@@ -69,8 +82,6 @@ let theme = extendTheme({
     MuiLink: {
       styleOverrides: {
         root: ({ theme: t }) => ({
-          color: theme.vars.palette.text.secondary,
-          textDecorationColor: theme.vars.palette.text.secondary,
           fontWeight: t.typography.fontWeightBold,
         }),
       },
@@ -83,6 +94,13 @@ let theme = extendTheme({
       },
       defaultProps: {
         variant: "contained",
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: ({ theme: t }) => ({
+          color: theme.vars.palette.text.primary,
+        }),
       },
     },
   },

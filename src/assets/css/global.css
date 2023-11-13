@@ -1,5 +1,9 @@
 :root {
   --lng-height-navbar: 80px;
+
+  --lng-borderRadius-sm:0.5em;
+  --lng-borderRadius-md: 1em;
+  --lng-borderRadius-lg: 2em;
 }
 
 

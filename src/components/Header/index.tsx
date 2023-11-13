@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Stack, Link, useTheme } from "@mui/material";
 import { ReactComponent as Logo } from "assets/images/logo/logo.svg";
 
-export default function ButtonAppBar() {
+export default function Header() {
   const theme = useTheme();
   const navigate = useNavigate();
 
