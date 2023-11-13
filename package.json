@@ -14,6 +14,9 @@
     "@types/node": "^16.18.60",
     "@types/react": "^18.2.36",
     "@types/react-dom": "^18.2.14",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
+    "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
@@ -55,15 +58,15 @@
       }
     ],
     "react/jsx-max-props-per-line": [
-      "error"
+      1,
+      {
+        "maximum": 1,
+        "when": "multiline"
+      }
     ],
     "react/jsx-indent-props": [
-      "error",
+      2,
       2
-    ],
-    "react/jsx-first-prop-new-line": [
-      "error",
-      "multiline"
     ],
     "object-property-newline": [
       "error"
@@ -95,5 +98,15 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   }
 }

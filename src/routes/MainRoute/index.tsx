@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import Header from "../../components/Header";
+import Footer from "components/Footer";
 
 export default function MainRoute() {
   return (
@@ -12,16 +13,17 @@ export default function MainRoute() {
         flexFlow: "column",
       }}
     >
-      <Navbar />
+      <Header />
 
       <Box
-        py={2}
         sx={{
-          flexGrow:1
+          flexGrow: 1,
         }}
-      > 
+      >
         <Outlet />
       </Box>
+
+      <Footer />
     </Box>
   );
 }
