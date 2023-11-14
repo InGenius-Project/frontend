@@ -72,7 +72,9 @@ export default function Login() {
                 }}
               />
               <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                <Button>登入</Button>
+                <Button onClick={() => navigate("/Account/User/Profile")}>
+                  登入
+                </Button>
                 <Button
                   variant="outlined"
                   onClick={() => navigate("/Account/Register")}
