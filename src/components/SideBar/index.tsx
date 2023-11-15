@@ -52,7 +52,7 @@ const SideBar = () => {
       exit={{
         x: -100,
         width: 0,
-        opacity: 1,
+        opacity: 0,
       }}
       transition={{
         type: "linear",
@@ -64,7 +64,7 @@ const SideBar = () => {
         exclusive
         value={currentTab}
         onChange={handleNavigate}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", position: "sticky", top: 0 }}
       >
         <SideBarButton value="Profile">
           <SideBarLeftIcon>

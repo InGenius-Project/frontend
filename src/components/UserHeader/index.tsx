@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack, Breadcrumbs, Checkbox, Link } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -29,7 +28,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
       direction={"row"}
       sx={{
         alignItems: "center",
-        p: 1,
+        height: "var(--lng-height-userHeader)",
       }}
     >
       <Checkbox
@@ -42,8 +41,13 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
         }}
       />
       <Breadcrumbs>
-        {crumbs.map((crumb) => (
-          <Link underline="hover" color="inherit" href={crumb.pathname}>
+        {crumbs.map((crumb, index) => (
+          <Link
+            underline="hover"
+            color="inherit"
+            href={crumb.pathname}
+            key={`userHeader-breadcrumb-${index}`}
+          >
             {crumb.label}
           </Link>
         ))}

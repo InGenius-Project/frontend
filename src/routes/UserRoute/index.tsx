@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "components/SideBar";
 import UserHeader from "components/UserHeader";
@@ -9,11 +9,11 @@ export default function UserRoute() {
   const [open, setOpen] = useCycle(false, true);
 
   return (
-    <Box
+    <Container
       sx={{
-        maxWidth: "100vw",
         display: "flex",
         flexFlow: "row",
+        flexGrow: 1,
       }}
     >
       <AnimatePresence>{open && <Sidebar />}</AnimatePresence>
@@ -25,8 +25,10 @@ export default function UserRoute() {
         }}
       >
         <UserHeader toggle={open} onToggle={setOpen} />
-        <Outlet />
+        <Box sx={{ overflowY: "auto" }}>
+          <Outlet />
+        </Box>
       </Box>
-    </Box>
+    </Container>
   );
 }

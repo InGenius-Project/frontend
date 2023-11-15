@@ -11,6 +11,7 @@ export default function MainRoute() {
         minHeight: "100vh",
         display: "flex",
         flexFlow: "column",
+        flexGrow: 1,
       }}
     >
       <Header />
@@ -20,6 +21,7 @@ export default function MainRoute() {
           display: "flex",
           flexGrow: 1,
           minHeight: "calc(100vh - var(--lng-height-navbar))",
+          justifyContent: "center",
         }}
       >
         <Outlet />
