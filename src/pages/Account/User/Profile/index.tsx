@@ -1,3 +1,12 @@
+import { Stack } from "@mui/material";
+import AreaItem from "components/AreaItem";
+
 export default function Profile() {
-  return <h1>profile</h1>;
+  return (
+    <Stack spacing={2}>
+      <AreaItem />
+      <AreaItem />
+      <AreaItem />
+    </Stack>
+  );
 }

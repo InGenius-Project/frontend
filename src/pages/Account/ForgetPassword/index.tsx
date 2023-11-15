@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import Lock from "@mui/icons-material/Lock";
 import { Link as RouterLink } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 

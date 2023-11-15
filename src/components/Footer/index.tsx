@@ -12,8 +12,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 
 export default function Footer() {
-  const theme = useTheme();
-
   return (
     <>
       <Divider />

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,9 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ImageFrame from "assets/images/png/imageFrame.png";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShareIcon from "@mui/icons-material/Share";
-import theme from "assets/theme/theme";
 import { Chip, Stack } from "@mui/material";
 
 export default function ActivityItem() {
