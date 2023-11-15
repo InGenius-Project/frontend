@@ -1,20 +1,28 @@
 import React from "react";
-import { Stack, Breadcrumbs, Checkbox, Link, Typography } from "@mui/material";
+import { Stack, Breadcrumbs, Checkbox, Link } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import { Cycle } from "framer-motion";
+import { UIMatch, useMatches } from "react-router-dom";
+import { AgnosticBaseRouteObject } from "@remix-run/router/dist/utils";
 
 type UserHeaderProps = {
   toggle: boolean;
-  onToggle: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void | undefined;
+  onToggle: Cycle;
 };
 
 export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
-  React.useEffect(() => {
-    console.log("header", toggle);
-  }, [toggle]);
+  const matches = useMatches() as UIMatch<
+    unknown,
+    AgnosticBaseRouteObject["handle"]
+  >[];
+
+  const crumbs = matches
+    .filter((match) => Boolean(match.handle?.crumb))
+    .map((match) => ({
+      label: match.handle?.crumb,
+      pathname: match.pathname,
+    }));
 
   return (
     <Stack
@@ -28,24 +36,17 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
         checked={toggle}
         icon={<KeyboardDoubleArrowRightIcon />}
         checkedIcon={<KeyboardDoubleArrowLeftIcon />}
-        onChange={onToggle}
+        onChange={() => onToggle()}
         sx={{
-          display: toggle ? "none" : "box",
           marginRight: 1,
         }}
       />
       <Breadcrumbs>
-        <Link underline="hover" color="inherit" href="/">
-          MUI
-        </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
-          Core
-        </Link>
-        <Typography color="text.primary">Breadcrumbs</Typography>
+        {crumbs.map((crumb) => (
+          <Link underline="hover" color="inherit" href={crumb.pathname}>
+            {crumb.label}
+          </Link>
+        ))}
       </Breadcrumbs>
     </Stack>
   );

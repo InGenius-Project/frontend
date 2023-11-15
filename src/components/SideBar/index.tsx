@@ -6,9 +6,7 @@ import { styled } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { Box, Checkbox } from "@mui/material";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import { motion } from "framer-motion";
 
 const SideBarToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
@@ -22,6 +20,7 @@ const SideBarButton = styled(ToggleButton)(({ theme }) => ({
   px: theme.spacing(2),
   justifyContent: "flex-start",
   alignItems: "center",
+  whiteSpace: "nowrap",
 }));
 
 const SideBarLeftIcon = styled("span")(({ theme }) => ({
@@ -32,15 +31,7 @@ const SideBarLeftIcon = styled("span")(({ theme }) => ({
   alignItems: "center",
 }));
 
-type SideBarProps = {
-  toggle: boolean;
-  onToggle: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    newState: boolean
-  ) => void;
-};
-
-const SideBar = ({ toggle, onToggle }: SideBarProps) => {
+const SideBar = () => {
   const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = React.useState("profile");
@@ -54,70 +45,56 @@ const SideBar = ({ toggle, onToggle }: SideBarProps) => {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
+    <motion.aside
+      style={{ flexShrink: 0 }}
+      initial={{ x: -100, width: 0, opacity: 0 }}
+      animate={{ x: 0, width: "var(--lng-width-sidebar)", opacity: 1 }}
+      exit={{
+        x: -100,
+        width: 0,
+        opacity: 1,
+      }}
+      transition={{
+        type: "linear",
       }}
     >
-      <Box
-        sx={{
-          width: "var(--lng-width-sidebar)",
-          flexShrink: 0,
-          display: toggle ? "box" : "none",
-        }}
+      <SideBarToggleButtonGroup
+        color="primary"
+        orientation="vertical"
+        exclusive
+        value={currentTab}
+        onChange={handleNavigate}
+        sx={{ width: "100%" }}
       >
-        <SideBarToggleButtonGroup
-          color="primary"
-          orientation="vertical"
-          exclusive
-          value={currentTab}
-          onChange={handleNavigate}
-          sx={{ width: "100%" }}
-        >
-          <SideBarButton value="Profile">
-            <SideBarLeftIcon>
-              <img
-                src={dummyUserImage}
-                alt="userImage"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  objectFit: "contain",
-                }}
-              />
-            </SideBarLeftIcon>
-            王曉明
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "flex-end",
+        <SideBarButton value="Profile">
+          <SideBarLeftIcon>
+            <img
+              src={dummyUserImage}
+              alt="userImage"
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "50%",
+                objectFit: "contain",
               }}
-            >
-              <Checkbox
-                checked={toggle}
-                icon={<KeyboardDoubleArrowRightIcon />}
-                checkedIcon={<KeyboardDoubleArrowLeftIcon />}
-                onChange={onToggle}
-              />
-            </Box>
-          </SideBarButton>
-          <SideBarButton value="Resume">
-            <SideBarLeftIcon>
-              <InsertDriveFileOutlinedIcon />
-            </SideBarLeftIcon>
-            履歷
-          </SideBarButton>
-          <SideBarButton value="Intern">
-            <SideBarLeftIcon>
-              <WorkOutlineOutlinedIcon />
-            </SideBarLeftIcon>
-            實習管理
-          </SideBarButton>
-        </SideBarToggleButtonGroup>
-      </Box>
-    </Box>
+            />
+          </SideBarLeftIcon>
+          王曉明
+        </SideBarButton>
+        <SideBarButton value="Resume">
+          <SideBarLeftIcon>
+            <InsertDriveFileOutlinedIcon />
+          </SideBarLeftIcon>
+          履歷
+        </SideBarButton>
+        <SideBarButton value="Intern">
+          <SideBarLeftIcon>
+            <WorkOutlineOutlinedIcon />
+          </SideBarLeftIcon>
+          實習管理
+        </SideBarButton>
+      </SideBarToggleButtonGroup>
+    </motion.aside>
   );
 };
 
