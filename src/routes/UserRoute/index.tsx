@@ -21,11 +21,10 @@ export default function UserRoute() {
       <Box
         sx={{
           minHeight: "calc(100vh - var(--lng-height-navbar))",
-          flex: "1 1 auto",
         }}
       >
         <UserHeader toggle={open} onToggle={setOpen} />
-        <Box sx={{ overflowY: "auto" }}>
+        <Box sx={{ my: 1 }}>
           <Outlet />
         </Box>
       </Box>
