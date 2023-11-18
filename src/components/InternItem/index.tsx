@@ -10,7 +10,7 @@ export default function InternItem() {
       sx={{
         backgroundColor: theme.palette.common.white,
         position: "relative",
-        borderRadius: "var(--lng-borderRadius-sm)",
+        borderRadius: "var(--ing-borderRadius-sm)",
         padding: theme.spacing(2),
       }}
     >

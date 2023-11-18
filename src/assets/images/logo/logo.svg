@@ -4,8 +4,8 @@
 	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
 <style type="text/css">
 	.logo0{clip-path:url(#SVGID_2_);}
-	.logo1{fill:var(--lng-palette-primary-main);}
-	.logo2{fill:var(--lng-palette-grey-700);}
+	.logo1{fill:var(--ing-palette-primary-main);}
+	.logo2{fill:var(--ing-palette-grey-700);}
 	.logo3{clip-path:url(#SVGID_4_);}
 </style>
 <g>

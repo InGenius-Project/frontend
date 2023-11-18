@@ -48,7 +48,7 @@ const SideBar = () => {
     <motion.aside
       style={{ flexShrink: 0 }}
       initial={{ x: -100, width: 0, opacity: 0 }}
-      animate={{ x: 0, width: "var(--lng-width-sidebar)", opacity: 1 }}
+      animate={{ x: 0, width: "var(--ing-width-sidebar)", opacity: 1 }}
       exit={{
         x: -100,
         width: 0,

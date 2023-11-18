@@ -40,7 +40,7 @@ const AreaItemControl = ({ top }: AreaItemControlProps) => {
       style={{
         position: "absolute",
         top: 0,
-        width: "var(--lng-width-areaControl)",
+        width: "var(--ing-width-areaControl)",
       }}
     >
       <Stack

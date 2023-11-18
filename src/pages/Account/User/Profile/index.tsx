@@ -33,7 +33,7 @@ export default function Profile() {
       <Box
         sx={{
           flexShrink: 0,
-          width: "var(--lng-width-areaControl)",
+          width: "var(--ing-width-areaControl)",
           position: "relative",
         }}
       >

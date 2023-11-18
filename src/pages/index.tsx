@@ -37,7 +37,7 @@ export default function Root() {
       <Container
         sx={{
           height: {
-            laptop: "calc(100vh - var(--lng-height-navbar))",
+            laptop: "calc(100vh - var(--ing-height-navbar))",
           },
           maxHeight: {
             desktop: "450px",

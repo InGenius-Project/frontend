@@ -28,7 +28,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
       direction={"row"}
       sx={{
         alignItems: "center",
-        height: "var(--lng-height-userHeader)",
+        height: "var(--ing-height-userHeader)",
       }}
     >
       <Checkbox

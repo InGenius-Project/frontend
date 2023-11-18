@@ -11,7 +11,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <Container sx={{ height: "var(--lng-height-navbar)" }}>
+    <Container sx={{ height: "var(--ing-height-navbar)" }}>
       <Box
         sx={{
           width: "100%",

@@ -20,7 +20,7 @@ export default function MainRoute() {
         sx={{
           display: "flex",
           flexGrow: 1,
-          minHeight: "calc(100vh - var(--lng-height-navbar))",
+          minHeight: "calc(100vh - var(--ing-height-navbar))",
           justifyContent: "center",
         }}
       >

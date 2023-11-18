@@ -15,7 +15,7 @@ declare module "@mui/material/styles" {
 }
 
 let theme = extendTheme({
-  cssVarPrefix: "lng",
+  cssVarPrefix: "ing",
   colorSchemes: {
     light: {
       palette: {
