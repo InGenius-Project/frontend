@@ -5,7 +5,6 @@ import {
   IconButton,
   Link,
   Stack,
-  useTheme,
 } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import EmailIcon from "@mui/icons-material/Email";
