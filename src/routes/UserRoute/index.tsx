@@ -21,6 +21,7 @@ export default function UserRoute() {
       <Box
         sx={{
           minHeight: "calc(100vh - var(--lng-height-navbar))",
+          flexGrow: 1,
         }}
       >
         <UserHeader toggle={open} onToggle={setOpen} />

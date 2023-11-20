@@ -12,6 +12,8 @@ import Profile from "pages/Account/User/Profile";
 import UserRoute from "./UserRoute";
 import Intern from "pages/Account/User/Intern";
 import Resume from "pages/Account/User/Resume";
+import ProfileNew from "pages/Account/User/Profile/New";
+import Edit from "pages/Account/User/Profile/Edit";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -31,13 +33,21 @@ const router = createBrowserRouter(
         <Route element={<ForgetPassword />} path="ForgetPassword" />
         <Route element={<UserRoute />} path="User">
           <Route
-            index
-            element={<Profile />}
             path="Profile"
             handle={{
               crumb: "個人首頁",
             }}
-          />
+          >
+            <Route element={<Profile />} index />
+            <Route path="New" handle={{ crumb: "新增區塊" }}>
+              <Route index element={<ProfileNew />} />
+              <Route
+                element={<Edit />}
+                path="Edit/:type?"
+                handle={{ crumb: "編輯內容" }}
+              />
+            </Route>
+          </Route>
           <Route
             element={<Resume />}
             path="Resume"

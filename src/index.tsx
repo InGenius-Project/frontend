@@ -5,6 +5,7 @@ import router from "./routes/router";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import theme from "./assets/theme/theme";
 import { RouterProvider } from "react-router-dom";
+import { ConfirmProvider } from "material-ui-confirm";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,7 +14,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <CssVarsProvider theme={theme}>
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <ConfirmProvider>
+        <RouterProvider router={router} />
+      </ConfirmProvider>
     </React.StrictMode>
   </CssVarsProvider>
 );
