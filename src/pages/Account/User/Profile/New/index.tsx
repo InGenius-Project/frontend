@@ -57,7 +57,7 @@ export default function New() {
         },
       })
         .then(() => {
-          navigate(`Edit`);
+          navigate(`Layout`);
         })
         .catch(() => {});
     } else {
@@ -96,7 +96,9 @@ export default function New() {
             )}
           />
           <Box>
-            <Button variant="outlined">自定義</Button>
+            <Button variant="outlined" onClick={() => navigate("Layout")}>
+              自定義
+            </Button>
           </Box>
         </Stack>
 

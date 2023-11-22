@@ -14,6 +14,7 @@ import Intern from "pages/Account/User/Intern";
 import Resume from "pages/Account/User/Resume";
 import ProfileNew from "pages/Account/User/Profile/New";
 import Edit from "pages/Account/User/Profile/Edit";
+import Layout from "pages/Account/User/Profile/Layout";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -45,6 +46,11 @@ const router = createBrowserRouter(
                 element={<Edit />}
                 path="Edit/:type?"
                 handle={{ crumb: "編輯內容" }}
+              ></Route>
+              <Route
+                element={<Layout />}
+                path="Layout"
+                handle={{ crumb: "區塊排列方式" }}
               />
             </Route>
           </Route>

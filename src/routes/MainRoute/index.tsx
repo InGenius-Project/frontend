@@ -1,11 +1,10 @@
 import { Box } from "@mui/material";
-import { Outlet, useLocation, useOutlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "components/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function MainRoute() {
-  const outlet = useOutlet();
   return (
     <Box
       sx={{
@@ -28,7 +27,7 @@ export default function MainRoute() {
               justifyContent: "center",
             }}
           >
-            {outlet}{" "}
+            <Outlet />
           </Box>
         </motion.main>
       </AnimatePresence>
