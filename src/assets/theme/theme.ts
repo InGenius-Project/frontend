@@ -79,6 +79,11 @@ let theme = extendTheme({
         maxWidth: "laptop",
       },
     },
+    MuiDialog: {
+      defaultProps: {
+        maxWidth: "laptop",
+      },
+    },
     MuiLink: {
       styleOverrides: {
         root: ({ theme: t }) => ({

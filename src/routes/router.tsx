@@ -1,4 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 import MainRoute from "./MainRoute";
 import Root from "../pages";
 import Register from "../pages/Account/Register";
@@ -8,7 +12,9 @@ import Profile from "pages/Account/User/Profile";
 import UserRoute from "./UserRoute";
 import Intern from "pages/Account/User/Intern";
 import Resume from "pages/Account/User/Resume";
-import ResumeEdit from "pages/Account/User/Resume/Edit";
+import ProfileNew from "pages/Account/User/Profile/New";
+import Edit from "pages/Account/User/Profile/Edit";
+import Layout from "pages/Account/User/Profile/Layout";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -18,68 +24,54 @@ declare module "@remix-run/router/dist/utils" {
   };
 }
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainRoute />,
-    children: [
-      {
-        path: "",
-        element: <Root />,
-      },
-      {
-        path: "Account",
-        children: [
-          {
-            path: "Login",
-            element: <Login />,
-          },
-          {
-            path: "Register",
-            element: <Register />,
-          },
-          {
-            path: "ForgetPassword",
-            element: <ForgetPassword />,
-          },
-          {
-            path: "User",
-            element: <UserRoute />,
-            children: [
-              {
-                path: "Profile?",
-                element: <Profile />,
-                handle: {
-                  crumb: "個人首頁",
-                },
-              },
-              {
-                path: "Resume",
-                element: <Resume />,
-                handle: {
-                  crumb: "履歷",
-                },
-                children: [
-                  {
-                    path: "Edit",
-                    element: <ResumeEdit />,
-                    handle: {
-                      crumb: "履歷編輯",
-                    },
-                  },
-                ],
-              },
-              {
-                path: "Intern",
-                element: <Intern />,
-                handle: {
-                  crumb: "實習",
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<MainRoute />}>
+      <Route index element={<Root />} />
+      <Route path={"Account"}>
+        <Route index element={<Login />} path="Login" />
+        <Route element={<Register />} path="Register" />
+        <Route element={<ForgetPassword />} path="ForgetPassword" />
+        <Route element={<UserRoute />} path="User">
+          <Route
+            path="Profile"
+            handle={{
+              crumb: "個人首頁",
+            }}
+          >
+            <Route element={<Profile />} index />
+            <Route path="New" handle={{ crumb: "新增區塊" }}>
+              <Route index element={<ProfileNew />} />
+              <Route
+                element={<Edit />}
+                path="Edit/:type?"
+                handle={{ crumb: "編輯內容" }}
+              ></Route>
+              <Route
+                element={<Layout />}
+                path="Layout"
+                handle={{ crumb: "區塊排列方式" }}
+              />
+            </Route>
+          </Route>
+          <Route
+            element={<Resume />}
+            path="Resume"
+            handle={{
+              crumb: "履歷管理",
+            }}
+          />
+          <Route
+            element={<Intern />}
+            path="Intern"
+            handle={{
+              crumb: "實習管理",
+            }}
+          />
+        </Route>
+      </Route>
+    </Route>
+  )
+);
+
+export default router;

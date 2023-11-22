@@ -13,6 +13,7 @@ import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -42,50 +43,68 @@ export default function Login() {
             <LoginSvg width={"70%"} />
           </Grid>
           <Grid mobile={12} tablet={6}>
-            <Stack spacing={3}>
-              <Typography variant="h3">登入</Typography>
-              <Stack spacing={2} direction="row">
-                <Link>一般</Link>
-                <Link>企業</Link>
+            <motion.div
+              initial={{
+                x: -100,
+                opacity: 0,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+              }}
+              exit={{
+                x: 100,
+                opacity: 0,
+              }}
+              transition={{
+                type: "linear",
+              }}
+            >
+              <Stack spacing={3}>
+                <Typography variant="h3">登入</Typography>
+                <Stack spacing={2} direction="row">
+                  <Link>一般</Link>
+                  <Link>企業</Link>
+                </Stack>
+                <TextField
+                  label="帳號"
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircle color="primary" />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  label="密碼"
+                  required
+                  type="password"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock color="primary" />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+                  <Button onClick={() => navigate("/Account/User/Profile")}>
+                    登入
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate("/Account/Register")}
+                  >
+                    註冊
+                  </Button>
+                  <Link component={RouterLink} to="/Account/ForgetPassword">
+                    忘記密碼?
+                  </Link>
+                </Stack>
               </Stack>
-              <TextField
-                label="帳號"
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountCircle color="primary" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                label="密碼"
-                required
-                type="password"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock color="primary" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                <Button onClick={() => navigate("/Account/User/Profile")}>
-                  登入
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => navigate("/Account/Register")}
-                >
-                  註冊
-                </Button>
-                <Link component={RouterLink} to="/Account/ForgetPassword">
-                  忘記密碼?
-                </Link>
-              </Stack>
-            </Stack>
+            </motion.div>
           </Grid>
         </Grid>
       </Container>
