@@ -1,22 +1,80 @@
 import {
   Box,
-  Button,
   Container,
   InputAdornment,
   Link,
   Stack,
-  TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
 import Lock from "@mui/icons-material/Lock";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import { motion } from "framer-motion";
+import { useRegisterUserMutation } from "features/api/authApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { object, string, TypeOf } from "zod";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import LoadingButton from "@mui/lab/LoadingButton";
+import FormInput from "components/FormInput";
+
+const registerSchema = object({
+  Username: string().min(1, "請輸入名稱").max(100),
+  Email: string().min(1, "請輸入帳號").email("請輸入正確的帳號格式"),
+  Password: string()
+    .min(1, "請輸入密碼")
+    .min(8, "密碼必須大於8個字元")
+    .max(32, "密碼必須小於32個字元"),
+  PasswordConfirm: string().min(1, "請確認密碼"),
+}).refine((data) => data.Password === data.PasswordConfirm, {
+  path: ["PasswordConfirm"],
+  message: "密碼不相符",
+});
+
+export type RegisterInput = Omit<
+  TypeOf<typeof registerSchema>,
+  "PasswordConfirm"
+>;
 
 export default function Register() {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const methods = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const [registerUser, { isLoading, isSuccess }] = useRegisterUserMutation();
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitSuccessful },
+  } = methods;
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("User registered successfully");
+      navigate("./Profile");
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    console.log("reset");
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
+
+  const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
+    // ? Executing the RegisterUser Mutation
+    registerUser(values);
+  };
+
   return (
     <Box
       sx={{
@@ -59,65 +117,88 @@ export default function Register() {
                 type: "linear",
               }}
             >
-              <Stack spacing={3}>
-                <Typography variant="h3">註冊</Typography>
-                <Stack spacing={2} direction="row">
-                  <Link>一般</Link>
-                  <Link>企業</Link>
-                </Stack>
-                <TextField
-                  label="帳號"
-                  required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircle color="primary" />
-                      </InputAdornment>
-                    ),
+              <FormProvider {...methods}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: theme.spacing(3),
                   }}
-                />
-                <TextField
-                  label="名稱"
-                  required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <RateReviewIcon color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  label="密碼"
-                  required
-                  type="password"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  label="確認密碼"
-                  required
-                  type="password"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                  <Button>註冊</Button>
-                  <Link component={RouterLink} to="/Account/Login">
-                    已有帳號，直接登入
-                  </Link>
-                </Stack>
-              </Stack>
+                  noValidate
+                  component="form"
+                  onSubmit={handleSubmit(onSubmitHandler)}
+                >
+                  <Typography variant="h3">註冊</Typography>
+                  <Stack spacing={2} direction="row">
+                    <Link>一般</Link>
+                    <Link>企業</Link>
+                  </Stack>
+
+                  <FormInput
+                    label="帳號"
+                    required
+                    name="Email"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AccountCircle color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <FormInput
+                    label="名稱"
+                    required
+                    name="Username"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RateReviewIcon color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <FormInput
+                    label="密碼"
+                    required
+                    name="Password"
+                    type="password"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <FormInput
+                    label="確認密碼"
+                    required
+                    name="PasswordConfirm"
+                    type="password"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+
+                  <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+                    <LoadingButton
+                      variant="contained"
+                      loading={isLoading}
+                      type="submit"
+                    >
+                      註冊
+                    </LoadingButton>
+                    <Link component={RouterLink} to="/Account/Login">
+                      已有帳號，直接登入
+                    </Link>
+                  </Stack>
+                </Box>
+              </FormProvider>
             </motion.div>
           </Grid>
         </Grid>

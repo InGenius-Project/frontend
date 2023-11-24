@@ -6,6 +6,8 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import theme from "./assets/theme/theme";
 import { RouterProvider } from "react-router-dom";
 import { ConfirmProvider } from "material-ui-confirm";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,9 +16,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <CssVarsProvider theme={theme}>
     <React.StrictMode>
-      <ConfirmProvider>
-        <RouterProvider router={router} />
-      </ConfirmProvider>
+      <ReduxProvider store={store}>
+        <ConfirmProvider>
+          <RouterProvider router={router} />
+        </ConfirmProvider>
+      </ReduxProvider>
     </React.StrictMode>
   </CssVarsProvider>
 );
