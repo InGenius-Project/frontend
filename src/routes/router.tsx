@@ -32,7 +32,7 @@ const router = createBrowserRouter(
       <Route index element={<Root />} />
       <Route path="Account">
         <Route element={<UnAuthRoute />}>
-          <Route element={<Login />} path="Login" />
+          <Route element={<Login />} path="Login?" />
           <Route element={<Register />} path="Register" />
           <Route element={<ForgetPassword />} path="ForgetPassword" />
         </Route>
