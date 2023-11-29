@@ -5,8 +5,19 @@ import Footer from "components/Footer";
 import { AnimatePresence } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserApi } from "features/api/user/getUser";
+import FullScreenLoader from "components/FullScreenLoader";
 
 export default function MainRoute() {
+  const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(
+    null,
+    {
+      skip: false,
+    }
+  );
+
+  const loading = isLoading || isFetching;
+
   return (
     <Box
       sx={{
@@ -30,7 +41,7 @@ export default function MainRoute() {
             justifyContent: "center",
           }}
         >
-          <Outlet />
+          {loading ? <FullScreenLoader /> : <Outlet />}
         </Box>
       </AnimatePresence>
 

@@ -1,18 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi } from "features/api/authApi";
-import { userApi } from "features/api/userApi";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userReducer from "features/user/userSlice";
+import { baseApi } from "./api/baseApi";
+import errorToastMiddleware from "./middleware/errorToastMiddleware";
 
 export const store = configureStore({
   reducer: {
-    [authApi.reducerPath]: authApi.reducer,
-    [userApi.reducerPath]: userApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
     userState: userReducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([authApi.middleware, userApi.middleware]),
+    getDefaultMiddleware({}).concat([baseApi.middleware, errorToastMiddleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

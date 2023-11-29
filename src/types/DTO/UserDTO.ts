@@ -1,8 +1,8 @@
 import { TokenDTO } from "./TokenDTO";
 
 export interface UserDTO {
-  user: UserInfoDTO;
-  token: TokenDTO;
+  user?: UserInfoDTO;
+  token?: TokenDTO;
 }
 
 export interface UserInfoDTO {

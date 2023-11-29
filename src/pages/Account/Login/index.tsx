@@ -5,18 +5,70 @@ import {
   InputAdornment,
   Link,
   Stack,
-  TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { motion } from "framer-motion";
+import { TypeOf, object, string } from "zod";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import FormInput from "components/FormInput";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useLoginMutation } from "features/api/auth/login";
+import { getUserApi } from "features/api/user/getUser";
+
+const loginSchema = object({
+  email: string()
+    .min(1, "Email address is required")
+    .email("Email Address is invalid"),
+  password: string().min(1, "Password is required"),
+});
+
+export type LoginInput = TypeOf<typeof loginSchema>;
 
 export default function Login() {
+  const methods = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const [loginUser, { isLoading, isSuccess }] = useLoginMutation();
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const theme = useTheme();
+
+  const from =
+    ((location.state as any)?.from.pathname as string) || "/Account/User";
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitSuccessful },
+  } = methods;
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("登入成功");
+      navigate(from);
+    }
+  }, [isLoading, navigate, from, isSuccess]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
+
+  const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
+    loginUser(values);
+  };
 
   return (
     <Box
@@ -60,50 +112,68 @@ export default function Login() {
                 type: "linear",
               }}
             >
-              <Stack spacing={3}>
-                <Typography variant="h3">登入</Typography>
-                <Stack spacing={2} direction="row">
-                  <Link>一般</Link>
-                  <Link>企業</Link>
-                </Stack>
-                <TextField
-                  label="帳號"
-                  required
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircle color="primary" />
-                      </InputAdornment>
-                    ),
+              <FormProvider {...methods}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: theme.spacing(3),
                   }}
-                />
-                <TextField
-                  label="密碼"
-                  required
-                  type="password"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                  <Button onClick={() => navigate("/Account/User/Profile")}>
-                    登入
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => navigate("/Account/Register")}
-                  >
-                    註冊
-                  </Button>
-                  <Link component={RouterLink} to="/Account/ForgetPassword">
-                    忘記密碼?
-                  </Link>
-                </Stack>
-              </Stack>
+                  noValidate
+                  component="form"
+                  onSubmit={handleSubmit(onSubmitHandler)}
+                >
+                  <Typography variant="h3">登入</Typography>
+                  <Stack spacing={2} direction="row">
+                    <Link>一般</Link>
+                    <Link>企業</Link>
+                  </Stack>
+                  <FormInput
+                    name="email"
+                    type="email"
+                    label="帳號"
+                    required
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AccountCircle color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <FormInput
+                    name="password"
+                    type="password"
+                    label="密碼"
+                    required
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Stack direction="row" spacing={2} alignItems={"flex-end"}>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isLoading}
+                    >
+                      登入
+                    </LoadingButton>
+                    <Button
+                      variant="outlined"
+                      onClick={() => navigate("/Account/Register")}
+                    >
+                      註冊
+                    </Button>
+                    <Link component={RouterLink} to="/Account/ForgetPassword">
+                      忘記密碼?
+                    </Link>
+                  </Stack>
+                </Box>
+              </FormProvider>
             </motion.div>
           </Grid>
         </Grid>

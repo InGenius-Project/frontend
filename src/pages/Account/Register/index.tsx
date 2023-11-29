@@ -14,7 +14,6 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import { motion } from "framer-motion";
-import { useRegisterUserMutation } from "features/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { object, string, TypeOf } from "zod";
 import { useEffect } from "react";
@@ -22,6 +21,7 @@ import { toast } from "react-toastify";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormInput from "components/FormInput";
+import { useRegisterMutation } from "features/api/auth/register";
 
 const registerSchema = object({
   Username: string().min(1, "請輸入名稱").max(100),
@@ -48,7 +48,7 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  const [registerUser, { isLoading, isSuccess }] = useRegisterUserMutation();
+  const [registerUser, { isLoading, isSuccess }] = useRegisterMutation();
 
   const {
     reset,
@@ -58,20 +58,17 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("User registered successfully");
-      navigate("./Profile");
+      navigate("/Account/User");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   useEffect(() => {
-    console.log("reset");
     if (isSubmitSuccessful) {
       reset();
     }
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    // ? Executing the RegisterUser Mutation
     registerUser(values);
   };
 

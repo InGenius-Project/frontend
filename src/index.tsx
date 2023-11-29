@@ -7,7 +7,7 @@ import theme from "./assets/theme/theme";
 import { RouterProvider } from "react-router-dom";
 import { ConfirmProvider } from "material-ui-confirm";
 import { Provider as ReduxProvider } from "react-redux";
-import { store } from "store";
+import { store } from "features/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
