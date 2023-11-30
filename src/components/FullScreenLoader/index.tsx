@@ -5,6 +5,7 @@ const FullScreenLoader = () => {
   return (
     <Container
       sx={{ height: "calc(100vh-var(--ing-height-navbar))", width: "100%" }}
+      data-testid="fullscreen-loader"
     >
       <Box
         display="flex"

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "assets/css/global.css";
-import router from "./routes/router";
+import browserRouter from "./routes/router";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import theme from "./assets/theme/theme";
 import { RouterProvider } from "react-router-dom";
@@ -18,7 +18,7 @@ root.render(
     <React.StrictMode>
       <ReduxProvider store={store}>
         <ConfirmProvider>
-          <RouterProvider router={router} />
+          <RouterProvider router={browserRouter} />
         </ConfirmProvider>
       </ReduxProvider>
     </React.StrictMode>

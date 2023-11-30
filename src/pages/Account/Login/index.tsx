@@ -76,6 +76,7 @@ export default function Login() {
         alignSelf: "center",
         flexGrow: 1,
       }}
+      data-testid="login"
     >
       <Container>
         <Grid
