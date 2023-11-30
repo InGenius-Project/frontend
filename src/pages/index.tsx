@@ -62,7 +62,7 @@ export default function Root() {
               justifyContent: "center",
             }}
           >
-            <WorkInProgress width="90%" height={"fit-content"} />
+            <WorkInProgress style={{ width: "90%", height: "fit-content" }} />
           </Grid>
           <Grid
             tablet={6}
@@ -128,7 +128,7 @@ export default function Root() {
               justifyContent: "center",
             }}
           >
-            <Update width="90%" height={"fit-content"} />
+            <Update style={{ width: "90%", height: "fit-content" }} />
           </Grid>
         </Grid>
       </Container>
