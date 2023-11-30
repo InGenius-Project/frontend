@@ -1,15 +1,18 @@
 import {
   Middleware,
   MiddlewareAPI,
-  PayloadAction,
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 const errorToastMiddleware: Middleware =
-  (api: MiddlewareAPI) => (next) => (action: any) => {
-    // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these use matchers!
+  (api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
+      if (action.payload.status === "FETCH_ERROR") {
+        toast.error("伺服器未回應");
+        return next(action);
+      }
+
       if (action.payload.data.Exception) {
         toast.error(action.payload.data.Exception);
       }
