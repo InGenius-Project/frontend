@@ -104,7 +104,7 @@ let theme = extendTheme({
     MuiTypography: {
       styleOverrides: {
         root: ({ theme: t }) => ({
-          color: theme.vars.palette.text.primary,
+          color: t.vars.palette.text.primary,
         }),
       },
     },
