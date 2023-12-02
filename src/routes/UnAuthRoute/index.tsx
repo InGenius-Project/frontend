@@ -1,14 +1,20 @@
-import FullScreenLoader from "components/FullScreenLoader";
-import { getUserApi, useGetUserQuery } from "features/api/user/getUser";
+import { getUserApi } from "features/api/user/getUser";
 import { useAppSelector } from "features/store";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export default function AuthRoute() {
   const user = getUserApi.endpoints.getUser.useQueryState(null);
-  const userState = useAppSelector((state) => state.userState.user);
+  const userState = useAppSelector((state) => state.userState.User);
+  const location = useLocation();
+  const from =
+    ((location.state as any)?.from.pathname as string) || "/Account/User";
+  React.useEffect(() => {
+    console.log(from);
+  }, [from]);
 
   return user && userState ? (
-    <Navigate to="/Account/User" replace={true} />
+    <Navigate to={from} replace={true} state={{ from: location }} />
   ) : (
     <Outlet />
   );

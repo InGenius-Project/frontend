@@ -3,5 +3,4 @@ export interface ResponseDTO<Data = unknown> {
   StatusCode: number;
   Message: string;
   Data?: Data;
-  Exception?: string;
 }

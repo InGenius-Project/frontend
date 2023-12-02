@@ -20,7 +20,7 @@ export const loginApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           data.Data && dispatch(setToken(data.Data));
           data.Data &&
-            localStorage.setItem("accessToken", data.Data.accessToken);
+            localStorage.setItem("accessToken", data.Data.AccessToken);
 
           dispatch(
             getUserApi.endpoints.getUser.initiate(null, {

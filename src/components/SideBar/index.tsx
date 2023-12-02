@@ -34,7 +34,7 @@ const SideBarLeftIcon = styled("span")(({ theme }) => ({
 
 const SideBar = () => {
   const navigate = useNavigate();
-  const user = useAppSelector((state) => state.userState.user);
+  const user = useAppSelector((state) => state.userState.User);
 
   const [currentTab, setCurrentTab] = React.useState("profile");
 
@@ -81,7 +81,7 @@ const SideBar = () => {
               }}
             />
           </SideBarLeftIcon>
-          {user?.username}
+          {user?.Username}
         </SideBarButton>
         <SideBarButton value="Resume">
           <SideBarLeftIcon>

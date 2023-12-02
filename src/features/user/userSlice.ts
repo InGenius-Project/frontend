@@ -4,8 +4,8 @@ import { UserInfo } from "os";
 import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
 
 const initialState: UserDTO = {
-  user: undefined,
-  token: undefined,
+  User: undefined,
+  Token: undefined,
 };
 
 export const userSlice = createSlice({
@@ -16,10 +16,10 @@ export const userSlice = createSlice({
       state = action.payload;
     },
     setUserInfo: (state, action: PayloadAction<UserInfoDTO>) => {
-      state.user = action.payload;
+      state.User = action.payload;
     },
     setToken: (state, action: PayloadAction<TokenDTO>) => {
-      state.token = action.payload;
+      state.Token = action.payload;
     },
     logout: () => {
       localStorage.removeItem("accessToken");

@@ -1,4 +1,4 @@
 export interface TokenDTO {
-  accessToken: string;
-  expireAt: string;
+  AccessToken: string;
+  ExpireAt: string;
 }

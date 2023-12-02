@@ -22,7 +22,7 @@ export default function Header() {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userState.user);
+  const user = useAppSelector((state) => state.userState.User);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -93,7 +93,7 @@ export default function Header() {
                 endIcon={<ArrowDropDownIcon />}
                 onClick={handleClick}
               >
-                {user.username}
+                {user.Username}
               </Button>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <MenuItem onClick={() => navigate("/Account/User/Profile")}>

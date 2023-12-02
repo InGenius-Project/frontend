@@ -13,6 +13,14 @@ const errorToastMiddleware: Middleware =
         return next(action);
       }
 
+      if (
+        action.payload.data.StatusCode === 500 ||
+        action.payload.data.StatusCode === 400
+      ) {
+        toast.error(action.payload.data.Message);
+        return next(action);
+      }
+
       if (action.payload.data.Exception) {
         toast.error(action.payload.data.Exception);
       }

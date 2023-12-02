@@ -9,7 +9,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     headers.set("Accept", "application/json");
 
-    var token = (getState() as RootState).userState.token?.accessToken;
+    var token = (getState() as RootState).userState.Token?.AccessToken;
     if (!token) {
       token = localStorage.getItem("accessToken") || undefined;
     }

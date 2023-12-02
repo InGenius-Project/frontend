@@ -1,12 +1,12 @@
 import { TokenDTO } from "./TokenDTO";
 
 export interface UserDTO {
-  user?: UserInfoDTO;
-  token?: TokenDTO;
+  User?: UserInfoDTO;
+  Token?: TokenDTO;
 }
 
 export interface UserInfoDTO {
-  id: string;
-  email: string;
-  username: string;
+  Id: string;
+  Email: string;
+  Username: string;
 }
