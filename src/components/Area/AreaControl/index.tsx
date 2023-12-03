@@ -6,16 +6,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAnimate, motion } from "framer-motion";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 type AreaControlProps = {
   top: number | undefined;
+  onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const AreaControl = ({ top }: AreaControlProps) => {
+const AreaControl = ({ top, onAddClick }: AreaControlProps) => {
   const theme = useTheme();
   const [motionRef, animate] = useAnimate();
-  const navigate = useNavigate();
 
   React.useEffect(() => {
     animate(motionRef.current, { top });
@@ -26,7 +25,7 @@ const AreaControl = ({ top }: AreaControlProps) => {
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    navigate("New");
+    onAddClick && onAddClick(event);
   };
 
   return (
@@ -35,7 +34,7 @@ const AreaControl = ({ top }: AreaControlProps) => {
       style={{
         position: "absolute",
         top: 0,
-        width: "var(--lng-width-areaControl)",
+        width: "var(--ing-width-areaControl)",
       }}
     >
       <Stack

@@ -4,6 +4,7 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Cycle } from "framer-motion";
 import { UIMatch, useMatches } from "react-router-dom";
 import { AgnosticBaseRouteObject } from "@remix-run/router/dist/utils";
+import { Link as RouterLink } from "react-router-dom";
 
 type UserHeaderProps = {
   toggle: boolean;
@@ -43,9 +44,10 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
       <Breadcrumbs>
         {crumbs.map((crumb, index) => (
           <Link
+            component={RouterLink}
             underline="hover"
             color="inherit"
-            href={crumb.pathname}
+            to={crumb.pathname}
             key={`userHeader-breadcrumb-${index}`}
           >
             {crumb.label}

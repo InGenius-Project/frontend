@@ -12,11 +12,13 @@ import Profile from "pages/Account/User/Profile";
 import UserRoute from "./UserRoute";
 import Intern from "pages/Account/User/Intern";
 import Resume from "pages/Account/User/Resume";
-import ProfileNew from "pages/Account/User/Profile/New";
-import Edit from "pages/Account/User/Profile/Edit";
-import Layout from "pages/Account/User/Profile/Layout";
+import ProfileNew from "components/Area/AreaNewModel";
+import ResumeEdit from "pages/Account/User/Resume/Edit";
+import ResumeAreaLayout from "pages/Account/User/Resume/Edit/Layout";
+import ResumeAreaNew from "pages/Account/User/Resume/Edit/New";
 import AuthRoute from "./AuthRoute";
 import UnAuthRoute from "./UnAuthRoute";
+import ResumeArea from "pages/Account/User/Resume/Edit/Area";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -47,25 +49,45 @@ const router = createBrowserRouter(
               <Route element={<Profile />} index />
               <Route path="New" handle={{ crumb: "新增區塊" }}>
                 <Route index element={<ProfileNew />} />
-                <Route
-                  element={<Edit />}
-                  path="Edit/:type?"
-                  handle={{ crumb: "編輯內容" }}
-                ></Route>
-                <Route
-                  element={<Layout />}
-                  path="Layout"
-                  handle={{ crumb: "區塊排列方式" }}
-                />
               </Route>
             </Route>
             <Route
-              element={<Resume />}
               path="Resume"
               handle={{
                 crumb: "履歷管理",
               }}
-            />
+            >
+              <Route path="" element={<Resume />} />
+              <Route
+                path="Edit/:resumeId?"
+                handle={{
+                  crumb: "履歷編輯",
+                }}
+              >
+                <Route element={<ResumeEdit />} path="" />
+                <Route
+                  element={<ResumeAreaNew />}
+                  path="New"
+                  handle={{
+                    crumb: "新增履歷區塊",
+                  }}
+                ></Route>
+                <Route
+                  element={<ResumeAreaLayout />}
+                  path="Layout"
+                  handle={{
+                    crumb: "選擇區塊排列方式",
+                  }}
+                ></Route>
+                <Route
+                  element={<ResumeArea />}
+                  path="Area/:areaId"
+                  handle={{
+                    crumb: "編輯區塊內容",
+                  }}
+                ></Route>
+              </Route>
+            </Route>
             <Route
               element={<Intern />}
               path="Intern"

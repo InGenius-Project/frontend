@@ -11,6 +11,9 @@ import { ReactComponent as IconTextFrame } from "assets/images/svg/icon-text-fra
 import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-frame.svg";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "features/store";
+import { LayoutArrangement } from "types/DTO/ResumeDTO";
+import { setArrangement } from "features/area/areaSlice";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,
@@ -30,13 +33,22 @@ const LayoutButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export default function Layout() {
-  const [selectedLayout, setSelectLayout] = React.useState<string | null>(null);
+  const [selectedLayout, setSelectLayout] =
+    React.useState<LayoutArrangement | null>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newSelectedLayout: string | null
+    newSelectedLayout: LayoutArrangement | null
   ) => {
     setSelectLayout(newSelectedLayout);
+  };
+
+  const handleNext = () => {
+    dispatch(setArrangement(selectedLayout || LayoutArrangement.TEXT));
+
+    navigate("../Area");
   };
 
   return (
@@ -50,32 +62,32 @@ export default function Layout() {
         value={selectedLayout}
         onChange={handleChange}
       >
-        <LayoutButton value="text">
+        <LayoutButton value={LayoutArrangement.TEXT}>
           <TextFrame />
           <Typography variant="body1">純文字</Typography>
         </LayoutButton>
-        <LayoutButton value="icon-text">
+        {/* <LayoutButton value="icon-text">
           <IconTextFrame />
           <Typography variant="body1">貼圖與文字</Typography>
-        </LayoutButton>
-        <LayoutButton value="img-text">
+        </LayoutButton> */}
+        <LayoutButton value={LayoutArrangement.IMAGETEXT}>
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
-        <LayoutButton value="list">
+        {/* <LayoutButton value="list">
           <TextFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>
         <LayoutButton value="key-value-list">
           <TextFrame />
           <Typography variant="body1">鍵值條列文字</Typography>
-        </LayoutButton>
+        </LayoutButton> */}
       </LayoutButtonGroup>
       <Stack direction="row" spacing={1}>
-        <Button variant="outlined" onClick={() => navigate("..")}>
+        <Button variant="outlined" onClick={() => navigate("../New")}>
           上一步
         </Button>
-        <Button onClick={() => navigate("../Edit")}>下一步</Button>
+        <Button onClick={handleNext}>下一步</Button>
       </Stack>
     </Stack>
   );

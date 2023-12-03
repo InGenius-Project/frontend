@@ -1,10 +1,11 @@
+import { TextLayoutDTO } from "./../../../types/DTO/ResumeDTO";
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { ResumeDTO } from "types/DTO/ResumeDTO";
+import { ResumeAreaPostDTO, ResumeDTO } from "types/DTO/ResumeDTO";
 
 export const getUserResume = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getResume: builder.query<ResponseDTO<Array<ResumeDTO>>, null>({
+    getResumes: builder.query<ResponseDTO<Array<ResumeDTO>>, null>({
       query() {
         return {
           url: "Resume",
@@ -21,7 +22,32 @@ export const getUserResume = baseApi.injectEndpoints({
         };
       },
     }),
+    getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
+      query(id) {
+        return {
+          url: `Resume/${id}`,
+          method: "Get",
+        };
+      },
+    }),
+    postResumeArea: builder.mutation<ResponseDTO<null>, ResumeAreaPostDTO>({
+      query(req) {
+        return {
+          url: `Resume/${req.ResumeId}/Area`,
+          method: "POST",
+          body: {
+            TextLayout: req.TextLayout,
+            ImageTextLayout: req.ImageTextLayout,
+          },
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetResumeQuery, usePostResumeMutation } = getUserResume;
+export const {
+  useGetResumesQuery,
+  usePostResumeMutation,
+  usePostResumeAreaMutation,
+  useGetResumeByIdQuery,
+} = getUserResume;

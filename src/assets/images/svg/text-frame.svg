@@ -1,6 +1,6 @@
 <svg width="120" height="36" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="120" height="8.57143" fill="var(--lng-palette-primary-main)" />
-  <rect y="13.6133" width="98.3193" height="8.57143" fill="var(--lng-palette-primary-main)" />
-  <rect y="27.2271" width="98.3193" height="8.57143" fill="var(--lng-palette-primary-main)" />
+  <rect width="120" height="8.57143" fill="var(--ing-palette-primary-main)" />
+  <rect y="13.6133" width="98.3193" height="8.57143" fill="var(--ing-palette-primary-main)" />
+  <rect y="27.2271" width="98.3193" height="8.57143" fill="var(--ing-palette-primary-main)" />
 </svg>
   

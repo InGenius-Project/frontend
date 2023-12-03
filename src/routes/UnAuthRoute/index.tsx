@@ -9,10 +9,6 @@ export default function AuthRoute() {
   const location = useLocation();
   const from =
     ((location.state as any)?.from.pathname as string) || "/Account/User";
-  React.useEffect(() => {
-    console.log(from);
-  }, [from]);
-
   return user && userState ? (
     <Navigate to={from} replace={true} state={{ from: location }} />
   ) : (

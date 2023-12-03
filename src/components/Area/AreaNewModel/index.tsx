@@ -14,35 +14,17 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { setTitle } from "features/area/areaSlice";
 
-interface AreaType {
-  value: string;
-  type: string;
-}
+const areaOptions = ["簡介", "專業技能", "教育背景"];
 
-const options = [
-  {
-    value: "簡介",
-    type: "user",
-  },
-  {
-    value: "教育背景",
-    type: "user",
-  },
-  {
-    value: "專業技能",
-    type: "user",
-  },
-  {
-    value: "聯絡資訊",
-    type: "user",
-  },
-];
-
-export default function New() {
-  const [value, setValue] = React.useState<AreaType | null>(null);
+export default function AreaNewModel() {
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const areaState = useAppSelector((state) => state.areaState);
+  const [value, setValue] = React.useState<string | null>(areaState.title);
+  const dispatch = useAppDispatch();
 
   const handleClick = () => {
     if (!value) {
@@ -57,11 +39,13 @@ export default function New() {
         },
       })
         .then(() => {
-          navigate(`Layout`);
+          dispatch(setTitle(value || ""));
+          navigate(`../Layout`);
         })
         .catch(() => {});
     } else {
-      navigate(`Edit/${value.value}`);
+      dispatch(setTitle(value || ""));
+      navigate(`../Area`);
     }
   };
 
@@ -75,10 +59,10 @@ export default function New() {
       <Stack spacing={2}>
         <Stack direction={"row"} spacing={1} alignItems={"flex-end"}>
           <Autocomplete
-            options={options}
-            getOptionLabel={(option: AreaType) => option.value}
+            options={areaOptions}
+            defaultValue={areaState.title}
             value={value}
-            onChange={(e: any, value: AreaType | null) => setValue(value)}
+            onChange={(e: any, value: string | null) => setValue(value)}
             sx={{ width: 300 }}
             renderInput={(params) => (
               <TextField
@@ -96,7 +80,7 @@ export default function New() {
             )}
           />
           <Box>
-            <Button variant="outlined" onClick={() => navigate("Layout")}>
+            <Button variant="outlined" onClick={() => navigate("../Layout")}>
               自定義
             </Button>
           </Box>
@@ -104,13 +88,11 @@ export default function New() {
 
         <Stack direction="row" spacing={2} alignItems={"center"}>
           <Typography variant="body1">常見類型</Typography>
-          {options.map((o, i) => (
+          {areaOptions.map((o, i) => (
             <Chip
               key={i}
-              icon={
-                value && o.value === value.value ? <CheckIcon /> : <AddIcon />
-              }
-              label={o.value}
+              icon={value && o === value ? <CheckIcon /> : <AddIcon />}
+              label={o}
               onClick={() => {
                 setValue(o);
               }}
