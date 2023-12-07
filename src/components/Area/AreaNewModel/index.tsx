@@ -15,15 +15,15 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { setTitle } from "features/area/areaSlice";
+import { setTitle } from "features/layout/layoutSlice";
 
 const areaOptions = ["簡介", "專業技能", "教育背景"];
 
 export default function AreaNewModel() {
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const areaState = useAppSelector((state) => state.areaState);
-  const [value, setValue] = React.useState<string | null>(areaState.title);
+  const layoutState = useAppSelector((state) => state.layoutState);
+  const [value, setValue] = React.useState<string | null>(layoutState.title);
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
@@ -60,7 +60,7 @@ export default function AreaNewModel() {
         <Stack direction={"row"} spacing={1} alignItems={"flex-end"}>
           <Autocomplete
             options={areaOptions}
-            defaultValue={areaState.title}
+            defaultValue={layoutState.title}
             value={value}
             onChange={(e: any, value: string | null) => setValue(value)}
             sx={{ width: 300 }}

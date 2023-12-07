@@ -25,5 +25,5 @@ const baseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   baseQuery,
   endpoints: () => ({}),
-  tagTypes: ["User"],
+  tagTypes: ["User", "Resume"],
 });

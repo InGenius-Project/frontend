@@ -9,10 +9,19 @@ import React from "react";
 
 type AreaControlProps = {
   top: number | undefined;
+  disabled?: boolean;
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onDeleteClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onEditClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const AreaControl = ({ top, onAddClick }: AreaControlProps) => {
+const AreaControl = ({
+  top,
+  disabled,
+  onAddClick,
+  onDeleteClick,
+  onEditClick,
+}: AreaControlProps) => {
   const theme = useTheme();
   const [motionRef, animate] = useAnimate();
 
@@ -48,6 +57,7 @@ const AreaControl = ({ top, onAddClick }: AreaControlProps) => {
       >
         <Box>
           <IconButton
+            disabled={disabled}
             size="small"
             onClick={handleAddClick}
             onMouseDown={(e) => e.preventDefault()}
@@ -57,17 +67,28 @@ const AreaControl = ({ top, onAddClick }: AreaControlProps) => {
         </Box>
         <Checkbox
           icon={<VisibilityIcon />}
+          disabled={disabled}
           checkedIcon={<VisibilityOffIcon />}
           size="small"
           onMouseDown={(e) => e.preventDefault()}
         />
         <Box>
-          <IconButton size="small" onMouseDown={(e) => e.preventDefault()}>
+          <IconButton
+            size="small"
+            disabled={disabled}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={onEditClick}
+          >
             <EditIcon />
           </IconButton>
         </Box>
         <Box>
-          <IconButton size="small" onMouseDown={(e) => e.preventDefault()}>
+          <IconButton
+            size="small"
+            disabled={disabled}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={onDeleteClick}
+          >
             <DeleteIcon />
           </IconButton>
         </Box>

@@ -1,7 +1,7 @@
-import { TextLayoutDTO } from "./../../../types/DTO/ResumeDTO";
+import { ResumePostDTO } from "./../../../types/DTO/ResumeDTO";
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { ResumeAreaPostDTO, ResumeDTO } from "types/DTO/ResumeDTO";
+import { ResumeDTO } from "types/DTO/ResumeDTO";
 
 export const getUserResume = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,8 +12,21 @@ export const getUserResume = baseApi.injectEndpoints({
           method: "Get",
         };
       },
+      providesTags: (result) => {
+        if (result && result.Data) {
+          return [
+            ...result.Data.map(({ Id }) => ({
+              type: "Resume" as const,
+              id: Id,
+            })),
+            "Resume",
+          ];
+        } else {
+          return ["Resume"];
+        }
+      },
     }),
-    postResume: builder.mutation<ResponseDTO<null>, ResumeDTO>({
+    postResume: builder.mutation<ResponseDTO<ResumeDTO>, ResumePostDTO>({
       query(body) {
         return {
           url: "Resume",
@@ -21,6 +34,7 @@ export const getUserResume = baseApi.injectEndpoints({
           body,
         };
       },
+      invalidatesTags: ["Resume"],
     }),
     getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
       query(id) {
@@ -29,18 +43,18 @@ export const getUserResume = baseApi.injectEndpoints({
           method: "Get",
         };
       },
+      providesTags: (result) => {
+        return [{ type: "Resume", id: result?.Data?.Id }];
+      },
     }),
-    postResumeArea: builder.mutation<ResponseDTO<null>, ResumeAreaPostDTO>({
-      query(req) {
+    deleteResume: builder.mutation<ResponseDTO<null>, string>({
+      query(id) {
         return {
-          url: `Resume/${req.ResumeId}/Area`,
-          method: "POST",
-          body: {
-            TextLayout: req.TextLayout,
-            ImageTextLayout: req.ImageTextLayout,
-          },
+          url: `Resume/${id}`,
+          method: "DELETE",
         };
       },
+      invalidatesTags: ["Resume"],
     }),
   }),
 });
@@ -48,6 +62,6 @@ export const getUserResume = baseApi.injectEndpoints({
 export const {
   useGetResumesQuery,
   usePostResumeMutation,
-  usePostResumeAreaMutation,
   useGetResumeByIdQuery,
+  useDeleteResumeMutation,
 } = getUserResume;

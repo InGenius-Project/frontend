@@ -7,13 +7,12 @@ import {
   styled,
 } from "@mui/material";
 import { ReactComponent as TextFrame } from "assets/images/svg/text-frame.svg";
-import { ReactComponent as IconTextFrame } from "assets/images/svg/icon-text-frame.svg";
 import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-frame.svg";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "features/store";
 import { LayoutArrangement } from "types/DTO/ResumeDTO";
-import { setArrangement } from "features/area/areaSlice";
+import { setArrangement } from "features/layout/layoutSlice";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,

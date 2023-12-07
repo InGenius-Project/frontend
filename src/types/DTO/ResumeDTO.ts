@@ -1,15 +1,28 @@
 export type ResumeDTO = {
   Id: string;
   Title: string;
-  TextLayouts: Array<ResumeAreaDTO<TextLayoutDTO>>;
-  ImageTextLayouts: Array<ResumeAreaDTO<ImageTextLayoutDTO>>;
+  TextLayouts?: Array<ResumeAreaDTO<TextLayoutDTO>>;
+  ImageTextLayouts?: Array<ResumeAreaDTO<ImageTextLayoutDTO>>;
   ModifiedAt: string;
 };
 
+export type ResumePostDTO = {
+  Id?: string;
+  Title: string;
+  TextLayouts?: Array<ResumeAreaDTO<TextLayoutDTO>>;
+  ImageTextLayouts?: Array<ResumeAreaDTO<ImageTextLayoutDTO>>;
+};
+
 export interface ResumeAreaDTO<TLayout> {
+  Id: string;
   Layout: TLayout;
   Sequence: number;
   IsDisplayed: boolean;
+}
+
+export interface ResumeAreaDeleteDTO {
+  ResumeId: string;
+  AreaId: string;
 }
 
 export interface ResumeAreaPostDTO {
@@ -19,7 +32,7 @@ export interface ResumeAreaPostDTO {
 }
 
 export interface LayoutDTO {
-  Id: string;
+  Id: string | undefined;
   Type: LayoutType;
   Title: string;
   Arrangement: LayoutArrangement;

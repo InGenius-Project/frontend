@@ -9,18 +9,28 @@ import {
 import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useAppSelector } from "features/store";
-import { LayoutType } from "types/DTO/ResumeDTO";
-import { usePostResumeAreaMutation } from "features/api/resume/resume";
-import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { LayoutArrangement, LayoutType } from "types/DTO/ResumeDTO";
+import { setTextLayoutContent, setTitle } from "features/layout/layoutSlice";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
+  loading?: boolean;
 };
 
-export default function AreaEditModel({ onAddClick }: AreaEditModelProps) {
-  const areaState = useAppSelector((state) => state.areaState);
-  const [value, setValue] = React.useState("");
+export default function AreaEditModel({
+  onAddClick,
+  loading,
+}: AreaEditModelProps) {
+  const areaState = useAppSelector((state) => state.layoutState);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleContentChange = (value: string) => {
+    dispatch(setTextLayoutContent(value));
+  };
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -36,23 +46,36 @@ export default function AreaEditModel({ onAddClick }: AreaEditModelProps) {
           <TextField
             label="標題"
             value={areaState.title}
+            onChange={(event) => dispatch(setTitle(event.target.value))}
             disabled={areaState.type !== LayoutType.CUSTOM ? true : false} // disabled if area type is not custom
             fullWidth
             sx={{ flexGrow: 1 }}
           />
 
           <Box sx={{ whiteSpace: "nowrap" }}>
-            <Button variant="outlined">上一步</Button>
+            <Button variant="outlined" onClick={() => navigate(-1)}>
+              上一步
+            </Button>
           </Box>
           <Box>
-            <Button variant="contained" onClick={onAddClick}>
+            <LoadingButton
+              variant="contained"
+              onClick={onAddClick}
+              loading={loading}
+            >
               新增
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
         <Typography variant="h4">內容</Typography>
 
-        <ReactQuill theme="snow" value={value} onChange={setValue} />
+        {areaState.arrangement === LayoutArrangement.TEXT && (
+          <ReactQuill
+            theme="snow"
+            value={areaState.textLayout?.Content}
+            onChange={handleContentChange}
+          />
+        )}
       </Stack>
     </Paper>
   );

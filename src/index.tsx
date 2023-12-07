@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "assets/css/global.css";
 import router from "./routes/router";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import "react-quill/dist/quill.bubble.css";
 import theme from "./assets/theme/theme";
 import { RouterProvider } from "react-router-dom";
 import { ConfirmProvider } from "material-ui-confirm";

@@ -81,7 +81,7 @@ const router = createBrowserRouter(
                 ></Route>
                 <Route
                   element={<ResumeArea />}
-                  path="Area/:areaId"
+                  path="Area/:areaId?"
                   handle={{
                     crumb: "編輯區塊內容",
                   }}
