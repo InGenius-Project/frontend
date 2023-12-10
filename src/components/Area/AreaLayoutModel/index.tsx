@@ -11,8 +11,8 @@ import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-f
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "features/store";
-import { LayoutArrangement } from "types/DTO/ResumeDTO";
 import { setArrangement } from "features/layout/layoutSlice";
+import { LayoutArrangement } from "types/DTO/AreaDTO";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,

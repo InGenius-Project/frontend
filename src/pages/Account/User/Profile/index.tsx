@@ -1,18 +1,7 @@
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { AreaItem, AreaControl } from "components/Area";
+import { Box, Stack } from "@mui/material";
+import { AreaControl } from "components/Area";
 import React from "react";
-import ImageFrame from "assets/images/png/imageFrame.png";
 
-import StarsIcon from "@mui/icons-material/Stars";
 export default function Profile() {
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
 
@@ -36,7 +25,7 @@ export default function Profile() {
           position: "relative",
         }}
       >
-        <AreaItem onClick={handleClick} title="簡介">
+        {/* <AreaItem onClick={handleClick} title="簡介">
           <Typography variant="body1">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Asperiores
             dicta quas iure repellendus eaque inventore tempora ab. Id
@@ -121,7 +110,7 @@ export default function Profile() {
               <ListItemText primary="example@email.com" />
             </ListItem>
           </List>
-        </AreaItem>
+        </AreaItem> */}
       </Stack>
 
       <Box

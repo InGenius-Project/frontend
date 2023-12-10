@@ -5,7 +5,6 @@ import { setTextLayout } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { LayoutArrangement, TextLayoutDTO } from "types/DTO/ResumeDTO";
 
 export default function ResumeArea() {
   const { resumeId = "", areaId } = useParams();
@@ -17,31 +16,31 @@ export default function ResumeArea() {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    if (resumeData && resumeData.Data?.TextLayouts) {
-      const findArea = resumeData.Data.TextLayouts.find((t) => t.Id === areaId);
-      if (findArea?.Layout.Arrangement === LayoutArrangement.TEXT) {
-        dispatch(setTextLayout(findArea.Layout));
+    if (resumeData && resumeData.Data?.Areas) {
+      const findArea = resumeData.Data.Areas.find((t) => t.Id === areaId);
+      if (findArea?.TextLayout) {
+        dispatch(setTextLayout(findArea.TextLayout));
       }
     }
   }, [resumeData]);
 
   const handleSubmit = () => {
-    postResumeArea({
-      ResumeId: resumeId,
-      TextLayout: {
-        Id: areaId,
-        Title: areaState.title,
-        Type: areaState.type,
-        Arrangement: LayoutArrangement.TEXT,
-        ...areaState.textLayout,
-      } as TextLayoutDTO,
-    })
-      .unwrap()
-      .then((res) => {
-        if (res.Success) {
-          navigate(`/Account/User/Resume/Edit/${resumeId}`);
-        }
-      });
+    // postResumeArea({
+    //   ResumeId: resumeId,
+    //   TextLayout: {
+    //     Id: areaId,
+    //     Title: areaState.title,
+    //     Type: areaState.type,
+    //     Arrangement: LayoutArrangement.TEXT,
+    //     ...areaState.textLayout,
+    //   } as TextLayoutDTO,
+    // })
+    //   .unwrap()
+    //   .then((res) => {
+    //     if (res.Success) {
+    //       navigate(`/Account/User/Resume/Edit/${resumeId}`);
+    //     }
+    //   });
   };
 
   return <AreaEditModel onAddClick={handleSubmit} loading={isLoading} />;

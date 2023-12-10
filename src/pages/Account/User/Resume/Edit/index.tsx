@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { AreaControl, AreaItem } from "components/Area";
+import { AreaControl } from "components/Area";
+import AreaDragContainer from "components/Area/AreaDragContainer";
 import FullScreenLoader from "components/FullScreenLoader";
 import { ResumeItem } from "components/Resume";
 import { useGetResumeByIdQuery } from "features/api/resume/resume";
@@ -9,7 +10,7 @@ import { useAppDispatch } from "features/store";
 import React from "react";
 import ReactQuill from "react-quill";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { LayoutType } from "types/DTO/ResumeDTO";
+import { LayoutType } from "types/DTO/AreaDTO";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
@@ -23,10 +24,7 @@ export default function ResumeEdit() {
 
   React.useEffect(() => {
     if (res && res.Data) {
-      setIsEmptyLayout(
-        (!res.Data.TextLayouts || res.Data.TextLayouts.length < 1) &&
-          (!res.Data.ImageTextLayouts || res.Data.ImageTextLayouts.length < 1)
-      );
+      setIsEmptyLayout(!res.Data.Areas || res.Data.Areas.length < 1);
     }
   }, [res]);
 
@@ -62,7 +60,7 @@ export default function ResumeEdit() {
         <ResumeItem
           title={res.Data.Title}
           id={res.Data.Id}
-          modifiedAt={new Date(res.Data.ModifiedAt)}
+          modifiedAt={res.Data.ModifiedAt}
           isEditable={true}
         ></ResumeItem>
         <Box
@@ -90,23 +88,24 @@ export default function ResumeEdit() {
                 </Box>
               </Stack>
             )}
-            {res?.Data?.TextLayouts &&
-              res.Data.TextLayouts.map((t) => (
-                <AreaItem
-                  title={t.Layout.Title}
-                  onClick={(number: number | undefined) => {
-                    setControlTop(number);
+            {res.Data.Areas && (
+              <AreaDragContainer
+                items={res.Data.Areas.map((t) => ({
+                  id: t.Id,
+                  title: t.TextLayout.Title,
+                  onClick: (top: number | undefined) => {
                     setFocusedArea(t.Id);
-                  }}
-                  key={t.Layout.Id}
-                >
-                  <ReactQuill
-                    value={t.Layout.Content}
-                    readOnly={true}
-                    theme={"bubble"}
-                  />
-                </AreaItem>
-              ))}
+                    setControlTop(top);
+                  },
+                  children: (
+                    <ReactQuill
+                      theme="bubble"
+                      value={t.TextLayout.Content}
+                    ></ReactQuill>
+                  ),
+                }))}
+              />
+            )}
           </Stack>
 
           {!isEmptyLayout && (

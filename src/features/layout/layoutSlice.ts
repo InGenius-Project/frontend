@@ -1,19 +1,18 @@
-import { ImageTextLayoutDTO } from "./../../types/DTO/ResumeDTO";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { resumeAreaApi } from "features/api/resume/resumeArea";
 import {
-  LayoutDTO,
-  TextLayoutDTO,
-  LayoutType,
+  ImageTextLayoutDTO,
   LayoutArrangement,
-} from "types/DTO/ResumeDTO";
+  LayoutType,
+  TextLayoutDTO,
+} from "types/DTO/AreaDTO";
 
 interface LayoutState {
   type: LayoutType;
   arrangement: LayoutArrangement;
   title: string;
-  textLayout: Omit<TextLayoutDTO, keyof LayoutDTO> | null;
-  imageTextLayout: Omit<ImageTextLayoutDTO, keyof LayoutDTO> | null;
+  textLayout: TextLayoutDTO | null;
+  imageTextLayout: ImageTextLayoutDTO | null;
 }
 
 const initialState: LayoutState = {
@@ -43,15 +42,11 @@ const layoutSlice = createSlice({
         type: action.payload.Type,
         title: action.payload.Title,
         arrangement: LayoutArrangement.TEXT,
-        textLayout: {
-          Content: action.payload.Content,
-        },
+        textLayout: action.payload,
       };
     },
     setTextLayoutContent: (state, action: PayloadAction<string>) => {
-      state.textLayout
-        ? (state.textLayout.Content = action.payload)
-        : (state.textLayout = { Content: "" });
+      state.textLayout && (state.textLayout.Content = action.payload);
     },
   },
   extraReducers: (builder) => {

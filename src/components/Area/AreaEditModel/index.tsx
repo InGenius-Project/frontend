@@ -10,10 +10,10 @@ import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { LayoutArrangement, LayoutType } from "types/DTO/ResumeDTO";
 import { setTextLayoutContent, setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
+import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;

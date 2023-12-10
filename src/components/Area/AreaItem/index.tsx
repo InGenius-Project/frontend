@@ -1,16 +1,20 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import React, { PropsWithChildren } from "react";
+import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 
-type AreaItemProps = {
+export type AreaItemProps = {
   onClick?: (top: number | undefined) => void;
+  id: string;
   title?: string;
+  dragProps?: DraggableProvidedDragHandleProps | null; // for drag handle
 };
 
 const AreaItem = ({
   onClick,
   title,
   children,
+  dragProps,
 }: PropsWithChildren<AreaItemProps>) => {
   const [isHover, setIsHover] = React.useState(false);
   const theme = useTheme();
@@ -62,6 +66,7 @@ const AreaItem = ({
             justifyContent: "center",
             cursor: "move",
           }}
+          {...dragProps}
         >
           <DragHandleIcon color="primary" />
         </Box>

@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  CssBaseline,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CssBaseline, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
   useGetResumesQuery,
@@ -72,7 +65,7 @@ export default function Resume() {
               title={r.Title}
               key={r.Id}
               id={r.Id}
-              modifiedAt={new Date(r.ModifiedAt)}
+              modifiedAt={r.ModifiedAt}
             />
           ))}
       </Stack>

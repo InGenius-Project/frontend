@@ -3,7 +3,7 @@ import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { ResumeDTO } from "types/DTO/ResumeDTO";
 
-export const getUserResume = baseApi.injectEndpoints({
+export const resumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getResumes: builder.query<ResponseDTO<Array<ResumeDTO>>, null>({
       query() {
@@ -34,7 +34,9 @@ export const getUserResume = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["Resume"],
+      invalidatesTags: (res) => {
+        return [{ type: "Resume", id: res?.Data?.Id }];
+      },
     }),
     getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
       query(id) {
@@ -63,5 +65,6 @@ export const {
   useGetResumesQuery,
   usePostResumeMutation,
   useGetResumeByIdQuery,
+  useLazyGetResumeByIdQuery,
   useDeleteResumeMutation,
-} = getUserResume;
+} = resumeApi;
