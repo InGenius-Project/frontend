@@ -17,10 +17,3 @@ export interface ResumeAreaDeleteDTO {
   ResumeId: string;
   AreaId: string;
 }
-
-export interface ResumeAreaPostDTO {
-  ResumeId: string;
-  AreaId: string;
-  TextLayout: TextLayoutDTO;
-  ImageTextLayout: ImageTextLayoutDTO;
-}

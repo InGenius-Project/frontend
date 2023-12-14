@@ -6,7 +6,17 @@ export interface AreaDTO {
   ImageTextLayout: ImageTextLayoutDTO;
 }
 
+export interface AreaPostDTO {
+  ResumeId?: string;
+  Id?: string;
+  Sequence: number;
+  IsDisplayed: boolean;
+  TextLayout?: TextLayoutDTO;
+  ImageTextLayout?: ImageTextLayoutDTO;
+}
+
 export interface LayoutDTO {
+  Id: string;
   Title: string;
   Arrangement: LayoutArrangement;
   Type: LayoutType;

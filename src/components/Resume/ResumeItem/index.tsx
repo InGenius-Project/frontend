@@ -11,7 +11,6 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 import {
-  resumeApi,
   useDeleteResumeMutation,
   useLazyGetResumeByIdQuery,
   usePostResumeMutation,
@@ -19,8 +18,6 @@ import {
 import { useConfirm } from "material-ui-confirm";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import FullScreenLoader from "components/FullScreenLoader";
-import { EditRoad } from "@mui/icons-material";
 
 function getLastModifiedTimeString(modifiedAt: Date): string {
   const now = new Date();

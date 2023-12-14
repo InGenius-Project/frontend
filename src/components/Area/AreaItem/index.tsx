@@ -55,22 +55,20 @@ const AreaItem = ({
         }
       }}
     >
-      {isHover && (
-        <Box
-          sx={{
-            width: "100%",
-            position: "absolute",
-            top: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            cursor: "move",
-          }}
-          {...dragProps}
-        >
-          <DragHandleIcon color="primary" />
-        </Box>
-      )}
+      <Box
+        sx={{
+          width: "100%",
+          position: "absolute",
+          top: 0,
+          right: 0,
+          justifyContent: "center",
+          cursor: "move",
+          display: isHover ? "flex" : "none",
+        }}
+        {...dragProps}
+      >
+        <DragHandleIcon color="primary" />
+      </Box>
       <Stack spacing={1}>
         <Typography variant="h4">{title ? title : "標題"}</Typography>
         {children ? (

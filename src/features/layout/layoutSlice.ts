@@ -1,26 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { resumeAreaApi } from "features/api/resume/resumeArea";
-import {
-  ImageTextLayoutDTO,
-  LayoutArrangement,
-  LayoutType,
-  TextLayoutDTO,
-} from "types/DTO/AreaDTO";
+import { areaApi } from "features/api/area/area";
+import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 interface LayoutState {
   type: LayoutType;
   arrangement: LayoutArrangement;
   title: string;
-  textLayout: TextLayoutDTO | null;
-  imageTextLayout: ImageTextLayoutDTO | null;
+  content: string;
+  image?: {
+    id: string;
+    content: string;
+  };
 }
 
 const initialState: LayoutState = {
   title: "",
   type: LayoutType.CUSTOM,
   arrangement: LayoutArrangement.TEXT,
-  textLayout: null,
-  imageTextLayout: null,
+  content: "",
+  image: undefined,
 };
 
 const layoutSlice = createSlice({
@@ -36,36 +34,52 @@ const layoutSlice = createSlice({
     setArrangement: (state, action: PayloadAction<LayoutArrangement>) => {
       state.arrangement = action.payload;
     },
-    setTextLayout: (state, action: PayloadAction<TextLayoutDTO>) => {
-      return {
-        ...state,
-        type: action.payload.Type,
-        title: action.payload.Title,
-        arrangement: LayoutArrangement.TEXT,
-        textLayout: action.payload,
-      };
+    setContent: (state, action: PayloadAction<string>) => {
+      state.content = action.payload;
     },
-    setTextLayoutContent: (state, action: PayloadAction<string>) => {
-      state.textLayout && (state.textLayout.Content = action.payload);
+    setLayout: (state, action: PayloadAction<LayoutState>) => {
+      state = action.payload;
+    },
+    setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
+      var { TextLayout, ImageTextLayout } = action.payload;
+
+      if (TextLayout) {
+        return {
+          ...state,
+          title: TextLayout.Title,
+          arrangement: LayoutArrangement.TEXT,
+          content: TextLayout.Content,
+        };
+      }
+      if (ImageTextLayout) {
+        return {
+          ...state,
+          title: ImageTextLayout.Title,
+          arrangement: LayoutArrangement.TEXT,
+          content: ImageTextLayout.Content,
+          image: {
+            id: ImageTextLayout.Image.Id,
+            content: ImageTextLayout.Image.Content,
+          },
+        };
+      }
+      return state;
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      resumeAreaApi.endpoints.postResumeArea.matchFulfilled,
-      () => {
-        console.log("set");
-        return initialState;
-      }
-    );
+    builder.addMatcher(areaApi.endpoints.postArea.matchFulfilled, () => {
+      return initialState;
+    });
   },
 });
 
 export const {
   setType,
   setTitle,
-  setTextLayout,
-  setTextLayoutContent,
   setArrangement,
+  setContent,
+  setLayout,
+  setLayoutByArea,
 } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

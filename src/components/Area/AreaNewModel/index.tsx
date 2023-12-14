@@ -62,6 +62,7 @@ export default function AreaNewModel() {
             options={areaOptions}
             defaultValue={layoutState.title}
             value={value}
+            freeSolo
             onChange={(e: any, value: string | null) => setValue(value)}
             sx={{ width: 300 }}
             renderInput={(params) => (

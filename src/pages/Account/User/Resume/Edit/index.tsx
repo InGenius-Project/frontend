@@ -3,8 +3,8 @@ import { AreaControl } from "components/Area";
 import AreaDragContainer from "components/Area/AreaDragContainer";
 import FullScreenLoader from "components/FullScreenLoader";
 import { ResumeItem } from "components/Resume";
+import { useDeleteAreaMutation } from "features/api/area/area";
 import { useGetResumeByIdQuery } from "features/api/resume/resume";
-import { useDeleteResumeAreaMutation } from "features/api/resume/resumeArea";
 import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React from "react";
@@ -15,10 +15,10 @@ import { LayoutType } from "types/DTO/AreaDTO";
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
   const { data: res, isLoading } = useGetResumeByIdQuery(resumeId);
+  const [deleteArea] = useDeleteAreaMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
-  const [deleteArea, { isLoading: isDeleting }] = useDeleteResumeAreaMutation();
   const [focusedAreaId, setFocusedArea] = React.useState<string | undefined>();
   const [isEmptyLayout, setIsEmptyLayout] = React.useState<boolean>(false);
 
@@ -36,11 +36,7 @@ export default function ResumeEdit() {
   };
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    focusedAreaId &&
-      deleteArea({
-        ResumeId: resumeId,
-        AreaId: focusedAreaId,
-      });
+    focusedAreaId && deleteArea(focusedAreaId);
   };
 
   const handleEditClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -118,7 +114,6 @@ export default function ResumeEdit() {
             >
               <AreaControl
                 top={controlTop}
-                disabled={isDeleting}
                 onAddClick={handleAddClick}
                 onDeleteClick={handleDeleteClick}
                 onEditClick={handleEditClick}

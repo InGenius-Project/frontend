@@ -10,7 +10,7 @@ import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { setTextLayoutContent, setTitle } from "features/layout/layoutSlice";
+import { setContent, setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
@@ -29,7 +29,7 @@ export default function AreaEditModel({
   const navigate = useNavigate();
 
   const handleContentChange = (value: string) => {
-    dispatch(setTextLayoutContent(value));
+    dispatch(setContent(value));
   };
 
   return (
@@ -72,7 +72,7 @@ export default function AreaEditModel({
         {areaState.arrangement === LayoutArrangement.TEXT && (
           <ReactQuill
             theme="snow"
-            value={areaState.textLayout?.Content}
+            value={areaState.content}
             onChange={handleContentChange}
           />
         )}
