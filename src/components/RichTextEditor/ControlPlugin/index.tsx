@@ -4,6 +4,8 @@ import CodeIcon from "@mui/icons-material/Code";
 import FormatStrikethroughIcon from "@mui/icons-material/FormatStrikethrough";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -11,6 +13,10 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import {
   SELECTION_CHANGE_COMMAND,
   FORMAT_TEXT_COMMAND,
+  CAN_REDO_COMMAND,
+  CAN_UNDO_COMMAND,
+  REDO_COMMAND,
+  UNDO_COMMAND,
   $getSelection,
   $isRangeSelection,
   $createParagraphNode,
@@ -36,6 +42,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useCallback, useEffect, useState } from "react";
 import {
   FormControl,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -81,6 +88,9 @@ const blockTypeToBlockName = {
 
 export default function ControlePlugin() {
   const [editor] = useLexicalComposerContext();
+
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
   const [blockType, setBlockType] = useState("paragraph");
   const [textFormats, setTextFormats] = useState<TextFormatType[]>([]);
@@ -180,6 +190,22 @@ export default function ControlePlugin() {
           return false;
         },
         LowPriority
+      ),
+      editor.registerCommand(
+        CAN_UNDO_COMMAND,
+        (payload) => {
+          setCanUndo(payload);
+          return false;
+        },
+        LowPriority
+      ),
+      editor.registerCommand(
+        CAN_REDO_COMMAND,
+        (payload) => {
+          setCanRedo(payload);
+          return false;
+        },
+        LowPriority
       )
     );
   }, [editor, updateToolbar]);
@@ -194,6 +220,23 @@ export default function ControlePlugin() {
           flexWrap: "wrap",
         }}
       >
+        <IconButton
+          disabled={!canUndo}
+          onClick={() => {
+            editor.dispatchCommand(UNDO_COMMAND, undefined);
+          }}
+        >
+          <UndoIcon />
+        </IconButton>
+        <IconButton
+          disabled={!canRedo}
+          onClick={() => {
+            editor.dispatchCommand(REDO_COMMAND, undefined);
+          }}
+        >
+          <RedoIcon />
+        </IconButton>
+
         {/* Block format */}
         {supportedBlockTypes.includes(blockType) && (
           <>
