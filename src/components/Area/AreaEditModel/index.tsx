@@ -7,13 +7,12 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { setContent, setTitle } from "features/layout/layoutSlice";
+import { setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
-import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import { LayoutType } from "types/DTO/AreaDTO";
+import RichTextEditor from "components/RichTextEditor";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -27,10 +26,6 @@ export default function AreaEditModel({
   const areaState = useAppSelector((state) => state.layoutState);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const handleContentChange = (value: string) => {
-    dispatch(setContent(value));
-  };
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -68,14 +63,16 @@ export default function AreaEditModel({
           </Box>
         </Box>
         <Typography variant="h4">內容</Typography>
+        <RichTextEditor controllable />
 
+        {/* 
         {areaState.arrangement === LayoutArrangement.TEXT && (
           <ReactQuill
             theme="snow"
             value={areaState.content}
             onChange={handleContentChange}
           />
-        )}
+        )} */}
       </Stack>
     </Paper>
   );
