@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { areaApi } from "features/api/area/area";
+import { EditorState } from "lexical";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 interface LayoutState {
   type: LayoutType;
   arrangement: LayoutArrangement;
   title: string;
-  content: string;
+  content?: EditorState | string;
   image?: {
     id: string;
     content: string;
@@ -17,7 +18,7 @@ const initialState: LayoutState = {
   title: "",
   type: LayoutType.CUSTOM,
   arrangement: LayoutArrangement.TEXT,
-  content: "",
+  content: undefined,
   image: undefined,
 };
 
@@ -34,7 +35,7 @@ const layoutSlice = createSlice({
     setArrangement: (state, action: PayloadAction<LayoutArrangement>) => {
       state.arrangement = action.payload;
     },
-    setContent: (state, action: PayloadAction<string>) => {
+    setContent: (state, action: PayloadAction<EditorState>) => {
       state.content = action.payload;
     },
     setLayout: (state, action: PayloadAction<LayoutState>) => {

@@ -1,5 +1,5 @@
 import {
-  InitialConfigType,
+  InitialEditorStateType,
   LexicalComposer,
 } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -12,8 +12,7 @@ import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import lexicalTheme from "assets/theme/lexicalTheme";
 import React from "react";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import ControlPlugin from "./ControlPlugin";
-import ToolbarPlugin from "./ToolbarPlugin";
+import ControlPlugin from "./ToolbarPlugin";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { MarkNode } from "@lexical/mark";
@@ -23,9 +22,11 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { ElementNode, LexicalNode } from "lexical";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import ListMaxIndentLevelPlugin from "./ListMaxIndentLevelPlugin";
 import TabFocusPlugin from "./TabFocusPlugin";
+import { EditorState, LexicalEditor } from "lexical";
+import InitialPlugin from "./InitialPlugin";
 
 const editorConfig = {
   // The editor theme
@@ -46,29 +47,68 @@ const editorConfig = {
     MarkNode,
     LinkNode,
     AutoLinkNode,
-    // TableNode,
-    // TableCellNode,
-    // TableRowNode,
   ],
 };
 
 type RichTextEditorProps = {
-  controllable: boolean;
+  controllable?: boolean;
+  onChange?: (
+    editorState: EditorState,
+    editor: LexicalEditor,
+    tags: Set<string>
+  ) => void;
+  initialEditorState?: InitialEditorStateType;
 };
 
-function RichTextEditor({ controllable }: RichTextEditorProps) {
+function RichTextEditor({
+  controllable = true,
+  onChange,
+  initialEditorState,
+}: RichTextEditorProps) {
   const theme = useTheme();
+
   return (
     <Box sx={{ position: "relative" }}>
-      <LexicalComposer initialConfig={editorConfig}>
-        {controllable ? <ControlPlugin /> : <React.Fragment />}
+      <LexicalComposer
+        initialConfig={{
+          ...editorConfig,
+          editable: controllable,
+        }}
+      >
+        <InitialPlugin initialEditorState={initialEditorState} />
+
+        {controllable ? (
+          <>
+            <ControlPlugin />
+            <LinkPlugin />
+            <HistoryPlugin />
+            <TabIndentationPlugin />
+            <ListPlugin />
+            <AutoFocusPlugin />
+            <TabFocusPlugin />
+            <ListMaxIndentLevelPlugin maxDepth={3} />
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+            {onChange ? (
+              <OnChangePlugin
+                onChange={onChange}
+                ignoreSelectionChange
+              ></OnChangePlugin>
+            ) : (
+              <React.Fragment />
+            )}
+          </>
+        ) : (
+          <React.Fragment />
+        )}
         <RichTextPlugin
           contentEditable={
             <ContentEditable
               style={{
                 padding: "0 8px",
-                minHeight: "300px",
-                border: `1px solid ${theme.palette.divider}`,
+                minHeight: controllable ? "300px" : "auto",
+                border: controllable
+                  ? `1px solid ${theme.palette.divider}`
+                  : "",
                 borderRadius: "0.3em",
                 fontFamily: theme.typography.fontFamily,
               }}
@@ -77,14 +117,6 @@ function RichTextEditor({ controllable }: RichTextEditorProps) {
           ErrorBoundary={LexicalErrorBoundary}
           placeholder={null}
         />
-        <LinkPlugin />
-        <HistoryPlugin />
-        <TabIndentationPlugin />
-        <ListPlugin />
-        <AutoFocusPlugin />
-        <TabFocusPlugin />
-        <ListMaxIndentLevelPlugin maxDepth={3} />
-        <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       </LexicalComposer>
     </Box>
   );

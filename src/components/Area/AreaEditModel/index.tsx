@@ -8,11 +8,12 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { setTitle } from "features/layout/layoutSlice";
+import { setContent, setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import { LayoutType } from "types/DTO/AreaDTO";
 import RichTextEditor from "components/RichTextEditor";
+import { EditorState, LexicalEditor } from "lexical";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -23,9 +24,16 @@ export default function AreaEditModel({
   onAddClick,
   loading,
 }: AreaEditModelProps) {
-  const areaState = useAppSelector((state) => state.layoutState);
+  const layoutState = useAppSelector((state) => state.layoutState);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const handleEditorChange = (
+    editorState: EditorState,
+    editor: LexicalEditor
+  ) => {
+    dispatch(setContent(editorState));
+  };
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -40,9 +48,9 @@ export default function AreaEditModel({
         >
           <TextField
             label="標題"
-            value={areaState.title}
+            value={layoutState.title}
             onChange={(event) => dispatch(setTitle(event.target.value))}
-            disabled={areaState.type !== LayoutType.CUSTOM ? true : false} // disabled if area type is not custom
+            disabled={layoutState.type !== LayoutType.CUSTOM ? true : false} // disabled if area type is not custom
             fullWidth
             sx={{ flexGrow: 1 }}
           />
@@ -63,16 +71,12 @@ export default function AreaEditModel({
           </Box>
         </Box>
         <Typography variant="h4">內容</Typography>
-        <RichTextEditor controllable />
 
-        {/* 
-        {areaState.arrangement === LayoutArrangement.TEXT && (
-          <ReactQuill
-            theme="snow"
-            value={areaState.content}
-            onChange={handleContentChange}
-          />
-        )} */}
+        <RichTextEditor
+          controllable
+          onChange={handleEditorChange}
+          initialEditorState={layoutState.content}
+        />
       </Stack>
     </Paper>
   );

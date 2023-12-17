@@ -14,3 +14,7 @@ body{
   margin:0;
   background: radial-gradient(circle, var(--ing-palette-common-background) 35%, var(--ing-palette-common-white) 100%);
 }
+
+:focus-visible{
+  outline: none;
+}

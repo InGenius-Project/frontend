@@ -3,12 +3,12 @@ import { AreaControl } from "components/Area";
 import AreaDragContainer from "components/Area/AreaDragContainer";
 import FullScreenLoader from "components/FullScreenLoader";
 import { ResumeItem } from "components/Resume";
+import RichTextEditor from "components/RichTextEditor";
 import { useDeleteAreaMutation } from "features/api/area/area";
 import { useGetResumeByIdQuery } from "features/api/resume/resume";
 import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React from "react";
-import ReactQuill from "react-quill";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { LayoutType } from "types/DTO/AreaDTO";
 
@@ -94,10 +94,10 @@ export default function ResumeEdit() {
                     setControlTop(top);
                   },
                   children: (
-                    <ReactQuill
-                      theme="bubble"
-                      value={t.TextLayout.Content}
-                    ></ReactQuill>
+                    <RichTextEditor
+                      controllable={false}
+                      initialEditorState={t.TextLayout.Content}
+                    ></RichTextEditor>
                   ),
                 }))}
               />

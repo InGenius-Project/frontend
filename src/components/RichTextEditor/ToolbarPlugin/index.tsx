@@ -2,6 +2,10 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import CodeIcon from "@mui/icons-material/Code";
 import FormatStrikethroughIcon from "@mui/icons-material/FormatStrikethrough";
+import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
+import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import RedoIcon from "@mui/icons-material/Redo";
@@ -10,6 +14,7 @@ import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { $isLinkNode } from "@lexical/link";
 import {
   SELECTION_CHANGE_COMMAND,
   FORMAT_TEXT_COMMAND,
@@ -22,9 +27,18 @@ import {
   $createParagraphNode,
   TextFormatType,
   ElementNode,
+  ElementFormatType,
+  FORMAT_ELEMENT_COMMAND,
+  $isElementNode,
+  RangeSelection,
+  TextNode,
 } from "lexical";
-import { $setBlocksType } from "@lexical/selection";
-import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
+import { $isAtNodeEnd, $setBlocksType } from "@lexical/selection";
+import {
+  $findMatchingParent,
+  $getNearestNodeOfType,
+  mergeRegister,
+} from "@lexical/utils";
 import {
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
@@ -46,6 +60,8 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Stack,
+  Tooltip,
 } from "@mui/material";
 
 const LowPriority = 1;
@@ -86,7 +102,25 @@ const blockTypeToBlockName = {
   ul: "項目清單",
 };
 
-export default function ControlePlugin() {
+export function getSelectedNode(
+  selection: RangeSelection
+): TextNode | ElementNode {
+  const anchor = selection.anchor;
+  const focus = selection.focus;
+  const anchorNode = selection.anchor.getNode();
+  const focusNode = selection.focus.getNode();
+  if (anchorNode === focusNode) {
+    return anchorNode;
+  }
+  const isBackward = selection.isBackward();
+  if (isBackward) {
+    return $isAtNodeEnd(focus) ? anchorNode : focusNode;
+  } else {
+    return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
+  }
+}
+
+export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
 
   const [canUndo, setCanUndo] = useState(false);
@@ -94,50 +128,9 @@ export default function ControlePlugin() {
 
   const [blockType, setBlockType] = useState("paragraph");
   const [textFormats, setTextFormats] = useState<TextFormatType[]>([]);
+  const [elementFormat, setElementFormat] = useState<ElementFormatType>("left");
 
-  const updateToolbar = useCallback(() => {
-    const selection = $getSelection();
-    if ($isRangeSelection(selection)) {
-      // Set Block Format
-      const anchorNode = selection.anchor.getNode();
-      const element =
-        anchorNode.getKey() === "root"
-          ? anchorNode
-          : anchorNode.getTopLevelElementOrThrow();
-      const elementKey = element.getKey();
-      const elementDOM = editor.getElementByKey(elementKey);
-      if (elementDOM !== null) {
-        if ($isListNode(element)) {
-          const parentList = $getNearestNodeOfType(anchorNode, ListNode);
-          const type = parentList ? parentList.getTag() : element.getTag();
-          setBlockType(type);
-        } else {
-          const type = $isHeadingNode(element)
-            ? element.getTag()
-            : element.getType();
-          setBlockType(type);
-        }
-      }
-
-      //  Set text Format
-      const currentFormats: TextFormatType[] = [];
-      selection.hasFormat("bold") && currentFormats.push("bold");
-      selection.hasFormat("italic") && currentFormats.push("italic");
-      selection.hasFormat("underline") && currentFormats.push("underline");
-      selection.hasFormat("code") && currentFormats.push("code");
-      selection.hasFormat("strikethrough") &&
-        currentFormats.push("strikethrough");
-      setTextFormats(currentFormats);
-    }
-  }, [editor]);
-
-  const handleTextFormatClick = (
-    event: React.MouseEvent,
-    value: TextFormatType
-  ) => {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, value);
-  };
-
+  /** Handle block formatting */
   const blockHandlers = {
     paragraph: () => $createParagraphNode(),
     h1: () => $createHeadingNode("h1"),
@@ -176,6 +169,79 @@ export default function ControlePlugin() {
     }
   };
 
+  /** Handle text formatting */
+  const handleTextFormatClick = (
+    event: React.MouseEvent,
+    value: TextFormatType
+  ) => {
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, value);
+  };
+
+  /** Handle element align formatting */
+  const handleElementFormatClick = (
+    event: React.MouseEvent,
+    value: ElementFormatType
+  ) => {
+    editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, value);
+  };
+
+  /** Toolbar state update */
+  const updateToolbar = useCallback(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      // Set Block Format
+      const anchorNode = selection.anchor.getNode();
+      const element =
+        anchorNode.getKey() === "root"
+          ? anchorNode
+          : anchorNode.getTopLevelElementOrThrow();
+      const elementKey = element.getKey();
+      const elementDOM = editor.getElementByKey(elementKey);
+      if (elementDOM !== null) {
+        if ($isListNode(element)) {
+          const parentList = $getNearestNodeOfType(anchorNode, ListNode);
+          const type = parentList ? parentList.getTag() : element.getTag();
+          setBlockType(type);
+        } else {
+          const type = $isHeadingNode(element)
+            ? element.getTag()
+            : element.getType();
+          setBlockType(type);
+        }
+      }
+
+      //  Set text Format
+      const currentFormats: TextFormatType[] = [];
+      selection.hasFormat("bold") && currentFormats.push("bold");
+      selection.hasFormat("italic") && currentFormats.push("italic");
+      selection.hasFormat("underline") && currentFormats.push("underline");
+      selection.hasFormat("code") && currentFormats.push("code");
+      selection.hasFormat("strikethrough") &&
+        currentFormats.push("strikethrough");
+      setTextFormats(currentFormats);
+
+      // Set Algin Format
+      const node = getSelectedNode(selection);
+      const parent = node.getParent();
+      let matchingParent;
+      if ($isLinkNode(parent)) {
+        // If node is a link, we need to fetch the parent paragraph node to set format
+        matchingParent = $findMatchingParent(
+          node,
+          (parentNode) => $isElementNode(parentNode) && !parentNode.isInline()
+        );
+      }
+      setElementFormat(
+        $isElementNode(matchingParent)
+          ? matchingParent.getFormatType()
+          : $isElementNode(node)
+          ? node.getFormatType()
+          : parent?.getFormatType() || "left"
+      );
+    }
+  }, [editor]);
+
+  /** Regist command **/
   useEffect(() => {
     return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
@@ -218,24 +284,38 @@ export default function ControlePlugin() {
           display: "flex",
           border: (theme) => `1px solid ${theme.palette.divider}`,
           flexWrap: "wrap",
+          alignItems: "center",
+          gap: 1,
+          paddingX: 1,
         }}
       >
-        <IconButton
-          disabled={!canUndo}
-          onClick={() => {
-            editor.dispatchCommand(UNDO_COMMAND, undefined);
-          }}
-        >
-          <UndoIcon />
-        </IconButton>
-        <IconButton
-          disabled={!canRedo}
-          onClick={() => {
-            editor.dispatchCommand(REDO_COMMAND, undefined);
-          }}
-        >
-          <RedoIcon />
-        </IconButton>
+        {/* History */}
+        <Stack direction={"row"} spacing={1}>
+          <Tooltip title="復原(Ctrl+Z)">
+            <span>
+              <IconButton
+                disabled={!canUndo}
+                onClick={() => {
+                  editor.dispatchCommand(UNDO_COMMAND, undefined);
+                }}
+              >
+                <UndoIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="取消復原(Ctrl+Shift+Z)">
+            <span>
+              <IconButton
+                disabled={!canRedo}
+                onClick={() => {
+                  editor.dispatchCommand(REDO_COMMAND, undefined);
+                }}
+              >
+                <RedoIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Stack>
 
         {/* Block format */}
         {supportedBlockTypes.includes(blockType) && (
@@ -302,33 +382,29 @@ export default function ControlePlugin() {
           >
             <CodeIcon />
           </ToggleButton>
-          {/* <ToggleButton value="color" aria-label="color" disabled>
-            <FormatColorFillIcon />
-            <ArrowDropDownIcon />
-          </ToggleButton> */}
         </ControlButtonGroup>
 
-        {/* Align */}
-        {/* <ControlButtonGroup
-            size="small"
-            value={alignment}
-            exclusive
-            onChange={handleAlignment}
-            aria-label="text alignment"
-          >
-            <ToggleButton value="left" aria-label="left aligned">
-              <FormatAlignLeftIcon />
-            </ToggleButton>
-            <ToggleButton value="center" aria-label="centered">
-              <FormatAlignCenterIcon />
-            </ToggleButton>
-            <ToggleButton value="right" aria-label="right aligned">
-              <FormatAlignRightIcon />
-            </ToggleButton>
-            <ToggleButton value="justify" aria-label="justified" disabled>
-              <FormatAlignJustifyIcon />
-            </ToggleButton>
-          </ControlButtonGroup> */}
+        {/* Elemnet Align format */}
+        <ControlButtonGroup
+          size="small"
+          value={elementFormat}
+          exclusive
+          onChange={handleElementFormatClick}
+          aria-label="text alignment"
+        >
+          <ToggleButton value="left" aria-label="left aligned">
+            <FormatAlignLeftIcon />
+          </ToggleButton>
+          <ToggleButton value="center" aria-label="centered">
+            <FormatAlignCenterIcon />
+          </ToggleButton>
+          <ToggleButton value="right" aria-label="right aligned">
+            <FormatAlignRightIcon />
+          </ToggleButton>
+          <ToggleButton value="justify" aria-label="justified">
+            <FormatAlignJustifyIcon />
+          </ToggleButton>
+        </ControlButtonGroup>
       </Paper>
     </div>
   );

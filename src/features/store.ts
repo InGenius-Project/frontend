@@ -13,7 +13,13 @@ export const store = configureStore({
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([baseApi.middleware, errorToastMiddleware]),
+    getDefaultMiddleware({
+      serializableCheck: {
+        // ignore layout.content serialization problem
+        ignoredPaths: ["layoutState.content"],
+        ignoredActions: ["layout/setContent"],
+      },
+    }).concat([baseApi.middleware, errorToastMiddleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

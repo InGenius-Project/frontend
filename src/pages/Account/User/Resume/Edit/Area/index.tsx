@@ -5,7 +5,7 @@ import {
 } from "features/api/area/area";
 import { setLayoutByArea } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LayoutArrangement } from "types/DTO/AreaDTO";
 
@@ -19,7 +19,7 @@ export default function ResumeArea() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (areaData && areaData.Data) {
       dispatch(setLayoutByArea(areaData.Data));
     }
@@ -38,7 +38,7 @@ export default function ResumeArea() {
               Title: layoutState.title,
               Arrangement: LayoutArrangement.TEXT,
               Type: layoutState.type,
-              Content: layoutState.content,
+              Content: JSON.stringify(layoutState.content),
             }
           : undefined,
     })
