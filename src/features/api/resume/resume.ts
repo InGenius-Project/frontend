@@ -12,18 +12,8 @@ export const resumeApi = baseApi.injectEndpoints({
           method: "Get",
         };
       },
-      providesTags: (result) => {
-        if (result && result.Data) {
-          return [
-            ...result.Data.map(({ Id }) => ({
-              type: "Resume" as const,
-              id: Id,
-            })),
-            "Resume",
-          ];
-        } else {
-          return ["Resume"];
-        }
+      providesTags: () => {
+        return ["Resume", "ResumeLists"];
       },
     }),
     postResume: builder.mutation<ResponseDTO<ResumeDTO>, ResumePostDTO>({
@@ -35,7 +25,7 @@ export const resumeApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: (res) => {
-        return [{ type: "Resume", id: res?.Data?.Id }];
+        return [{ type: "ResumeLists" }, { type: "Resume", id: res?.Data?.Id }];
       },
     }),
     getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
@@ -56,7 +46,7 @@ export const resumeApi = baseApi.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: ["Resume"],
+      invalidatesTags: ["ResumeLists"],
     }),
   }),
 });

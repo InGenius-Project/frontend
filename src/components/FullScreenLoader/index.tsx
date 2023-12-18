@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Container } from "@mui/material";
-import { calcLength } from "framer-motion";
 
 const FullScreenLoader = () => {
   return (

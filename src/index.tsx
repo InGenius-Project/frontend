@@ -4,7 +4,6 @@ import "assets/css/global.css";
 import "assets/css/editor.css";
 import router from "./routes/router";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
-import "react-quill/dist/quill.bubble.css";
 import theme from "./assets/theme/muiTheme";
 import { RouterProvider } from "react-router-dom";
 import { ConfirmProvider } from "material-ui-confirm";

@@ -5,7 +5,11 @@ import FullScreenLoader from "components/FullScreenLoader";
 import { ResumeItem } from "components/Resume";
 import RichTextEditor from "components/RichTextEditor";
 import { useDeleteAreaMutation } from "features/api/area/area";
-import { useGetResumeByIdQuery } from "features/api/resume/resume";
+import {
+  useDeleteResumeMutation,
+  useGetResumeByIdQuery,
+  usePostResumeMutation,
+} from "features/api/resume/resume";
 import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React from "react";
@@ -21,6 +25,8 @@ export default function ResumeEdit() {
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
   const [focusedAreaId, setFocusedArea] = React.useState<string | undefined>();
   const [isEmptyLayout, setIsEmptyLayout] = React.useState<boolean>(false);
+  const [postResume] = usePostResumeMutation();
+  const [deleteResume] = useDeleteResumeMutation();
 
   React.useEffect(() => {
     if (res && res.Data) {
@@ -43,6 +49,21 @@ export default function ResumeEdit() {
     navigate(`Area/${focusedAreaId}`);
   };
 
+  const handleChangeTitle = (title: string) => {
+    if (res && res.Data)
+      postResume({
+        Title: title,
+        Id: resumeId,
+        Areas: res?.Data.Areas,
+      });
+  };
+
+  const handleDeleteResume = async (id: string) => {
+    await deleteResume(id)
+      .unwrap()
+      .then(() => navigate(".."));
+  };
+
   // If not provide id, redirect back
   if (!resumeId) {
     return <Navigate to=".." />;
@@ -58,6 +79,8 @@ export default function ResumeEdit() {
           id={res.Data.Id}
           modifiedAt={res.Data.ModifiedAt}
           isEditable={true}
+          onChangeTitle={handleChangeTitle}
+          onDelete={handleDeleteResume}
         ></ResumeItem>
         <Box
           sx={{

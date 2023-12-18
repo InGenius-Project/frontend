@@ -1,6 +1,5 @@
 import { TokenDTO } from "./../../types/DTO/TokenDTO";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserInfo } from "os";
 import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
 
 const initialState: UserDTO = {

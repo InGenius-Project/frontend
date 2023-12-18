@@ -1,7 +1,6 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { RegisterInput } from "pages/Account/Register";
-import { UserDTO } from "types/DTO/UserDTO";
 import { getUserApi } from "../user/getUser";
 import { TokenDTO } from "types/DTO/TokenDTO";
 import { setToken } from "features/user/userSlice";

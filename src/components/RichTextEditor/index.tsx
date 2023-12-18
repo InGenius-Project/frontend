@@ -87,7 +87,6 @@ function RichTextEditor({
             <AutoFocusPlugin />
             <TabFocusPlugin />
             <ListMaxIndentLevelPlugin maxDepth={3} />
-            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
             {onChange ? (
               <OnChangePlugin
                 onChange={onChange}
@@ -96,6 +95,7 @@ function RichTextEditor({
             ) : (
               <React.Fragment />
             )}
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </>
         ) : (
           <React.Fragment />

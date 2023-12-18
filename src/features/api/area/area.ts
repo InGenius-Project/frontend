@@ -1,6 +1,5 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { ResumeAreaDeleteDTO } from "types/DTO/ResumeDTO";
 import { AreaDTO, AreaPostDTO } from "types/DTO/AreaDTO";
 
 export const areaApi = baseApi.injectEndpoints({

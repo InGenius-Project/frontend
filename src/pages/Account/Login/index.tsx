@@ -22,7 +22,6 @@ import { toast } from "react-toastify";
 import FormInput from "components/FormInput";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useLoginMutation } from "features/api/auth/login";
-import { getUserApi } from "features/api/user/getUser";
 
 const loginSchema = object({
   email: string()

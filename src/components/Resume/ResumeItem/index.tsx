@@ -10,14 +10,9 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useNavigate } from "react-router-dom";
-import {
-  useDeleteResumeMutation,
-  useLazyGetResumeByIdQuery,
-  usePostResumeMutation,
-} from "features/api/resume/resume";
 import { useConfirm } from "material-ui-confirm";
-import React, { useEffect, useState } from "react";
-import { useDebounce } from "usehooks-ts";
+import React, { useState } from "react";
+import { useDebounce, useUpdateEffect } from "usehooks-ts";
 
 function getLastModifiedTimeString(modifiedAt: Date): string {
   const now = new Date();
@@ -45,19 +40,22 @@ type ResumeItemProps = {
   isEditable?: boolean;
   title: string;
   modifiedAt: string;
+  onDelete?: (id: string) => void;
+  onChangeTitle?: (title: string) => void;
 };
 
-const ResumeItem = ({ id, isEditable, title, modifiedAt }: ResumeItemProps) => {
-  const [deleteResume] = useDeleteResumeMutation();
-  const [getResumeData, { data: resumeData }] = useLazyGetResumeByIdQuery();
-  const [postResume] = usePostResumeMutation();
+const ResumeItem = ({
+  id,
+  isEditable,
+  title,
+  modifiedAt,
+  onDelete,
+  onChangeTitle,
+}: ResumeItemProps) => {
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const [currentTitle, setCurrentTitle] = useState<string | undefined>(title);
-  const debouncedCurrentTitle = useDebounce<string | undefined>(
-    currentTitle,
-    500
-  );
+  const [currentTitle, setCurrentTitle] = useState<string>(title);
+  const debouncedCurrentTitle = useDebounce<string>(currentTitle, 500);
 
   const handleDeleteClick = () => {
     confirm({
@@ -69,7 +67,7 @@ const ResumeItem = ({ id, isEditable, title, modifiedAt }: ResumeItemProps) => {
       },
     })
       .then(() => {
-        deleteResume(id);
+        onDelete && onDelete(id);
       })
       .catch(() => {});
   };
@@ -80,18 +78,9 @@ const ResumeItem = ({ id, isEditable, title, modifiedAt }: ResumeItemProps) => {
     setCurrentTitle(event.target.value);
   };
 
-  useEffect(() => {
-    if (isEditable) {
-      getResumeData(id, true);
-
-      if (resumeData && resumeData.Data)
-        postResume({
-          Title: debouncedCurrentTitle,
-          Id: id,
-          Areas: resumeData?.Data.Areas,
-        });
-    }
-  }, [debouncedCurrentTitle, postResume, isEditable]);
+  useUpdateEffect(() => {
+    onChangeTitle && onChangeTitle(debouncedCurrentTitle);
+  }, [debouncedCurrentTitle]);
 
   return (
     <Paper

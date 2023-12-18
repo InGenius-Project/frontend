@@ -1,6 +1,7 @@
 import { Box, CssBaseline, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
+  useDeleteResumeMutation,
   useGetResumesQuery,
   usePostResumeMutation,
 } from "features/api/resume/resume";
@@ -11,17 +12,12 @@ import FullScreenLoader from "components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 
 export default function Resume() {
-  const [
-    postResume,
-    {
-      data: resData,
-      isLoading: isAddingNewResume,
-      isSuccess: isSuccessAddingNewResume,
-    },
-  ] = usePostResumeMutation();
+  const [postResume, { isLoading: isAddingNewResume }] =
+    usePostResumeMutation();
   const userStae = useAppSelector((state) => state.userState);
   const { data: resumes, isLoading } = useGetResumesQuery(null);
   const navigate = useNavigate();
+  const [deleteResume] = useDeleteResumeMutation();
 
   const handelAddNewResumeClick = () => {
     postResume({
@@ -66,6 +62,7 @@ export default function Resume() {
               key={r.Id}
               id={r.Id}
               modifiedAt={r.ModifiedAt}
+              onDelete={(id) => deleteResume(id)}
             />
           ))}
       </Stack>
