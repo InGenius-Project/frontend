@@ -86,7 +86,11 @@ const AreaDragContainer = ({ items, onDragEnd }: AreaDragContainerProps) => {
                       ...provided.draggableProps.style,
                     }}
                   >
-                    <AreaItem {...item} dragProps={provided.dragHandleProps} />
+                    <AreaItem
+                      {...item}
+                      dragProps={provided.dragHandleProps}
+                      index={index}
+                    />
                   </Box>
                 )}
               </Draggable>

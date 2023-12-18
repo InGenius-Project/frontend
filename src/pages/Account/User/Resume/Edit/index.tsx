@@ -31,6 +31,11 @@ export default function ResumeEdit() {
   React.useEffect(() => {
     if (res && res.Data) {
       setIsEmptyLayout(!res.Data.Areas || res.Data.Areas.length < 1);
+
+      if (res.Data.Areas) {
+        const firstAreas = res.Data.Areas.find((a) => a.Sequence === 0);
+        setFocusedArea(firstAreas?.Id);
+      }
     }
   }, [res]);
 

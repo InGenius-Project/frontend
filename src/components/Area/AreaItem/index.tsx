@@ -1,11 +1,13 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { useEffectOnce } from "usehooks-ts";
 
 export type AreaItemProps = {
   onClick?: (top: number | undefined) => void;
   id: string;
+  index?: number;
   title?: string;
   dragProps?: DraggableProvidedDragHandleProps | null; // for drag handle
 };
@@ -15,10 +17,17 @@ const AreaItem = ({
   title,
   children,
   dragProps,
+  index,
 }: PropsWithChildren<AreaItemProps>) => {
   const [isHover, setIsHover] = React.useState(false);
   const theme = useTheme();
   const ref = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (index === 0) {
+      ref.current?.focus();
+    }
+  }, [index]);
 
   const handleClick = () => {
     ref.current?.focus();
@@ -30,6 +39,7 @@ const AreaItem = ({
     <Paper
       ref={ref}
       tabIndex={0}
+      data-component="AreaItem"
       sx={{
         padding: 3,
         position: "relative",
