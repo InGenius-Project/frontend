@@ -1,0 +1,9 @@
+services:
+  app:
+    container_name: ing-frontend
+    image: ing-frontend
+    build: .
+    ports:
+      - 34004:80
+    env_file:
+      - '.env.production'
