@@ -1,6 +1,8 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { AreaDTO, AreaPostDTO } from "types/DTO/AreaDTO";
+import { resumeApi } from "../resume/resume";
+import { GuidEmpty } from "assets/utils/guid";
 
 export const areaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,18 +18,14 @@ export const areaApi = baseApi.injectEndpoints({
       },
     }),
     postArea: builder.mutation<ResponseDTO<AreaDTO>, AreaPostDTO>({
-      query(body) {
+      query: (body) => {
         return {
           url: `Area/${body.Id ? body.Id : ""}`,
           method: "POST",
           body,
         };
       },
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
-        try {
-          await queryFulfilled;
-        } catch (err) {}
-      },
+
       invalidatesTags: (result, error, arg) => {
         return [
           { type: "Resume", id: arg.ResumeId },

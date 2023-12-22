@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
   DroppableProps,
+  DragDropContextProps,
+  OnDragStartResponder,
+  OnDragUpdateResponder,
 } from "react-beautiful-dnd";
 import { Box, Stack } from "@mui/material";
 import AreaItem, { AreaItemProps } from "../AreaItem";
@@ -43,9 +46,16 @@ const reorder = (
 type AreaDragContainerProps = {
   items: Array<AreaItemProps>;
   onDragEnd?: (items: AreaItemProps[]) => void;
+  onDragStart?: OnDragStartResponder;
+  onDragUpdate?: OnDragUpdateResponder;
 };
 
-const AreaDragContainer = ({ items, onDragEnd }: AreaDragContainerProps) => {
+const AreaDragContainer = ({
+  items,
+  onDragEnd,
+  onDragStart,
+  onDragUpdate,
+}: AreaDragContainerProps) => {
   const [areaItems, setAreaItems] = useState(items);
 
   const handleDragEnd = useCallback(
@@ -66,8 +76,14 @@ const AreaDragContainer = ({ items, onDragEnd }: AreaDragContainerProps) => {
     [areaItems, onDragEnd]
   );
 
+  useEffect(() => setAreaItems(items), [items]);
+
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext
+      onDragEnd={handleDragEnd}
+      onDragStart={onDragStart}
+      onDragUpdate={onDragUpdate}
+    >
       <StrictModeDroppable droppableId="droppable">
         {(provided, snapshot) => (
           <Stack
@@ -76,24 +92,7 @@ const AreaDragContainer = ({ items, onDragEnd }: AreaDragContainerProps) => {
             spacing={1}
           >
             {areaItems.map((item, index: number) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <Box
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    sx={{
-                      opacity: snapshot.isDragging ? 0.7 : 1,
-                      ...provided.draggableProps.style,
-                    }}
-                  >
-                    <AreaItem
-                      {...item}
-                      dragProps={provided.dragHandleProps}
-                      index={index}
-                    />
-                  </Box>
-                )}
-              </Draggable>
+              <DraggableAreaItem item={item} index={index} key={item.id} />
             ))}
             {provided.placeholder}
           </Stack>
@@ -102,5 +101,29 @@ const AreaDragContainer = ({ items, onDragEnd }: AreaDragContainerProps) => {
     </DragDropContext>
   );
 };
+
+type DraggableAreaItemProps = {
+  item: AreaItemProps;
+  index: number;
+};
+
+function DraggableAreaItem({ item, index }: DraggableAreaItemProps) {
+  return (
+    <Draggable draggableId={item.id} index={index}>
+      {(provided, snapshot) => (
+        <Box
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          sx={{
+            opacity: snapshot.isDragging ? 0.7 : 1,
+            ...provided.draggableProps.style,
+          }}
+        >
+          <AreaItem {...item} dragProps={provided.dragHandleProps} />
+        </Box>
+      )}
+    </Draggable>
+  );
+}
 
 export default AreaDragContainer;

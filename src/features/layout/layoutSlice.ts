@@ -12,6 +12,7 @@ interface LayoutState {
     id: string;
     content: string;
   };
+  focusedIndex: number;
 }
 
 const initialState: LayoutState = {
@@ -20,6 +21,7 @@ const initialState: LayoutState = {
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
   image: undefined,
+  focusedIndex: -1,
 };
 
 const layoutSlice = createSlice({
@@ -40,6 +42,9 @@ const layoutSlice = createSlice({
     },
     setLayout: (state, action: PayloadAction<LayoutState>) => {
       state = action.payload;
+    },
+    setFocusedIndex: (state, action: PayloadAction<number>) => {
+      state.focusedIndex = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
       var { TextLayout, ImageTextLayout } = action.payload;
@@ -81,6 +86,7 @@ export const {
   setContent,
   setLayout,
   setLayoutByArea,
+  setFocusedIndex,
 } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

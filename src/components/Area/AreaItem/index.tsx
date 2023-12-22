@@ -1,14 +1,13 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { useEffectOnce } from "usehooks-ts";
 
 export type AreaItemProps = {
   onClick?: (top: number | undefined) => void;
   id: string;
-  index?: number;
   title?: string;
+  focused?: boolean;
   dragProps?: DraggableProvidedDragHandleProps | null; // for drag handle
 };
 
@@ -17,53 +16,45 @@ const AreaItem = ({
   title,
   children,
   dragProps,
-  index,
+  focused,
 }: PropsWithChildren<AreaItemProps>) => {
   const [isHover, setIsHover] = React.useState(false);
   const theme = useTheme();
   const ref = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (index === 0) {
-      ref.current?.focus();
-    }
-  }, [index]);
+  const [focusedState, setFocusState] = useState(false);
 
   const handleClick = () => {
-    ref.current?.focus();
     ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     onClick && onClick(ref.current?.offsetTop);
   };
+
+  useEffect(() => {
+    setFocusState(focused ? focused : false);
+  }, [focused]);
 
   return (
     <Paper
       ref={ref}
       tabIndex={0}
-      data-component="AreaItem"
       sx={{
         padding: 3,
         position: "relative",
-        "&:focus": {
-          "&::before": {
-            content: '""',
-            height: "100%",
-            position: "absolute",
-            borderRadius: 4,
-            left: 0,
-            top: 0,
-            backgroundColor: theme.palette.primary.main,
-            width: 5,
-          },
-        },
+        "&::before": focusedState
+          ? {
+              content: '""',
+              height: "100%",
+              position: "absolute",
+              borderRadius: 4,
+              left: 0,
+              top: 0,
+              backgroundColor: theme.palette.primary.main,
+              width: 5,
+            }
+          : undefined,
       }}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       onClick={() => handleClick()}
-      onBlur={(e) => {
-        if (e.relatedTarget === null) {
-          e.target.focus();
-        }
-      }}
     >
       <Box
         sx={{

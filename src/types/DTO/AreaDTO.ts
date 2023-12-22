@@ -2,8 +2,8 @@ export interface AreaDTO {
   Id: string;
   Sequence: number;
   IsDisplayed: boolean;
-  TextLayout: TextLayoutDTO;
-  ImageTextLayout: ImageTextLayoutDTO;
+  TextLayout?: TextLayoutDTO;
+  ImageTextLayout?: ImageTextLayoutDTO;
 }
 
 export interface AreaPostDTO {

@@ -2,6 +2,8 @@ import { ResumePostDTO } from "./../../../types/DTO/ResumeDTO";
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { ResumeDTO } from "types/DTO/ResumeDTO";
+import { setFocusedIndex } from "features/layout/layoutSlice";
+import { GuidEmpty } from "assets/utils/guid";
 
 export const resumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,6 +18,52 @@ export const resumeApi = baseApi.injectEndpoints({
         return ["Resume", "ResumeLists"];
       },
     }),
+    getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
+      query(id) {
+        return {
+          url: `Resume/${id}`,
+          method: "Get",
+        };
+      },
+      providesTags: (result) => {
+        return [{ type: "Resume", id: result?.Data?.Id }];
+      },
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        console.log("getResume");
+        try {
+          const { data: res } = await queryFulfilled;
+
+          if (res && res.Data) {
+            const { Areas } = res.Data;
+
+            if (Areas && Areas.length > 0) {
+              // Extract the sequence numbers from each area
+              const sequenceNumbers = Areas.map((area) => area.Sequence);
+
+              // Find the max sequence number
+              const maxSequenceNumber = Math.max(...sequenceNumbers);
+              dispatch(setFocusedIndex(maxSequenceNumber));
+            }
+          }
+        } catch (error) {}
+      },
+      transformResponse: (response: ResponseDTO<ResumeDTO>, meta, arg) => {
+        // Reorder the areas by sequence
+        if (response.Data) {
+          const orderedArea = response.Data.Areas.sort(
+            (a, b) => a.Sequence - b.Sequence
+          );
+          return {
+            ...response,
+            Data: {
+              ...response.Data,
+              Areas: orderedArea,
+            },
+          };
+        }
+        return response;
+      },
+    }),
     postResume: builder.mutation<ResponseDTO<ResumeDTO>, ResumePostDTO>({
       query(body) {
         return {
@@ -26,17 +74,6 @@ export const resumeApi = baseApi.injectEndpoints({
       },
       invalidatesTags: (res) => {
         return [{ type: "ResumeLists" }, { type: "Resume", id: res?.Data?.Id }];
-      },
-    }),
-    getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
-      query(id) {
-        return {
-          url: `Resume/${id}`,
-          method: "Get",
-        };
-      },
-      providesTags: (result) => {
-        return [{ type: "Resume", id: result?.Data?.Id }];
       },
     }),
     deleteResume: builder.mutation<ResponseDTO<null>, string>({
