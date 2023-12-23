@@ -29,7 +29,6 @@ export const resumeApi = baseApi.injectEndpoints({
         return [{ type: "Resume", id: result?.Data?.Id }];
       },
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
-        console.log("getResume");
         try {
           const { data: res } = await queryFulfilled;
 
@@ -74,6 +73,23 @@ export const resumeApi = baseApi.injectEndpoints({
       },
       invalidatesTags: (res) => {
         return [{ type: "ResumeLists" }, { type: "Resume", id: res?.Data?.Id }];
+      },
+      onQueryStarted: ({ Id, ...body }, { dispatch }) => {
+        dispatch(
+          resumeApi.util.updateQueryData(
+            "getResumeById",
+            Id || GuidEmpty,
+            (draft) => {
+              return {
+                ...draft,
+                Data: {
+                  ...(draft.Data as ResumeDTO),
+                  Areas: body.Areas || [],
+                },
+              };
+            }
+          )
+        );
       },
     }),
     deleteResume: builder.mutation<ResponseDTO<null>, string>({

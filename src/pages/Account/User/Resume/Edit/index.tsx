@@ -1,5 +1,4 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { GuidEmpty } from "assets/utils/guid";
 import { AreaControl } from "components/Area";
 import AreaDragContainer from "components/Area/AreaDragContainer";
 import { AreaItemProps } from "components/Area/AreaItem";
@@ -11,7 +10,6 @@ import {
   usePostAreaMutation,
 } from "features/api/area/area";
 import {
-  resumeApi,
   useDeleteResumeMutation,
   useGetResumeByIdQuery,
   usePostResumeMutation,
@@ -19,13 +17,9 @@ import {
 import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React, { useEffect, useRef } from "react";
-import {
-  OnDragStartResponder,
-  OnDragUpdateResponder,
-} from "react-beautiful-dnd";
+import { OnDragStartResponder } from "react-beautiful-dnd";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
-import { useDebounce, useEffectOnce, useOnClickOutside } from "usehooks-ts";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
@@ -33,7 +27,6 @@ export default function ResumeEdit() {
   const navigate = useNavigate();
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
   const [focusedArea, setFocusedArea] = React.useState<AreaDTO>();
-  const deboucedFocusArea = useDebounce(focusedArea, 500);
   const [isEmptyLayout, setIsEmptyLayout] = React.useState<boolean>(false);
   const areaContainerRef = useRef(null);
 
@@ -124,9 +117,6 @@ export default function ResumeEdit() {
       });
     }
   };
-  // React.useEffect(() => {
-  //   console.log(resumeData?.Data?.Areas);
-  // }, [resumeData]);
 
   const handleDragStart: OnDragStartResponder = ({ draggableId }) => {
     if (resumeData && resumeData.Data) {
@@ -181,28 +171,26 @@ export default function ResumeEdit() {
                 </Box>
               </Stack>
             )}
-            {resumeData.Data.Areas && (
-              <AreaDragContainer
-                items={resumeData.Data.Areas.map((a) => ({
-                  id: a.Id,
-                  title: a.TextLayout?.Title,
-                  index: a.Sequence,
-                  focused: deboucedFocusArea?.Id === a.Id,
-                  onClick: (top: number | undefined) => {
-                    setFocusedArea(a);
-                    setControlTop(top);
-                  },
-                  children: (
-                    <RichTextEditor
-                      controllable={false}
-                      initialEditorState={a.TextLayout?.Content}
-                    ></RichTextEditor>
-                  ),
-                }))}
-                onDragEnd={handleDragEnd}
-                onDragStart={handleDragStart}
-              />
-            )}
+            <AreaDragContainer
+              items={resumeData.Data.Areas.map((a) => ({
+                id: a.Id,
+                title: a.TextLayout?.Title,
+                index: a.Sequence,
+                focused: focusedArea?.Id === a.Id,
+                onClick: (top: number | undefined) => {
+                  setFocusedArea(a);
+                  setControlTop(top);
+                },
+                children: (
+                  <RichTextEditor
+                    controllable={false}
+                    initialEditorState={a.TextLayout?.Content}
+                  ></RichTextEditor>
+                ),
+              }))}
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+            />
           </Stack>
 
           {!isEmptyLayout && (

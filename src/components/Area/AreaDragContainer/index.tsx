@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
   DroppableProps,
-  DragDropContextProps,
   OnDragStartResponder,
   OnDragUpdateResponder,
 } from "react-beautiful-dnd";
@@ -56,27 +55,18 @@ const AreaDragContainer = ({
   onDragStart,
   onDragUpdate,
 }: AreaDragContainerProps) => {
-  const [areaItems, setAreaItems] = useState(items);
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
 
-  const handleDragEnd = useCallback(
-    (result: DropResult) => {
-      if (!result.destination) {
-        return;
-      }
-
-      const updatedItems = reorder(
-        areaItems,
-        result.source.index,
-        result.destination.index
-      );
-
-      setAreaItems(updatedItems);
-      onDragEnd && onDragEnd(updatedItems);
-    },
-    [areaItems, onDragEnd]
-  );
-
-  useEffect(() => setAreaItems(items), [items]);
+    const updatedItems = reorder(
+      items,
+      result.source.index,
+      result.destination.index
+    );
+    onDragEnd && onDragEnd(updatedItems);
+  };
 
   return (
     <DragDropContext
@@ -91,7 +81,7 @@ const AreaDragContainer = ({
             ref={provided.innerRef}
             spacing={1}
           >
-            {areaItems.map((item, index: number) => (
+            {items.map((item, index: number) => (
               <DraggableAreaItem item={item} index={index} key={item.id} />
             ))}
             {provided.placeholder}
