@@ -14,10 +14,10 @@ import {
   useGetResumeByIdQuery,
   usePostResumeMutation,
 } from "features/api/resume/resume";
-import { setType } from "features/layout/layoutSlice";
+import { setFocusedIndex, setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React, { useEffect, useRef } from "react";
-import { OnDragStartResponder } from "react-beautiful-dnd";
+import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
 
@@ -124,6 +124,7 @@ export default function ResumeEdit() {
         (a) => a.Id === draggableId
       );
       setFocusedArea(findArea);
+      findArea && dispatch(setFocusedIndex(findArea.Sequence));
     }
   };
 
@@ -177,9 +178,10 @@ export default function ResumeEdit() {
                 title: a.TextLayout?.Title,
                 index: a.Sequence,
                 focused: focusedArea?.Id === a.Id,
-                onClick: (top: number | undefined) => {
+                onClick: (element) => {
                   setFocusedArea(a);
-                  setControlTop(top);
+                  setControlTop(element.offsetTop);
+                  dispatch(setFocusedIndex(a.Sequence));
                 },
                 children: (
                   <RichTextEditor

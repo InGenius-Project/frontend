@@ -34,33 +34,63 @@ export default function ResumeArea() {
 
   const handleSubmit = () => {
     if (resumeData && resumeData.Data) {
-      const areas = Array.from(resumeData.Data.Areas);
+      let areas = Array.from(resumeData.Data.Areas);
 
-      const newAreaSequence = layoutState.focusedIndex + 1 || 0;
-      const newAreas: AreaDTO = {
-        Id: areaId ? areaId : GuidEmpty,
-        Sequence: newAreaSequence, // set new index after focuslayout
-        IsDisplayed: areaData?.Data?.IsDisplayed || true,
-        TextLayout:
-          layoutState.arrangement === LayoutArrangement.TEXT
-            ? {
-                Id: areaData?.Data?.TextLayout?.Id
-                  ? areaData.Data.TextLayout.Id
-                  : GuidEmpty,
-                Title: layoutState.title,
-                Arrangement: LayoutArrangement.TEXT,
-                Type: layoutState.type,
-                Content: JSON.stringify(layoutState.content),
-              }
-            : undefined,
-      };
+      const existAreaIndex = areas.findIndex(
+        (area) => area.Id === areaData?.Data?.Id
+      );
 
-      // Insert the new area at the specified sequence
-      areas.splice(newAreaSequence, 0, newAreas);
+      if (existAreaIndex === -1) {
+        const newAreaSequence = layoutState.focusedIndex + 1 || 0;
+        const newArea: AreaDTO = {
+          Id: areaId ? areaId : GuidEmpty,
+          Sequence: newAreaSequence,
+          IsDisplayed: areaData?.Data?.IsDisplayed || true,
+          TextLayout:
+            layoutState.arrangement === LayoutArrangement.TEXT
+              ? {
+                  Id: areaData?.Data?.TextLayout?.Id
+                    ? areaData.Data.TextLayout.Id
+                    : GuidEmpty,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.TEXT,
+                  Type: layoutState.type,
+                  Content: JSON.stringify(layoutState.content),
+                }
+              : undefined,
+        };
 
-      // Update the Sequence for the rest of the areas
-      for (let i = newAreaSequence + 1; i < areas.length; i++) {
-        areas[i].Sequence = i;
+        // Insert the new area at the specified sequence
+        areas.splice(newAreaSequence, 0, newArea);
+
+        // Update the Sequence for the rest of the areas
+        const updatedAreas = areas.map((area, i) => {
+          return {
+            ...area,
+            Sequence: i + newAreaSequence + 1,
+          };
+        });
+
+        // Replace the old areas array with the updated one
+        areas = updatedAreas;
+      } else {
+        // Update the existing area
+        areas[existAreaIndex] = {
+          ...areas[existAreaIndex],
+          IsDisplayed: areaData?.Data?.IsDisplayed || true,
+          TextLayout:
+            layoutState.arrangement === LayoutArrangement.TEXT
+              ? {
+                  Id: areaData?.Data?.TextLayout?.Id
+                    ? areaData.Data.TextLayout.Id
+                    : GuidEmpty,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.TEXT,
+                  Type: layoutState.type,
+                  Content: JSON.stringify(layoutState.content),
+                }
+              : undefined,
+        };
       }
 
       postResume({

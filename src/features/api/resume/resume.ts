@@ -28,24 +28,6 @@ export const resumeApi = baseApi.injectEndpoints({
       providesTags: (result) => {
         return [{ type: "Resume", id: result?.Data?.Id }];
       },
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
-        try {
-          const { data: res } = await queryFulfilled;
-
-          if (res && res.Data) {
-            const { Areas } = res.Data;
-
-            if (Areas && Areas.length > 0) {
-              // Extract the sequence numbers from each area
-              const sequenceNumbers = Areas.map((area) => area.Sequence);
-
-              // Find the max sequence number
-              const maxSequenceNumber = Math.max(...sequenceNumbers);
-              dispatch(setFocusedIndex(maxSequenceNumber));
-            }
-          }
-        } catch (error) {}
-      },
       transformResponse: (response: ResponseDTO<ResumeDTO>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.Data) {

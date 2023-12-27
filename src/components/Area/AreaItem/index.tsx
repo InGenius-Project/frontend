@@ -4,7 +4,7 @@ import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 
 export type AreaItemProps = {
-  onClick?: (top: number | undefined) => void;
+  onClick?: (element: HTMLElement) => void;
   id: string;
   title?: string;
   focused?: boolean;
@@ -25,7 +25,7 @@ const AreaItem = ({
 
   const handleClick = () => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    onClick && onClick(ref.current?.offsetTop);
+    onClick && onClick(ref.current as HTMLElement);
   };
 
   useEffect(() => {
