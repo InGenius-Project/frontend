@@ -1,8 +1,6 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { AreaDTO, AreaPostDTO } from "types/DTO/AreaDTO";
-import { resumeApi } from "../resume/resume";
-import { GuidEmpty } from "assets/utils/guid";
 
 export const areaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

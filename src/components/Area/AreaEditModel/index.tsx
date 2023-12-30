@@ -5,8 +5,9 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { setContent, setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -15,11 +16,22 @@ import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 import RichTextEditor from "components/RichTextEditor";
 import { EditorState, LexicalEditor } from "lexical";
 import ImageCrop from "components/ImageCrop";
+import AreaListItem from "../AreaListItem";
+import DragDropContainer from "components/DragDropContainer";
+import { v4 as uuid } from "uuid";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   loading?: boolean;
 };
+
+const dummyListItems = [
+  {
+    id: uuid(),
+    content: "React",
+  },
+  { id: uuid(), content: "UI/UX" },
+];
 
 export default function AreaEditModel({
   onAddClick,
@@ -28,12 +40,36 @@ export default function AreaEditModel({
   const layoutState = useAppSelector((state) => state.layoutState);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const [listItemState, setListItemState] = useState(dummyListItems);
 
   const handleEditorChange = (
     editorState: EditorState,
     editor: LexicalEditor
   ) => {
     dispatch(setContent(editorState));
+  };
+
+  const handleListItemDragEnd = (item: string[]) => {
+    const newListItem = item
+      .map((id) => listItemState.find((item) => item.id === id))
+      .filter((item) => item !== undefined);
+
+    setListItemState(newListItem as typeof dummyListItems);
+  };
+
+  const handleListAddClick = () => {
+    setListItemState((state) => [
+      ...state,
+      {
+        id: uuid(),
+        content: "",
+      },
+    ]);
+  };
+
+  const handleListRemoveClick = (id: string) => {
+    setListItemState((state) => state.filter((i) => i.id !== id));
   };
 
   return (
@@ -72,6 +108,43 @@ export default function AreaEditModel({
           </Box>
         </Box>
         <Typography variant="h4">內容</Typography>
+
+        {layoutState.arrangement === LayoutArrangement.LIST && (
+          <Box
+            sx={{
+              border: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            <DragDropContainer
+              droppableId={uuid()}
+              items={listItemState.map((item) => item.id)}
+              spacing={0}
+              onDragEnd={handleListItemDragEnd}
+            >
+              {listItemState.map((i) => (
+                <AreaListItem
+                  content={i.content}
+                  editable
+                  key={i.id}
+                  id={i.id}
+                  onClickDelete={handleListRemoveClick}
+                />
+              ))}
+            </DragDropContainer>
+            <Button
+              color="info"
+              variant="text"
+              sx={{
+                width: "100%",
+                borderRadius: "4px",
+                padding: 0.2,
+              }}
+              onClick={handleListAddClick}
+            >
+              +
+            </Button>
+          </Box>
+        )}
 
         {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
           <ImageCrop />

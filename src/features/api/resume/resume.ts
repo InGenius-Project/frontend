@@ -2,8 +2,7 @@ import { ResumePostDTO } from "./../../../types/DTO/ResumeDTO";
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { ResumeDTO } from "types/DTO/ResumeDTO";
-import { setFocusedIndex } from "features/layout/layoutSlice";
-import { GuidEmpty } from "assets/utils/guid";
+import { NIL as GuidEmpty } from "uuid";
 
 export const resumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

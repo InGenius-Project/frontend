@@ -44,8 +44,10 @@ type DragDropContainerProps = {
   items: Array<string>;
   /** Should put the element that extends DraggableProvidedDragHandleProps*/
   children: React.ReactNode;
+  /** Spacing between items */
+  spacing?: number;
   /** return the list of item's id onDragEnd */
-  onDragEnd?: (items: string[]) => void;
+  onDragEnd: (items: string[]) => void;
   onDragStart?: OnDragStartResponder;
   onDragUpdate?: OnDragUpdateResponder;
 };
@@ -57,6 +59,7 @@ const DragDropContainer = ({
   droppableId,
   items,
   children,
+  spacing = 1,
   onDragEnd,
   onDragStart,
   onDragUpdate,
@@ -85,7 +88,7 @@ const DragDropContainer = ({
           <Stack
             {...provided.droppableProps}
             ref={provided.innerRef}
-            spacing={1}
+            spacing={spacing}
           >
             {React.Children.map(children, (child, index) => {
               if (React.isValidElement(child)) {

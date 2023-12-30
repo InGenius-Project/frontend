@@ -39,6 +39,7 @@ export interface ImageDTO {
 export enum LayoutArrangement {
   "TEXT" = "TEXT",
   "IMAGETEXT" = "IMAGETEXT",
+  "LIST" = "LIST",
 }
 
 export enum LayoutType {

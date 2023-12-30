@@ -1,4 +1,3 @@
-import { GuidEmpty } from "assets/utils/guid";
 import { AreaEditModel } from "components/Area";
 import {
   useGetAreaByIdQuery,
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
+import { NIL as GuidEmpty } from "uuid";
 
 export default function ResumeArea() {
   const { resumeId = "", areaId } = useParams();

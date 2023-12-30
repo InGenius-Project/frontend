@@ -88,7 +88,7 @@ export default function Layout() {
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
-        <LayoutButton value="list">
+        <LayoutButton value={LayoutArrangement.LIST}>
           <TextFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>

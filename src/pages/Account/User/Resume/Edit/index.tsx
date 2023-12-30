@@ -100,8 +100,6 @@ export default function ResumeEdit() {
   };
 
   const handleDragEnd = async (items: string[]) => {
-    console.log(items);
-
     if (resumeData && resumeData.Data) {
       const newAreas = items.map((i, index) => {
         const findArea = resumeData!.Data!.Areas.find((a) => a.Id === i);
