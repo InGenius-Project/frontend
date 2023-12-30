@@ -8,10 +8,7 @@ interface LayoutState {
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image?: {
-    id: string;
-    content: string;
-  };
+  image?: string;
   focusedIndex: number;
 }
 
@@ -46,6 +43,9 @@ const layoutSlice = createSlice({
     setFocusedIndex: (state, action: PayloadAction<number>) => {
       state.focusedIndex = action.payload;
     },
+    setImage: (state, action: PayloadAction<string>) => {
+      state.image = action.payload;
+    },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
       var { TextLayout, ImageTextLayout } = action.payload;
 
@@ -63,10 +63,7 @@ const layoutSlice = createSlice({
           title: ImageTextLayout.Title,
           arrangement: LayoutArrangement.TEXT,
           content: ImageTextLayout.Content,
-          image: {
-            id: ImageTextLayout.Image.Id,
-            content: ImageTextLayout.Image.Content,
-          },
+          image: ImageTextLayout.Image.Content,
         };
       }
       return state;
@@ -87,6 +84,7 @@ export const {
   setLayout,
   setLayoutByArea,
   setFocusedIndex,
+  setImage,
 } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

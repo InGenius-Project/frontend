@@ -11,9 +11,10 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { setContent, setTitle } from "features/layout/layoutSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
-import { LayoutType } from "types/DTO/AreaDTO";
+import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 import RichTextEditor from "components/RichTextEditor";
 import { EditorState, LexicalEditor } from "lexical";
+import ImageCrop from "components/ImageCrop";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -72,11 +73,18 @@ export default function AreaEditModel({
         </Box>
         <Typography variant="h4">內容</Typography>
 
-        <RichTextEditor
-          controllable
-          onChange={handleEditorChange}
-          initialEditorState={layoutState.content}
-        />
+        {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
+          <ImageCrop />
+        )}
+
+        {(layoutState.arrangement === LayoutArrangement.TEXT ||
+          layoutState.arrangement === LayoutArrangement.IMAGETEXT) && (
+          <RichTextEditor
+            controllable
+            onChange={handleEditorChange}
+            initialEditorState={layoutState.content}
+          />
+        )}
       </Stack>
     </Paper>
   );

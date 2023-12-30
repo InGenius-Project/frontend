@@ -17,15 +17,30 @@ import { LayoutArrangement } from "types/DTO/AreaDTO";
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,
   height: 150,
-  color: theme.palette.common.black,
+  color: theme.palette.text.primary,
   backgroundColor: theme.palette.common.white,
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(2),
   borderRadius: 10,
+  "&:hover": {
+    backgroundColor: theme.palette.grey[100],
+  },
 }));
 
 const LayoutButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  "& .MuiToggleButtonGroup-grouped": {
+    "&:not(:first-of-type)": {
+      borderRadius: theme.shape.borderRadius,
+    },
+    "&:first-of-type": {
+      borderRadius: theme.shape.borderRadius,
+    },
+    "&.Mui-selected": {
+      border: `3px solid ${theme.palette.primary.main}`,
+      backgroundColor: theme.palette.common.white,
+    },
+  },
   display: "flex",
   gap: theme.spacing(2),
   flexWrap: "wrap",
@@ -73,11 +88,11 @@ export default function Layout() {
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
-        {/* <LayoutButton value="list">
+        <LayoutButton value="list">
           <TextFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>
-        <LayoutButton value="key-value-list">
+        {/* <LayoutButton value="key-value-list">
           <TextFrame />
           <Typography variant="body1">鍵值條列文字</Typography>
         </LayoutButton> */}

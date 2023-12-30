@@ -12,7 +12,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import React, { useState } from "react";
-import { useDebounce, useUpdateEffect } from "usehooks-ts";
+import { useDebounce, useUpdateEffect } from "ahooks";
 
 function getLastModifiedTimeString(modifiedAt: Date): string {
   const now = new Date();
@@ -55,7 +55,7 @@ const ResumeItem = ({
   const navigate = useNavigate();
   const confirm = useConfirm();
   const [currentTitle, setCurrentTitle] = useState<string>(title);
-  const debouncedCurrentTitle = useDebounce<string>(currentTitle, 500);
+  const debouncedCurrentTitle = useDebounce<string>(currentTitle);
 
   const handleDeleteClick = () => {
     confirm({

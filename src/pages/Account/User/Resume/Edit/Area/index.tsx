@@ -58,6 +58,22 @@ export default function ResumeArea() {
                   Content: JSON.stringify(layoutState.content),
                 }
               : undefined,
+          ImageTextLayout:
+            layoutState.arrangement === LayoutArrangement.IMAGETEXT
+              ? {
+                  Id: areaData?.Data?.TextLayout?.Id
+                    ? areaData.Data.TextLayout.Id
+                    : GuidEmpty,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.IMAGETEXT,
+                  Type: layoutState.type,
+                  Content: JSON.stringify(layoutState.content),
+                  Image: {
+                    Id: GuidEmpty,
+                    Content: layoutState.image || "",
+                  },
+                }
+              : undefined,
         };
 
         // Insert the new area at the specified sequence
@@ -88,6 +104,24 @@ export default function ResumeArea() {
                   Arrangement: LayoutArrangement.TEXT,
                   Type: layoutState.type,
                   Content: JSON.stringify(layoutState.content),
+                }
+              : undefined,
+          ImageTextLayout:
+            layoutState.arrangement === LayoutArrangement.IMAGETEXT
+              ? {
+                  Id: areaData?.Data?.TextLayout?.Id
+                    ? areaData.Data.TextLayout.Id
+                    : GuidEmpty,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.IMAGETEXT,
+                  Type: layoutState.type,
+                  Content: JSON.stringify(layoutState.content),
+                  Image: {
+                    Id: areaData?.Data?.ImageTextLayout?.Id
+                      ? areaData?.Data?.ImageTextLayout?.Id
+                      : GuidEmpty,
+                    Content: layoutState.image || "",
+                  },
                 }
               : undefined,
         };
