@@ -8,15 +8,14 @@ export type AreaItemProps = {
   id: string;
   title?: string;
   focused?: boolean;
-  dragProps?: DraggableProvidedDragHandleProps | null; // for drag handle
-};
+} & Partial<DraggableProvidedDragHandleProps>;
 
 const AreaItem = ({
   onClick,
   title,
   children,
-  dragProps,
   focused,
+  ...props
 }: PropsWithChildren<AreaItemProps>) => {
   const [isHover, setIsHover] = React.useState(false);
   const theme = useTheme();
@@ -66,7 +65,7 @@ const AreaItem = ({
           cursor: "move",
           display: isHover ? "flex" : "none",
         }}
-        {...dragProps}
+        {...props}
       >
         <DragHandleIcon color="primary" />
       </Box>

@@ -9,7 +9,6 @@ import {
   OnDragUpdateResponder,
 } from "react-beautiful-dnd";
 import { Box, Stack } from "@mui/material";
-import AreaItem, { AreaItemProps } from "../AreaItem";
 
 export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
   const [enabled, setEnabled] = useState(false);
@@ -30,11 +29,7 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
   return <Droppable {...props}>{children}</Droppable>;
 };
 
-const reorder = (
-  list: Array<AreaItemProps>,
-  startIndex: number,
-  endIndex: number
-) => {
+const reorder = (list: Array<string>, startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -42,19 +37,30 @@ const reorder = (
   return result;
 };
 
-type AreaDragContainerProps = {
-  items: Array<AreaItemProps>;
-  onDragEnd?: (items: AreaItemProps[]) => void;
+type DragDropContainerProps = {
+  /** Droppable container unique id  */
+  droppableId: string;
+  /** Storing the list of item's id */
+  items: Array<string>;
+  /** Should put the element that extends DraggableProvidedDragHandleProps*/
+  children: React.ReactNode;
+  /** return the list of item's id onDragEnd */
+  onDragEnd?: (items: string[]) => void;
   onDragStart?: OnDragStartResponder;
   onDragUpdate?: OnDragUpdateResponder;
 };
 
-const AreaDragContainer = ({
+/**
+ *  A Component that feature the drag drop function on the children
+ */
+const DragDropContainer = ({
+  droppableId,
   items,
+  children,
   onDragEnd,
   onDragStart,
   onDragUpdate,
-}: AreaDragContainerProps) => {
+}: DragDropContainerProps) => {
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
@@ -74,16 +80,37 @@ const AreaDragContainer = ({
       onDragStart={onDragStart}
       onDragUpdate={onDragUpdate}
     >
-      <StrictModeDroppable droppableId="droppable">
+      <StrictModeDroppable droppableId={droppableId}>
         {(provided, snapshot) => (
           <Stack
             {...provided.droppableProps}
             ref={provided.innerRef}
             spacing={1}
           >
-            {items.map((item, index: number) => (
-              <DraggableAreaItem item={item} index={index} key={item.id} />
-            ))}
+            {React.Children.map(children, (child, index) => {
+              if (React.isValidElement(child)) {
+                return (
+                  <Draggable draggableId={child.props.id} index={index}>
+                    {(provided, snapshot) => (
+                      <Box
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        sx={{
+                          opacity: snapshot.isDragging ? 0.7 : 1,
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        {React.cloneElement(child, {
+                          ...provided.dragHandleProps,
+                        })}
+                      </Box>
+                    )}
+                  </Draggable>
+                );
+              }
+              return child;
+            })}
+
             {provided.placeholder}
           </Stack>
         )}
@@ -92,28 +119,4 @@ const AreaDragContainer = ({
   );
 };
 
-type DraggableAreaItemProps = {
-  item: AreaItemProps;
-  index: number;
-};
-
-function DraggableAreaItem({ item, index }: DraggableAreaItemProps) {
-  return (
-    <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => (
-        <Box
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          sx={{
-            opacity: snapshot.isDragging ? 0.7 : 1,
-            ...provided.draggableProps.style,
-          }}
-        >
-          <AreaItem {...item} dragProps={provided.dragHandleProps} />
-        </Box>
-      )}
-    </Draggable>
-  );
-}
-
-export default AreaDragContainer;
+export default DragDropContainer;

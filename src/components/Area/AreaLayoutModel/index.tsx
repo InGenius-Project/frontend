@@ -37,7 +37,7 @@ const LayoutButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
       borderRadius: theme.shape.borderRadius,
     },
     "&.Mui-selected": {
-      border: `3px solid ${theme.palette.primary.main}`,
+      border: `1px solid ${theme.palette.primary.main}`,
       backgroundColor: theme.palette.common.white,
     },
   },

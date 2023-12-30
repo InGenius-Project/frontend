@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { AreaControl } from "components/Area";
-import AreaDragContainer from "components/Area/AreaDragContainer";
-import { AreaItemProps } from "components/Area/AreaItem";
+import AreaItem from "components/Area/AreaItem";
+import DragDropContainer from "components/DragDropContainer";
 import FullScreenLoader from "components/FullScreenLoader";
 import { ResumeItem } from "components/Resume";
 import RichTextEditor from "components/RichTextEditor";
@@ -17,7 +17,7 @@ import {
 import { setFocusedIndex, setType } from "features/layout/layoutSlice";
 import { useAppDispatch } from "features/store";
 import React, { useEffect, useRef } from "react";
-import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
+import { OnDragStartResponder } from "react-beautiful-dnd";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
 
@@ -99,10 +99,12 @@ export default function ResumeEdit() {
       .then(() => navigate(".."));
   };
 
-  const handleDragEnd = async (items: AreaItemProps[]) => {
+  const handleDragEnd = async (items: string[]) => {
+    console.log(items);
+
     if (resumeData && resumeData.Data) {
       const newAreas = items.map((i, index) => {
-        const findArea = resumeData!.Data!.Areas.find((a) => a.Id === i.id);
+        const findArea = resumeData!.Data!.Areas.find((a) => a.Id === i);
         if (findArea) {
           return { ...findArea, Sequence: index };
         } else {
@@ -172,27 +174,32 @@ export default function ResumeEdit() {
                 </Box>
               </Stack>
             )}
-            <AreaDragContainer
-              items={resumeData.Data.Areas.map((a) => ({
-                id: a.Id,
-                title: a.TextLayout?.Title,
-                index: a.Sequence,
-                focused: focusedArea?.Id === a.Id,
-                onClick: (element) => {
-                  setFocusedArea(a);
-                  setControlTop(element.offsetTop);
-                  dispatch(setFocusedIndex(a.Sequence));
-                },
-                children: (
+
+            <DragDropContainer
+              droppableId={resumeData.Data.Id}
+              items={resumeData.Data.Areas.map((a) => a.Id)}
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+            >
+              {resumeData.Data.Areas.map((a) => (
+                <AreaItem
+                  key={a.Id}
+                  id={a.Id}
+                  title={a.TextLayout?.Title}
+                  focused={focusedArea?.Id === a.Id}
+                  onClick={(element) => {
+                    setFocusedArea(a);
+                    setControlTop(element.offsetTop);
+                    dispatch(setFocusedIndex(a.Sequence));
+                  }}
+                >
                   <RichTextEditor
                     controllable={false}
                     initialEditorState={a.TextLayout?.Content}
                   ></RichTextEditor>
-                ),
-              }))}
-              onDragEnd={handleDragEnd}
-              onDragStart={handleDragStart}
-            />
+                </AreaItem>
+              ))}
+            </DragDropContainer>
           </Stack>
 
           {!isEmptyLayout && (
