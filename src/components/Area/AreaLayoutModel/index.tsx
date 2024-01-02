@@ -8,9 +8,12 @@ import {
 } from "@mui/material";
 import { ReactComponent as TextFrame } from "assets/images/svg/text-frame.svg";
 import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-frame.svg";
+import { ReactComponent as ListFrame } from "assets/images/svg/list-frame.svg";
+import { ReactComponent as KeyValueListFrame } from "assets/images/svg/key-value-list-frame.svg";
+import { ReactComponent as IconTextFrame } from "assets/images/svg/icon-text-frame.svg";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "features/store";
+import { useAppDispatch, useAppSelector } from "features/store";
 import { setArrangement } from "features/layout/layoutSlice";
 import { LayoutArrangement } from "types/DTO/AreaDTO";
 
@@ -47,8 +50,7 @@ const LayoutButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export default function Layout() {
-  const [selectedLayout, setSelectLayout] =
-    React.useState<LayoutArrangement | null>(null);
+  const layoutState = useAppSelector((state) => state.layoutState);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -56,12 +58,10 @@ export default function Layout() {
     event: React.MouseEvent<HTMLElement>,
     newSelectedLayout: LayoutArrangement | null
   ) => {
-    setSelectLayout(newSelectedLayout);
+    dispatch(setArrangement(newSelectedLayout || LayoutArrangement.TEXT));
   };
 
   const handleNext = () => {
-    dispatch(setArrangement(selectedLayout || LayoutArrangement.TEXT));
-
     navigate("../Area");
   };
 
@@ -73,29 +73,29 @@ export default function Layout() {
       </Typography>
       <LayoutButtonGroup
         exclusive
-        value={selectedLayout}
+        value={layoutState.arrangement}
         onChange={handleChange}
       >
         <LayoutButton value={LayoutArrangement.TEXT}>
           <TextFrame />
           <Typography variant="body1">純文字</Typography>
         </LayoutButton>
-        {/* <LayoutButton value="icon-text">
+        <LayoutButton value={LayoutArrangement.ICONTEXT}>
           <IconTextFrame />
           <Typography variant="body1">貼圖與文字</Typography>
-        </LayoutButton> */}
+        </LayoutButton>
         <LayoutButton value={LayoutArrangement.IMAGETEXT}>
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
         <LayoutButton value={LayoutArrangement.LIST}>
-          <TextFrame />
+          <ListFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>
-        {/* <LayoutButton value="key-value-list">
-          <TextFrame />
+        <LayoutButton value={LayoutArrangement.KEYVALUELIST}>
+          <KeyValueListFrame />
           <Typography variant="body1">鍵值條列文字</Typography>
-        </LayoutButton> */}
+        </LayoutButton>
       </LayoutButtonGroup>
       <Stack direction="row" spacing={1}>
         <Button variant="outlined" onClick={() => navigate("../New")}>

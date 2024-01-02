@@ -1,7 +1,9 @@
 import {
+  Box,
   Divider,
   IconButton,
   ListItem,
+  ListItemText,
   Stack,
   TextField,
   Typography,
@@ -14,7 +16,8 @@ import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 
 type AreaListItemProps = {
   id: string;
-  content?: string;
+  itemKey?: string;
+  value?: string;
   editable?: boolean;
   onClickDelete?: (id: string) => void;
   onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
@@ -22,7 +25,8 @@ type AreaListItemProps = {
 
 function AreaListItem({
   id,
-  content,
+  itemKey: key = "",
+  value = "",
   editable = false,
   onClickDelete,
   onChange,
@@ -36,19 +40,6 @@ function AreaListItem({
 
   return (
     <ListItem
-      secondaryAction={
-        editable ? (
-          <Stack direction={"row"} spacing={1}>
-            <Divider orientation="vertical" flexItem />
-            <IconButton onClick={handleDeleteClick}>
-              <ClearIcon />
-            </IconButton>
-            <IconButton {...props}>
-              <DragIndicatorIcon />
-            </IconButton>
-          </Stack>
-        ) : undefined
-      }
       sx={{
         borderBottom: `1px solid ${theme.palette.divider}`,
         padding: 2,
@@ -56,13 +47,35 @@ function AreaListItem({
       }}
     >
       {editable ? (
-        <TextField
-          variant="standard"
-          defaultValue={content}
-          onChange={onChange}
-        />
+        <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
+          <TextField
+            variant="standard"
+            defaultValue={key}
+            onChange={onChange}
+          />
+          <Divider orientation="vertical" flexItem />
+          <TextField
+            variant="standard"
+            defaultValue={value}
+            onChange={onChange}
+            sx={{ flex: "1 1 auto" }}
+          />
+          <Stack direction={"row"} spacing={1}>
+            <Divider orientation="vertical" flexItem />
+            <IconButton onClick={handleDeleteClick}>
+              <ClearIcon />
+            </IconButton>
+            <IconButton {...props} tabIndex={-1}>
+              <DragIndicatorIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
       ) : (
-        <Typography variant="body1">{content}</Typography>
+        <Stack spacing={1} direction={"row"}>
+          <Typography variant="body1">{key}</Typography>
+          <Divider orientation="vertical" flexItem />
+          <Typography variant="body1">{value}</Typography>
+        </Stack>
       )}
     </ListItem>
   );

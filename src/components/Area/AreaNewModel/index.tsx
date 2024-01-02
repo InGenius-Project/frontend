@@ -15,7 +15,11 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import { useAppDispatch, useAppSelector } from "features/store";
-import { setTitle } from "features/layout/layoutSlice";
+import {
+  initializeState,
+  initializeStateWithoutFocusedIndex,
+  setTitle,
+} from "features/layout/layoutSlice";
 
 const areaOptions = ["簡介", "專業技能", "教育背景"];
 
@@ -39,14 +43,18 @@ export default function AreaNewModel() {
         },
       })
         .then(() => {
-          dispatch(setTitle(value || ""));
-          navigate(`../Layout`);
+          handleCustomClick();
         })
         .catch(() => {});
     } else {
       dispatch(setTitle(value || ""));
       navigate(`../Area`);
     }
+  };
+
+  const handleCustomClick = () => {
+    dispatch(initializeStateWithoutFocusedIndex());
+    navigate(`../Layout`);
   };
 
   return (
@@ -81,7 +89,7 @@ export default function AreaNewModel() {
             )}
           />
           <Box>
-            <Button variant="outlined" onClick={() => navigate("../Layout")}>
+            <Button variant="outlined" onClick={handleCustomClick}>
               自定義
             </Button>
           </Box>

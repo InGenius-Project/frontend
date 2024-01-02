@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
-import { NIL as GuidEmpty } from "uuid";
+import { NIL } from "uuid";
 
 export default function ResumeArea() {
   const { resumeId = "", areaId } = useParams();
@@ -40,18 +40,17 @@ export default function ResumeArea() {
         (area) => area.Id === areaData?.Data?.Id
       );
 
+      // Create a new area if not exist
       if (existAreaIndex === -1) {
-        const newAreaSequence = layoutState.focusedIndex + 1 || 0;
+        const newAreaSequence = layoutState.focusedIndex;
         const newArea: AreaDTO = {
-          Id: areaId ? areaId : GuidEmpty,
+          Id: NIL,
           Sequence: newAreaSequence,
           IsDisplayed: areaData?.Data?.IsDisplayed || true,
           TextLayout:
             layoutState.arrangement === LayoutArrangement.TEXT
               ? {
-                  Id: areaData?.Data?.TextLayout?.Id
-                    ? areaData.Data.TextLayout.Id
-                    : GuidEmpty,
+                  Id: NIL,
                   Title: layoutState.title,
                   Arrangement: LayoutArrangement.TEXT,
                   Type: layoutState.type,
@@ -61,29 +60,41 @@ export default function ResumeArea() {
           ImageTextLayout:
             layoutState.arrangement === LayoutArrangement.IMAGETEXT
               ? {
-                  Id: areaData?.Data?.TextLayout?.Id
-                    ? areaData.Data.TextLayout.Id
-                    : GuidEmpty,
+                  Id: NIL,
                   Title: layoutState.title,
                   Arrangement: LayoutArrangement.IMAGETEXT,
                   Type: layoutState.type,
                   Content: JSON.stringify(layoutState.content),
                   Image: {
-                    Id: GuidEmpty,
+                    Id: NIL,
                     Content: layoutState.image || "",
                   },
+                }
+              : undefined,
+          ListLayout:
+            layoutState.arrangement === LayoutArrangement.LIST
+              ? {
+                  Id: NIL,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.LIST,
+                  Type: layoutState.type,
+                  Items: layoutState.listItems.map((i) => ({
+                    Id: NIL,
+                    Name: i.name,
+                    Type: "CUSTOM", // TODO: Base on area type
+                  })),
                 }
               : undefined,
         };
 
         // Insert the new area at the specified sequence
-        areas.splice(newAreaSequence, 0, newArea);
+        areas.splice(newAreaSequence + 1, 0, newArea);
 
         // Update the Sequence for the rest of the areas
         const updatedAreas = areas.map((area, i) => {
           return {
             ...area,
-            Sequence: i + newAreaSequence + 1,
+            Sequence: i,
           };
         });
 
@@ -99,7 +110,7 @@ export default function ResumeArea() {
               ? {
                   Id: areaData?.Data?.TextLayout?.Id
                     ? areaData.Data.TextLayout.Id
-                    : GuidEmpty,
+                    : NIL,
                   Title: layoutState.title,
                   Arrangement: LayoutArrangement.TEXT,
                   Type: layoutState.type,
@@ -111,7 +122,7 @@ export default function ResumeArea() {
               ? {
                   Id: areaData?.Data?.TextLayout?.Id
                     ? areaData.Data.TextLayout.Id
-                    : GuidEmpty,
+                    : NIL,
                   Title: layoutState.title,
                   Arrangement: LayoutArrangement.IMAGETEXT,
                   Type: layoutState.type,
@@ -119,9 +130,25 @@ export default function ResumeArea() {
                   Image: {
                     Id: areaData?.Data?.ImageTextLayout?.Id
                       ? areaData?.Data?.ImageTextLayout?.Id
-                      : GuidEmpty,
+                      : NIL,
                     Content: layoutState.image || "",
                   },
+                }
+              : undefined,
+          ListLayout:
+            layoutState.arrangement === LayoutArrangement.LIST
+              ? {
+                  Id: areaData?.Data?.TextLayout?.Id
+                    ? areaData.Data.TextLayout.Id
+                    : NIL,
+                  Title: layoutState.title,
+                  Arrangement: LayoutArrangement.LIST,
+                  Type: layoutState.type,
+                  Items: layoutState.listItems.map((i) => ({
+                    Id: i.id,
+                    Name: i.name,
+                    Type: "CUSTOM", // TODO: Base on area type
+                  })),
                 }
               : undefined,
         };

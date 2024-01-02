@@ -4,6 +4,7 @@ export interface AreaDTO {
   IsDisplayed: boolean;
   TextLayout?: TextLayoutDTO;
   ImageTextLayout?: ImageTextLayoutDTO;
+  ListLayout?: ListLayoutDTO;
 }
 
 export interface AreaPostDTO {
@@ -13,6 +14,7 @@ export interface AreaPostDTO {
   IsDisplayed: boolean;
   TextLayout?: TextLayoutDTO;
   ImageTextLayout?: ImageTextLayoutDTO;
+  ListLayoutDTO?: ListLayoutDTO;
 }
 
 export interface LayoutDTO {
@@ -36,10 +38,22 @@ export interface ImageDTO {
   Content: string;
 }
 
+export interface ListLayoutDTO extends LayoutDTO {
+  Arrangement: LayoutArrangement.LIST;
+  Items?: Array<TagDTO>;
+}
+export interface TagDTO {
+  Id: string;
+  Name: string;
+  Type: string;
+}
+
 export enum LayoutArrangement {
   "TEXT" = "TEXT",
   "IMAGETEXT" = "IMAGETEXT",
   "LIST" = "LIST",
+  "KEYVALUELIST" = "KEYVALUELIST",
+  "ICONTEXT" = "ICONTEXT",
 }
 
 export enum LayoutType {

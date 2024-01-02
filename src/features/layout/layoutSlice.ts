@@ -10,6 +10,19 @@ interface LayoutState {
   content?: EditorState | string;
   image?: string;
   focusedIndex: number;
+  listItems: Array<ListItem>;
+  keyValueListItems: Array<KeyValueListItem>;
+}
+
+export interface ListItem {
+  id: string;
+  name: string;
+}
+
+export interface KeyValueListItem {
+  id: string;
+  key: string;
+  value: string;
 }
 
 const initialState: LayoutState = {
@@ -19,12 +32,23 @@ const initialState: LayoutState = {
   content: undefined,
   image: undefined,
   focusedIndex: -1,
+  listItems: [],
+  keyValueListItems: [],
 };
 
 const layoutSlice = createSlice({
   name: "layout",
   initialState,
   reducers: {
+    initializeState: (state) => {
+      return initialState;
+    },
+    initializeStateWithoutFocusedIndex: (state) => {
+      return {
+        ...initialState,
+        focusedIndex: state.focusedIndex,
+      };
+    },
     setType: (state, action: PayloadAction<LayoutType>) => {
       state.type = action.payload;
     },
@@ -45,6 +69,15 @@ const layoutSlice = createSlice({
     },
     setImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
+    },
+    setListItem: (state, action: PayloadAction<Array<ListItem>>) => {
+      state.listItems = action.payload;
+    },
+    setKetValueListItems: (
+      state,
+      action: PayloadAction<Array<KeyValueListItem>>
+    ) => {
+      state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
       var { TextLayout, ImageTextLayout } = action.payload;
@@ -77,12 +110,16 @@ const layoutSlice = createSlice({
 });
 
 export const {
+  initializeState,
+  initializeStateWithoutFocusedIndex,
   setType,
   setTitle,
   setArrangement,
   setContent,
   setLayout,
+  setListItem,
   setLayoutByArea,
+  setKetValueListItems,
   setFocusedIndex,
   setImage,
 } = layoutSlice.actions;
