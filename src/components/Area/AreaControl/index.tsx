@@ -5,37 +5,41 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAnimate, motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type AreaControlProps = {
   top: number | undefined;
   disabled?: boolean;
+  visibled?: boolean;
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   onDeleteClick?: React.MouseEventHandler<HTMLButtonElement>;
   onEditClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onVisibilityChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => void;
 };
 
 const AreaControl = ({
   top,
   disabled,
+  visibled,
   onAddClick,
   onDeleteClick,
   onEditClick,
+  onVisibilityChange,
 }: AreaControlProps) => {
   const theme = useTheme();
   const [motionRef, animate] = useAnimate();
+  const [visibledCheckState, setVisibledCheckState] = useState(visibled);
+
+  useEffect(() => {
+    setVisibledCheckState(visibled);
+  }, [visibled]);
 
   React.useEffect(() => {
     animate(motionRef.current, { top });
   }, [top, motionRef, animate]);
-
-  const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
-    onAddClick && onAddClick(event);
-  };
 
   return (
     <motion.div
@@ -59,7 +63,7 @@ const AreaControl = ({
           <IconButton
             disabled={disabled}
             size="small"
-            onClick={handleAddClick}
+            onClick={onAddClick}
             onMouseDown={(e) => e.preventDefault()}
           >
             <AddIcon />
@@ -70,6 +74,8 @@ const AreaControl = ({
           disabled={disabled}
           checkedIcon={<VisibilityOffIcon />}
           size="small"
+          checked={!visibledCheckState}
+          onChange={onVisibilityChange}
           onMouseDown={(e) => e.preventDefault()}
         />
         <Box>

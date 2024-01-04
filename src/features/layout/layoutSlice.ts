@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { areaApi } from "features/api/area/area";
 import { EditorState } from "lexical";
+import { parse } from "path";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 interface LayoutState {
@@ -8,10 +9,22 @@ interface LayoutState {
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image?: {
-    id: string;
-    content: string;
-  };
+  image?: string;
+  listItems?: Array<Tag>;
+  keyValueListItems: Array<KeyValueListItem>;
+  focusedAreaDTO?: AreaDTO;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  type: string;
+}
+
+export interface KeyValueListItem {
+  id: string;
+  key: Tag;
+  value: string;
 }
 
 const initialState: LayoutState = {
@@ -20,12 +33,23 @@ const initialState: LayoutState = {
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
   image: undefined,
+  listItems: undefined,
+  keyValueListItems: [],
 };
 
 const layoutSlice = createSlice({
   name: "layout",
   initialState,
   reducers: {
+    initializeState: (state) => {
+      return initialState;
+    },
+    initializeStateWithoutFocusedArea: (state) => {
+      return {
+        ...initialState,
+        focusedAreaDTO: state.focusedAreaDTO,
+      };
+    },
     setType: (state, action: PayloadAction<LayoutType>) => {
       state.type = action.payload;
     },
@@ -41,46 +65,65 @@ const layoutSlice = createSlice({
     setLayout: (state, action: PayloadAction<LayoutState>) => {
       state = action.payload;
     },
-    setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
-      var { TextLayout, ImageTextLayout } = action.payload;
-
-      if (TextLayout) {
-        return {
-          ...state,
-          title: TextLayout.Title,
-          arrangement: LayoutArrangement.TEXT,
-          content: TextLayout.Content,
-        };
-      }
-      if (ImageTextLayout) {
-        return {
-          ...state,
-          title: ImageTextLayout.Title,
-          arrangement: LayoutArrangement.TEXT,
-          content: ImageTextLayout.Content,
-          image: {
-            id: ImageTextLayout.Image.Id,
-            content: ImageTextLayout.Image.Content,
-          },
-        };
-      }
-      return state;
+    setFocusedAreaDTO: (state, action: PayloadAction<AreaDTO>) => {
+      state.focusedAreaDTO = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(areaApi.endpoints.postArea.matchFulfilled, () => {
-      return initialState;
-    });
+    setImage: (state, action: PayloadAction<string>) => {
+      state.image = action.payload;
+    },
+    setListItem: (state, action: PayloadAction<Array<Tag>>) => {
+      state.listItems = action.payload;
+    },
+    setKetValueListItems: (
+      state,
+      action: PayloadAction<Array<KeyValueListItem>>
+    ) => {
+      state.keyValueListItems = action.payload;
+    },
+    setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
+      const { Title, Type, Arrangement } = action.payload;
+
+      var parseArea = {
+        ...state,
+        title: Title,
+        type: Type,
+        arrangement: Arrangement,
+      };
+
+      switch (Arrangement) {
+        case LayoutArrangement.TEXT:
+          parseArea.content = action.payload.TextLayout?.Content;
+          break;
+        case LayoutArrangement.IMAGETEXT:
+          parseArea.content = action.payload.ImageTextLayout?.Content;
+          parseArea.image = action.payload.ImageTextLayout?.Image.Content;
+          break;
+        case LayoutArrangement.LIST:
+          parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
+            id: i.Id,
+            name: i.Name,
+            type: "CUSTOM",
+          }));
+          break;
+      }
+      return parseArea;
+    },
   },
 });
 
 export const {
+  initializeState,
+  initializeStateWithoutFocusedArea,
   setType,
   setTitle,
   setArrangement,
   setContent,
   setLayout,
+  setListItem,
   setLayoutByArea,
+  setKetValueListItems,
+  setFocusedAreaDTO,
+  setImage,
 } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

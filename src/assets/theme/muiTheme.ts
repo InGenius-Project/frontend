@@ -28,6 +28,9 @@ let theme = extendTheme({
         common: {
           background: "#fcebfb",
         },
+        info: {
+          main: "#808080",
+        },
         text: {
           primary: "#404040",
         },
