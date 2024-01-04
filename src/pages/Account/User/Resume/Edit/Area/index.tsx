@@ -42,18 +42,20 @@ export default function ResumeArea() {
 
       // Create a new area if not exist
       if (existAreaIndex === -1) {
-        const newAreaSequence = layoutState.focusedIndex;
+        const newAreaSequence = layoutState.focusedAreaDTO
+          ? layoutState.focusedAreaDTO.Sequence
+          : resumeData.Data.Areas.length;
         const newArea: AreaDTO = {
           Id: NIL,
           Sequence: newAreaSequence,
-          IsDisplayed: areaData?.Data?.IsDisplayed || true,
+          Type: layoutState.type,
+          IsDisplayed: true,
+          Title: layoutState.title,
+          Arrangement: layoutState.arrangement,
           TextLayout:
             layoutState.arrangement === LayoutArrangement.TEXT
               ? {
                   Id: NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.TEXT,
-                  Type: layoutState.type,
                   Content: JSON.stringify(layoutState.content),
                 }
               : undefined,
@@ -61,9 +63,6 @@ export default function ResumeArea() {
             layoutState.arrangement === LayoutArrangement.IMAGETEXT
               ? {
                   Id: NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.IMAGETEXT,
-                  Type: layoutState.type,
                   Content: JSON.stringify(layoutState.content),
                   Image: {
                     Id: NIL,
@@ -75,13 +74,25 @@ export default function ResumeArea() {
             layoutState.arrangement === LayoutArrangement.LIST
               ? {
                   Id: NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.LIST,
-                  Type: layoutState.type,
-                  Items: layoutState.listItems.map((i) => ({
+                  Items: (layoutState.listItems || []).map((i) => ({
                     Id: NIL,
                     Name: i.name,
                     Type: "CUSTOM", // TODO: Base on area type
+                  })),
+                }
+              : undefined,
+          KeyValueListLayout:
+            layoutState.arrangement === LayoutArrangement.KEYVALUELIST
+              ? {
+                  Id: NIL,
+                  Items: (layoutState.keyValueListItems || []).map((i) => ({
+                    Id: NIL,
+                    Key: {
+                      Id: NIL,
+                      Name: i.key.name,
+                      Type: "CUSTOM",
+                    },
+                    Value: i.value,
                   })),
                 }
               : undefined,
@@ -100,20 +111,33 @@ export default function ResumeArea() {
 
         // Replace the old areas array with the updated one
         areas = updatedAreas;
+
+        // Post full Resume for update the sequence of the areas
+        postResume({
+          Id: resumeId,
+          Title: resumeData.Data.Title,
+          Areas: areas,
+          Visibility: resumeData.Data.Visibility,
+        })
+          .unwrap()
+          .then(() => {
+            navigate("..");
+            return;
+          });
       } else {
         // Update the existing area
         areas[existAreaIndex] = {
           ...areas[existAreaIndex],
-          IsDisplayed: areaData?.Data?.IsDisplayed || true,
+          Title: layoutState.title,
+          Arrangement: layoutState.arrangement,
+          Type: layoutState.type,
           TextLayout:
             layoutState.arrangement === LayoutArrangement.TEXT
               ? {
                   Id: areaData?.Data?.TextLayout?.Id
                     ? areaData.Data.TextLayout.Id
                     : NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.TEXT,
-                  Type: layoutState.type,
+
                   Content: JSON.stringify(layoutState.content),
                 }
               : undefined,
@@ -123,9 +147,6 @@ export default function ResumeArea() {
                   Id: areaData?.Data?.TextLayout?.Id
                     ? areaData.Data.TextLayout.Id
                     : NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.IMAGETEXT,
-                  Type: layoutState.type,
                   Content: JSON.stringify(layoutState.content),
                   Image: {
                     Id: areaData?.Data?.ImageTextLayout?.Id
@@ -138,31 +159,46 @@ export default function ResumeArea() {
           ListLayout:
             layoutState.arrangement === LayoutArrangement.LIST
               ? {
-                  Id: areaData?.Data?.TextLayout?.Id
-                    ? areaData.Data.TextLayout.Id
+                  Id: areaData?.Data?.ListLayout?.Id
+                    ? areaData.Data.ListLayout.Id
                     : NIL,
-                  Title: layoutState.title,
-                  Arrangement: LayoutArrangement.LIST,
-                  Type: layoutState.type,
-                  Items: layoutState.listItems.map((i) => ({
-                    Id: i.id,
+
+                  Items: (layoutState.listItems || []).map((i) => ({
+                    Id: NIL,
                     Name: i.name,
                     Type: "CUSTOM", // TODO: Base on area type
                   })),
                 }
               : undefined,
+          KeyValueListLayout:
+            layoutState.arrangement === LayoutArrangement.KEYVALUELIST
+              ? {
+                  Id: areaData?.Data?.KeyValueListLayout?.Id
+                    ? areaData.Data.KeyValueListLayout.Id
+                    : NIL,
+                  Items: (layoutState.keyValueListItems || []).map((i) => ({
+                    Id: NIL,
+                    Key: {
+                      Id: NIL,
+                      Name: i.key.name,
+                      Type: "CUSTOM",
+                    },
+                    Value: i.value,
+                  })),
+                }
+              : undefined,
         };
-      }
 
-      postResume({
-        Id: resumeId,
-        Title: resumeData.Data.Title,
-        Areas: areas,
-      })
-        .unwrap()
-        .then(() => {
-          navigate("..");
-        });
+        postArea({
+          ...areas[existAreaIndex],
+          ResumeId: resumeId,
+        })
+          .unwrap()
+          .then(() => {
+            navigate("..");
+            return;
+          });
+      }
     }
   };
 

@@ -22,6 +22,7 @@ export default function Resume() {
   const handelAddNewResumeClick = () => {
     postResume({
       Title: `${userStae.User?.Username}的履歷`,
+      Visibility: false,
     })
       .unwrap()
       .then((res) => {

@@ -44,7 +44,10 @@ export const resumeApi = baseApi.injectEndpoints({
         return response;
       },
     }),
-    postResume: builder.mutation<ResponseDTO<ResumeDTO>, ResumePostDTO>({
+    postResume: builder.mutation<
+      ResponseDTO<ResumeDTO>,
+      Partial<ResumePostDTO>
+    >({
       query(body) {
         return {
           url: "Resume",

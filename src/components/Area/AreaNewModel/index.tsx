@@ -17,7 +17,7 @@ import { useConfirm } from "material-ui-confirm";
 import { useAppDispatch, useAppSelector } from "features/store";
 import {
   initializeState,
-  initializeStateWithoutFocusedIndex,
+  initializeStateWithoutFocusedArea,
   setTitle,
 } from "features/layout/layoutSlice";
 
@@ -53,7 +53,7 @@ export default function AreaNewModel() {
   };
 
   const handleCustomClick = () => {
-    dispatch(initializeStateWithoutFocusedIndex());
+    dispatch(initializeStateWithoutFocusedArea());
     navigate(`../Layout`);
   };
 

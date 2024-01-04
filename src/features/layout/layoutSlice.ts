@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { areaApi } from "features/api/area/area";
 import { EditorState } from "lexical";
+import { parse } from "path";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 interface LayoutState {
@@ -9,19 +10,20 @@ interface LayoutState {
   title: string;
   content?: EditorState | string;
   image?: string;
-  focusedIndex: number;
-  listItems: Array<ListItem>;
+  listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
+  focusedAreaDTO?: AreaDTO;
 }
 
-export interface ListItem {
+export interface Tag {
   id: string;
   name: string;
+  type: string;
 }
 
 export interface KeyValueListItem {
   id: string;
-  key: string;
+  key: Tag;
   value: string;
 }
 
@@ -31,8 +33,7 @@ const initialState: LayoutState = {
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
   image: undefined,
-  focusedIndex: -1,
-  listItems: [],
+  listItems: undefined,
   keyValueListItems: [],
 };
 
@@ -43,10 +44,10 @@ const layoutSlice = createSlice({
     initializeState: (state) => {
       return initialState;
     },
-    initializeStateWithoutFocusedIndex: (state) => {
+    initializeStateWithoutFocusedArea: (state) => {
       return {
         ...initialState,
-        focusedIndex: state.focusedIndex,
+        focusedAreaDTO: state.focusedAreaDTO,
       };
     },
     setType: (state, action: PayloadAction<LayoutType>) => {
@@ -64,13 +65,13 @@ const layoutSlice = createSlice({
     setLayout: (state, action: PayloadAction<LayoutState>) => {
       state = action.payload;
     },
-    setFocusedIndex: (state, action: PayloadAction<number>) => {
-      state.focusedIndex = action.payload;
+    setFocusedAreaDTO: (state, action: PayloadAction<AreaDTO>) => {
+      state.focusedAreaDTO = action.payload;
     },
     setImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
     },
-    setListItem: (state, action: PayloadAction<Array<ListItem>>) => {
+    setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
     },
     setKetValueListItems: (
@@ -80,38 +81,39 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
-      var { TextLayout, ImageTextLayout } = action.payload;
+      const { Title, Type, Arrangement } = action.payload;
 
-      if (TextLayout) {
-        return {
-          ...state,
-          title: TextLayout.Title,
-          arrangement: LayoutArrangement.TEXT,
-          content: TextLayout.Content,
-        };
+      var parseArea = {
+        ...state,
+        title: Title,
+        type: Type,
+        arrangement: Arrangement,
+      };
+
+      switch (Arrangement) {
+        case LayoutArrangement.TEXT:
+          parseArea.content = action.payload.TextLayout?.Content;
+          break;
+        case LayoutArrangement.IMAGETEXT:
+          parseArea.content = action.payload.ImageTextLayout?.Content;
+          parseArea.image = action.payload.ImageTextLayout?.Image.Content;
+          break;
+        case LayoutArrangement.LIST:
+          parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
+            id: i.Id,
+            name: i.Name,
+            type: "CUSTOM",
+          }));
+          break;
       }
-      if (ImageTextLayout) {
-        return {
-          ...state,
-          title: ImageTextLayout.Title,
-          arrangement: LayoutArrangement.TEXT,
-          content: ImageTextLayout.Content,
-          image: ImageTextLayout.Image.Content,
-        };
-      }
-      return state;
+      return parseArea;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(areaApi.endpoints.postArea.matchFulfilled, () => {
-      return initialState;
-    });
   },
 });
 
 export const {
   initializeState,
-  initializeStateWithoutFocusedIndex,
+  initializeStateWithoutFocusedArea,
   setType,
   setTitle,
   setArrangement,
@@ -120,7 +122,7 @@ export const {
   setListItem,
   setLayoutByArea,
   setKetValueListItems,
-  setFocusedIndex,
+  setFocusedAreaDTO,
   setImage,
 } = layoutSlice.actions;
 

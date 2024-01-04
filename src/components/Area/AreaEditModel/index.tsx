@@ -10,7 +10,8 @@ import {
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "features/store";
 import {
-  ListItem,
+  KeyValueListItem,
+  Tag,
   setContent,
   setKetValueListItems,
   setListItem,
@@ -33,14 +34,6 @@ type AreaEditModelProps = {
   loading?: boolean;
 };
 
-const dummyListItems: ListItem[] = [
-  {
-    id: uuid(),
-    name: "React",
-  },
-  { id: uuid(), name: "UI/UX" },
-];
-
 export default function AreaEditModel({
   onAddClick,
   loading,
@@ -59,7 +52,7 @@ export default function AreaEditModel({
 
   const handleListItemDragEnd = (item: string[]) => {
     const newListItem = item
-      .map((id) => layoutState.listItems.find((item) => item.id === id))
+      .map((id) => (layoutState.listItems || []).find((item) => item.id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setListItem(newListItem));
@@ -78,7 +71,11 @@ export default function AreaEditModel({
         ...layoutState.keyValueListItems,
         {
           id: uuid(),
-          key: "",
+          key: {
+            id: uuid(),
+            name: "",
+            type: "CUSTOM",
+          },
           value: "",
         },
       ])
@@ -86,19 +83,39 @@ export default function AreaEditModel({
   };
 
   const handleListAddClick = () => {
-    dispatch(
-      setListItem([
-        ...layoutState.listItems,
-        {
-          id: uuid(),
-          name: "",
-        },
-      ])
-    );
+    if (layoutState.listItems) {
+      dispatch(
+        setListItem([
+          ...layoutState.listItems,
+          {
+            id: uuid(),
+            name: "",
+            type: "CUSTOM",
+          },
+        ])
+      );
+    } else {
+      dispatch(setListItem([{ id: uuid(), name: "", type: "CUSTOM" }]));
+    }
   };
 
   const handleListRemoveClick = (id: string) => {
-    dispatch(setListItem(layoutState.listItems.filter((i) => i.id !== id)));
+    dispatch(
+      setListItem((layoutState.listItems || []).filter((i) => i.id !== id))
+    );
+  };
+
+  const handleKeyValueListItemChange = (item: KeyValueListItem) => {
+    dispatch(
+      setKetValueListItems(
+        layoutState.keyValueListItems.map((i) => {
+          if (i.id === item.id) {
+            return item;
+          }
+          return i;
+        })
+      )
+    );
   };
 
   return (
@@ -173,6 +190,7 @@ export default function AreaEditModel({
                   value={item.value}
                   key={item.id}
                   editable
+                  onChange={handleKeyValueListItemChange}
                 />
               ))}
             </DragDropContainer>
@@ -200,11 +218,11 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={layoutState.listItems.map((item) => item.id)}
+              items={(layoutState.listItems || []).map((item) => item.id)}
               spacing={0}
               onDragEnd={handleListItemDragEnd}
             >
-              {layoutState.listItems.map((i) => (
+              {(layoutState.listItems || []).map((i) => (
                 <AreaListItem
                   content={i.name}
                   editable
@@ -214,7 +232,7 @@ export default function AreaEditModel({
                   onChange={(event) =>
                     dispatch(
                       setListItem(
-                        layoutState.listItems.map((item) => {
+                        (layoutState.listItems || []).map((item) => {
                           if (item.id === i.id)
                             return { ...item, name: event.target.value };
                           return item;
