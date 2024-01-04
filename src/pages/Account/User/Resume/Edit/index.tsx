@@ -19,9 +19,9 @@ import {
 import { setFocusedAreaDTO, setType } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React, { useEffect, useRef } from "react";
-import { OnDragStartResponder } from "react-beautiful-dnd";
+import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
@@ -103,7 +103,7 @@ export default function ResumeEdit() {
       .then(() => navigate(".."));
   };
 
-  const handleDragEnd = async (items: string[]) => {
+  const handleDragEnd = async (items: string[], result?: DropResult) => {
     if (resumeData && resumeData.Data) {
       const newAreas = items.map((i, index) => {
         const findArea = resumeData!.Data!.Areas.find((a) => a.Id === i);
@@ -121,6 +121,13 @@ export default function ResumeEdit() {
         Visibility: resumeData.Data.Visibility,
       });
     }
+
+    const dragItem = result
+      ? document.querySelector<HTMLElement>(
+          `[data-rbd-draggable-id=${result.draggableId}]`
+        )
+      : undefined;
+    dragItem && setControlTop(dragItem?.offsetTop);
   };
 
   const handleDragStart: OnDragStartResponder = ({ draggableId }) => {

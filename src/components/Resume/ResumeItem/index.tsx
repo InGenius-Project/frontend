@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import React, { useState } from "react";
 import { useDebounce, useUpdateEffect } from "ahooks";
+import { addHours } from "date-fns";
 
 function getLastModifiedTimeString(modifiedAt: Date): string {
   const now = new Date();
@@ -105,7 +106,8 @@ const ResumeItem = ({
             )}
             <Typography variant="caption">
               上次編輯時間:{" "}
-              {getLastModifiedTimeString(new Date(modifiedAt)) || "?"}
+              {getLastModifiedTimeString(addHours(new Date(modifiedAt), 8)) ||
+                "?"}
             </Typography>
           </Stack>
         </Box>

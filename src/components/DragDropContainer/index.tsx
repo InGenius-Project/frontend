@@ -47,7 +47,7 @@ type DragDropContainerProps = {
   /** Spacing between items */
   spacing?: number;
   /** return the list of item's id onDragEnd */
-  onDragEnd: (items: string[]) => void;
+  onDragEnd: (items: string[], result?: DropResult) => void;
   onDragStart?: OnDragStartResponder;
   onDragUpdate?: OnDragUpdateResponder;
 };
@@ -74,7 +74,7 @@ const DragDropContainer = ({
       result.source.index,
       result.destination.index
     );
-    onDragEnd && onDragEnd(updatedItems);
+    onDragEnd && onDragEnd(updatedItems, result);
   };
 
   return (
