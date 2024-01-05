@@ -1,5 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { AreaControl } from "components/Area";
+import ProfileItem from "components/ProfileItem";
 import React from "react";
 
 export default function Profile() {
@@ -10,22 +11,24 @@ export default function Profile() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        width: "100%",
-        flexGrow: 1,
-        gap: 1,
-      }}
-    >
-      <Stack
-        spacing={1}
+    <>
+      <ProfileItem />
+      <Box
         sx={{
-          flex: "1 1 auto",
-          position: "relative",
+          display: "flex",
+          width: "100%",
+          flexGrow: 1,
+          gap: 1,
         }}
       >
-        {/* <AreaItem onClick={handleClick} title="簡介">
+        <Stack
+          spacing={1}
+          sx={{
+            flex: "1 1 auto",
+            position: "relative",
+          }}
+        >
+          {/* <AreaItem onClick={handleClick} title="簡介">
           <Typography variant="body1">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Asperiores
             dicta quas iure repellendus eaque inventore tempora ab. Id
@@ -111,17 +114,18 @@ export default function Profile() {
             </ListItem>
           </List>
         </AreaItem> */}
-      </Stack>
+        </Stack>
 
-      <Box
-        sx={{
-          flexShrink: 0,
-          width: "var(--ing-width-areaControl)",
-          position: "relative",
-        }}
-      >
-        <AreaControl top={controlTop} />
+        <Box
+          sx={{
+            flexShrink: 0,
+            width: "var(--ing-width-areaControl)",
+            position: "relative",
+          }}
+        >
+          <AreaControl top={controlTop} />
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }

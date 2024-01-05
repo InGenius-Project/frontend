@@ -2,6 +2,7 @@ import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "components/SideBar";
 import UserHeader from "components/UserHeader";
+
 import { AnimatePresence, useCycle } from "framer-motion";
 
 export default function UserRoute() {
@@ -20,6 +21,7 @@ export default function UserRoute() {
       <Box
         sx={{
           minHeight: "calc(100vh - var(--ing-height-navbar))",
+          width: "100%",
           flexGrow: 1,
         }}
       >

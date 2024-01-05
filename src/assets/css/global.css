@@ -1,5 +1,7 @@
 :root {
   --ing-height-navbar: 80px;
+  --ing-height-profile-cover: 125px;
+  --ing-height-profile-avatar: 5rem;
 
   --ing-width-sidebar: 9rem;
   --ing-width-areaControl: 56px;
