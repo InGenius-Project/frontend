@@ -28,7 +28,6 @@ export default function ResumeEdit() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
-  // const [focusedArea, setFocusedArea] = React.useState<AreaDTO>();
   const [isEmptyLayout, setIsEmptyLayout] = React.useState<boolean>(false);
   const areaContainerRef = useRef(null);
 

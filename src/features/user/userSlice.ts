@@ -22,16 +22,7 @@ export const userSlice = createSlice({
     setUserInfo: (state, action: PayloadAction<UserInfoDTO>) => {
       state.User = action.payload;
     },
-    setUserName: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        User: {
-          Email: state.User?.Email || "",
-          Id: state.User?.Id || "",
-          Username: action.payload,
-        },
-      };
-    },
+
     setToken: (state, action: PayloadAction<TokenDTO>) => {
       state.Token = action.payload;
     },
@@ -44,5 +35,4 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const { logout, setUser, setUserInfo, setToken, setUserName } =
-  userSlice.actions;
+export const { logout, setUser, setUserInfo, setToken } = userSlice.actions;

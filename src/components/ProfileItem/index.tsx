@@ -14,11 +14,11 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import dummyCover from "assets/images/png/dummyCover.jpg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppDispatch, useAppSelector } from "features/store";
+import { useAppSelector } from "features/store";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { useDebounce, useUpdateEffect } from "ahooks";
-import { setUserName } from "features/user/userSlice";
 import { usePostUserMutation } from "features/api/user/postUser";
+import { useState } from "react";
 
 type ProfileItemProps = {
   editable?: boolean;
@@ -33,14 +33,14 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
 function ProfileItem({ editable = false }: ProfileItemProps) {
   const theme = useTheme();
   const userState = useAppSelector((state) => state.userState);
-  const debouncedUserName = useDebounce(userState.User?.Username);
-  const dispatch = useAppDispatch();
+  const [userNameState, setUserNameState] = useState(userState.User?.Username);
+  const debouncedUserName = useDebounce(userNameState);
   const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
 
   const handleChangeUserName: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
-    dispatch(setUserName(event.target.value));
+    setUserNameState(event.target.value);
   };
 
   useUpdateEffect(() => {
@@ -48,6 +48,10 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
       Username: debouncedUserName || "",
     });
   }, [debouncedUserName]);
+
+  useUpdateEffect(() => {
+    setUserNameState(userState.User?.Username);
+  }, [userState.User?.Username]);
 
   const handleDelete = () => {};
   return (
@@ -116,7 +120,7 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
         {editable ? (
           <UserNameTextField
             variant={"standard"}
-            defaultValue={userState.User?.Username || ""}
+            value={userNameState}
             onChange={handleChangeUserName}
             InputProps={{
               endAdornment: isPostingUser ? (
