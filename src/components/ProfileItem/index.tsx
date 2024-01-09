@@ -2,23 +2,52 @@ import {
   Box,
   Button,
   Chip,
-  CssBaseline,
-  IconButton,
+  CircularProgress,
+  InputAdornment,
   Paper,
   Stack,
+  TextField,
   Typography,
+  styled,
   useTheme,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import dummyCover from "assets/images/png/dummyCover.jpg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppSelector } from "features/store";
+import { useAppDispatch, useAppSelector } from "features/store";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import React from "react";
+import { useDebounce, useUpdateEffect } from "ahooks";
+import { setUserName } from "features/user/userSlice";
+import { usePostUserMutation } from "features/api/user/postUser";
 
-function ProfileItem() {
+type ProfileItemProps = {
+  editable?: boolean;
+};
+
+const UserNameTextField = styled(TextField)(({ theme }) => ({
+  ".MuiInputBase-root": {
+    fontSize: theme.typography.h4.fontSize,
+    width: "10em",
+  },
+}));
+function ProfileItem({ editable = false }: ProfileItemProps) {
   const theme = useTheme();
   const userState = useAppSelector((state) => state.userState);
+  const debouncedUserName = useDebounce(userState.User?.Username);
+  const dispatch = useAppDispatch();
+  const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
+
+  const handleChangeUserName: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    dispatch(setUserName(event.target.value));
+  };
+
+  useUpdateEffect(() => {
+    postUser({
+      Username: debouncedUserName || "",
+    });
+  }, [debouncedUserName]);
 
   const handleDelete = () => {};
   return (
@@ -84,7 +113,22 @@ function ProfileItem() {
           mt: "calc(var(--ing-height-profile-cover) + var(--ing-height-profile-avatar) / 4)",
         }}
       >
-        <Typography variant="h3">{userState.User?.Username}</Typography>
+        {editable ? (
+          <UserNameTextField
+            variant={"standard"}
+            defaultValue={userState.User?.Username || ""}
+            onChange={handleChangeUserName}
+            InputProps={{
+              endAdornment: isPostingUser ? (
+                <InputAdornment position="start">
+                  <CircularProgress />
+                </InputAdornment>
+              ) : undefined,
+            }}
+          />
+        ) : (
+          <Typography variant="h4">{userState.User?.Username}</Typography>
+        )}
         <Typography variant="caption">就讀於中正大學 資訊管理學系</Typography>
         <Stack direction={"row"} spacing={1}>
           <Chip label="積極" onDelete={handleDelete} />

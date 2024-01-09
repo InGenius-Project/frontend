@@ -10,3 +10,5 @@ export interface UserInfoDTO {
   Email: string;
   Username: string;
 }
+
+export type UserInfoPostDTO = Pick<UserInfoDTO, "Username">;

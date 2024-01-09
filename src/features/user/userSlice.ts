@@ -2,7 +2,12 @@ import { TokenDTO } from "./../../types/DTO/TokenDTO";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
 
-const initialState: UserDTO = {
+type userSliceType = {
+  User?: UserInfoDTO;
+  Token?: TokenDTO;
+};
+
+const initialState: userSliceType = {
   User: undefined,
   Token: undefined,
 };
@@ -17,6 +22,16 @@ export const userSlice = createSlice({
     setUserInfo: (state, action: PayloadAction<UserInfoDTO>) => {
       state.User = action.payload;
     },
+    setUserName: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        User: {
+          Email: state.User?.Email || "",
+          Id: state.User?.Id || "",
+          Username: action.payload,
+        },
+      };
+    },
     setToken: (state, action: PayloadAction<TokenDTO>) => {
       state.Token = action.payload;
     },
@@ -29,4 +44,5 @@ export const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const { logout, setUser, setUserInfo, setToken } = userSlice.actions;
+export const { logout, setUser, setUserInfo, setToken, setUserName } =
+  userSlice.actions;

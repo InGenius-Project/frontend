@@ -12,7 +12,7 @@ export default function Profile() {
 
   return (
     <>
-      <ProfileItem />
+      <ProfileItem editable />
       <Box
         sx={{
           display: "flex",

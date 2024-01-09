@@ -15,6 +15,7 @@ export const getUserApi = baseApi.injectEndpoints({
           data.Data && dispatch(setUserInfo(data.Data));
         } catch (error) {}
       },
+      providesTags: ["User"],
     }),
   }),
 });

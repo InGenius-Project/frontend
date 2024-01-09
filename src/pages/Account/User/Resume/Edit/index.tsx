@@ -53,7 +53,6 @@ export default function ResumeEdit() {
     if (resumeData && resumeData.Data) {
       // Set FoucesArea to first Areas
       if (resumeData.Data.Areas && !focusedAreaDTO) {
-        console.log("set");
         const firstAreas = resumeData.Data.Areas.find((a) => a.Sequence === 0);
         firstAreas && dispatch(setFocusedAreaDTO(firstAreas));
       }
