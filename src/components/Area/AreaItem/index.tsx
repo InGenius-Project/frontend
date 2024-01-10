@@ -2,17 +2,21 @@ import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
+import RichTextEditor from "components/RichTextEditor";
+import AreaListItem from "../AreaListItem";
+import AreaKeyValueListItem from "../AreaKeyValueListItem";
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
   id: string;
-  title?: string;
+  area: AreaDTO;
   focused?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 const AreaItem = ({
   onClick,
-  title,
+  area,
   children,
   focused,
   ...props
@@ -70,14 +74,31 @@ const AreaItem = ({
         <DragHandleIcon color="primary" />
       </Box>
       <Stack spacing={1}>
-        <Typography variant="h4">{title ? title : "標題"}</Typography>
-        {children ? (
-          children
-        ) : (
-          <Box width="100%">
-            <Typography variant="caption">暫無內容</Typography>
-          </Box>
+        <Typography variant="h4">{area.Title ? area.Title : "標題"}</Typography>
+        {area.Arrangement === LayoutArrangement.TEXT && (
+          <RichTextEditor
+            controllable={false}
+            initialEditorState={area.TextLayout?.Content}
+          ></RichTextEditor>
         )}
+        {area.Arrangement === LayoutArrangement.LIST &&
+          area.ListLayout?.Items?.map((i) => (
+            <AreaListItem id={i.Id} content={i.Name} key={i.Id} />
+          ))}
+
+        {area.Arrangement === LayoutArrangement.KEYVALUELIST &&
+          area.KeyValueListLayout?.Items?.map((i) => (
+            <AreaKeyValueListItem
+              id={i.Id}
+              key={i.Id}
+              itemKey={{
+                id: i.Key.Id,
+                name: i.Key.Name,
+                type: i.Key.Type,
+              }}
+              value={i.Value}
+            />
+          ))}
       </Stack>
     </Paper>
   );

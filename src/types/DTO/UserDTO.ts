@@ -13,4 +13,4 @@ export interface UserInfoDTO {
   Areas?: Array<AreaDTO> | null;
 }
 
-export type UserInfoPostDTO = Pick<UserInfoDTO, "Username">;
+export type UserInfoPostDTO = Pick<UserInfoDTO, "Username" | "Areas">;

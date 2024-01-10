@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
 import { NIL } from "uuid";
 
-export default function ResumeArea() {
+export default function ProfileArea() {
   const { resumeId = "", areaId } = useParams();
   const [postArea, { isLoading }] = usePostAreaMutation();
   const { data: areaData } = useGetAreaByIdQuery(areaId!, {

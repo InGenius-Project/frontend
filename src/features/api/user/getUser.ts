@@ -2,6 +2,7 @@ import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { UserInfoDTO } from "types/DTO/UserDTO";
 import { setUserInfo } from "features/user/userSlice";
+import { setAreas } from "features/areas/areasSlice";
 
 export const getUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

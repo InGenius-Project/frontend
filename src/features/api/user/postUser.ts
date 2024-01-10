@@ -1,9 +1,9 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 import { UserInfoDTO, UserInfoPostDTO } from "types/DTO/UserDTO";
-import { setUserInfo } from "features/user/userSlice";
+import { getUserApi } from "./getUser";
 
-export const getUserApi = baseApi.injectEndpoints({
+export const postUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postUser: builder.mutation<ResponseDTO<UserInfoDTO>, UserInfoPostDTO>({
       query: (body) => ({
@@ -16,4 +16,4 @@ export const getUserApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { usePostUserMutation } = getUserApi;
+export const { usePostUserMutation } = postUserApi;

@@ -1,5 +1,6 @@
 import { TokenDTO } from "./../../types/DTO/TokenDTO";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
+import { getResumeByIdApi } from "features/api/resume/getResumeById";
 import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
 
 type userSliceType = {

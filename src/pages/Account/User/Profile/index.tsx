@@ -1,29 +1,37 @@
-import { Box, Stack } from "@mui/material";
-import { AreaControl, AreaItem } from "components/Area";
-import DragDropContainer from "components/DragDropContainer";
+import { Box } from "@mui/material";
 import FullScreenLoader from "components/FullScreenLoader";
 import ProfileItem from "components/ProfileItem";
 import { useGetUserQuery } from "features/api/user/getUser";
-import { v4 as uuid } from "uuid";
-import React from "react";
+import { useEffect } from "react";
 import { usePostUserMutation } from "features/api/user/postUser";
+import { useAppDispatch } from "features/store";
+import { AreasType, setAreas } from "features/areas/areasSlice";
+import { AreaDTO } from "types/DTO/AreaDTO";
+import AreaEditor from "components/Area/AreaEditor";
 
 export default function Profile() {
-  const [controlTop, setControlTop] = React.useState<number | undefined>(0);
-  const { data: userData, isLoading: isGettingUserData } =
-    useGetUserQuery(null);
+  const dispatch = useAppDispatch();
+  const { data: userData } = useGetUserQuery(null, {});
+
+  useEffect(() => {
+    if (userData && userData.Data) {
+      dispatch(
+        setAreas({
+          id: userData.Data?.Id,
+          type: AreasType.PROFILE,
+          areas: userData?.Data?.Areas || [],
+        })
+      );
+    }
+  }, [dispatch, userData]);
+
   const [postUser] = usePostUserMutation();
 
-  const handleClick = (number: number | undefined) => {
-    setControlTop(number);
-  };
-
-  const handleDragEnd = (itemIds: string[]) => {
-      
-
-    postUser({
-      Areas: 
-    })
+  const handlePostProfileArea = async (areas: Array<AreaDTO>) => {
+    await postUser({
+      Username: userData?.Data?.Username || "",
+      Areas: areas,
+    });
   };
 
   if (userData && userData.Data)
@@ -38,36 +46,7 @@ export default function Profile() {
             gap: 1,
           }}
         >
-          {userData.Data.Areas && (
-            <Stack
-              spacing={1}
-              sx={{
-                flex: "1 1 auto",
-                position: "relative",
-              }}
-            >
-              <DragDropContainer
-                droppableId={userData.Data.Id || uuid()}
-                items={userData.Data.Areas.map((i) => i.Id) || []}
-                onDragEnd={handleDragEnd}
-              >
-                {userData.Data &&
-                  userData.Data.Areas &&
-                  userData?.Data?.Areas.map((i) => {
-                    return <AreaItem id={i.Id} />;
-                  })}
-              </DragDropContainer>
-            </Stack>
-          )}
-          <Box
-            sx={{
-              flexShrink: 0,
-              width: "var(--ing-width-areaControl)",
-              position: "relative",
-            }}
-          >
-            <AreaControl top={controlTop} />
-          </Box>
+          <AreaEditor onPost={handlePostProfileArea}></AreaEditor>
         </Box>
       </>
     );

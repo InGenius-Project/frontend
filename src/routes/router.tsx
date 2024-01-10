@@ -12,13 +12,15 @@ import Profile from "pages/Account/User/Profile";
 import UserRoute from "./UserRoute";
 import Intern from "pages/Account/User/Intern";
 import Resume from "pages/Account/User/Resume";
-import ProfileNew from "components/Area/AreaNewModel";
 import ResumeEdit from "pages/Account/User/Resume/Edit";
 import ResumeAreaLayout from "pages/Account/User/Resume/Edit/Layout";
 import ResumeAreaNew from "pages/Account/User/Resume/Edit/New";
 import AuthRoute from "./AuthRoute";
 import UnAuthRoute from "./UnAuthRoute";
 import ResumeArea from "pages/Account/User/Resume/Edit/Area";
+import ProfileAreaNew from "pages/Account/User/Profile/New";
+import ProfileArea from "pages/Account/User/Profile/Area";
+import ProfileAreaLayout from "pages/Account/User/Profile/Layout";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -47,8 +49,14 @@ const router = createBrowserRouter(
               }}
             >
               <Route element={<Profile />} index />
-              <Route path="New" handle={{ crumb: "新增區塊" }}>
-                <Route index element={<ProfileNew />} />
+              <Route path="Area" handle={{ crumb: "編輯區塊內容" }}>
+                <Route index element={<ProfileArea />} />
+              </Route>
+              <Route path="New" handle={{ crumb: "新增個人首頁區塊" }}>
+                <Route index element={<ProfileAreaNew />} />
+              </Route>
+              <Route path="Layout" handle={{ crumb: "選擇區塊排列方式" }}>
+                <Route index element={<ProfileAreaLayout />} />
               </Route>
             </Route>
             <Route
