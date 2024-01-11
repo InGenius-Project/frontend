@@ -38,7 +38,21 @@ const AreaControl = ({
   }, [visibled]);
 
   React.useEffect(() => {
-    animate(motionRef.current, { top });
+    // animate(motionRef.current, { top });。
+    if (
+      motionRef.current.parentElement.clientHeight -
+        (top || 0) -
+        motionRef.current.clientHeight >
+      0
+    ) {
+      animate(motionRef.current, { top });
+    } else {
+      animate(motionRef.current, {
+        top:
+          motionRef.current.parentElement.clientHeight -
+          motionRef.current.clientHeight,
+      });
+    }
   }, [top, motionRef, animate]);
 
   return (
@@ -47,7 +61,8 @@ const AreaControl = ({
       style={{
         position: "absolute",
         top: 0,
-        width: "var(--ing-width-areaControl)",
+        width: "var(--ing-width-area-control)",
+        height: "var(--ing-height-area-control)",
       }}
     >
       <Stack

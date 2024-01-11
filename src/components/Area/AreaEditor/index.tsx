@@ -98,6 +98,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         width: "100%",
         flexGrow: 1,
         gap: 1,
+        minHeight: "var(--ing-height-area-control)",
       }}
     >
       <Stack
@@ -135,7 +136,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
       <Box
         sx={{
           flexShrink: 0,
-          width: "var(--ing-width-areaControl)",
+          width: "var(--ing-width-area-control)",
           position: "relative",
         }}
       >
