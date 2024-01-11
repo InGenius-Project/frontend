@@ -84,8 +84,8 @@ function AreaEditor({ onPost }: AreaContainerProps) {
     areasState.focusedArea &&
       postArea({
         ...areasState.focusedArea,
-        ResumeId:
-          areasState.type === AreasType.RESUME ? areasState.id : undefined,
+        // ResumeId:
+        //   areasState.type === AreasType.RESUME ? areasState.id : undefined,
         //TODO: PROFILE ID
         IsDisplayed: !checked,
       });

@@ -26,10 +26,7 @@ export const areaApi = baseApi.injectEndpoints({
       },
 
       invalidatesTags: (result, error, arg) => {
-        return [
-          { type: "Resume", id: arg.ResumeId },
-          { type: "Area", id: arg.Id },
-        ];
+        return [{ type: "Resume" }, { type: "Area", id: arg.Id }, "User"];
       },
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area
@@ -44,7 +41,7 @@ export const areaApi = baseApi.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: ["Resume"],
+      invalidatesTags: ["Resume", "User"],
     }),
   }),
 });

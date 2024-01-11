@@ -12,6 +12,20 @@ export const postUserApi = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: ["User"],
+      onQueryStarted: (request, { dispatch }) => {
+        // optimistic update to prvent flicking Area
+        dispatch(
+          getUserApi.util.updateQueryData("getUser", null, (draft) => {
+            return {
+              ...draft,
+              Data: {
+                ...(draft.Data as UserInfoDTO),
+                Areas: request.Areas || [],
+              },
+            };
+          })
+        );
+      },
     }),
   }),
 });

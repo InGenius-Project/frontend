@@ -32,14 +32,6 @@ export const getResumeByIdApi = baseApi.injectEndpoints({
         }
         return response;
       },
-      onCacheEntryAdded: async (args, { cacheDataLoaded }) => {
-        try {
-          cacheDataLoaded.then(() => {
-            console.log("cacheDataLoaded");
-          });
-          console.log("onCacheEntryAdded");
-        } catch (err) {}
-      },
     }),
   }),
 });

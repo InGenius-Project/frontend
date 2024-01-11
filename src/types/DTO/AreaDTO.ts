@@ -12,7 +12,6 @@ export interface AreaDTO {
 }
 
 export interface AreaPostDTO extends Omit<AreaDTO, "Id"> {
-  ResumeId?: string;
   Id?: string;
 }
 

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import FullScreenLoader from "components/FullScreenLoader";
 import ProfileItem from "components/ProfileItem";
 import { useGetUserQuery } from "features/api/user/getUser";
@@ -34,21 +34,19 @@ export default function Profile() {
     });
   };
 
-  if (userData && userData.Data)
-    return (
-      <>
-        <ProfileItem editable />
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            flexGrow: 1,
-            gap: 1,
-          }}
-        >
-          <AreaEditor onPost={handlePostProfileArea}></AreaEditor>
-        </Box>
-      </>
-    );
-  return <FullScreenLoader />;
+  return (
+    <Stack spacing={1}>
+      <ProfileItem editable />
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          flexGrow: 1,
+          gap: 1,
+        }}
+      >
+        <AreaEditor onPost={handlePostProfileArea}></AreaEditor>
+      </Box>
+    </Stack>
+  );
 }

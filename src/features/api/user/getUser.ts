@@ -16,6 +16,22 @@ export const getUserApi = baseApi.injectEndpoints({
           data.Data && dispatch(setUserInfo(data.Data));
         } catch (error) {}
       },
+      transformResponse: (response: ResponseDTO<UserInfoDTO>, meta, arg) => {
+        // Reorder the areas by sequence
+        if (response.Data && response.Data.Areas) {
+          const orderedArea = response.Data.Areas.sort(
+            (a, b) => a.Sequence - b.Sequence
+          );
+          return {
+            ...response,
+            Data: {
+              ...response.Data,
+              Areas: orderedArea,
+            },
+          };
+        }
+        return response;
+      },
       providesTags: ["User"],
     }),
   }),

@@ -5,6 +5,8 @@ import {
 } from "features/api/area/area";
 import { useGetResumeByIdQuery } from "features/api/resume/getResumeById";
 import { usePostResumeMutation } from "features/api/resume/postResume";
+import { useGetUserQuery } from "features/api/user/getUser";
+import { usePostUserMutation } from "features/api/user/postUser";
 import { setLayoutByArea } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { useLayoutEffect } from "react";
@@ -13,7 +15,7 @@ import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
 import { NIL } from "uuid";
 
 export default function ProfileArea() {
-  const { resumeId = "", areaId } = useParams();
+  const { areaId } = useParams();
   const [postArea, { isLoading }] = usePostAreaMutation();
   const { data: areaData } = useGetAreaByIdQuery(areaId!, {
     skip: !areaId,
@@ -21,8 +23,8 @@ export default function ProfileArea() {
   const layoutState = useAppSelector((state) => state.layoutState);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: resumeData } = useGetResumeByIdQuery(resumeId);
-  const [postResume] = usePostResumeMutation();
+  const [postUser] = usePostUserMutation();
+  const { data: userData } = useGetUserQuery(null);
   const areasState = useAppSelector((state) => state.areasState);
 
   useLayoutEffect(() => {
@@ -32,8 +34,8 @@ export default function ProfileArea() {
   }, [areaData, dispatch]);
 
   const handleSubmit = () => {
-    if (resumeData && resumeData.Data) {
-      let areas = Array.from(resumeData.Data.Areas);
+    if (userData && userData.Data) {
+      let areas = Array.from(userData.Data.Areas || []);
 
       const existAreaIndex = areas.findIndex(
         (area) => area.Id === areaData?.Data?.Id
@@ -43,7 +45,7 @@ export default function ProfileArea() {
       if (existAreaIndex === -1) {
         const newAreaSequence = areasState.focusedArea
           ? areasState.focusedArea.Sequence
-          : resumeData.Data.Areas.length;
+          : (userData.Data.Areas || []).length;
         const newArea: AreaDTO = {
           Id: NIL,
           Sequence: newAreaSequence,
@@ -112,11 +114,9 @@ export default function ProfileArea() {
         areas = updatedAreas;
 
         // Post full Resume for update the sequence of the areas
-        postResume({
-          Id: resumeId,
-          Title: resumeData.Data.Title,
+        postUser({
+          Username: userData.Data.Username,
           Areas: areas,
-          Visibility: resumeData.Data.Visibility,
         })
           .unwrap()
           .then(() => {
@@ -190,7 +190,6 @@ export default function ProfileArea() {
 
         postArea({
           ...areas[existAreaIndex],
-          ResumeId: resumeId,
         })
           .unwrap()
           .then(() => {

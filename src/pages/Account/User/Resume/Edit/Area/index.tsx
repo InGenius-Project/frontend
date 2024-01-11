@@ -190,7 +190,6 @@ export default function ResumeArea() {
 
         postArea({
           ...areas[existAreaIndex],
-          ResumeId: resumeId,
         })
           .unwrap()
           .then(() => {
