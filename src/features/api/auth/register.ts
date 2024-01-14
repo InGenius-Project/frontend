@@ -4,10 +4,14 @@ import { RegisterInput } from "pages/Account/Register";
 import { getUserApi } from "../user/getUser";
 import { TokenDTO } from "types/DTO/TokenDTO";
 import { setToken } from "features/user/userSlice";
+import { UserRole } from "types/DTO/UserDTO";
 
 export const registerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation<ResponseDTO<TokenDTO>, RegisterInput>({
+    register: builder.mutation<
+      ResponseDTO<TokenDTO>,
+      RegisterInput & { Role: UserRole }
+    >({
       query(data) {
         return {
           url: "/user/signup",

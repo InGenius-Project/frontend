@@ -10,6 +10,7 @@ import {
   useTheme,
   Menu,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import { ReactComponent as Logo } from "assets/images/logo/logo.svg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
@@ -17,6 +18,7 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { logout } from "features/user/userSlice";
 import { baseApi } from "features/api/baseApi";
+import { UserRole } from "types/DTO/UserDTO";
 
 export default function Header() {
   const theme = useTheme();
@@ -76,7 +78,8 @@ export default function Header() {
         {/* Right Control */}
         <Box height="100%">
           {user ? (
-            <>
+            <Stack spacing={1} direction={"row"} alignItems={"center"}>
+              <Chip label={UserRole[user.Role as unknown as UserRole]} />
               <Button
                 variant="text"
                 startIcon={
@@ -104,7 +107,7 @@ export default function Header() {
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>登出</MenuItem>
               </Menu>
-            </>
+            </Stack>
           ) : (
             <Button
               variant="contained"
