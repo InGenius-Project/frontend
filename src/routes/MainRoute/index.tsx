@@ -26,6 +26,7 @@ export default function MainRoute() {
         display: "flex",
         flexFlow: "column",
         flexGrow: 1,
+        cursor: loading ? "wait" : undefined,
       }}
     >
       <Header />
@@ -41,7 +42,7 @@ export default function MainRoute() {
             justifyContent: "center",
           }}
         >
-          {loading ? <FullScreenLoader /> : <Outlet />}
+          <Outlet />
         </Box>
       </AnimatePresence>
 

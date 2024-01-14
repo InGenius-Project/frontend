@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { areaApi } from "features/api/area/area";
 import { EditorState } from "lexical";
-import { parse } from "path";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
 interface LayoutState {
@@ -12,7 +10,6 @@ interface LayoutState {
   image?: string;
   listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
-  focusedAreaDTO?: AreaDTO;
 }
 
 export interface Tag {
@@ -47,7 +44,6 @@ const layoutSlice = createSlice({
     initializeStateWithoutFocusedArea: (state) => {
       return {
         ...initialState,
-        focusedAreaDTO: state.focusedAreaDTO,
       };
     },
     setType: (state, action: PayloadAction<LayoutType>) => {
@@ -64,9 +60,6 @@ const layoutSlice = createSlice({
     },
     setLayout: (state, action: PayloadAction<LayoutState>) => {
       state = action.payload;
-    },
-    setFocusedAreaDTO: (state, action: PayloadAction<AreaDTO>) => {
-      state.focusedAreaDTO = action.payload;
     },
     setImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
@@ -122,7 +115,6 @@ export const {
   setListItem,
   setLayoutByArea,
   setKetValueListItems,
-  setFocusedAreaDTO,
   setImage,
 } = layoutSlice.actions;
 

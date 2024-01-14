@@ -1,15 +1,13 @@
 import { Box, CssBaseline, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import {
-  useDeleteResumeMutation,
-  useGetResumesQuery,
-  usePostResumeMutation,
-} from "features/api/resume/resume";
 import { ResumeItem } from "components/Resume";
 import { useAppSelector } from "features/store";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FullScreenLoader from "components/FullScreenLoader";
 import { useNavigate } from "react-router-dom";
+import { useDeleteResumeMutation } from "features/api/resume/deleteResume";
+import { usePostResumeMutation } from "features/api/resume/postResume";
+import { useGetResumesQuery } from "features/api/resume/getResumes";
 
 export default function Resume() {
   const [postResume, { isLoading: isAddingNewResume }] =
