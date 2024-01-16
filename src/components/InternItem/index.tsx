@@ -1,8 +1,16 @@
-import { Box, Button, IconButton, Link, Stack, useTheme } from "@mui/material";
+import { Box, Chip, IconButton, Link, Stack, useTheme } from "@mui/material";
+import TagIcon from "@mui/icons-material/Tag";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Typography from "@mui/material/Typography";
+import { useAppSelector } from "features/store";
+import { UserRole } from "types/DTO/UserDTO";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+
 export default function InternItem() {
   const theme = useTheme();
+  const userState = useAppSelector((state) => state.userState);
 
   return (
     <Stack
@@ -23,18 +31,40 @@ export default function InternItem() {
         <Typography variant="caption">台北市南港區</Typography>
       </Box>
       <Stack spacing={1} direction={"row"}>
-        <Button>社群管理</Button>
-        <Button>行銷企劃</Button>
+        <Chip label={"社群管理"} color="primary" icon={<TagIcon />} />
       </Stack>
-      <IconButton
-        sx={{
-          position: "absolute",
-          top: theme.spacing(1),
-          right: theme.spacing(1),
-        }}
-      >
-        <FavoriteBorderIcon />
-      </IconButton>
+      {(!userState || userState?.User?.Role === UserRole.Intern) && (
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: theme.spacing(1),
+            right: theme.spacing(1),
+          }}
+        >
+          <FavoriteBorderIcon />
+        </IconButton>
+      )}
+      {userState.User?.Role === UserRole.Company && (
+        <Stack
+          direction="row"
+          sx={{
+            position: "absolute",
+            top: theme.spacing(1),
+            right: theme.spacing(1),
+          }}
+          spacing={1}
+        >
+          <IconButton>
+            <CreateOutlinedIcon />
+          </IconButton>
+          <IconButton>
+            <AnalyticsOutlinedIcon />
+          </IconButton>
+          <IconButton>
+            <DeleteOutlinedIcon />
+          </IconButton>
+        </Stack>
+      )}
     </Stack>
   );
 }

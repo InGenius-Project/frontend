@@ -2,10 +2,10 @@ import { AreaDTO } from "./AreaDTO";
 import { TokenDTO } from "./TokenDTO";
 
 export enum UserRole {
-  "INTERN" = 0,
-  "COMPANY" = 1,
-  "ADMIN" = 2,
-  "INTERNALUSER" = 3,
+  "Intern" = 0,
+  "Company" = 1,
+  "Admin" = 2,
+  "InnerUser" = 3,
 }
 
 export interface UserDTO {

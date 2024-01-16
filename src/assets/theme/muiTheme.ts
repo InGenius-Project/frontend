@@ -12,6 +12,14 @@ declare module "@mui/material/styles" {
     laptop: true;
     desktop: true;
   }
+
+  interface PaletteColor {
+    lighter?: string;
+  }
+
+  interface SimplePaletteColorOptions {
+    lighter?: string;
+  }
 }
 
 let theme = extendTheme({
@@ -21,6 +29,7 @@ let theme = extendTheme({
       palette: {
         primary: {
           main: "#874983",
+          lighter: "#F2F0FE",
         },
         secondary: {
           main: "#00C9C8",
@@ -108,6 +117,13 @@ let theme = extendTheme({
       styleOverrides: {
         root: ({ theme: t }) => ({
           color: t.vars.palette.text.primary,
+        }),
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: ({ theme: t }) => ({
+          borderRadius: "0.5em",
         }),
       },
     },

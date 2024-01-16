@@ -35,7 +35,7 @@ const SideBarLeftIcon = styled("span")(({ theme }) => ({
 
 export const navigationConfig = [
   {
-    role: UserRole.INTERN,
+    role: UserRole.Intern,
     items: [
       {
         name: "個人首頁",
@@ -66,7 +66,7 @@ export const navigationConfig = [
     ],
   },
   {
-    role: UserRole.COMPANY,
+    role: UserRole.Company,
     items: [
       {
         name: "公司首頁",
