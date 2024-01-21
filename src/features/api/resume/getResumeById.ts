@@ -1,8 +1,6 @@
 import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { baseApi } from "../baseApi";
 import { ResumeDTO } from "types/DTO/ResumeDTO";
-import { setAreas } from "features/areas/areasSlice";
-import { createLogicalAnd } from "typescript";
+import { baseApi } from "../baseApi";
 
 export const getResumeByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

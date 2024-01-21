@@ -7,11 +7,22 @@ import { UserRole } from "types/DTO/UserDTO";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { useDeleteRecruitmentMutation } from "features/api/recruitment/deleteRecruitment";
 
-export default function InternItem() {
+type RecruitmentItemProps = {
+  id: string,
+  title?: string,
+}
+
+export default function RecruitmentItem({id, title}: RecruitmentItemProps) {
   const theme = useTheme();
   const userState = useAppSelector((state) => state.userState);
+  const [deleteRecruitment] = useDeleteRecruitmentMutation()
 
+  const handleClickDelete = () => {
+    deleteRecruitment(id);
+  }
+  
   return (
     <Stack
       spacing={1}
@@ -22,7 +33,7 @@ export default function InternItem() {
         padding: theme.spacing(2),
       }}
     >
-      <Typography variant="h4">社群行銷助理</Typography>
+      <Typography variant="h4">{title || ""}</Typography>
       <Box>
         <Link href="#" color={theme.palette.info.main}>
           網路股份有限公司
@@ -60,7 +71,7 @@ export default function InternItem() {
           <IconButton>
             <AnalyticsOutlinedIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={handleClickDelete}>
             <DeleteOutlinedIcon />
           </IconButton>
         </Stack>

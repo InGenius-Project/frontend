@@ -1,26 +1,30 @@
+import ForgetPassword from "pages/Account/ForgetPassword";
+import Profile from "pages/Account/User/Profile";
+import ProfileArea from "pages/Account/User/Profile/Area";
+import ProfileAreaLayout from "pages/Account/User/Profile/Layout";
+import ProfileAreaNew from "pages/Account/User/Profile/New";
+import Recruitment from "pages/Account/User/Recruitment";
+import RecruitmentEdit from "pages/Account/User/Recruitment/Edit";
+import Resume from "pages/Account/User/Resume";
+import ResumeEdit from "pages/Account/User/Resume/Edit";
+import ResumeArea from "pages/Account/User/Resume/Edit/Area";
+import ResumeAreaLayout from "pages/Account/User/Resume/Edit/Layout";
+import ResumeAreaNew from "pages/Account/User/Resume/Edit/New";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import MainRoute from "./MainRoute";
 import Root from "../pages";
-import Register from "../pages/Account/Register";
 import Login from "../pages/Account/Login";
-import ForgetPassword from "pages/Account/ForgetPassword";
-import Profile from "pages/Account/User/Profile";
-import UserRoute from "./UserRoute";
-import Intern from "pages/Account/User/Intern";
-import Resume from "pages/Account/User/Resume";
-import ResumeEdit from "pages/Account/User/Resume/Edit";
-import ResumeAreaLayout from "pages/Account/User/Resume/Edit/Layout";
-import ResumeAreaNew from "pages/Account/User/Resume/Edit/New";
+import Register from "../pages/Account/Register";
 import AuthRoute from "./AuthRoute";
+import MainRoute from "./MainRoute";
 import UnAuthRoute from "./UnAuthRoute";
-import ResumeArea from "pages/Account/User/Resume/Edit/Area";
-import ProfileAreaNew from "pages/Account/User/Profile/New";
-import ProfileArea from "pages/Account/User/Profile/Area";
-import ProfileAreaLayout from "pages/Account/User/Profile/Layout";
+import UserRoute from "./UserRoute";
+import RecruitementAreaNew from "pages/Account/User/Recruitment/Edit/New";
+import RecruitmentAreaLayout from "pages/Account/User/Recruitment/Edit/Layout";
+import RecruitmentArea from "pages/Account/User/Recruitment/Edit/Area";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -97,12 +101,37 @@ const router = createBrowserRouter(
               </Route>
             </Route>
             <Route
-              element={<Intern />}
-              path="Intern"
+              path="Recruitment"
               handle={{
-                crumb: "實習管理",
+                crumb: "職缺管理",
               }}
-            />
+            >
+              <Route path="" element={<Recruitment />} />
+              <Route path="Edit/:recruitmentId?" handle={{ crumb: "編輯職缺" }}>
+                <Route path="" element={<RecruitmentEdit />} />
+                <Route
+                  element={<RecruitementAreaNew />}
+                  path="New"
+                  handle={{
+                    crumb: "新增履歷區塊",
+                  }}
+                />
+                <Route
+                  element={<RecruitmentAreaLayout />}
+                  path="Layout"
+                  handle={{
+                    crumb: "選擇區塊排列方式",
+                  }}
+                />
+                <Route
+                  element={<RecruitmentArea />}
+                  path="Area/:areaId?"
+                  handle={{
+                    crumb: "編輯區塊內容",
+                  }}
+                />
+              </Route>
+            </Route>
           </Route>
         </Route>
       </Route>

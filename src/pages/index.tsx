@@ -7,6 +7,7 @@ import { ReactComponent as HappyAnnnouncement } from "assets/images/svg/happy-an
 import { ReactComponent as Searching } from "assets/images/svg/searching.svg";
 import { ReactComponent as Working } from "assets/images/svg/working.svg";
 import { ReactComponent as Questions } from "assets/images/svg/questions.svg";
+import {v4 as uuid} from "uuid";
 import Typography from "@mui/material/Typography";
 import {
   Box,
@@ -17,7 +18,7 @@ import {
   TextField,
   useMediaQuery,
 } from "@mui/material";
-import InternItem from "components/InternItem";
+import {RecruitmentItem} from "components/Recruitment";
 import ActivityItem, { ActivityColumnItem } from "components/ActivityItem";
 
 export default function Root() {
@@ -113,9 +114,10 @@ export default function Root() {
             <Stack spacing={2}>
               <Typography variant="h3">熱門活動</Typography>
               <Stack direction={"column"} spacing={2} sx={{ width: "100%" }}>
-                <InternItem />
-                <InternItem />
-                <InternItem />
+                <RecruitmentItem id={uuid()}/> 
+                {/* TODO: assign id */}
+                <RecruitmentItem id={uuid()}/>
+                <RecruitmentItem id={uuid()}/>
               </Stack>
               <Link>查看更多</Link>
             </Stack>

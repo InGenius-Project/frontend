@@ -24,7 +24,6 @@ export const areaApi = baseApi.injectEndpoints({
           body,
         };
       },
-
       invalidatesTags: (result, error, arg) => {
         return [{ type: "Resume" }, { type: "Area", id: arg.Id }, "User"];
       },

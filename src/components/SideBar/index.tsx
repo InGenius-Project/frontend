@@ -59,8 +59,8 @@ export const navigationConfig = [
         icon: <InsertDriveFileOutlinedIcon />,
       },
       {
-        name: "實習管理",
-        value: "Intern",
+        name: "職缺管理",
+        value: "Recruitment",
         icon: <WorkOutlineOutlinedIcon />,
       },
     ],
@@ -85,8 +85,8 @@ export const navigationConfig = [
         ),
       },
       {
-        name: "實習管理",
-        value: "Intern",
+        name: "職缺管理",
+        value: "Recruitment",
         icon: <WorkOutlineOutlinedIcon />,
       },
     ],
