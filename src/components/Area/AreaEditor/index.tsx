@@ -1,23 +1,17 @@
 import { Box, Stack } from "@mui/material";
+import DragDropContainer from "components/DragDropContainer";
+import { useDeleteAreaMutation } from "features/api/area/deleteArea";
+import { usePostAreaMutation } from "features/api/area/postArea";
+import { selectIsEmptyAreas, setFocusedArea } from "features/areas/areasSlice";
+import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
-import AreaEmpty from "../AreaEmpty";
-import AreaControl from "../AreaControl";
-import {
-  AreasType,
-  selectIsEmptyAreas,
-  setFocusedArea,
-} from "features/areas/areasSlice";
-import DragDropContainer from "components/DragDropContainer";
 import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
-import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
-import AreaItem from "../AreaItem";
 import { useNavigate } from "react-router-dom";
-import {
-  useDeleteAreaMutation,
-  usePostAreaMutation,
-} from "features/api/area/area";
-import { setType } from "features/layout/layoutSlice";
+import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
+import AreaControl from "../AreaControl";
+import AreaEmpty from "../AreaEmpty";
+import AreaItem from "../AreaItem";
 
 type AreaContainerProps = {
   onPost?: (areas: Array<AreaDTO>) => Promise<void>;

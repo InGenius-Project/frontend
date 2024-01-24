@@ -1,10 +1,6 @@
 import { AreaEditModel } from "components/Area";
-import {
-  useGetAreaByIdQuery,
-  usePostAreaMutation,
-} from "features/api/area/area";
-import { useGetResumeByIdQuery } from "features/api/resume/getResumeById";
-import { usePostResumeMutation } from "features/api/resume/postResume";
+import { useGetAreaByIdQuery } from "features/api/area/getArea";
+import { usePostAreaMutation } from "features/api/area/postArea";
 import { useGetUserQuery } from "features/api/user/getUser";
 import { usePostUserMutation } from "features/api/user/postUser";
 import { setLayoutByArea } from "features/layout/layoutSlice";
@@ -67,7 +63,9 @@ export default function ProfileArea() {
                   Content: JSON.stringify(layoutState.content),
                   Image: {
                     Id: NIL,
-                    Content: layoutState.image || "",
+                    Content: layoutState.image?.content || "",
+                    ContentType: layoutState.image?.contentType || "image/png",
+                    Filename: layoutState.image?.filename || "",
                   },
                 }
               : undefined,
@@ -143,15 +141,19 @@ export default function ProfileArea() {
           ImageTextLayout:
             layoutState.arrangement === LayoutArrangement.IMAGETEXT
               ? {
-                  Id: areaData?.Data?.TextLayout?.Id
-                    ? areaData.Data.TextLayout.Id
+                  Id: areaData?.Data?.ImageTextLayout?.Id
+                    ? areaData.Data.ImageTextLayout.Id
                     : NIL,
                   Content: JSON.stringify(layoutState.content),
                   Image: {
-                    Id: areaData?.Data?.ImageTextLayout?.Id
-                      ? areaData?.Data?.ImageTextLayout?.Id
-                      : NIL,
-                    Content: layoutState.image || "",
+                    Id:
+                      areaData?.Data?.ImageTextLayout?.Image &&
+                      areaData?.Data?.ImageTextLayout?.Image.Id
+                        ? areaData?.Data?.ImageTextLayout?.Image.Id
+                        : NIL,
+                    Content: layoutState.image?.content || "",
+                    ContentType: layoutState.image?.contentType || "image/png",
+                    Filename: layoutState.image?.filename || "",
                   },
                 }
               : undefined,

@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import Header from "../../components/Header";
 import Footer from "components/Footer";
+import { getUserApi } from "features/api/user/getUser";
 import { AnimatePresence } from "framer-motion";
+import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getUserApi } from "features/api/user/getUser";
-import FullScreenLoader from "components/FullScreenLoader";
+import Header from "../../components/Header";
 
 export default function MainRoute() {
   const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(

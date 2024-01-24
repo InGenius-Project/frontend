@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "features/store";
 import { EditorState } from "lexical";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 
@@ -7,7 +8,12 @@ interface LayoutState {
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image?: string;
+  image: {
+    id: string;
+    filename: string;
+    contentType: string;
+    content: string;
+  };
   listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
 }
@@ -29,7 +35,12 @@ const initialState: LayoutState = {
   type: LayoutType.CUSTOM,
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
-  image: undefined,
+  image: {
+    id: "",
+    filename: "",
+    contentType: "",
+    content: "",
+  },
   listItems: undefined,
   keyValueListItems: [],
 };
@@ -61,8 +72,14 @@ const layoutSlice = createSlice({
     setLayout: (state, action: PayloadAction<LayoutState>) => {
       state = action.payload;
     },
-    setImage: (state, action: PayloadAction<string>) => {
+    setImage: (state, action: PayloadAction<LayoutState["image"]>) => {
       state.image = action.payload;
+    },
+    setImageFilename: (state, action: PayloadAction<string>) => {
+      state.image.filename = action.payload;
+    },
+    setImageContent: (state, action: PayloadAction<string>) => {
+      state.image.content = action.payload;
     },
     setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
@@ -89,7 +106,12 @@ const layoutSlice = createSlice({
           break;
         case LayoutArrangement.IMAGETEXT:
           parseArea.content = action.payload.ImageTextLayout?.Content;
-          parseArea.image = action.payload.ImageTextLayout?.Image.Content;
+          parseArea.image = {
+            id: action.payload.ImageTextLayout?.Image?.Id!,
+            filename: action.payload.ImageTextLayout?.Image?.Filename!,
+            contentType: action.payload.ImageTextLayout?.Image?.ContentType!,
+            content: action.payload.ImageTextLayout?.Image?.Content!,
+          };
           break;
         case LayoutArrangement.LIST:
           parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
@@ -108,14 +130,22 @@ export const {
   initializeState,
   initializeStateWithoutFocusedArea,
   setType,
+  setImageFilename,
   setTitle,
   setArrangement,
   setContent,
   setLayout,
   setListItem,
   setLayoutByArea,
+  setImageContent,
   setKetValueListItems,
   setImage,
 } = layoutSlice.actions;
+
+export const getImageBase64Src = createSelector(
+  (state: RootState) => state.layoutState.image.contentType,
+  (state: RootState) => state.layoutState.image.content,
+  (contentType, content) => `data:${contentType};base64,${content}`
+);
 
 export default layoutSlice.reducer;

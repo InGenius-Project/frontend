@@ -1,12 +1,8 @@
 import { AreaEditModel } from "components/Area";
-import {
-  useGetAreaByIdQuery,
-  usePostAreaMutation,
-} from "features/api/area/area";
+import { useGetAreaByIdQuery } from "features/api/area/getArea";
+import { usePostAreaMutation } from "features/api/area/postArea";
 import { useGetRecruitmentByIdQuery } from "features/api/recruitment/getRecruitmentById";
 import { usePostRecruitmentMutation } from "features/api/recruitment/postRecruitment";
-import { useGetResumeByIdQuery } from "features/api/resume/getResumeById";
-import { usePostResumeMutation } from "features/api/resume/postResume";
 import { setLayoutByArea } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { useLayoutEffect } from "react";
@@ -60,17 +56,17 @@ export default function RecruitmentArea() {
                   Content: JSON.stringify(layoutState.content),
                 }
               : undefined,
-          ImageTextLayout:
-            layoutState.arrangement === LayoutArrangement.IMAGETEXT
-              ? {
-                  Id: NIL,
-                  Content: JSON.stringify(layoutState.content),
-                  Image: {
-                    Id: NIL,
-                    Content: layoutState.image || "",
-                  },
-                }
-              : undefined,
+          // ImageTextLayout:
+          //   layoutState.arrangement === LayoutArrangement.IMAGETEXT
+          //     ? {
+          //         Id: NIL,
+          //         Content: JSON.stringify(layoutState.content),
+          //         Image: {
+          //           Id: NIL,
+          //           Content: layoutState.image || "",
+          //         },
+          //       }
+          //     : undefined,
           ListLayout:
             layoutState.arrangement === LayoutArrangement.LIST
               ? {
@@ -142,21 +138,21 @@ export default function RecruitmentArea() {
                   Content: JSON.stringify(layoutState.content),
                 }
               : undefined,
-          ImageTextLayout:
-            layoutState.arrangement === LayoutArrangement.IMAGETEXT
-              ? {
-                  Id: areaData?.Data?.TextLayout?.Id
-                    ? areaData.Data.TextLayout.Id
-                    : NIL,
-                  Content: JSON.stringify(layoutState.content),
-                  Image: {
-                    Id: areaData?.Data?.ImageTextLayout?.Id
-                      ? areaData?.Data?.ImageTextLayout?.Id
-                      : NIL,
-                    Content: layoutState.image || "",
-                  },
-                }
-              : undefined,
+          // ImageTextLayout:
+          //   layoutState.arrangement === LayoutArrangement.IMAGETEXT
+          //     ? {
+          //         Id: areaData?.Data?.TextLayout?.Id
+          //           ? areaData.Data.TextLayout.Id
+          //           : NIL,
+          //         Content: JSON.stringify(layoutState.content),
+          //         Image: {
+          //           Id: areaData?.Data?.ImageTextLayout?.Id
+          //             ? areaData?.Data?.ImageTextLayout?.Id
+          //             : NIL,
+          //           Content: layoutState.image || "",
+          //         },
+          //       }
+          //     : undefined,
           ListLayout:
             layoutState.arrangement === LayoutArrangement.LIST
               ? {
