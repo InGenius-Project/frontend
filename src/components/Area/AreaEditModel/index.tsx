@@ -1,3 +1,4 @@
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Button,
@@ -7,27 +8,25 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "features/store";
+import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
+import DragDropContainer from "components/DragDropContainer";
+import ImageCrop from "components/ImageCrop";
+import RichTextEditor from "components/RichTextEditor";
 import {
   KeyValueListItem,
-  Tag,
   setContent,
   setKetValueListItems,
   setListItem,
   setTitle,
 } from "features/layout/layoutSlice";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { EditorState, LexicalEditor } from "lexical";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
-import RichTextEditor from "components/RichTextEditor";
-import { EditorState, LexicalEditor } from "lexical";
-import ImageCrop from "components/ImageCrop";
-import AreaListItem from "../AreaListItem";
-import DragDropContainer from "components/DragDropContainer";
 import { v4 as uuid } from "uuid";
-import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
+import AreaListItem from "../AreaListItem";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
