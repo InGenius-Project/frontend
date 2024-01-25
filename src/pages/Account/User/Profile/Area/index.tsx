@@ -13,15 +13,18 @@ import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ProfileArea() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const { areaId } = useParams();
+
   const [postArea, { isLoading }] = usePostAreaMutation();
+  const [postUser] = usePostUserMutation();
+  const { data: userData } = useGetUserQuery(null);
   const { data: areaData } = useGetAreaByIdQuery(areaId!, {
     skip: !areaId,
   });
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const [postUser] = usePostUserMutation();
-  const { data: userData } = useGetUserQuery(null);
+
   const areasState = useAppSelector((state) => state.areasState);
 
   useLayoutEffect(() => {
