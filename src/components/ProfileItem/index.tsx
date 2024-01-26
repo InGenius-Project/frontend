@@ -1,3 +1,5 @@
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import {
   Box,
   Button,
@@ -11,13 +13,11 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useDebounce, useUpdateEffect } from "ahooks";
 import dummyCover from "assets/images/png/dummyCover.jpg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppSelector } from "features/store";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { useDebounce, useUpdateEffect } from "ahooks";
 import { usePostUserMutation } from "features/api/user/postUser";
+import { useAppSelector } from "features/store";
 import { useState } from "react";
 
 type ProfileItemProps = {
@@ -32,9 +32,11 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
 }));
 function ProfileItem({ editable = false }: ProfileItemProps) {
   const theme = useTheme();
+
   const userState = useAppSelector((state) => state.userState);
   const [userNameState, setUserNameState] = useState(userState.User?.Username);
   const debouncedUserName = useDebounce(userNameState);
+
   const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
 
   const handleChangeUserName: React.ChangeEventHandler<HTMLInputElement> = (

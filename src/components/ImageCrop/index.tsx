@@ -2,7 +2,7 @@ import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
   Box,
   Button,
-  ButtonProps,
+  ButtonBase,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  getImageBase64Src,
+  generateImageBase64Src,
   setImageContent,
   setImageFilename,
 } from "features/layout/layoutSlice";
@@ -28,16 +28,8 @@ import ReactCrop, {
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
+import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
-
-const UploadImageButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  overflow: "hidden",
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.primary.main}`,
-  width: 256,
-  height: 256,
-  padding: 0,
-}));
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -50,7 +42,8 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-const MAX_CANVAS_SIZE = 300 * 1024; // 64KB
+const MAX_KB_SIZE = 100;
+const MAX_CANVAS_SIZE = MAX_KB_SIZE * 1024; // 64KB
 const MIN_DIMENSION = 150;
 const ASPECT_RATIO = 1;
 function base64ToBytes(base64: string): number {
@@ -58,10 +51,17 @@ function base64ToBytes(base64: string): number {
   const bytes = binaryString.length;
   return bytes;
 }
-export default function ImageCrop() {
+
+type ImageCropProps = {
+  width?: string | number;
+  height?: string | number;
+};
+export default function ImageCrop({
+  width = 100,
+  height = 100,
+}: ImageCropProps) {
   const theme = useTheme();
   const { image: imageState } = useAppSelector((state) => state.layoutState);
-  const imageBase64Src = useAppSelector(getImageBase64Src);
   const dispatch = useAppDispatch();
   const [imgSrc, setImgSrc] = useState("");
 
@@ -113,11 +113,13 @@ export default function ImageCrop() {
       );
       if (imgRef.current && previewCanvasRef.current && crop) {
         const dataUrl = previewCanvasRef.current.toDataURL();
-        if (base64ToBytes(dataUrl.split(",")[1]) <= MAX_CANVAS_SIZE) {
-          dispatch(setImageContent(dataUrl.split(",")[1]));
+        const splitDataUrl = dataUrl.split(",");
+        if (base64ToBytes(splitDataUrl[1]) <= MAX_CANVAS_SIZE) {
+          dispatch(setImageContent(splitDataUrl[0]));
+          dispatch(setImageContent(splitDataUrl[1]));
           setOpen(false);
         } else {
-          toast.error("圖片檔案大於300KB，請重新上傳");
+          toast.error(`檔案大小超過 ${MAX_KB_SIZE}KB`);
         }
       }
     }
@@ -196,8 +198,8 @@ export default function ImageCrop() {
                 style={{
                   display: "none",
                   objectFit: "contain",
-                  height: "256px",
-                  width: "256px",
+                  height,
+                  width,
                 }}
               />
             )}
@@ -215,14 +217,16 @@ export default function ImageCrop() {
       </Dialog>
 
       <Stack direction="row" spacing={2}>
-        {!imageState ? (
+        {imageState.content === "" ? (
           <UploadImageButton
             variant="outlined"
             component="label"
+            width={width}
+            height={height}
             startIcon={<ImageOutlinedIcon />}
           >
             <Typography variant="body1">上傳圖片</Typography>
-            <Typography variant="caption">256px x 256px</Typography>
+
             <VisuallyHiddenInput
               type="file"
               onChange={handleSelectFile}
@@ -231,39 +235,32 @@ export default function ImageCrop() {
             />
           </UploadImageButton>
         ) : (
-          <>
+          <UploadImageButton component="label" width={width} height={height}>
             <img
               width={256}
               height={256}
-              src={imageBase64Src}
+              src={generateImageBase64Src(
+                imageState?.contentType,
+                imageState?.content
+              )}
               alt={imageState?.filename}
               style={{
                 overflow: "hidden",
                 borderRadius: theme.shape.borderRadius,
                 border: `1px solid ${theme.palette.primary.main}`,
-                width: 256,
-                height: 256,
+                width,
+                height,
                 padding: 0,
               }}
             />
-          </>
-        )}
-
-        <Stack
-          spacing={2}
-          direction="row"
-          sx={{ height: "fit-content", alignSelf: "flex-end" }}
-        >
-          <Button variant="outlined" component="label">
-            修改圖片
             <VisuallyHiddenInput
               type="file"
               onChange={handleSelectFile}
               onClick={(e) => ((e.target as any).value = "")}
               accept="image/*"
             />
-          </Button>
-        </Stack>
+          </UploadImageButton>
+        )}
       </Stack>
     </Box>
   );

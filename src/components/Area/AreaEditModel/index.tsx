@@ -154,6 +154,11 @@ export default function AreaEditModel({
         </Box>
         <Typography variant="h4">內容</Typography>
 
+        {/* Image */}
+        {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
+          <ImageCrop height={150} width={150} />
+        )}
+
         {/* Text */}
         {(layoutState.arrangement === LayoutArrangement.TEXT ||
           layoutState.arrangement === LayoutArrangement.IMAGETEXT) && (
@@ -162,11 +167,6 @@ export default function AreaEditModel({
             onChange={handleEditorChange}
             initialEditorState={layoutState.content}
           />
-        )}
-
-        {/* Image */}
-        {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
-          <ImageCrop />
         )}
 
         {/* Key value list */}

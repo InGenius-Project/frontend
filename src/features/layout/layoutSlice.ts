@@ -5,7 +5,14 @@ import { parse } from "path";
 import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
 import { NIL } from "uuid";
 
-interface LayoutState {
+interface Image {
+  id: string;
+  filename: string;
+  contentType: string;
+  content: string;
+}
+
+interface Layout {
   areaId: string;
   sequence: number;
   isDisplayed: boolean;
@@ -14,12 +21,7 @@ interface LayoutState {
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image: {
-    id: string;
-    filename: string;
-    contentType: string;
-    content: string;
-  };
+  image: Image;
   listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
 }
@@ -36,7 +38,7 @@ export interface KeyValueListItem {
   value: string;
 }
 
-const initialState: LayoutState = {
+const initialState: Layout = {
   areaId: "",
   isDisplayed: true,
   sequence: 0,
@@ -79,10 +81,10 @@ const layoutSlice = createSlice({
     setContent: (state, action: PayloadAction<EditorState>) => {
       state.content = action.payload;
     },
-    setLayout: (state, action: PayloadAction<LayoutState>) => {
+    setLayout: (state, action: PayloadAction<Layout>) => {
       state = action.payload;
     },
-    setImage: (state, action: PayloadAction<LayoutState["image"]>) => {
+    setImage: (state, action: PayloadAction<Layout["image"]>) => {
       state.image = action.payload;
     },
     setImageFilename: (state, action: PayloadAction<string>) => {
@@ -90,6 +92,9 @@ const layoutSlice = createSlice({
     },
     setImageContent: (state, action: PayloadAction<string>) => {
       state.image.content = action.payload;
+    },
+    setImageContentType: (state, action: PayloadAction<string>) => {
+      state.image.contentType = action.payload;
     },
     setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
@@ -104,7 +109,7 @@ const layoutSlice = createSlice({
       const { Title, Type, Arrangement, Sequence, Id, IsDisplayed } =
         action.payload;
 
-      var parseArea: LayoutState = {
+      var parseArea: Layout = {
         ...state,
         areaId: Id,
         sequence: Sequence,
@@ -168,16 +173,14 @@ export const {
   setListItem,
   setLayoutByArea,
   setImageContent,
+  setImageContentType,
   setKetValueListItems,
   setImage,
 } = layoutSlice.actions;
 
 // TODO: remove createSelector
-export const getImageBase64Src = createSelector(
-  (state: RootState) => state.layoutState.image.contentType,
-  (state: RootState) => state.layoutState.image.content,
-  (contentType, content) => `data:${contentType};base64,${content}`
-);
+export const generateImageBase64Src = (contentType: string, content: string) =>
+  `data:${contentType};base64,${content}`;
 
 export const getUpdatedAreas = (newAreaSequence: number) => {
   const state = store.getState();

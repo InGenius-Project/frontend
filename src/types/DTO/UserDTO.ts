@@ -1,4 +1,4 @@
-import { AreaDTO } from "./AreaDTO";
+import { AreaDTO, ImageDTO } from "./AreaDTO";
 import { TokenDTO } from "./TokenDTO";
 
 export enum UserRole {
@@ -18,6 +18,7 @@ export interface UserInfoDTO {
   Email: string;
   Username: string;
   Role: UserRole;
+  Avatar: ImageDTO;
   Areas?: Array<AreaDTO> | null;
 }
 
