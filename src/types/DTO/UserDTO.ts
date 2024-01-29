@@ -18,8 +18,11 @@ export interface UserInfoDTO {
   Email: string;
   Username: string;
   Role: UserRole;
-  Avatar: ImageDTO;
+  Avatar?: ImageDTO;
   Areas?: Array<AreaDTO> | null;
 }
 
-export type UserInfoPostDTO = Pick<UserInfoDTO, "Username" | "Areas">;
+export type UserInfoPostDTO = Pick<
+  UserInfoDTO,
+  "Username" | "Areas" | "Avatar"
+>;

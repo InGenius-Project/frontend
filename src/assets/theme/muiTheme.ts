@@ -20,6 +20,19 @@ declare module "@mui/material/styles" {
   interface SimplePaletteColorOptions {
     lighter?: string;
   }
+  interface Palette {
+    white: Palette["primary"];
+  }
+
+  interface PaletteOptions {
+    white?: PaletteOptions["primary"];
+  }
+}
+
+declare module "@mui/material/Button" {
+  interface ButtonPropsColorOverrides {
+    white: true;
+  }
 }
 
 let theme = extendTheme({
@@ -42,6 +55,9 @@ let theme = extendTheme({
         },
         text: {
           primary: "#404040",
+        },
+        white: {
+          main: "#FFFFFF",
         },
       },
     },

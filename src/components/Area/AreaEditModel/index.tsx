@@ -15,6 +15,7 @@ import RichTextEditor from "components/RichTextEditor";
 import {
   KeyValueListItem,
   setContent,
+  setImage,
   setKetValueListItems,
   setListItem,
   setTitle,
@@ -156,7 +157,12 @@ export default function AreaEditModel({
 
         {/* Image */}
         {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
-          <ImageCrop height={150} width={150} />
+          <ImageCrop
+            height={150}
+            width={150}
+            image={layoutState.image}
+            onChange={(image) => dispatch(setImage(image))}
+          />
         )}
 
         {/* Text */}

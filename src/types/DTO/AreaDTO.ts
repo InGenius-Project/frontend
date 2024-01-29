@@ -28,9 +28,9 @@ export interface ImageTextLayoutDTO extends LayoutDTO {
 }
 export interface ImageDTO {
   Id: string;
-  Filename?: string;
-  Content?: string;
-  ContentType?: string;
+  Filename: string;
+  Content: string;
+  ContentType: string;
 }
 
 export interface ListLayoutDTO extends LayoutDTO {

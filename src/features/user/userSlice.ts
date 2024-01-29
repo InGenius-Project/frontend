@@ -22,7 +22,6 @@ export const userSlice = createSlice({
     setUserInfo: (state, action: PayloadAction<UserInfoDTO>) => {
       state.User = action.payload;
     },
-
     setToken: (state, action: PayloadAction<TokenDTO>) => {
       state.Token = action.payload;
     },

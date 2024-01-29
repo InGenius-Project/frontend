@@ -1,16 +1,13 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, store } from "features/store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "features/store";
 import { EditorState } from "lexical";
-import { parse } from "path";
-import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import {
+  AreaDTO,
+  ImageDTO,
+  LayoutArrangement,
+  LayoutType,
+} from "types/DTO/AreaDTO";
 import { NIL } from "uuid";
-
-interface Image {
-  id: string;
-  filename: string;
-  contentType: string;
-  content: string;
-}
 
 interface Layout {
   areaId: string;
@@ -21,7 +18,7 @@ interface Layout {
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image: Image;
+  image: ImageDTO;
   listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
 }
@@ -48,10 +45,10 @@ const initialState: Layout = {
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
   image: {
-    id: "",
-    filename: "",
-    contentType: "",
-    content: "",
+    Id: "",
+    Filename: "",
+    ContentType: "",
+    Content: "",
   },
   listItems: undefined,
   keyValueListItems: [],
@@ -88,13 +85,13 @@ const layoutSlice = createSlice({
       state.image = action.payload;
     },
     setImageFilename: (state, action: PayloadAction<string>) => {
-      state.image.filename = action.payload;
+      state.image.Filename = action.payload;
     },
     setImageContent: (state, action: PayloadAction<string>) => {
-      state.image.content = action.payload;
+      state.image.Content = action.payload;
     },
     setImageContentType: (state, action: PayloadAction<string>) => {
-      state.image.contentType = action.payload;
+      state.image.ContentType = action.payload;
     },
     setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
@@ -128,10 +125,11 @@ const layoutSlice = createSlice({
           parseArea.id = action.payload.ImageTextLayout?.Id!;
           parseArea.content = action.payload.ImageTextLayout?.Content;
           parseArea.image = {
-            id: action.payload.ImageTextLayout?.Image?.Id!,
-            filename: action.payload.ImageTextLayout?.Image?.Filename!,
-            contentType: action.payload.ImageTextLayout?.Image?.ContentType!,
-            content: action.payload.ImageTextLayout?.Image?.Content!,
+            Id: action.payload.ImageTextLayout?.Image?.Id || "",
+            Filename: action.payload.ImageTextLayout?.Image?.Filename || "",
+            ContentType:
+              action.payload.ImageTextLayout?.Image?.ContentType || "",
+            Content: action.payload.ImageTextLayout?.Image?.Content || "",
           };
           break;
         case LayoutArrangement.LIST:
@@ -182,8 +180,7 @@ export const {
 export const generateImageBase64Src = (contentType: string, content: string) =>
   `data:${contentType};base64,${content}`;
 
-export const getUpdatedAreas = (newAreaSequence: number) => {
-  const state = store.getState();
+export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
   const areasState = state.areasState;
   const layoutState = state.layoutState;
   var areas = areasState.areas;
@@ -209,9 +206,9 @@ export const getUpdatedAreas = (newAreaSequence: number) => {
             Content: JSON.stringify(layoutState.content),
             Image: {
               Id: NIL,
-              Content: layoutState.image?.content || "",
-              ContentType: layoutState.image?.contentType || "image/jpeg",
-              Filename: layoutState.image?.filename || "",
+              Content: layoutState.image?.Content || "",
+              ContentType: layoutState.image?.ContentType || "image/jpeg",
+              Filename: layoutState.image?.Filename || "",
             },
           }
         : undefined,
@@ -255,8 +252,8 @@ export const getUpdatedAreas = (newAreaSequence: number) => {
   return updatedAreas;
 };
 
-export const getUpdatedArea = () => {
-  const layoutState = store.getState().layoutState;
+export const getUpdatedArea = (state: RootState) => {
+  const layoutState = state.layoutState;
   const updatedArea: AreaDTO = {
     Id: layoutState.areaId,
     Sequence: layoutState.sequence,
@@ -277,10 +274,10 @@ export const getUpdatedArea = () => {
             Id: layoutState.id,
             Content: JSON.stringify(layoutState.content),
             Image: {
-              Id: layoutState.image.id,
-              Content: layoutState.image?.content || "",
-              ContentType: layoutState.image?.contentType || "image/jpeg",
-              Filename: layoutState.image?.filename || "",
+              Id: layoutState.image.Id,
+              Content: layoutState.image?.Content || "",
+              ContentType: layoutState.image?.ContentType || "image/jpeg",
+              Filename: layoutState.image?.Filename || "",
             },
           }
         : undefined,

@@ -1,18 +1,28 @@
-import { Box, Button, ButtonProps, useTheme } from "@mui/material";
+import {
+  Button,
+  ButtonBase,
+  ButtonBaseTypeMap,
+  ButtonProps,
+  ExtendButtonBase,
+  useTheme,
+} from "@mui/material";
 import { motion } from "framer-motion";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import React from "react";
 
 type UploadImageButtonProps = {
   width?: number | string;
   height?: number | string;
+  circularCrop?: boolean;
 };
 
 function UploadImageButton({
   width,
   height,
+  circularCrop,
   children,
   ...props
-}: ButtonProps & UploadImageButtonProps & React.PropsWithChildren) {
+}: UploadImageButtonProps & React.PropsWithChildren & ButtonProps) {
   const theme = useTheme();
   const [displayHover, setDisplayHover] = React.useState(false);
 
@@ -21,15 +31,17 @@ function UploadImageButton({
       {...props}
       onMouseEnter={() => setDisplayHover(true)}
       onMouseLeave={() => setDisplayHover(false)}
-      sx={{
+      style={{
         overflow: "hidden",
-        borderRadius: theme.shape.borderRadius,
-        border: `1px solid ${props.color}`,
+        cursor: "pointer",
+        borderRadius: circularCrop ? "50%" : theme.shape.borderRadius,
+        border: "none",
         padding: 0,
         width,
         height,
       }}
     >
+      {children}
       <motion.div
         variants={{
           open: { opacity: 1 },
@@ -43,6 +55,7 @@ function UploadImageButton({
           zIndex: theme.zIndex.tooltip,
           width: "100%",
           height: "100%",
+          borderRadius: circularCrop ? "50%" : theme.shape.borderRadius,
           backgroundColor: "rgba(0,0,0,0.5)",
           color: "white",
           alignItems: "center",
@@ -50,10 +63,8 @@ function UploadImageButton({
         }}
         animate={displayHover ? "open" : "closed"}
       >
-        變更圖片
+        <FileUploadOutlinedIcon />
       </motion.div>
-
-      {children}
     </Button>
   );
 }

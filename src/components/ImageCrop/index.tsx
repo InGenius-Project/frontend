@@ -2,7 +2,6 @@ import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
   Box,
   Button,
-  ButtonBase,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,13 +12,9 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import {
-  generateImageBase64Src,
-  setImageContent,
-  setImageFilename,
-} from "features/layout/layoutSlice";
-import { useAppDispatch, useAppSelector } from "features/store";
-import React, { useRef, useState } from "react";
+import { useUpdateEffect } from "ahooks";
+import { generateImageBase64Src } from "features/layout/layoutSlice";
+import React, { useMemo, useRef, useState } from "react";
 import ReactCrop, {
   Crop,
   centerCrop,
@@ -28,6 +23,7 @@ import ReactCrop, {
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
+import { ImageDTO } from "types/DTO/AreaDTO";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
 
@@ -55,14 +51,22 @@ function base64ToBytes(base64: string): number {
 type ImageCropProps = {
   width?: string | number;
   height?: string | number;
+  image: ImageDTO;
+  onChange?: (image: ImageDTO) => void;
+  onCropDone?: (image: ImageDTO) => void;
+  circularCrop?: boolean;
 };
 export default function ImageCrop({
   width = 100,
   height = 100,
+  image,
+  circularCrop,
+  onChange,
+  onCropDone,
 }: ImageCropProps) {
   const theme = useTheme();
-  const { image: imageState } = useAppSelector((state) => state.layoutState);
-  const dispatch = useAppDispatch();
+
+  const [imageState, setImageState] = useState<ImageDTO>(image);
   const [imgSrc, setImgSrc] = useState("");
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -71,13 +75,18 @@ export default function ImageCrop({
   const [crop, setCrop] = useState<Crop>();
   const [open, setOpen] = React.useState(false);
 
+  useUpdateEffect(() => {
+    onChange && onChange(imageState);
+  }, [imageState, onChange]);
+
   const handleSelectFile = (e?: React.ChangeEvent<HTMLInputElement>) => {
     if (e && e.target.files && e.target.files.length > 0) {
       setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setImgSrc(reader.result?.toString() || "")
-      );
+      reader.addEventListener("load", () => {
+        setImgSrc(reader.result?.toString() || "");
+      });
+
       reader.readAsDataURL(e.target.files[0]);
     }
     handleClickOpen();
@@ -115,8 +124,16 @@ export default function ImageCrop({
         const dataUrl = previewCanvasRef.current.toDataURL();
         const splitDataUrl = dataUrl.split(",");
         if (base64ToBytes(splitDataUrl[1]) <= MAX_CANVAS_SIZE) {
-          dispatch(setImageContent(splitDataUrl[0]));
-          dispatch(setImageContent(splitDataUrl[1]));
+          const newImageState = {
+            ...imageState,
+            ContentType: splitDataUrl[0],
+            Content: splitDataUrl[1],
+          };
+
+          onCropDone && onCropDone(newImageState);
+
+          setImageState(newImageState);
+
           setOpen(false);
         } else {
           toast.error(`檔案大小超過 ${MAX_KB_SIZE}KB`);
@@ -141,9 +158,19 @@ export default function ImageCrop({
     }
   };
 
+  const imgPreviewUrl = useMemo(
+    () => generateImageBase64Src(imageState.ContentType, imageState.Content),
+    [imageState]
+  );
+
   return (
     <Box className="App">
-      <Dialog onClose={handleClose} open={open} fullWidth maxWidth="laptop">
+      <Dialog
+        onClose={() => setOpen(false)}
+        open={open}
+        fullWidth
+        maxWidth="laptop"
+      >
         <DialogTitle>裁切圖片</DialogTitle>
 
         <DialogContent
@@ -157,10 +184,13 @@ export default function ImageCrop({
           <TextField
             sx={{ mt: 1 }}
             label="檔案名稱"
-            value={imageState?.filename || ""}
-            onChange={(e) =>
-              imageState && dispatch(setImageFilename((e.target as any).value))
-            }
+            value={imageState?.Filename || ""}
+            onChange={(e) => {
+              setImageState((prev) => ({
+                ...prev,
+                filename: (e.target as any).value,
+              }));
+            }}
           ></TextField>
 
           <Box
@@ -179,10 +209,11 @@ export default function ImageCrop({
                 onComplete={handleCompleteCrop}
                 minWidth={10}
                 aspect={ASPECT_RATIO}
+                circularCrop={circularCrop}
               >
                 <img
                   ref={imgRef}
-                  alt={imageState ? imageState.filename : "Crop preview"}
+                  alt={imageState ? imageState.Filename : "Crop preview"}
                   src={imgSrc}
                   style={{
                     maxHeight: "55vh",
@@ -217,14 +248,15 @@ export default function ImageCrop({
       </Dialog>
 
       <Stack direction="row" spacing={2}>
-        {imageState.content === "" ? (
+        {imageState.Content === "" ? (
           <UploadImageButton
-            variant="outlined"
+            color="white"
             component="label"
             width={width}
             height={height}
-            startIcon={<ImageOutlinedIcon />}
+            circularCrop={circularCrop}
           >
+            <ImageOutlinedIcon />
             <Typography variant="body1">上傳圖片</Typography>
 
             <VisuallyHiddenInput
@@ -235,19 +267,20 @@ export default function ImageCrop({
             />
           </UploadImageButton>
         ) : (
-          <UploadImageButton component="label" width={width} height={height}>
+          <UploadImageButton
+            color="white"
+            component="label"
+            width={width}
+            height={height}
+            circularCrop={circularCrop}
+          >
             <img
               width={256}
               height={256}
-              src={generateImageBase64Src(
-                imageState?.contentType,
-                imageState?.content
-              )}
-              alt={imageState?.filename}
+              src={imgPreviewUrl}
+              alt={imageState?.Filename}
               style={{
                 overflow: "hidden",
-                borderRadius: theme.shape.borderRadius,
-                border: `1px solid ${theme.palette.primary.main}`,
                 width,
                 height,
                 padding: 0,
