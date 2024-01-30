@@ -1,8 +1,8 @@
 import { AreaEditModel } from "components/Area";
 import { useGetAreaByIdQuery } from "features/api/area/getArea";
 import { usePostAreaMutation } from "features/api/area/postArea";
-import { useGetUserQuery } from "features/api/user/getUser";
-import { usePostUserMutation } from "features/api/user/postUser";
+import { useGetRecruitmentByIdQuery } from "features/api/recruitment/getRecruitmentById";
+import { usePostRecruitmentMutation } from "features/api/recruitment/postRecruitment";
 import {
   getUpdatedArea,
   getUpdatedAreas,
@@ -12,19 +12,16 @@ import { store, useAppDispatch, useAppSelector } from "features/store";
 import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ProfileArea() {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-  const { areaId } = useParams();
-
+export default function RecruitmentArea() {
+  const { recruitmentId = "", areaId } = useParams();
   const [postArea, { isLoading }] = usePostAreaMutation();
-  const [postUser] = usePostUserMutation();
-  const { data: userData } = useGetUserQuery(null);
   const { data: areaData } = useGetAreaByIdQuery(areaId!, {
     skip: !areaId,
   });
-
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { data: recruitementData } = useGetRecruitmentByIdQuery(recruitmentId);
+  const [postRecruitment] = usePostRecruitmentMutation();
   const areasState = useAppSelector((state) => state.areasState);
 
   useLayoutEffect(() => {
@@ -34,10 +31,10 @@ export default function ProfileArea() {
   }, [areaData, dispatch]);
 
   const handleSubmit = () => {
-    if (userData && userData.Data) {
-      let prevAreas = Array.from(userData.Data.Areas || []);
+    if (recruitementData && recruitementData.Data) {
+      let areas = Array.from(recruitementData.Data.Areas);
 
-      const existAreaIndex = prevAreas.findIndex(
+      const existAreaIndex = areas.findIndex(
         (area) => area.Id === areaData?.Data?.Id
       );
 
@@ -45,13 +42,15 @@ export default function ProfileArea() {
       // Create a new area if not exist
       if (existAreaIndex === -1) {
         // Post full Resume for update the sequence of the areas
-        postUser({
-          Username: userData.Data.Username,
+        postRecruitment({
+          Id: recruitmentId,
+          Name: recruitementData.Data.Name,
+          Enable: recruitementData.Data.Enable,
           Areas: getUpdatedAreas(
             state,
             areasState.focusedArea
               ? areasState.focusedArea.Sequence
-              : (userData?.Data?.Areas || []).length
+              : recruitementData.Data.Areas.length
           ),
         })
           .unwrap()

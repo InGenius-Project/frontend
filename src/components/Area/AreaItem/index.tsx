@@ -6,6 +6,7 @@ import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
 import RichTextEditor from "components/RichTextEditor";
 import AreaListItem from "../AreaListItem";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
+import layoutSlice from "features/layout/layoutSlice";
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -75,6 +76,24 @@ const AreaItem = ({
       </Box>
       <Stack spacing={1}>
         <Typography variant="h4">{area.Title ? area.Title : "標題"}</Typography>
+        {area.Arrangement === LayoutArrangement.IMAGETEXT &&
+          area.ImageTextLayout?.Image?.Content && (
+            <Stack direction={"row"} spacing={1}>
+              <img
+                src={`data:${area.ImageTextLayout?.Image?.ContentType};base64,${area.ImageTextLayout?.Image?.Content}`}
+                alt={area.ImageTextLayout.Image.Filename}
+                style={{
+                  width: "15vw",
+                  height: "15vw",
+                }}
+              />
+              <RichTextEditor
+                controllable={false}
+                initialEditorState={area.ImageTextLayout?.Content}
+              ></RichTextEditor>
+            </Stack>
+          )}
+
         {area.Arrangement === LayoutArrangement.TEXT && (
           <RichTextEditor
             controllable={false}

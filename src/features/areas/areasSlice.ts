@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 export enum AreasType {
   "RESUME" = "RESUME",
   "PROFILE" = "PROFILE",
+  "RECRUITMENT" = "RECRUITMENT",
 }
 
 type AreasStateType = {

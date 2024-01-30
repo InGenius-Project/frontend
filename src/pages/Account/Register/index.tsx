@@ -1,9 +1,16 @@
 import {
   Box,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   InputAdornment,
   Link,
+  Radio,
+  RadioGroup,
   Stack,
+  Tab,
+  Tabs,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -21,6 +28,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormInput from "components/FormInput";
 import { useRegisterMutation } from "features/api/auth/register";
+import React from "react";
 
 const registerSchema = object({
   Username: string().min(1, "請輸入名稱").max(100),
@@ -68,7 +76,18 @@ export default function Register() {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    registerUser(values);
+    registerUser({
+      Username: values.Username,
+      Email: values.Email,
+      Password: values.Password,
+      Role: role,
+    });
+  };
+
+  const [role, setRole] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setRole(newValue);
   };
 
   return (
@@ -125,10 +144,17 @@ export default function Register() {
                   onSubmit={handleSubmit(onSubmitHandler)}
                 >
                   <Typography variant="h3">註冊</Typography>
-                  <Stack spacing={2} direction="row">
-                    <Link>一般</Link>
-                    <Link>企業</Link>
-                  </Stack>
+
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs
+                      value={role}
+                      onChange={handleChange}
+                      aria-label="basic tabs example"
+                    >
+                      <Tab label="一般" value={0} />
+                      <Tab label="企業端" value={1} />
+                    </Tabs>
+                  </Box>
 
                   <FormInput
                     label="帳號"

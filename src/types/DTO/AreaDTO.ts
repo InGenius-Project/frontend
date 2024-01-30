@@ -24,11 +24,13 @@ export interface TextLayoutDTO extends LayoutDTO {
 }
 export interface ImageTextLayoutDTO extends LayoutDTO {
   Content: string;
-  Image: ImageDTO;
+  Image?: ImageDTO;
 }
 export interface ImageDTO {
   Id: string;
+  Filename: string;
   Content: string;
+  ContentType: string;
 }
 
 export interface ListLayoutDTO extends LayoutDTO {

@@ -1,3 +1,5 @@
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import {
   Box,
   Button,
@@ -11,14 +13,16 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useDebounce, useMount, useUpdateEffect } from "ahooks";
 import dummyCover from "assets/images/png/dummyCover.jpg";
-import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppSelector } from "features/store";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { useDebounce, useUpdateEffect } from "ahooks";
+import avatarFallback from "assets/images/png/avatarFallback.json";
+import ImageCrop from "components/ImageCrop";
 import { usePostUserMutation } from "features/api/user/postUser";
-import { useState } from "react";
+import { useAppSelector } from "features/store";
+import { useCallback, useEffect, useState } from "react";
+import { ImageDTO } from "types/DTO/AreaDTO";
+import { NIL } from "uuid";
+import { setImage } from "features/layout/layoutSlice";
 
 type ProfileItemProps = {
   editable?: boolean;
@@ -32,9 +36,14 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
 }));
 function ProfileItem({ editable = false }: ProfileItemProps) {
   const theme = useTheme();
+
   const userState = useAppSelector((state) => state.userState);
   const [userNameState, setUserNameState] = useState(userState.User?.Username);
   const debouncedUserName = useDebounce(userNameState);
+  const [image, setImage] = useState<ImageDTO | undefined>(
+    userState.User?.Avatar
+  );
+
   const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
 
   const handleChangeUserName: React.ChangeEventHandler<HTMLInputElement> = (
@@ -42,6 +51,19 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
   ) => {
     setUserNameState(event.target.value);
   };
+
+  const handleChangeAvatar = useCallback((image: ImageDTO) => {
+    setImage(image);
+  }, []);
+  const handleAvatarCropDone = useCallback(
+    (image: ImageDTO) => {
+      postUser({
+        Username: userState.User?.Username || "",
+        Avatar: image,
+      });
+    },
+    [postUser, userState]
+  );
 
   useUpdateEffect(() => {
     postUser({
@@ -88,14 +110,20 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
           left: theme.spacing(2),
         }}
       >
-        <img
-          src={dummyUserImage}
-          alt="user"
-          style={{
-            width: "var(--ing-height-profile-avatar)",
-            height: "var(--ing-height-profile-avatar)",
-            borderRadius: "50%",
-          }}
+        <ImageCrop
+          width="var(--ing-height-profile-avatar)"
+          height="var(--ing-height-profile-avatar)"
+          circularCrop
+          image={
+            image || {
+              Id: NIL,
+              ContentType: "",
+              Filename: "",
+              Content: avatarFallback.src,
+            }
+          }
+          onChange={handleChangeAvatar}
+          onCropDone={handleAvatarCropDone}
         />
       </Box>
 

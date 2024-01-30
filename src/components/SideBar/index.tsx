@@ -8,6 +8,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
 import { motion } from "framer-motion";
 import { useAppSelector } from "features/store";
+import { UserRole } from "types/DTO/UserDTO";
 
 const SideBarToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
@@ -31,6 +32,66 @@ const SideBarLeftIcon = styled("span")(({ theme }) => ({
   marginRight: theme.spacing(1),
   alignItems: "center",
 }));
+
+export const navigationConfig = [
+  {
+    role: UserRole.Intern,
+    items: [
+      {
+        name: "個人首頁",
+        value: "Profile",
+        icon: (
+          <img
+            src={dummyUserImage}
+            alt="userImage"
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              objectFit: "contain",
+            }}
+          />
+        ),
+      },
+      {
+        name: "履歷管理",
+        value: "Resume",
+        icon: <InsertDriveFileOutlinedIcon />,
+      },
+      {
+        name: "職缺管理",
+        value: "Recruitment",
+        icon: <WorkOutlineOutlinedIcon />,
+      },
+    ],
+  },
+  {
+    role: UserRole.Company,
+    items: [
+      {
+        name: "公司首頁",
+        value: "Profile",
+        icon: (
+          <img
+            src={dummyUserImage}
+            alt="userImage"
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              objectFit: "contain",
+            }}
+          />
+        ),
+      },
+      {
+        name: "職缺管理",
+        value: "Recruitment",
+        icon: <WorkOutlineOutlinedIcon />,
+      },
+    ],
+  },
+];
 
 const SideBar = () => {
   const navigate = useNavigate();
@@ -68,33 +129,21 @@ const SideBar = () => {
         onChange={handleNavigate}
         sx={{ width: "100%", position: "sticky", top: 0 }}
       >
-        <SideBarButton value="Profile">
-          <SideBarLeftIcon>
-            <img
-              src={dummyUserImage}
-              alt="userImage"
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                objectFit: "contain",
-              }}
-            />
-          </SideBarLeftIcon>
-          {user?.Username}
-        </SideBarButton>
-        <SideBarButton value="Resume">
-          <SideBarLeftIcon>
-            <InsertDriveFileOutlinedIcon />
-          </SideBarLeftIcon>
-          履歷
-        </SideBarButton>
-        <SideBarButton value="Intern">
-          <SideBarLeftIcon>
-            <WorkOutlineOutlinedIcon />
-          </SideBarLeftIcon>
-          實習管理
-        </SideBarButton>
+        {navigationConfig.map((config) => {
+          if (config.role === user?.Role) {
+            return config.items.map((item) => (
+              <SideBarButton
+                key={item.name}
+                value={item.value}
+                sx={{ justifyContent: "flex-start" }}
+              >
+                <SideBarLeftIcon>{item.icon}</SideBarLeftIcon>
+                {item.name}
+              </SideBarButton>
+            ));
+          }
+          return null;
+        })}
       </SideBarToggleButtonGroup>
     </motion.aside>
   );

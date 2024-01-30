@@ -15,16 +15,21 @@ export default function InitialPlugin({
 
   React.useLayoutEffect(() => {
     if (initialEditorState !== null) {
-      switch (typeof initialEditorState) {
-        case "string": {
-          const parsedEditorState = editor.parseEditorState(initialEditorState);
-          editor.setEditorState(parsedEditorState, HISTORY_MERGE_OPTIONS);
-          break;
+      try {
+        switch (typeof initialEditorState) {
+          case "string": {
+            const parsedEditorState =
+              editor.parseEditorState(initialEditorState);
+            editor.setEditorState(parsedEditorState, HISTORY_MERGE_OPTIONS);
+            break;
+          }
+          case "object": {
+            editor.setEditorState(initialEditorState, HISTORY_MERGE_OPTIONS);
+            break;
+          }
         }
-        case "object": {
-          editor.setEditorState(initialEditorState, HISTORY_MERGE_OPTIONS);
-          break;
-        }
+      } catch (e) {
+        console.error(e);
       }
     }
   }, [initialEditorState, editor]);

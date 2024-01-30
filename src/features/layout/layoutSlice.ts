@@ -1,13 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "features/store";
 import { EditorState } from "lexical";
-import { AreaDTO, LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import {
+  AreaDTO,
+  ImageDTO,
+  LayoutArrangement,
+  LayoutType,
+} from "types/DTO/AreaDTO";
+import { NIL } from "uuid";
 
-interface LayoutState {
+interface Layout {
+  areaId: string;
+  sequence: number;
+  isDisplayed: boolean;
+  id: string;
   type: LayoutType;
   arrangement: LayoutArrangement;
   title: string;
   content?: EditorState | string;
-  image?: string;
+  image: ImageDTO;
   listItems?: Array<Tag>;
   keyValueListItems: Array<KeyValueListItem>;
 }
@@ -24,12 +35,21 @@ export interface KeyValueListItem {
   value: string;
 }
 
-const initialState: LayoutState = {
+const initialState: Layout = {
+  areaId: "",
+  isDisplayed: true,
+  sequence: 0,
+  id: "",
   title: "",
   type: LayoutType.CUSTOM,
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
-  image: undefined,
+  image: {
+    Id: "",
+    Filename: "",
+    ContentType: "",
+    Content: "",
+  },
   listItems: undefined,
   keyValueListItems: [],
 };
@@ -58,11 +78,20 @@ const layoutSlice = createSlice({
     setContent: (state, action: PayloadAction<EditorState>) => {
       state.content = action.payload;
     },
-    setLayout: (state, action: PayloadAction<LayoutState>) => {
+    setLayout: (state, action: PayloadAction<Layout>) => {
       state = action.payload;
     },
-    setImage: (state, action: PayloadAction<string>) => {
+    setImage: (state, action: PayloadAction<Layout["image"]>) => {
       state.image = action.payload;
+    },
+    setImageFilename: (state, action: PayloadAction<string>) => {
+      state.image.Filename = action.payload;
+    },
+    setImageContent: (state, action: PayloadAction<string>) => {
+      state.image.Content = action.payload;
+    },
+    setImageContentType: (state, action: PayloadAction<string>) => {
+      state.image.ContentType = action.payload;
     },
     setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
@@ -74,10 +103,14 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
-      const { Title, Type, Arrangement } = action.payload;
+      const { Title, Type, Arrangement, Sequence, Id, IsDisplayed } =
+        action.payload;
 
-      var parseArea = {
+      var parseArea: Layout = {
         ...state,
+        areaId: Id,
+        sequence: Sequence,
+        isDisplayed: IsDisplayed,
         title: Title,
         type: Type,
         arrangement: Arrangement,
@@ -86,17 +119,39 @@ const layoutSlice = createSlice({
       switch (Arrangement) {
         case LayoutArrangement.TEXT:
           parseArea.content = action.payload.TextLayout?.Content;
+          parseArea.id = action.payload.TextLayout?.Id!;
           break;
         case LayoutArrangement.IMAGETEXT:
+          parseArea.id = action.payload.ImageTextLayout?.Id!;
           parseArea.content = action.payload.ImageTextLayout?.Content;
-          parseArea.image = action.payload.ImageTextLayout?.Image.Content;
+          parseArea.image = {
+            Id: action.payload.ImageTextLayout?.Image?.Id || "",
+            Filename: action.payload.ImageTextLayout?.Image?.Filename || "",
+            ContentType:
+              action.payload.ImageTextLayout?.Image?.ContentType || "",
+            Content: action.payload.ImageTextLayout?.Image?.Content || "",
+          };
           break;
         case LayoutArrangement.LIST:
+          parseArea.id = action.payload.ListLayout?.Id!;
           parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
             id: i.Id,
             name: i.Name,
             type: "CUSTOM",
           }));
+          break;
+        case LayoutArrangement.KEYVALUELIST:
+          parseArea.id = action.payload.KeyValueListLayout?.Id!;
+          parseArea.keyValueListItems =
+            action.payload.KeyValueListLayout!.Items!.map((i) => ({
+              id: i.Id,
+              key: {
+                id: i.Key.Id,
+                name: i.Key.Name,
+                type: "CUSTOM",
+              },
+              value: i.Value,
+            }));
           break;
       }
       return parseArea;
@@ -108,14 +163,154 @@ export const {
   initializeState,
   initializeStateWithoutFocusedArea,
   setType,
+  setImageFilename,
   setTitle,
   setArrangement,
   setContent,
   setLayout,
   setListItem,
   setLayoutByArea,
+  setImageContent,
+  setImageContentType,
   setKetValueListItems,
   setImage,
 } = layoutSlice.actions;
+
+// TODO: remove createSelector
+export const generateImageBase64Src = (contentType: string, content: string) =>
+  `data:${contentType};base64,${content}`;
+
+export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
+  const areasState = state.areasState;
+  const layoutState = state.layoutState;
+  var areas = areasState.areas;
+
+  const newArea: AreaDTO = {
+    Id: NIL,
+    Sequence: newAreaSequence,
+    Type: layoutState.type,
+    IsDisplayed: true,
+    Title: layoutState.title,
+    Arrangement: layoutState.arrangement,
+    TextLayout:
+      layoutState.arrangement === LayoutArrangement.TEXT
+        ? {
+            Id: NIL,
+            Content: JSON.stringify(layoutState.content),
+          }
+        : undefined,
+    ImageTextLayout:
+      layoutState.arrangement === LayoutArrangement.IMAGETEXT
+        ? {
+            Id: NIL,
+            Content: JSON.stringify(layoutState.content),
+            Image: {
+              Id: NIL,
+              Content: layoutState.image?.Content || "",
+              ContentType: layoutState.image?.ContentType || "image/jpeg",
+              Filename: layoutState.image?.Filename || "",
+            },
+          }
+        : undefined,
+    ListLayout:
+      layoutState.arrangement === LayoutArrangement.LIST
+        ? {
+            Id: NIL,
+            Items: (layoutState.listItems || []).map((i) => ({
+              Id: NIL,
+              Name: i.name,
+              Type: "CUSTOM", // TODO: Base on area type
+            })),
+          }
+        : undefined,
+    KeyValueListLayout:
+      layoutState.arrangement === LayoutArrangement.KEYVALUELIST
+        ? {
+            Id: NIL,
+            Items: (layoutState.keyValueListItems || []).map((i) => ({
+              Id: NIL,
+              Key: {
+                Id: NIL,
+                Name: i.key.name,
+                Type: "CUSTOM",
+              },
+              Value: i.value,
+            })),
+          }
+        : undefined,
+  };
+
+  areas = areas ? [...areas] : [];
+
+  areas.splice(newAreaSequence + 1, 0, newArea);
+
+  const updatedAreas = areas.map((area, i) => ({
+    ...area,
+    Sequence: i,
+  }));
+
+  return updatedAreas;
+};
+
+export const getUpdatedArea = (state: RootState) => {
+  const layoutState = state.layoutState;
+  const updatedArea: AreaDTO = {
+    Id: layoutState.areaId,
+    Sequence: layoutState.sequence,
+    IsDisplayed: layoutState.isDisplayed,
+    Title: layoutState.title,
+    Arrangement: layoutState.arrangement,
+    Type: layoutState.type,
+    TextLayout:
+      layoutState.arrangement === LayoutArrangement.TEXT
+        ? {
+            Id: layoutState.id,
+            Content: JSON.stringify(layoutState.content),
+          }
+        : undefined,
+    ImageTextLayout:
+      layoutState.arrangement === LayoutArrangement.IMAGETEXT
+        ? {
+            Id: layoutState.id,
+            Content: JSON.stringify(layoutState.content),
+            Image: {
+              Id: layoutState.image.Id,
+              Content: layoutState.image?.Content || "",
+              ContentType: layoutState.image?.ContentType || "image/jpeg",
+              Filename: layoutState.image?.Filename || "",
+            },
+          }
+        : undefined,
+    ListLayout:
+      layoutState.arrangement === LayoutArrangement.LIST
+        ? {
+            Id: layoutState.id,
+            // sort item
+            Items: (layoutState.listItems || []).map((i) => ({
+              Id: NIL,
+              Name: i.name,
+              Type: "CUSTOM", // TODO: Base on area type
+            })),
+          }
+        : undefined,
+    KeyValueListLayout:
+      layoutState.arrangement === LayoutArrangement.KEYVALUELIST
+        ? {
+            Id: layoutState.id,
+            Items: (layoutState.keyValueListItems || []).map((i) => ({
+              Id: NIL,
+              Key: {
+                Id: NIL,
+                Name: i.key.name,
+                Type: "CUSTOM",
+              },
+              Value: i.value,
+            })),
+          }
+        : undefined,
+  };
+
+  return updatedArea;
+};
 
 export default layoutSlice.reducer;

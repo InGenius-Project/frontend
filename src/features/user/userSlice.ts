@@ -1,7 +1,6 @@
-import { TokenDTO } from "./../../types/DTO/TokenDTO";
-import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
-import { getResumeByIdApi } from "features/api/resume/getResumeById";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
+import { TokenDTO } from "./../../types/DTO/TokenDTO";
 
 type userSliceType = {
   User?: UserInfoDTO;
@@ -23,7 +22,6 @@ export const userSlice = createSlice({
     setUserInfo: (state, action: PayloadAction<UserInfoDTO>) => {
       state.User = action.payload;
     },
-
     setToken: (state, action: PayloadAction<TokenDTO>) => {
       state.Token = action.payload;
     },
