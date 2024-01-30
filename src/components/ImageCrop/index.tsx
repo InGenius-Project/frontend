@@ -22,10 +22,11 @@ import ReactCrop, {
   makeAspectCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { toast } from "react-toastify";
 import { ImageDTO } from "types/DTO/AreaDTO";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
+import compressToMaxCanvasSize, { urltoFile } from "./compressToMaxCanvasSize";
+import resizeImage from "./compressToMaxCanvasSize";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -113,7 +114,7 @@ export default function ImageCrop({
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     if (imgRef.current && previewCanvasRef.current && crop) {
       canvasPreview(
         imgRef.current, // HTMLImageElement
@@ -121,23 +122,20 @@ export default function ImageCrop({
         convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height)
       );
       if (imgRef.current && previewCanvasRef.current && crop) {
-        const dataUrl = previewCanvasRef.current.toDataURL();
-        const splitDataUrl = dataUrl.split(",");
-        if (base64ToBytes(splitDataUrl[1]) <= MAX_CANVAS_SIZE) {
-          const newImageState = {
+        var dataUrl = previewCanvasRef.current.toDataURL();
+
+        resizeImage(dataUrl, 100, 1).then((res) => {
+          const newImageState: ImageDTO = {
             ...imageState,
-            ContentType: splitDataUrl[0],
-            Content: splitDataUrl[1],
+            Content: res.split(",")[1],
+            ContentType: res.split(",")[0].split(":")[1].split(";")[0],
           };
 
           onCropDone && onCropDone(newImageState);
 
           setImageState(newImageState);
-
           setOpen(false);
-        } else {
-          toast.error(`檔案大小超過 ${MAX_KB_SIZE}KB`);
-        }
+        });
       }
     }
   };
