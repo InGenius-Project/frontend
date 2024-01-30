@@ -1,13 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Lock from "@mui/icons-material/Lock";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   InputAdornment,
   Link,
-  Radio,
-  RadioGroup,
   Stack,
   Tab,
   Tabs,
@@ -16,19 +16,13 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import Lock from "@mui/icons-material/Lock";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import { motion } from "framer-motion";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { object, string, TypeOf } from "zod";
-import { useEffect } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import LoadingButton from "@mui/lab/LoadingButton";
 import FormInput from "components/FormInput";
 import { useRegisterMutation } from "features/api/auth/register";
-import React from "react";
+import { motion } from "framer-motion";
+import React, { useEffect } from "react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { TypeOf, object, string } from "zod";
 
 const registerSchema = object({
   Username: string().min(1, "請輸入名稱").max(100),
@@ -153,6 +147,12 @@ export default function Register() {
                     >
                       <Tab label="一般" value={0} />
                       <Tab label="企業端" value={1} />
+                      {process.env.REACT_APP_NODE_ENV === "development" && (
+                        <Tab label="管理員" value={2} />
+                      )}
+                      {process.env.REACT_APP_NODE_ENV === "development" && (
+                        <Tab label="內部管理員" value={3} />
+                      )}
                     </Tabs>
                   </Box>
 

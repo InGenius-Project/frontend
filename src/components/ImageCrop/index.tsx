@@ -25,8 +25,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { ImageDTO } from "types/DTO/AreaDTO";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
-import compressToMaxCanvasSize, { urltoFile } from "./compressToMaxCanvasSize";
-import resizeImage from "./compressToMaxCanvasSize";
+import resizeImage from "./resizeImage";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",

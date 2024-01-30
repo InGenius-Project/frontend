@@ -1,25 +1,25 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
+  Chip,
   Container,
-  Stack,
   Link,
-  useTheme,
   Menu,
   MenuItem,
-  Chip,
+  Stack,
+  useTheme,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { ReactComponent as Logo } from "assets/images/logo/logo.svg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppDispatch, useAppSelector } from "features/store";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { logout } from "features/user/userSlice";
+import { getNavigationConfig } from "components/SideBar/navigationConfig";
 import { baseApi } from "features/api/baseApi";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { logout } from "features/user/userSlice";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { UserRole } from "types/DTO/UserDTO";
-import { navigationConfig } from "components/SideBar";
 
 export default function Header() {
   const theme = useTheme();
@@ -100,17 +100,14 @@ export default function Header() {
                 {user.Username}
               </Button>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                {navigationConfig.map((config) => {
-                  if (config.role === user?.Role) {
-                    return config.items.map((item) => (
-                      <MenuItem
-                        onClick={() => navigate(`/Account/User/${item.value}`)}
-                      >
-                        {item.name}
-                      </MenuItem>
-                    ));
-                  }
-                  return null;
+                {getNavigationConfig(user?.Role || 0)?.map((item) => {
+                  return (
+                    <MenuItem
+                      onClick={() => navigate(`/Account/User/${item.value}`)}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  );
                 })}
 
                 <MenuItem onClick={handleLogout}>登出</MenuItem>

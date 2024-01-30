@@ -25,6 +25,8 @@ import UserRoute from "./UserRoute";
 import RecruitementAreaNew from "pages/Account/User/Recruitment/Edit/New";
 import RecruitmentAreaLayout from "pages/Account/User/Recruitment/Edit/Layout";
 import RecruitmentArea from "pages/Account/User/Recruitment/Edit/Area";
+import InternalUserRoute from "./InternalUserRoute";
+import Tag from "pages/Account/User/Tag";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -131,6 +133,13 @@ const router = createBrowserRouter(
                   }}
                 />
               </Route>
+            </Route>
+            <Route element={<InternalUserRoute />}>
+              <Route
+                path="Tag"
+                element={<Tag />}
+                handle={{ crumb: "標籤管理" }}
+              ></Route>
             </Route>
           </Route>
         </Route>

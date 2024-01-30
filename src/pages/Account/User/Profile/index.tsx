@@ -1,13 +1,12 @@
 import { Box, Stack } from "@mui/material";
-import FullScreenLoader from "components/FullScreenLoader";
+import AreaEditor from "components/Area/AreaEditor";
 import ProfileItem from "components/ProfileItem";
 import { useGetUserQuery } from "features/api/user/getUser";
-import { useEffect } from "react";
 import { usePostUserMutation } from "features/api/user/postUser";
-import { useAppDispatch } from "features/store";
 import { AreasType, setAreas } from "features/areas/areasSlice";
+import { useAppDispatch } from "features/store";
+import { useEffect } from "react";
 import { AreaDTO } from "types/DTO/AreaDTO";
-import AreaEditor from "components/Area/AreaEditor";
 
 export default function Profile() {
   const dispatch = useAppDispatch();

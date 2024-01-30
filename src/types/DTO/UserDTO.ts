@@ -5,7 +5,7 @@ export enum UserRole {
   "Intern" = 0,
   "Company" = 1,
   "Admin" = 2,
-  "InnerUser" = 3,
+  "InternalUser" = 3,
 }
 
 export interface UserDTO {

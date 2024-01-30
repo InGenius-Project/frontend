@@ -1,14 +1,11 @@
-import React from "react";
-import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
-import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { motion } from "framer-motion";
+import { styled } from "@mui/material/styles";
 import { useAppSelector } from "features/store";
-import { UserRole } from "types/DTO/UserDTO";
+import { motion } from "framer-motion";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { getNavigationConfig } from "./navigationConfig";
 
 const SideBarToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
@@ -32,66 +29,6 @@ const SideBarLeftIcon = styled("span")(({ theme }) => ({
   marginRight: theme.spacing(1),
   alignItems: "center",
 }));
-
-export const navigationConfig = [
-  {
-    role: UserRole.Intern,
-    items: [
-      {
-        name: "個人首頁",
-        value: "Profile",
-        icon: (
-          <img
-            src={dummyUserImage}
-            alt="userImage"
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "50%",
-              objectFit: "contain",
-            }}
-          />
-        ),
-      },
-      {
-        name: "履歷管理",
-        value: "Resume",
-        icon: <InsertDriveFileOutlinedIcon />,
-      },
-      {
-        name: "職缺管理",
-        value: "Recruitment",
-        icon: <WorkOutlineOutlinedIcon />,
-      },
-    ],
-  },
-  {
-    role: UserRole.Company,
-    items: [
-      {
-        name: "公司首頁",
-        value: "Profile",
-        icon: (
-          <img
-            src={dummyUserImage}
-            alt="userImage"
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "50%",
-              objectFit: "contain",
-            }}
-          />
-        ),
-      },
-      {
-        name: "職缺管理",
-        value: "Recruitment",
-        icon: <WorkOutlineOutlinedIcon />,
-      },
-    ],
-  },
-];
 
 const SideBar = () => {
   const navigate = useNavigate();
@@ -129,21 +66,16 @@ const SideBar = () => {
         onChange={handleNavigate}
         sx={{ width: "100%", position: "sticky", top: 0 }}
       >
-        {navigationConfig.map((config) => {
-          if (config.role === user?.Role) {
-            return config.items.map((item) => (
-              <SideBarButton
-                key={item.name}
-                value={item.value}
-                sx={{ justifyContent: "flex-start" }}
-              >
-                <SideBarLeftIcon>{item.icon}</SideBarLeftIcon>
-                {item.name}
-              </SideBarButton>
-            ));
-          }
-          return null;
-        })}
+        {(getNavigationConfig(user?.Role || 0) || []).map((item) => (
+          <SideBarButton
+            key={item.name}
+            value={item.value}
+            sx={{ justifyContent: "flex-start" }}
+          >
+            <SideBarLeftIcon>{item.icon}</SideBarLeftIcon>
+            {item.name}
+          </SideBarButton>
+        ))}
       </SideBarToggleButtonGroup>
     </motion.aside>
   );
