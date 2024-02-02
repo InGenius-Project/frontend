@@ -103,6 +103,7 @@ export default function Header() {
                 {getNavigationConfig(user?.Role || 0)?.map((item) => {
                   return (
                     <MenuItem
+                      key={`header-menu-item-${item.value}`}
                       onClick={() => navigate(`/Account/User/${item.value}`)}
                     >
                       {item.name}

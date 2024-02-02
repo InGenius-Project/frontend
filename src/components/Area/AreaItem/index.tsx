@@ -111,9 +111,9 @@ const AreaItem = ({
               id={i.Id}
               key={i.Id}
               itemKey={{
-                id: i.Key.Id,
-                name: i.Key.Name,
-                type: i.Key.Type,
+                Id: i.Key.Id,
+                Name: i.Key.Name,
+                Type: i.Key.Type,
               }}
               value={i.Value}
             />

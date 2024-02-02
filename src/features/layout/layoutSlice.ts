@@ -4,9 +4,11 @@ import { EditorState } from "lexical";
 import {
   AreaDTO,
   ImageDTO,
+  KeyValueItemDTO,
   LayoutArrangement,
   LayoutType,
 } from "types/DTO/AreaDTO";
+import { TagDTO } from "types/TagDTO";
 import { NIL } from "uuid";
 
 interface Layout {
@@ -19,20 +21,8 @@ interface Layout {
   title: string;
   content?: EditorState | string;
   image: ImageDTO;
-  listItems?: Array<Tag>;
-  keyValueListItems: Array<KeyValueListItem>;
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  type: string;
-}
-
-export interface KeyValueListItem {
-  id: string;
-  key: Tag;
-  value: string;
+  listItems?: Array<TagDTO>;
+  keyValueListItems: Array<KeyValueItemDTO>;
 }
 
 const initialState: Layout = {
@@ -93,12 +83,12 @@ const layoutSlice = createSlice({
     setImageContentType: (state, action: PayloadAction<string>) => {
       state.image.ContentType = action.payload;
     },
-    setListItem: (state, action: PayloadAction<Array<Tag>>) => {
+    setListItem: (state, action: PayloadAction<Array<TagDTO>>) => {
       state.listItems = action.payload;
     },
     setKetValueListItems: (
       state,
-      action: PayloadAction<Array<KeyValueListItem>>
+      action: PayloadAction<Array<KeyValueItemDTO>>
     ) => {
       state.keyValueListItems = action.payload;
     },
@@ -134,24 +124,12 @@ const layoutSlice = createSlice({
           break;
         case LayoutArrangement.LIST:
           parseArea.id = action.payload.ListLayout?.Id!;
-          parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
-            id: i.Id,
-            name: i.Name,
-            type: "CUSTOM",
-          }));
+          parseArea.listItems = action.payload.ListLayout?.Items;
           break;
         case LayoutArrangement.KEYVALUELIST:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
           parseArea.keyValueListItems =
-            action.payload.KeyValueListLayout!.Items!.map((i) => ({
-              id: i.Id,
-              key: {
-                id: i.Key.Id,
-                name: i.Key.Name,
-                type: "CUSTOM",
-              },
-              value: i.Value,
-            }));
+            action.payload.KeyValueListLayout?.Items || [];
           break;
       }
       return parseArea;
@@ -216,26 +194,14 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       layoutState.arrangement === LayoutArrangement.LIST
         ? {
             Id: NIL,
-            Items: (layoutState.listItems || []).map((i) => ({
-              Id: NIL,
-              Name: i.name,
-              Type: "CUSTOM", // TODO: Base on area type
-            })),
+            Items: layoutState.listItems,
           }
         : undefined,
     KeyValueListLayout:
       layoutState.arrangement === LayoutArrangement.KEYVALUELIST
         ? {
             Id: NIL,
-            Items: (layoutState.keyValueListItems || []).map((i) => ({
-              Id: NIL,
-              Key: {
-                Id: NIL,
-                Name: i.key.name,
-                Type: "CUSTOM",
-              },
-              Value: i.value,
-            })),
+            Items: layoutState.keyValueListItems,
           }
         : undefined,
   };
@@ -286,26 +252,14 @@ export const getUpdatedArea = (state: RootState) => {
         ? {
             Id: layoutState.id,
             // sort item
-            Items: (layoutState.listItems || []).map((i) => ({
-              Id: NIL,
-              Name: i.name,
-              Type: "CUSTOM", // TODO: Base on area type
-            })),
+            Items: layoutState.listItems,
           }
         : undefined,
     KeyValueListLayout:
       layoutState.arrangement === LayoutArrangement.KEYVALUELIST
         ? {
             Id: layoutState.id,
-            Items: (layoutState.keyValueListItems || []).map((i) => ({
-              Id: NIL,
-              Key: {
-                Id: NIL,
-                Name: i.key.name,
-                Type: "CUSTOM",
-              },
-              Value: i.value,
-            })),
+            Items: layoutState.keyValueListItems,
           }
         : undefined,
   };

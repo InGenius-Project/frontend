@@ -13,7 +13,6 @@ import DragDropContainer from "components/DragDropContainer";
 import ImageCrop from "components/ImageCrop";
 import RichTextEditor from "components/RichTextEditor";
 import {
-  KeyValueListItem,
   setContent,
   setImage,
   setKetValueListItems,
@@ -24,7 +23,11 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import {
+  KeyValueItemDTO,
+  LayoutArrangement,
+  LayoutType,
+} from "types/DTO/AreaDTO";
 import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
@@ -52,7 +55,7 @@ export default function AreaEditModel({
 
   const handleListItemDragEnd = (item: string[]) => {
     const newListItem = item
-      .map((id) => (layoutState.listItems || []).find((item) => item.id === id))
+      .map((id) => (layoutState.listItems || []).find((item) => item.Id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setListItem(newListItem));
@@ -60,56 +63,58 @@ export default function AreaEditModel({
 
   const handleKeyValueListItemDragEnd = (item: string[]) => {
     const newListItems = item
-      .map((id) => layoutState.keyValueListItems.find((item) => item.id === id))
+      .map((id) => layoutState.keyValueListItems.find((item) => item.Id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setKetValueListItems(newListItems));
   };
   const handleKeyValueListAddClick = () => {
-    dispatch(
-      setKetValueListItems([
-        ...layoutState.keyValueListItems,
-        {
-          id: uuid(),
-          key: {
-            id: uuid(),
-            name: "",
-            type: "CUSTOM",
-          },
-          value: "",
-        },
-      ])
-    );
+    // TODO: fix this
+    // dispatch(
+    //   setKetValueListItems([
+    //     ...layoutState.keyValueListItems,
+    //     {
+    //       Id: uuid(),
+    //       Key: {
+    //         id: uuid(),
+    //         name: "",
+    //         type: "CUSTOM",
+    //       },
+    //       value: "",
+    //     },
+    //   ])
+    // );
   };
 
   const handleListAddClick = () => {
     if (layoutState.listItems) {
-      dispatch(
-        setListItem([
-          ...layoutState.listItems,
-          {
-            id: uuid(),
-            name: "",
-            type: "CUSTOM",
-          },
-        ])
-      );
+      // TODO: fix this
+      // dispatch(
+      //   setListItem([
+      //     ...layoutState.listItems,
+      //     {
+      //       id: uuid(),
+      //       name: "",
+      //       type: "CUSTOM",
+      //     },
+      //   ])
+      // );
     } else {
-      dispatch(setListItem([{ id: uuid(), name: "", type: "CUSTOM" }]));
+      // dispatch(setListItem([{ id: uuid(), name: "", type: "CUSTOM" }]));
     }
   };
 
   const handleListRemoveClick = (id: string) => {
     dispatch(
-      setListItem((layoutState.listItems || []).filter((i) => i.id !== id))
+      setListItem((layoutState.listItems || []).filter((i) => i.Id !== id))
     );
   };
 
-  const handleKeyValueListItemChange = (item: KeyValueListItem) => {
+  const handleKeyValueListItemChange = (item: KeyValueItemDTO) => {
     dispatch(
       setKetValueListItems(
         layoutState.keyValueListItems.map((i) => {
-          if (i.id === item.id) {
+          if (i.Id === item.Id) {
             return item;
           }
           return i;
@@ -184,16 +189,16 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={layoutState.keyValueListItems.map((item) => item.id)}
+              items={layoutState.keyValueListItems.map((item) => item.Id)}
               spacing={0}
               onDragEnd={handleKeyValueListItemDragEnd}
             >
               {layoutState.keyValueListItems.map((item) => (
                 <AreaKeyValueListItem
-                  id={item.id}
-                  itemKey={item.key}
-                  value={item.value}
-                  key={item.id}
+                  id={item.Id}
+                  itemKey={item.Key}
+                  value={item.Value}
+                  key={item.Id}
                   editable
                   onChange={handleKeyValueListItemChange}
                 />
@@ -223,22 +228,22 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={(layoutState.listItems || []).map((item) => item.id)}
+              items={(layoutState.listItems || []).map((item) => item.Id)}
               spacing={0}
               onDragEnd={handleListItemDragEnd}
             >
               {(layoutState.listItems || []).map((i) => (
                 <AreaListItem
-                  content={i.name}
+                  content={i.Name}
                   editable
-                  key={i.id}
-                  id={i.id}
+                  key={i.Id}
+                  id={i.Id}
                   onClickDelete={handleListRemoveClick}
                   onChange={(event) =>
                     dispatch(
                       setListItem(
                         (layoutState.listItems || []).map((item) => {
-                          if (item.id === i.id)
+                          if (item.Id === i.Id)
                             return { ...item, name: event.target.value };
                           return item;
                         })

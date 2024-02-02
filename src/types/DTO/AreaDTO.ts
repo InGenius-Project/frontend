@@ -1,3 +1,5 @@
+import { TagDTO } from "types/TagDTO";
+
 export interface AreaDTO {
   Id: string;
   Sequence: number;
@@ -45,12 +47,6 @@ export interface KeyValueItemDTO {
   Id: string;
   Key: TagDTO;
   Value: string;
-}
-
-export interface TagDTO {
-  Id: string;
-  Name: string;
-  Type: string;
 }
 
 export enum LayoutArrangement {
