@@ -2,9 +2,10 @@ import { Box, Checkbox, TableCell, TableRow } from "@mui/material";
 import TableHead from "@mui/material/TableHead";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
-import { HeadCellType, Order } from "../utils";
+import React from "react";
+import { Cell, Order } from "../utils";
 
-interface EnhancedTableProps<T extends object, K extends keyof T> {
+interface TableHeadProps<T extends object, K extends keyof T> {
   numSelected: number;
   onRequestSort: (event: React.MouseEvent<unknown>, property: K) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -12,33 +13,19 @@ interface EnhancedTableProps<T extends object, K extends keyof T> {
   orderBy: K;
   editable?: boolean;
   rowCount: number;
-  headCells: HeadCell<K>[];
+  cells: Cell<T, K>[];
 }
 
-export interface HeadCell<K> {
-  id: K;
-  label: string;
-  type: HeadCellType;
-  disablePadding?: boolean;
-  formInput?: React.ReactNode;
-  width?: string;
-  hidden?: boolean;
-}
-
-export default function EnhancedTableHead<T extends object, K extends keyof T>(
-  props: EnhancedTableProps<T, K>
-) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    headCells,
-    editable,
-    onRequestSort,
-  } = props;
-
+export default function TableHeader<T extends object, K extends keyof T>({
+  onSelectAllClick,
+  order,
+  orderBy,
+  numSelected,
+  rowCount,
+  cells,
+  editable,
+  onRequestSort,
+}: TableHeadProps<T, K>) {
   const createSortHandler =
     (property: K) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -53,36 +40,28 @@ export default function EnhancedTableHead<T extends object, K extends keyof T>(
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
           />
         </TableCell>
-        {headCells
-          .filter((c) => !c.hidden)
-          .map((c) => (
-            <TableCell
-              key={c.id.toString()}
-              align={c.type === HeadCellType.Number ? "right" : "left"}
-              padding={c.disablePadding ? "none" : "normal"}
-              sortDirection={orderBy === c.id ? order : false}
+        {cells.map(({ id, label, getCellLabel, formInput, ...cellProps }) => (
+          <TableCell
+            {...cellProps}
+            key={id.toString()}
+            sortDirection={orderBy === id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === id}
+              direction={orderBy === id ? order : "asc"}
+              onClick={createSortHandler(id)}
             >
-              <TableSortLabel
-                active={orderBy === c.id}
-                direction={orderBy === c.id ? order : "asc"}
-                onClick={createSortHandler(c.id)}
-              >
-                {c.label}
-                {orderBy === c.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
-          ))}
+              {label}
+              {orderBy === id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
         {editable && <TableCell>選項</TableCell>}
       </TableRow>
     </TableHead>

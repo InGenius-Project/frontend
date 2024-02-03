@@ -8,14 +8,14 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import React from "react";
 import { Box } from "@mui/material";
 
-interface EnhancedTableToolbarProps {
+interface TableToolbarProps {
   title?: string;
   numSelected: number;
   onDelete?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function EnhancedTableToolbar(
-  props: EnhancedTableToolbarProps & React.PropsWithChildren
+export default function TableToolabar(
+  props: TableToolbarProps & React.PropsWithChildren
 ) {
   const { numSelected, title = "", children, onDelete } = props;
 
@@ -62,7 +62,7 @@ export default function EnhancedTableToolbar(
         ) : (
           <Tooltip title="Filter list">
             <IconButton>
-              {/* TODO: fileter */}
+              {/* TODO: filter */}
               <FilterListIcon />
             </IconButton>
           </Tooltip>

@@ -1,30 +1,29 @@
+import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Stack, Tab, Tooltip, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { IconButton, Stack, Tooltip } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
-import AddIcon from "@mui/icons-material/Add";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import * as React from "react";
-import EnhancedTableHead, { HeadCell } from "./TableHead";
-import EnhancedTableToolbar from "./TableToolbar";
-import { HeadCellType, Order, getComparator, stableSort } from "./utils";
+import { useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFormContext } from "react-hook-form";
-import ClearIcon from "@mui/icons-material/Clear";
 import { useHotkeys } from "react-hotkeys-hook";
+import TableHeader from "./TableHead";
+import TableToolabar from "./TableToolbar";
+import { Cell, Order, getComparator, stableSort } from "./utils";
 
 interface TableProps<T extends object, K extends keyof T> {
   title?: string;
   form?: React.ReactNode;
   data: readonly T[];
   property: K;
-  headCells: HeadCell<K>[];
+  cells: Cell<T, K>[];
   editable?: boolean;
   onEditClick?: (row: T) => void;
   onSubmit?: SubmitHandler<T>;
@@ -37,26 +36,29 @@ export default function EnhancedTable<
 >({
   data,
   property,
-  headCells,
+  cells,
   title,
-  form,
   editable = false,
   onEditClick,
   onDelete,
   onSubmit,
 }: TableProps<T, K>) {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<K>(property);
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [editing, setEditing] = React.useState<string>("");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { handleSubmit } = useFormContext<T>();
-  const newRowButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<K>(property);
+  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [editing, setEditing] = useState<string>("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { handleSubmit, reset } = useFormContext<T>();
+  const newRowButtonRef = useRef<HTMLButtonElement>(null);
 
-  useHotkeys("ctrl+enter", () => newRowButtonRef.current?.click(), {
-    enableOnFormTags: ["input", "select", "textarea"],
-  });
+  const hotKeyRef = useHotkeys<HTMLDivElement>(
+    "ctrl+enter",
+    () => newRowButtonRef.current?.click(),
+    {
+      enableOnFormTags: ["input", "select", "textarea"],
+    }
+  );
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: K) => {
     const isAsc = orderBy === property && order === "asc";
@@ -114,7 +116,7 @@ export default function EnhancedTable<
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const visibleRows = React.useMemo(
+  const visibleRows = useMemo(
     () =>
       stableSort<T>(data, getComparator<T, K>(order, orderBy)).slice(
         page * rowsPerPage,
@@ -131,179 +133,152 @@ export default function EnhancedTable<
   };
 
   return (
-    <Paper sx={{ width: "100%", mb: 2 }}>
-      <EnhancedTableToolbar
-        numSelected={selected.length}
-        title={title}
-        onDelete={() => {
-          setSelected([]);
-          onDelete && onDelete(selected);
-        }}
-      ></EnhancedTableToolbar>
-      <TableContainer>
-        <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-          <EnhancedTableHead<T, K>
-            editable={editable}
-            numSelected={selected.length}
-            order={order}
-            headCells={headCells}
-            orderBy={orderBy}
-            onSelectAllClick={handleSelectAllClick}
-            onRequestSort={handleRequestSort}
-            rowCount={data.length}
-          />
-          <TableBody>
-            {visibleRows.map((row, index) => {
-              const isItemSelected = isSelected(row.Id);
-              const labelId = `enhanced-table-checkbox-${index}`;
+    <div ref={hotKeyRef}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <TableToolabar
+          numSelected={selected.length}
+          title={title}
+          onDelete={() => {
+            setSelected([]);
+            onDelete && onDelete(selected);
+          }}
+        ></TableToolabar>
+        <TableContainer>
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+            <TableHeader<T, K>
+              editable={editable}
+              numSelected={selected.length}
+              order={order}
+              cells={cells}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={data.length}
+            />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                const isItemSelected = isSelected(row.Id);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
+                return (
+                  <TableRow
+                    hover
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.Id}
+                    selected={isItemSelected}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          "aria-labelledby": labelId,
+                        }}
+                        onClick={(event) => handleClick(event, row.Id)}
+                      />
+                    </TableCell>
+
+                    {cells.map(
+                      ({ id, formInput, getCellLabel, label, ...props }) => (
+                        <TableCell
+                          {...props}
+                          key={id.toString()}
+                          sx={{
+                            ...props.sx,
+                            cursor: "default",
+                          }}
+                        >
+                          {getCellLabel(row)}
+                        </TableCell>
+                      )
+                    )}
+                    {editable && (
+                      <TableCell padding="none" sx={{ width: "10%" }}>
+                        {editing === row.Id ? (
+                          <Stack spacing={1} direction={"row"}>
+                            <IconButton onClick={handleSubmitClick}>
+                              <CheckIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setEditing("");
+                                reset();
+                              }}
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </Stack>
+                        ) : (
+                          <IconButton
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              handleEditClick(row);
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        )}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow>
+                  <TableCell colSpan={cells.length + 1} />
+                </TableRow>
+              )}
+
+              {/* New Row */}
+              {editable && (
                 <TableRow
-                  hover
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.Id}
-                  selected={isItemSelected}
-                  sx={{ cursor: "pointer" }}
+                  sx={{
+                    display: editing === "" ? "table-row" : "none",
+                  }}
                 >
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={isItemSelected}
-                      inputProps={{
-                        "aria-labelledby": labelId,
-                      }}
-                      onClick={(event) => handleClick(event, row.Id)}
-                    />
+                    <Tooltip title="新增(Ctrl+Enter)">
+                      <IconButton
+                        onClick={handleSubmitClick}
+                        ref={newRowButtonRef}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
-
-                  {headCells.map(
-                    ({ id, type, label, formInput, hidden, width }) => (
+                  {cells.map(
+                    ({ id, label, formInput, getCellLabel, ...props }) => (
                       <TableCell
+                        {...props}
                         key={id.toString()}
-                        align={type === HeadCellType.Number ? "right" : "left"}
                         sx={{
-                          width,
+                          ...props.sx,
                           cursor: "default",
-                          display: hidden ? "none" : "table-cell",
                         }}
                       >
-                        {editable && editing === row.Id ? (
-                          <>{formInput}</>
-                        ) : (
-                          <>
-                            {type === HeadCellType.Text ||
-                            type === HeadCellType.Number ? (
-                              <Typography>{row[id] as string}</Typography>
-                            ) : type === HeadCellType.Color ? (
-                              <Box
-                                sx={{
-                                  width,
-                                  position: "relative",
-                                  paddingLeft: "1.5em",
-                                  "::before": {
-                                    content: '""',
-                                    position: "absolute",
-                                    top: "0.5em",
-                                    left: 0,
-                                    width: "1em",
-                                    height: "1em",
-                                    backgroundColor: row[id] as string,
-                                  },
-                                }}
-                              >
-                                <Typography>{row[id] as string}</Typography>
-                              </Box>
-                            ) : null}
-                          </>
-                        )}
+                        {formInput}
                       </TableCell>
                     )
                   )}
-                  {editable && (
-                    <TableCell padding="none" sx={{ width: "10%" }}>
-                      {editing === row.Id ? (
-                        <Stack spacing={1} direction={"row"}>
-                          <IconButton onClick={handleSubmitClick}>
-                            <CheckIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setEditing("");
-                            }}
-                          >
-                            <ClearIcon />
-                          </IconButton>
-                        </Stack>
-                      ) : (
-                        <IconButton
-                          type="button"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            handleEditClick(row);
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      )}
-                    </TableCell>
-                  )}
                 </TableRow>
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow>
-                <TableCell colSpan={headCells.length + 1} />
-              </TableRow>
-            )}
-
-            {/* New Row */}
-            {editable && (
-              <TableRow
-                sx={{
-                  display: editing === "" ? "table-row" : "none",
-                }}
-              >
-                <TableCell padding="checkbox">
-                  <Tooltip title="新增標籤類型(Ctrl+Enter)">
-                    <IconButton
-                      onClick={handleSubmitClick}
-                      ref={newRowButtonRef}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-                {headCells.map(
-                  ({ id, type, label, formInput, hidden, width }) => (
-                    <TableCell
-                      key={id.toString()}
-                      align={type === HeadCellType.Number ? "right" : "left"}
-                      sx={{
-                        width,
-                        cursor: "default",
-                        display: hidden ? "none" : "table-cell",
-                      }}
-                    >
-                      {formInput}
-                    </TableCell>
-                  )
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </div>
   );
 }

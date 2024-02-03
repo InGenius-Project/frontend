@@ -1,10 +1,13 @@
+import { TableCellProps } from "@mui/material";
+
 export type Order = "asc" | "desc";
 
-export enum HeadCellType {
-  Text = "text",
-  Color = "color",
-  Number = "number",
-}
+export type Cell<T, K> = {
+  id: K;
+  label: string;
+  formInput?: React.ReactNode;
+  getCellLabel: (row: T) => string | React.ReactNode;
+} & TableCellProps;
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
