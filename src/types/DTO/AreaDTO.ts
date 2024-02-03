@@ -1,16 +1,27 @@
 import { TagDTO } from "types/TagDTO";
+import { UserRole } from "./UserDTO";
 
 export interface AreaDTO {
   Id: string;
   Sequence: number;
   IsDisplayed: boolean;
   Title: string;
-  Arrangement: LayoutArrangement;
-  Type: LayoutType;
+  LayoutType?: LayoutTypeDTO;
+  AreaType?: AreaTypeDTO;
   TextLayout?: TextLayoutDTO;
   ImageTextLayout?: ImageTextLayoutDTO;
   ListLayout?: ListLayoutDTO;
   KeyValueListLayout?: KeyValueListLayoutDTO;
+}
+
+export interface AreaTypeDTO {
+  Id: number;
+  Name: string;
+  Value: string;
+  Description: string;
+  LayoutType: LayoutTypeDTO;
+  UserRole: UserRole;
+  Areas: AreaDTO[];
 }
 
 export interface AreaPostDTO extends Omit<AreaDTO, "Id"> {
@@ -49,16 +60,9 @@ export interface KeyValueItemDTO {
   Value: string;
 }
 
-export enum LayoutArrangement {
-  "TEXT" = "TEXT",
-  "IMAGETEXT" = "IMAGETEXT",
-  "LIST" = "LIST",
-  "KEYVALUELIST" = "KEYVALUELIST",
-  "ICONTEXT" = "ICONTEXT",
-}
-
-export enum LayoutType {
-  "CUSTOM" = "CUSTOM",
-  "USER" = "USER",
-  "COMPANY" = "COMPANY",
+export enum LayoutTypeDTO {
+  Text,
+  ImageText,
+  List,
+  KeyValueList,
 }

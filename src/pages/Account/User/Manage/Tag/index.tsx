@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import TagTypeForm from "./components/TagTypeForm";
 import TagForm from "./components/TagForm";
 
-function Tag() {
+function ManageTag() {
   return (
     <Stack spacing={1}>
       <TagTypeForm />
@@ -11,4 +11,4 @@ function Tag() {
   );
 }
 
-export default Tag;
+export default ManageTag;

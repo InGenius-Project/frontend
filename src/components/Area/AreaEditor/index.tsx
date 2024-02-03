@@ -3,12 +3,11 @@ import DragDropContainer from "components/DragDropContainer";
 import { useDeleteAreaMutation } from "features/api/area/deleteArea";
 import { usePostAreaMutation } from "features/api/area/postArea";
 import { selectIsEmptyAreas, setFocusedArea } from "features/areas/areasSlice";
-import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
-import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
+import { AreaDTO } from "types/DTO/AreaDTO";
 import AreaControl from "../AreaControl";
 import AreaEmpty from "../AreaEmpty";
 import AreaItem from "../AreaItem";
@@ -59,7 +58,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (
     event
   ) => {
-    dispatch(setType(LayoutType.USER));
+    // TODO: setAreaType
     navigate("New");
   };
 

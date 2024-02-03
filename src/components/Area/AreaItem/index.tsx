@@ -1,12 +1,11 @@
-import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
+import RichTextEditor from "components/RichTextEditor";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
-import RichTextEditor from "components/RichTextEditor";
-import AreaListItem from "../AreaListItem";
+import { AreaDTO, LayoutTypeDTO } from "types/DTO/AreaDTO";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
-import layoutSlice from "features/layout/layoutSlice";
+import AreaListItem from "../AreaListItem";
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -76,7 +75,7 @@ const AreaItem = ({
       </Box>
       <Stack spacing={1}>
         <Typography variant="h4">{area.Title ? area.Title : "標題"}</Typography>
-        {area.Arrangement === LayoutArrangement.IMAGETEXT &&
+        {area.LayoutType === LayoutTypeDTO.ImageText &&
           area.ImageTextLayout?.Image?.Content && (
             <Stack direction={"row"} spacing={1}>
               <img
@@ -94,18 +93,18 @@ const AreaItem = ({
             </Stack>
           )}
 
-        {area.Arrangement === LayoutArrangement.TEXT && (
+        {area.LayoutType === LayoutTypeDTO.Text && (
           <RichTextEditor
             controllable={false}
             initialEditorState={area.TextLayout?.Content}
           ></RichTextEditor>
         )}
-        {area.Arrangement === LayoutArrangement.LIST &&
+        {area.LayoutType === LayoutTypeDTO.List &&
           area.ListLayout?.Items?.map((i) => (
             <AreaListItem id={i.Id} content={i.Name} key={i.Id} />
           ))}
 
-        {area.Arrangement === LayoutArrangement.KEYVALUELIST &&
+        {area.LayoutType === LayoutTypeDTO.KeyValueList &&
           area.KeyValueListLayout?.Items?.map((i) => (
             <AreaKeyValueListItem
               id={i.Id}

@@ -70,6 +70,8 @@ function TagTypeForm() {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<TagTypeInput> = (values) => {
+    // TODO: validate unique value
+
     postTagType(values);
   };
 

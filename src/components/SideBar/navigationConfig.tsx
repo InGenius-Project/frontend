@@ -1,6 +1,7 @@
 import { UserRole } from "types/DTO/UserDTO";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 
@@ -69,7 +70,16 @@ const navigationConfig = [
   {
     role: UserRole.InternalUser,
     items: [
-      { name: "標籤管理", value: "Tag", icon: <LocalOfferOutlinedIcon /> },
+      {
+        name: "標籤管理",
+        value: "Manage/Tag",
+        icon: <LocalOfferOutlinedIcon />,
+      },
+      {
+        name: "區塊管理",
+        value: "Manage/Area",
+        icon: <DashboardOutlinedIcon />,
+      },
     ],
   },
 ];

@@ -23,11 +23,7 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  KeyValueItemDTO,
-  LayoutArrangement,
-  LayoutType,
-} from "types/DTO/AreaDTO";
+import { KeyValueItemDTO, LayoutTypeDTO } from "types/DTO/AreaDTO";
 import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
@@ -138,7 +134,7 @@ export default function AreaEditModel({
             label="標題"
             value={layoutState.title}
             onChange={(event) => dispatch(setTitle(event.target.value))}
-            disabled={layoutState.type !== LayoutType.CUSTOM ? true : false} // disabled if area type is not custom
+            disabled={!!layoutState.areaType}
             fullWidth
             sx={{ flexGrow: 1 }}
           />
@@ -161,7 +157,7 @@ export default function AreaEditModel({
         <Typography variant="h4">內容</Typography>
 
         {/* Image */}
-        {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
+        {layoutState.layoutType === LayoutTypeDTO.ImageText && (
           <ImageCrop
             height={150}
             width={150}
@@ -171,8 +167,8 @@ export default function AreaEditModel({
         )}
 
         {/* Text */}
-        {(layoutState.arrangement === LayoutArrangement.TEXT ||
-          layoutState.arrangement === LayoutArrangement.IMAGETEXT) && (
+        {(layoutState.layoutType === LayoutTypeDTO.Text ||
+          layoutState.layoutType === LayoutTypeDTO.ImageText) && (
           <RichTextEditor
             controllable
             onChange={handleEditorChange}
@@ -181,7 +177,7 @@ export default function AreaEditModel({
         )}
 
         {/* Key value list */}
-        {layoutState.arrangement === LayoutArrangement.KEYVALUELIST && (
+        {layoutState.layoutType === LayoutTypeDTO.KeyValueList && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,
@@ -220,7 +216,7 @@ export default function AreaEditModel({
         )}
 
         {/* List */}
-        {layoutState.arrangement === LayoutArrangement.LIST && (
+        {layoutState.layoutType === LayoutTypeDTO.List && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,

@@ -6,16 +6,15 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { ReactComponent as TextFrame } from "assets/images/svg/text-frame.svg";
 import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-frame.svg";
-import { ReactComponent as ListFrame } from "assets/images/svg/list-frame.svg";
 import { ReactComponent as KeyValueListFrame } from "assets/images/svg/key-value-list-frame.svg";
-import { ReactComponent as IconTextFrame } from "assets/images/svg/icon-text-frame.svg";
+import { ReactComponent as ListFrame } from "assets/images/svg/list-frame.svg";
+import { ReactComponent as TextFrame } from "assets/images/svg/text-frame.svg";
+import { setLayoutType } from "features/layout/layoutSlice";
+import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "features/store";
-import { setArrangement } from "features/layout/layoutSlice";
-import { LayoutArrangement } from "types/DTO/AreaDTO";
+import { LayoutTypeDTO } from "types/DTO/AreaDTO";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,
@@ -56,9 +55,9 @@ export default function Layout() {
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newSelectedLayout: LayoutArrangement | null
+    newSelectedLayout: LayoutTypeDTO | null
   ) => {
-    dispatch(setArrangement(newSelectedLayout || LayoutArrangement.TEXT));
+    dispatch(setLayoutType(newSelectedLayout || LayoutTypeDTO.Text));
   };
 
   const handleNext = () => {
@@ -73,26 +72,26 @@ export default function Layout() {
       </Typography>
       <LayoutButtonGroup
         exclusive
-        value={layoutState.arrangement}
+        value={layoutState.layoutType}
         onChange={handleChange}
       >
-        <LayoutButton value={LayoutArrangement.TEXT}>
+        <LayoutButton value={LayoutTypeDTO.Text}>
           <TextFrame />
           <Typography variant="body1">純文字</Typography>
         </LayoutButton>
-        <LayoutButton value={LayoutArrangement.ICONTEXT}>
+        {/* <LayoutButton value={LayoutTypeDTO.ICONTEXT}>
           <IconTextFrame />
           <Typography variant="body1">貼圖與文字</Typography>
-        </LayoutButton>
-        <LayoutButton value={LayoutArrangement.IMAGETEXT}>
+        </LayoutButton> */}
+        <LayoutButton value={LayoutTypeDTO.ImageText}>
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
-        <LayoutButton value={LayoutArrangement.LIST}>
+        <LayoutButton value={LayoutTypeDTO.List}>
           <ListFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>
-        <LayoutButton value={LayoutArrangement.KEYVALUELIST}>
+        <LayoutButton value={LayoutTypeDTO.KeyValueList}>
           <KeyValueListFrame />
           <Typography variant="body1">鍵值條列文字</Typography>
         </LayoutButton>
