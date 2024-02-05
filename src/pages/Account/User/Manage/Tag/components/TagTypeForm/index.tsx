@@ -91,7 +91,7 @@ function TagTypeForm() {
         <Table<TagTypeDTO, keyof TagTypeInput>
           title="標籤類型"
           data={tagTypesData?.Data || []}
-          property="Name"
+          defaultOrderBy="Name"
           editable
           onEditClick={handleEditClick}
           onSubmit={onSubmitHandler}

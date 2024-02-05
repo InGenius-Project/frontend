@@ -21,7 +21,6 @@ export interface AreaTypeDTO {
   Description: string;
   LayoutType: LayoutTypeDTO;
   UserRole: UserRole;
-  Areas: AreaDTO[];
 }
 
 export interface AreaPostDTO extends Omit<AreaDTO, "Id"> {

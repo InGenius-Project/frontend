@@ -89,7 +89,7 @@ function TagForm() {
         <Table<TagDTO, keyof TagInput>
           title="標籤類型"
           data={tagsData?.Data || []}
-          property="Name"
+          defaultOrderBy="Name"
           editable
           onEditClick={handleEditClick}
           onSubmit={onSubmitHandler}

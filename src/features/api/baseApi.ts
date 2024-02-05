@@ -30,6 +30,7 @@ export const baseApi = createApi({
     "Resume",
     "ResumeLists",
     "Area",
+    "AreaType",
     "Recruitment",
     "RecruitmentLists",
     "TagType",

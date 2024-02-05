@@ -22,7 +22,7 @@ interface TableProps<T extends object, K extends keyof T> {
   title?: string;
   form?: React.ReactNode;
   data: readonly T[];
-  property: K;
+  defaultOrderBy: K;
   cells: Cell<T, K>[];
   editable?: boolean;
   onEditClick?: (row: T) => void;
@@ -31,11 +31,11 @@ interface TableProps<T extends object, K extends keyof T> {
 }
 
 export default function EnhancedTable<
-  T extends object & { Id: string },
+  T extends object & { Id: string | number },
   K extends keyof T,
 >({
   data,
-  property,
+  defaultOrderBy,
   cells,
   title,
   editable = false,
@@ -44,7 +44,7 @@ export default function EnhancedTable<
   onSubmit,
 }: TableProps<T, K>) {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<K>(property);
+  const [orderBy, setOrderBy] = useState<K>(defaultOrderBy);
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [editing, setEditing] = useState<string>("");
   const [page, setPage] = useState(0);
@@ -68,7 +68,7 @@ export default function EnhancedTable<
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.Id);
+      const newSelected = data.map((n) => n.Id.toString());
       setSelected(newSelected);
       return;
     }
@@ -106,7 +106,7 @@ export default function EnhancedTable<
   };
 
   const handleEditClick = (row: T) => {
-    setEditing(row.Id);
+    setEditing(row.Id.toString());
     onEditClick && onEditClick(row);
   };
 
@@ -157,7 +157,7 @@ export default function EnhancedTable<
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.Id);
+                const isItemSelected = isSelected(row.Id.toString());
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -176,7 +176,9 @@ export default function EnhancedTable<
                         inputProps={{
                           "aria-labelledby": labelId,
                         }}
-                        onClick={(event) => handleClick(event, row.Id)}
+                        onClick={(event) =>
+                          handleClick(event, row.Id.toString())
+                        }
                       />
                     </TableCell>
 
@@ -194,6 +196,8 @@ export default function EnhancedTable<
                         </TableCell>
                       )
                     )}
+
+                    {/* edit control */}
                     {editable && (
                       <TableCell padding="none" sx={{ width: "10%" }}>
                         {editing === row.Id ? (
@@ -227,13 +231,15 @@ export default function EnhancedTable<
                   </TableRow>
                 );
               })}
+
+              {/* Display empty row*/}
               {emptyRows > 0 && (
                 <TableRow>
                   <TableCell colSpan={cells.length + 1} />
                 </TableRow>
               )}
 
-              {/* New Row */}
+              {/* new row */}
               {editable && (
                 <TableRow
                   sx={{
