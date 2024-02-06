@@ -28,17 +28,17 @@ export default function ProfileArea() {
   const areasState = useAppSelector((state) => state.areasState);
 
   useLayoutEffect(() => {
-    if (areaData && areaData.Data) {
-      dispatch(setLayoutByArea(areaData.Data));
+    if (areaData && areaData.result) {
+      dispatch(setLayoutByArea(areaData.result));
     }
   }, [areaData, dispatch]);
 
   const handleSubmit = () => {
-    if (userData && userData.Data) {
-      let prevAreas = Array.from(userData.Data.Areas || []);
+    if (userData && userData.result) {
+      let prevAreas = Array.from(userData.result.Areas || []);
 
       const existAreaIndex = prevAreas.findIndex(
-        (area) => area.Id === areaData?.Data?.Id
+        (area) => area.Id === areaData?.result?.Id
       );
 
       const state = store.getState();
@@ -46,12 +46,12 @@ export default function ProfileArea() {
       if (existAreaIndex === -1) {
         // Post full Resume for update the sequence of the areas
         postUser({
-          Username: userData.Data.Username,
+          Username: userData.result.Username,
           Areas: getUpdatedAreas(
             state,
             areasState.focusedArea
               ? areasState.focusedArea.Sequence
-              : (userData?.Data?.Areas || []).length
+              : (userData?.result?.Areas || []).length
           ),
         })
           .unwrap()

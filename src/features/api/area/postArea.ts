@@ -19,7 +19,7 @@ export const postAreaApi = baseApi.injectEndpoints({
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area
         const res = await queryFulfilled;
-        res.data.Data && dispatch(setFocusedArea(res.data.Data));
+        res.data.result && dispatch(setFocusedArea(res.data.result));
       },
     }),
   }),

@@ -22,9 +22,9 @@ export const registerApi = baseApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.Data) {
-            dispatch(setToken(data.Data));
-            localStorage.setItem("accessToken", data.Data.AccessToken);
+          if (data.result) {
+            dispatch(setToken(data.result));
+            localStorage.setItem("accessToken", data.result.AccessToken);
           }
 
           dispatch(

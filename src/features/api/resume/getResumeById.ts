@@ -12,18 +12,18 @@ export const getResumeByIdApi = baseApi.injectEndpoints({
         };
       },
       providesTags: (result) => {
-        return [{ type: "Resume", id: result?.Data?.Id }];
+        return [{ type: "Resume", id: result?.result?.Id }];
       },
       transformResponse: (response: ResponseDTO<ResumeDTO>, meta, arg) => {
         // Reorder the areas by sequence
-        if (response.Data) {
-          const orderedArea = response.Data.Areas.sort(
+        if (response.result) {
+          const orderedArea = response.result.Areas.sort(
             (a, b) => a.Sequence - b.Sequence
           );
           return {
             ...response,
-            Data: {
-              ...response.Data,
+            result: {
+              ...response.result,
               Areas: orderedArea,
             },
           };

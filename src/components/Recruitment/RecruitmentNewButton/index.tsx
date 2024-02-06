@@ -32,7 +32,7 @@ const RecruitmentNewButton: React.FC = () => {
     })
       .unwrap()
       .then((r) => {
-        r && r.Data && navigate(`Edit/${r.Data.Id}`);
+        r && r.result && navigate(`Edit/${r.result.Id}`);
       });
   };
 

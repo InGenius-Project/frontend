@@ -1,20 +1,18 @@
+import ClearIcon from "@mui/icons-material/Clear";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
-  Box,
   Divider,
   IconButton,
   ListItem,
-  ListItemText,
   Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import { v4 as uuid } from "uuid";
-import ClearIcon from "@mui/icons-material/Clear";
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import { KeyValueListItem, Tag } from "features/layout/layoutSlice";
+import React, { useState } from "react";
+import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { v4 as uuid } from "uuid";
 
 type AreaListItemProps = {
   id: string;

@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
   styled,
-  useTheme,
 } from "@mui/material";
 import { useUpdateEffect } from "ahooks";
 import { generateImageBase64Src } from "features/layout/layoutSlice";
@@ -25,7 +24,6 @@ import "react-image-crop/dist/ReactCrop.css";
 import { ImageDTO } from "types/DTO/AreaDTO";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
-import compressToMaxCanvasSize, { urltoFile } from "./compressToMaxCanvasSize";
 import resizeImage from "./compressToMaxCanvasSize";
 
 const VisuallyHiddenInput = styled("input")({
@@ -65,8 +63,6 @@ export default function ImageCrop({
   onChange,
   onCropDone,
 }: ImageCropProps) {
-  const theme = useTheme();
-
   const [imageState, setImageState] = useState<ImageDTO>(image);
   const [imgSrc, setImgSrc] = useState("");
 

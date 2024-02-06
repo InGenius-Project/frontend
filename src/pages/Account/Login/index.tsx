@@ -1,3 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Lock from "@mui/icons-material/Lock";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Button,
@@ -10,18 +14,13 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
-import Lock from "@mui/icons-material/Lock";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { motion } from "framer-motion";
-import { TypeOf, object, string } from "zod";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
 import FormInput from "components/FormInput";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useLoginMutation } from "features/api/auth/login";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { TypeOf, object, string } from "zod";
 
 const loginSchema = object({
   email: string()
@@ -33,28 +32,26 @@ const loginSchema = object({
 export type LoginInput = TypeOf<typeof loginSchema>;
 
 export default function Login() {
-  const methods = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const [loginUser, { isLoading, isSuccess }] = useLoginMutation();
-
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
+  const [loginUser, { isLoading, isSuccess }] = useLoginMutation();
 
+  // Previous page
   const from =
     ((location.state as any)?.from.pathname as string) || "/Account/User";
 
+  // Set up form
+  const methods = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
   const {
     reset,
     handleSubmit,
     formState: { isSubmitSuccessful },
   } = methods;
-
   useEffect(() => {
     if (isSuccess) {
-      toast.success("登入成功");
       navigate(from);
     }
   }, [isLoading, navigate, from, isSuccess]);

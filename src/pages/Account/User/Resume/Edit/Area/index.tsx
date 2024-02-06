@@ -28,17 +28,17 @@ export default function ResumeArea() {
   const areasState = useAppSelector((state) => state.areasState);
 
   useLayoutEffect(() => {
-    if (areaData && areaData.Data) {
-      dispatch(setLayoutByArea(areaData.Data));
+    if (areaData && areaData.result) {
+      dispatch(setLayoutByArea(areaData.result));
     }
   }, [areaData, dispatch]);
 
   const handleSubmit = () => {
-    if (resumeData && resumeData.Data) {
-      let areas = Array.from(resumeData.Data.Areas);
+    if (resumeData && resumeData.result) {
+      let areas = Array.from(resumeData.result.Areas);
 
       const existAreaIndex = areas.findIndex(
-        (area) => area.Id === areaData?.Data?.Id
+        (area) => area.Id === areaData?.result?.Id
       );
 
       const state = store.getState();
@@ -47,14 +47,14 @@ export default function ResumeArea() {
         // Post full Resume for update the sequence of the areas
         postResume({
           Id: resumeId,
-          Title: resumeData.Data.Title,
+          Title: resumeData.result.Title,
           Areas: getUpdatedAreas(
             state,
             areasState.focusedArea
               ? areasState.focusedArea.Sequence
-              : resumeData.Data.Areas.length
+              : resumeData.result.Areas.length
           ),
-          Visibility: resumeData.Data.Visibility,
+          Visibility: resumeData.result.Visibility,
         })
           .unwrap()
           .then(() => {

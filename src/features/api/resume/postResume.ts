@@ -18,7 +18,10 @@ export const postResumeApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: (res) => {
-        return [{ type: "ResumeLists" }, { type: "Resume", id: res?.Data?.Id }];
+        return [
+          { type: "ResumeLists" },
+          { type: "Resume", id: res?.result?.Id },
+        ];
       },
       onQueryStarted: ({ Id, ...body }, { dispatch }) => {
         // optimistic update to prvent flicking Area
@@ -29,8 +32,8 @@ export const postResumeApi = baseApi.injectEndpoints({
             (draft) => {
               return {
                 ...draft,
-                Data: {
-                  ...(draft.Data as ResumeDTO),
+                result: {
+                  ...(draft.result as ResumeDTO),
                   Areas: body.Areas || [],
                 },
               };
