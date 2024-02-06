@@ -13,12 +13,12 @@ export default function Profile() {
   const { data: userData } = useGetUserQuery(null, {});
 
   useEffect(() => {
-    if (userData && userData.Data) {
+    if (userData && userData.result) {
       dispatch(
         setAreas({
-          id: userData.Data?.Id,
+          id: userData.result?.Id,
           type: AreasType.PROFILE,
-          areas: userData?.Data?.Areas || [],
+          areas: userData?.result?.Areas || [],
         })
       );
     }
@@ -28,7 +28,7 @@ export default function Profile() {
 
   const handlePostProfileArea = async (areas: Array<AreaDTO>) => {
     await postUser({
-      Username: userData?.Data?.Username || "",
+      Username: userData?.result?.Username || "",
       Areas: areas,
     });
   };

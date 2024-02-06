@@ -17,34 +17,34 @@ function RecruitmentEdit() {
   });
 
   const handlePostAreas = async (areas: Array<AreaDTO>) => {
-    if (recruitmentData && recruitmentData.Data)
+    if (recruitmentData && recruitmentData.result)
       await postRecruitment({
         Id: recruitmentId,
         Areas: areas,
-        Name: recruitmentData.Data.Name,
-        Enable: recruitmentData.Data.Enable,
+        Name: recruitmentData.result.Name,
+        Enable: recruitmentData.result.Enable,
       });
   };
 
   useEffect(() => {
     // set areas state after query subscription success
-    if (recruitmentData?.Data)
+    if (recruitmentData?.result)
       dispatch(
         setAreas({
-          id: recruitmentData.Data.Id,
+          id: recruitmentData.result.Id,
           type: AreasType.RECRUITMENT,
-          areas: recruitmentData.Data.Areas,
+          areas: recruitmentData.result.Areas,
         })
       );
   }, [recruitmentData, dispatch]);
 
   return (
     <>
-      {recruitmentData && recruitmentData.Data && (
+      {recruitmentData && recruitmentData.result && (
         <>
           <RecruitmentItem
             id={recruitmentId}
-            title={recruitmentData.Data.Name}
+            title={recruitmentData.result.Name}
           />
           <AreaEditor onPost={handlePostAreas} />
         </>

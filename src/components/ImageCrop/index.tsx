@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
   styled,
-  useTheme,
 } from "@mui/material";
 import { useUpdateEffect } from "ahooks";
 import { generateImageBase64Src } from "features/layout/layoutSlice";
@@ -64,8 +63,6 @@ export default function ImageCrop({
   onChange,
   onCropDone,
 }: ImageCropProps) {
-  const theme = useTheme();
-
   const [imageState, setImageState] = useState<ImageDTO>(image);
   const [imgSrc, setImgSrc] = useState("");
 

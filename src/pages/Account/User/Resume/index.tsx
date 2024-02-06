@@ -24,8 +24,8 @@ export default function Resume() {
     })
       .unwrap()
       .then((res) => {
-        if (res && res.Data) {
-          navigate(`Edit/${res.Data.Id}`);
+        if (res && res.result) {
+          navigate(`Edit/${res.result.Id}`);
         }
       });
   };
@@ -53,9 +53,9 @@ export default function Resume() {
 
       <Stack spacing={1}>
         {resumes &&
-          resumes.Data &&
-          resumes.Data.length > 0 &&
-          resumes.Data.map((r) => (
+          resumes.result &&
+          resumes.result.length > 0 &&
+          resumes.result.map((r) => (
             <ResumeItem
               title={r.Title}
               key={r.Id}

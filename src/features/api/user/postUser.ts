@@ -18,8 +18,8 @@ export const postUserApi = baseApi.injectEndpoints({
           getUserApi.util.updateQueryData("getUser", null, (draft) => {
             return {
               ...draft,
-              Data: {
-                ...(draft.Data as UserInfoDTO),
+              result: {
+                ...(draft.result as UserInfoDTO),
                 Areas: request.Areas || [],
               },
             };

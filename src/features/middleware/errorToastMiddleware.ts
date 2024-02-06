@@ -4,6 +4,7 @@ import {
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { ResponseDTO } from "types/DTO/ResponseDTO";
 
 const errorToastMiddleware: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
@@ -12,17 +13,16 @@ const errorToastMiddleware: Middleware =
         toast.error("伺服器未回應");
         return next(action);
       }
+      const error = action.payload.data as ResponseDTO<any>;
 
+      console.log(error);
       if (
-        action.payload.data.StatusCode === 500 ||
-        action.payload.data.StatusCode === 400
+        error.isError &&
+        error.responseException &&
+        error.statusCode !== 401
       ) {
-        toast.error(action.payload.data.Message);
+        toast.error(error.responseException.exceptionMessage);
         return next(action);
-      }
-
-      if (action.payload.data.Exception) {
-        toast.error(action.payload.data.Exception);
       }
     }
 

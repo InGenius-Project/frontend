@@ -20,7 +20,7 @@ export const postRecruitment = baseApi.injectEndpoints({
       invalidatesTags: (res) => {
         return [
           { type: "RecruitmentLists" },
-          { type: "Recruitment", id: res?.Data?.Id },
+          { type: "Recruitment", id: res?.result?.Id },
         ];
       },
       onQueryStarted: ({ Id, ...body }, { dispatch }) => {
@@ -32,8 +32,8 @@ export const postRecruitment = baseApi.injectEndpoints({
             (draft) => {
               return {
                 ...draft,
-                Data: {
-                  ...(draft.Data as RecruitmentDTO),
+                result: {
+                  ...(draft.result as RecruitmentDTO),
                   Areas: body.Areas || [],
                 },
               };

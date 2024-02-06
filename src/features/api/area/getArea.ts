@@ -12,7 +12,7 @@ export const getAreaByIdApi = baseApi.injectEndpoints({
         };
       },
       providesTags: (result, error, arg) => {
-        return [{ type: "Area", id: result?.Data?.Id }];
+        return [{ type: "Area", id: result?.result?.Id }];
       },
     }),
   }),

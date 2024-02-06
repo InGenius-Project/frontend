@@ -12,19 +12,19 @@ export const getUserApi = baseApi.injectEndpoints({
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
-          data.Data && dispatch(setUserInfo(data.Data));
+          data.result && dispatch(setUserInfo(data.result));
         } catch (error) {}
       },
       transformResponse: (response: ResponseDTO<UserInfoDTO>, meta, arg) => {
         // Reorder the areas by sequence
-        if (response.Data && response.Data.Areas) {
-          const orderedArea = response.Data.Areas.sort(
+        if (response.result && response.result.Areas) {
+          const orderedArea = response.result.Areas.sort(
             (a, b) => a.Sequence - b.Sequence
           );
           return {
             ...response,
-            Data: {
-              ...response.Data,
+            result: {
+              ...response.result,
               Areas: orderedArea,
             },
           };
