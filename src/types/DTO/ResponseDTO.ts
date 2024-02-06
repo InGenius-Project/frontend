@@ -1,5 +1,10 @@
 export interface ResponseDTO<Result = unknown> {
-  message: string;
+  version: string;
+  statusCode: number;
+  message?: string;
+  isError?: boolean;
+  responseException?: {
+    exceptionMessage: string;
+  };
   result?: Result;
-  isError: boolean;
 }
