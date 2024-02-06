@@ -77,7 +77,7 @@ function AreaTypeForm() {
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <Table<AreaTypeDTO, keyof AreaTypeInput>
           title="區域類型"
-          data={areaTypesData?.Data || []}
+          data={areaTypesData?.result || []}
           defaultOrderBy="Name"
           editable
           onEditClick={handleEditClick}

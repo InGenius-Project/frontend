@@ -15,13 +15,12 @@ const errorToastMiddleware: Middleware =
       }
       const error = action.payload.data as ResponseDTO<any>;
 
-      console.log(error);
-      if (
-        error.isError &&
-        error.responseException &&
-        error.statusCode !== 401
-      ) {
-        toast.error(error.responseException.exceptionMessage);
+      if (error.isError && error.responseException) {
+        if (error.statusCode === 500) {
+          toast.error("伺服器錯誤");
+        } else if (error.statusCode !== 401) {
+          toast.error(error.responseException.exceptionMessage);
+        }
         return next(action);
       }
     }

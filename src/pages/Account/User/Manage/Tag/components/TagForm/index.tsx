@@ -88,7 +88,7 @@ function TagForm() {
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <Table<TagDTO, keyof TagInput>
           title="標籤類型"
-          data={tagsData?.Data || []}
+          data={tagsData?.result || []}
           defaultOrderBy="Name"
           editable
           onEditClick={handleEditClick}
@@ -135,7 +135,7 @@ function TagForm() {
                   render={({ field: { onChange, ...props } }) => (
                     <Autocomplete
                       {...props}
-                      options={tagTypesData?.Data || []}
+                      options={tagTypesData?.result || []}
                       getOptionLabel={(d) => d.Name}
                       renderInput={(params) => (
                         <TextField {...params} variant="standard" />

@@ -90,7 +90,7 @@ function TagTypeForm() {
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <Table<TagTypeDTO, keyof TagTypeInput>
           title="標籤類型"
-          data={tagTypesData?.Data || []}
+          data={tagTypesData?.result || []}
           defaultOrderBy="Name"
           editable
           onEditClick={handleEditClick}
