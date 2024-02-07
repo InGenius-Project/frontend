@@ -36,4 +36,4 @@ export const getUserApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetUserQuery } = getUserApi;
+export const { useGetUserQuery, usePrefetch } = getUserApi;

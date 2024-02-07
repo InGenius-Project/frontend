@@ -29,7 +29,7 @@ type AreaTypeInput = TypeOf<typeof areaTypeSchema>;
 
 function AreaTypeForm() {
   const theme = useTheme();
-  const { data: areaTypesData } = useGetAreaTypesQuery();
+  const { data: areaTypesData } = useGetAreaTypesQuery({});
   const [deleteAreaType] = useDeletAreaTypesMutation();
   const [postAreaType] = usePostAreaTypeMutation();
 

@@ -1,5 +1,5 @@
-import * as React from "react";
-import Autocomplete from "@mui/material/Autocomplete";
+import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -10,28 +10,38 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CheckIcon from "@mui/icons-material/Check";
-import { useNavigate } from "react-router-dom";
-import { useConfirm } from "material-ui-confirm";
-import { useAppDispatch, useAppSelector } from "features/store";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useGetAreaTypesQuery } from "features/api/area/getAreaTypes";
+import { useGetUserQuery } from "features/api/user/getUser";
 import {
-  initializeState,
   initializeStateWithoutFocusedArea,
-  setTitle,
+  setAreaType,
 } from "features/layout/layoutSlice";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { useConfirm } from "material-ui-confirm";
+import { useNavigate } from "react-router-dom";
 
 const areaOptions = ["簡介", "專業技能", "教育背景"];
 
 export default function AreaNewModel() {
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const layoutState = useAppSelector((state) => state.layoutState);
-  const [value, setValue] = React.useState<string | null>(layoutState.title);
+  const { data: userData } = useGetUserQuery(null);
+  const { data: areaTypesData } = useGetAreaTypesQuery(
+    {
+      userRoles: userData?.result?.Role ? [userData?.result?.Role] : undefined,
+    },
+    {
+      skip: !userData, // prefetch user data
+    }
+  );
+
+  const { areaType } = useAppSelector((state) => state.layoutState);
+
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    if (!value) {
+    if (!areaType) {
       confirm({
         title: "尚未選擇預設類型，確定要繼續?",
         description:
@@ -47,7 +57,6 @@ export default function AreaNewModel() {
         })
         .catch(() => {});
     } else {
-      dispatch(setTitle(value || ""));
       navigate(`../Area`);
     }
   };
@@ -66,28 +75,29 @@ export default function AreaNewModel() {
 
       <Stack spacing={2}>
         <Stack direction={"row"} spacing={1} alignItems={"flex-end"}>
-          <Autocomplete
-            options={areaOptions}
-            defaultValue={layoutState.title}
-            value={value}
-            freeSolo
-            onChange={(e: any, value: string | null) => setValue(value)}
-            sx={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="查詢區塊類型"
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
-          />
+          {areaTypesData?.result && (
+            <Autocomplete
+              options={areaTypesData.result}
+              value={areaType || null}
+              getOptionLabel={(option) => option.Name}
+              onChange={(e: any, value) => dispatch(setAreaType(value))}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="查詢區塊類型"
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
           <Box>
             <Button variant="outlined" onClick={handleCustomClick}>
               自定義
@@ -97,16 +107,17 @@ export default function AreaNewModel() {
 
         <Stack direction="row" spacing={2} alignItems={"center"}>
           <Typography variant="body1">常見類型</Typography>
-          {areaOptions.map((o, i) => (
-            <Chip
-              key={i}
-              icon={value && o === value ? <CheckIcon /> : <AddIcon />}
-              label={o}
-              onClick={() => {
-                setValue(o);
-              }}
-            />
-          ))}
+          {areaTypesData?.result &&
+            areaTypesData.result.map((o, i) => (
+              <Chip
+                key={i}
+                icon={areaType && o === areaType ? <CheckIcon /> : <AddIcon />}
+                label={o.Name}
+                onClick={() => {
+                  dispatch(setAreaType(o));
+                }}
+              />
+            ))}
         </Stack>
         <Box>
           <Button onClick={handleClick}>下一步</Button>

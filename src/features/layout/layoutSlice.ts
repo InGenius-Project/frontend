@@ -17,7 +17,7 @@ interface Layout {
   isDisplayed: boolean;
   id: string;
   layoutType?: LayoutTypeDTO;
-  areaType?: AreaTypeDTO;
+  areaType?: AreaTypeDTO | null;
   title: string;
   content?: EditorState | string;
   image: ImageDTO;
@@ -63,7 +63,7 @@ const layoutSlice = createSlice({
     setContent: (state, action: PayloadAction<EditorState>) => {
       state.content = action.payload;
     },
-    setAreaType: (state, action: PayloadAction<AreaTypeDTO>) => {
+    setAreaType: (state, action: PayloadAction<AreaTypeDTO | null>) => {
       state.areaType = action.payload;
     },
     setImage: (state, action: PayloadAction<Layout["image"]>) => {
@@ -147,6 +147,11 @@ export const {
   setImage,
 } = layoutSlice.actions;
 
+export const selectLayoutType = (state: RootState) =>
+  state.layoutState.areaType
+    ? state.layoutState.areaType.LayoutType
+    : state.layoutState.layoutType;
+
 export const generateImageBase64Src = (contentType: string, content: string) =>
   `data:${contentType};base64,${content}`;
 
@@ -161,7 +166,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
     IsDisplayed: true,
     Title: layoutState.title,
     LayoutType: layoutState.layoutType,
-    AreaType: layoutState.areaType,
+    AreaType: layoutState.areaType || undefined,
     TextLayout:
       layoutState.layoutType === LayoutTypeDTO.Text
         ? {
@@ -218,7 +223,7 @@ export const getUpdatedArea = (state: RootState) => {
     IsDisplayed: layoutState.isDisplayed,
     Title: layoutState.title,
     LayoutType: layoutState.layoutType,
-    AreaType: layoutState.areaType,
+    AreaType: layoutState.areaType || undefined,
     TextLayout:
       layoutState.layoutType === LayoutTypeDTO.Text
         ? {

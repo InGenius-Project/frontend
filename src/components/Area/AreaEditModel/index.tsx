@@ -13,6 +13,7 @@ import DragDropContainer from "components/DragDropContainer";
 import ImageCrop from "components/ImageCrop";
 import RichTextEditor from "components/RichTextEditor";
 import {
+  selectLayoutType,
   setContent,
   setImage,
   setKetValueListItems,
@@ -39,6 +40,7 @@ export default function AreaEditModel({
 }: AreaEditModelProps) {
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
+  const layoutTypeState = useAppSelector(selectLayoutType);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -130,15 +132,29 @@ export default function AreaEditModel({
             gap: 1,
           }}
         >
-          <TextField
-            label="標題"
-            value={layoutState.title}
-            onChange={(event) => dispatch(setTitle(event.target.value))}
-            disabled={!!layoutState.areaType}
-            fullWidth
-            sx={{ flexGrow: 1 }}
-          />
-
+          <Stack
+            direction={"column"}
+            sx={{
+              flex: "1 1 auto",
+            }}
+            spacing={1}
+          >
+            <TextField
+              label="標題"
+              value={
+                layoutState.areaType
+                  ? layoutState.areaType.Name
+                  : layoutState.title
+              }
+              onChange={(event) => dispatch(setTitle(event.target.value))}
+              disabled={!!layoutState.areaType}
+              fullWidth
+              sx={{ flexGrow: 1 }}
+            />
+            <Typography variant="caption">
+              {layoutState.areaType ? layoutState.areaType.Description : ""}
+            </Typography>
+          </Stack>
           <Box sx={{ whiteSpace: "nowrap" }}>
             <Button variant="outlined" onClick={() => navigate(-1)}>
               上一步
@@ -157,7 +173,7 @@ export default function AreaEditModel({
         <Typography variant="h4">內容</Typography>
 
         {/* Image */}
-        {layoutState.layoutType === LayoutTypeDTO.ImageText && (
+        {layoutTypeState === LayoutTypeDTO.ImageText && (
           <ImageCrop
             height={150}
             width={150}
@@ -167,8 +183,8 @@ export default function AreaEditModel({
         )}
 
         {/* Text */}
-        {(layoutState.layoutType === LayoutTypeDTO.Text ||
-          layoutState.layoutType === LayoutTypeDTO.ImageText) && (
+        {(layoutTypeState === LayoutTypeDTO.Text ||
+          layoutTypeState === LayoutTypeDTO.ImageText) && (
           <RichTextEditor
             controllable
             onChange={handleEditorChange}
@@ -177,7 +193,7 @@ export default function AreaEditModel({
         )}
 
         {/* Key value list */}
-        {layoutState.layoutType === LayoutTypeDTO.KeyValueList && (
+        {layoutTypeState === LayoutTypeDTO.KeyValueList && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,
@@ -216,7 +232,7 @@ export default function AreaEditModel({
         )}
 
         {/* List */}
-        {layoutState.layoutType === LayoutTypeDTO.List && (
+        {layoutTypeState === LayoutTypeDTO.List && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,

@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import { AreaDTO } from "types/DTO/AreaDTO";
 
 export default function Profile() {
+  const { data: userData } = useGetUserQuery(null);
   const dispatch = useAppDispatch();
-  const { data: userData } = useGetUserQuery(null, {});
 
   useEffect(() => {
     if (userData && userData.result) {
