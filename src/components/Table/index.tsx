@@ -169,6 +169,7 @@ export default function EnhancedTable<
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
+                    {/* Checkbox */}
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
@@ -182,6 +183,7 @@ export default function EnhancedTable<
                       />
                     </TableCell>
 
+                    {/* Cell data */}
                     {cells.map(
                       ({ id, formInput, getCellLabel, label, ...props }) => (
                         <TableCell
@@ -192,15 +194,19 @@ export default function EnhancedTable<
                             cursor: "default",
                           }}
                         >
-                          {getCellLabel(row)}
+                          {editable
+                            ? editing === row.Id.toString()
+                              ? formInput
+                              : getCellLabel(row)
+                            : getCellLabel(row)}
                         </TableCell>
                       )
                     )}
 
-                    {/* edit control */}
+                    {/* Edit control */}
                     {editable && (
                       <TableCell padding="none" sx={{ width: "10%" }}>
-                        {editing === row.Id ? (
+                        {editing === row.Id.toString() ? (
                           <Stack spacing={1} direction={"row"}>
                             <IconButton onClick={handleSubmitClick}>
                               <CheckIcon />

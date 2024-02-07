@@ -16,11 +16,10 @@ import React, { useEffect } from "react";
 import { ChromePicker } from "react-color";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { TagTypeDTO } from "types/TagDTO";
-import { NIL } from "uuid";
 import { TypeOf, z } from "zod";
 
 const tagTypeSchema = z.object({
-  Id: z.string().optional(),
+  Id: z.number(),
   Name: z.string().min(1, "請輸入名稱").max(20, "名稱過長"),
   Value: z.string().min(1, "請輸入數值").max(20, "數值過長"),
   Color: z
@@ -38,7 +37,7 @@ function TagTypeForm() {
   const methods = useForm<TagTypeInput>({
     resolver: zodResolver(tagTypeSchema),
     defaultValues: {
-      Id: NIL,
+      Id: 0,
     },
   });
 
@@ -72,6 +71,7 @@ function TagTypeForm() {
   const onSubmitHandler: SubmitHandler<TagTypeInput> = (values) => {
     // TODO: validate unique value
 
+    console.log("subit");
     postTagType(values);
   };
 
@@ -107,6 +107,7 @@ function TagTypeForm() {
                   name={"Id"}
                   label={"Id"}
                   variant="standard"
+                  type="number"
                   disabled
                   hidden
                 />

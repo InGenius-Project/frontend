@@ -7,7 +7,7 @@ export const getAreaTypesApi = baseApi.injectEndpoints({
     getAreaTypes: builder.query<ResponseDTO<AreaTypeDTO[]>, void>({
       query() {
         return {
-          url: "/Area/type", // Assuming the API endpoint for area types is "/Area/type"
+          url: "/Area/type",
           method: "GET",
         };
       },

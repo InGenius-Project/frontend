@@ -2,11 +2,30 @@ import { AreaDTO, ImageDTO } from "./AreaDTO";
 import { TokenDTO } from "./TokenDTO";
 
 export enum UserRole {
-  "Intern" = 0,
-  "Company" = 1,
-  "Admin" = 2,
-  "InternalUser" = 3,
+  Intern,
+  Company,
+  Admin,
+  InternalUser,
 }
+
+export const UserRoleObject = [
+  {
+    label: "實習生",
+    value: UserRole.Intern,
+  },
+  {
+    label: "公司",
+    value: UserRole.Company,
+  },
+  {
+    label: "管理員",
+    value: UserRole.Admin,
+  },
+  {
+    label: "內部使用者",
+    value: UserRole.InternalUser,
+  },
+];
 
 export interface UserDTO {
   User?: UserInfoDTO;

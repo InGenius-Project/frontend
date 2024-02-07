@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MenuItem } from "@mui/base";
 import { Autocomplete, Box, Chip, TextField, useTheme } from "@mui/material";
 import FormInput from "components/FormInput";
 import Table from "components/Table";
@@ -22,7 +23,7 @@ const tagSchema = z.object({
   Name: z.string().min(1, "請輸入名稱").max(20, "名稱過長"),
   Type: z
     .object({
-      Id: z.string(),
+      Id: z.number(),
       Name: z.string(),
       Value: z.string(),
       Color: z.string(),
@@ -87,7 +88,7 @@ function TagForm() {
     <FormProvider {...methods}>
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <Table<TagDTO, keyof TagInput>
-          title="標籤類型"
+          title="標籤"
           data={tagsData?.result || []}
           defaultOrderBy="Name"
           editable
@@ -136,7 +137,7 @@ function TagForm() {
                     <Autocomplete
                       {...props}
                       options={tagTypesData?.result || []}
-                      getOptionLabel={(d) => d.Name}
+                      getOptionLabel={(d) => `${d.Name} ( ${d.Value} )`}
                       renderInput={(params) => (
                         <TextField {...params} variant="standard" />
                       )}

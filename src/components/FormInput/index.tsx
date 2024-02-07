@@ -25,11 +25,11 @@ export default function FormInput({
       name={name}
       render={({ field }) => (
         <TextField
+          {...otherProps}
           {...field}
           label={label}
           error={!!errors[name]}
           helperText={errors[name] ? errors[name]?.message?.toString() : ""}
-          {...otherProps}
         />
       )}
     />

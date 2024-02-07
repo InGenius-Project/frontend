@@ -5,7 +5,7 @@ export interface TagDTO {
 }
 
 export interface TagTypeDTO {
-  Id: string;
+  Id: number;
   Name: string;
   Value: string;
   Color: string;

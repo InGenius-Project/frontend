@@ -4,10 +4,7 @@ import { baseApi } from "../baseApi";
 
 export const postTagType = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postTagType: builder.mutation<
-      ResponseDTO<null>,
-      Partial<Pick<TagTypeDTO, "Id">> & Omit<TagTypeDTO, "Id">
-    >({
+    postTagType: builder.mutation<ResponseDTO<null>, TagTypeDTO>({
       query: (body) => {
         return {
           url: `Tag/type`,

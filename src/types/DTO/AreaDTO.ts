@@ -20,7 +20,7 @@ export interface AreaTypeDTO {
   Value: string;
   Description: string;
   LayoutType: LayoutTypeDTO;
-  UserRole: UserRole;
+  UserRole: Array<UserRole>;
 }
 
 export interface AreaPostDTO extends Omit<AreaDTO, "Id"> {
@@ -65,3 +65,22 @@ export enum LayoutTypeDTO {
   List,
   KeyValueList,
 }
+
+export const LayoutTypeObject = [
+  {
+    label: "文字",
+    value: LayoutTypeDTO.Text as number,
+  },
+  {
+    label: "圖片文字",
+    value: LayoutTypeDTO.ImageText as number,
+  },
+  {
+    label: "列表",
+    value: LayoutTypeDTO.List as number,
+  },
+  {
+    label: "鍵值列表",
+    value: LayoutTypeDTO.KeyValueList as number,
+  },
+];
