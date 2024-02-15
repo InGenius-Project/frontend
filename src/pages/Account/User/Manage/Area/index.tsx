@@ -12,8 +12,13 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { AreaTypeDTO, LayoutTypeObject } from "types/DTO/AreaDTO";
-import { UserRoleObject } from "types/DTO/UserDTO";
+import { useNavigate } from "react-router-dom";
+import {
+  AreaTypeDTO,
+  LayoutTypeDTO,
+  LayoutTypeObject,
+} from "types/DTO/AreaDTO";
+import { UserRole, UserRoleObject } from "types/DTO/UserDTO";
 import { TypeOf, z } from "zod";
 
 const areaTypeSchema = z.object({
@@ -28,8 +33,12 @@ const areaTypeSchema = z.object({
 type AreaTypeInput = TypeOf<typeof areaTypeSchema>;
 
 function AreaTypeForm() {
-  const theme = useTheme();
-  const { data: areaTypesData } = useGetAreaTypesQuery({});
+  const navigate = useNavigate();
+  const { data: areaTypesData } = useGetAreaTypesQuery({
+    roles: Object.keys(UserRole).filter(
+      (v) => !isNaN(Number(v))
+    ) as unknown as UserRole[],
+  });
   const [deleteAreaType] = useDeletAreaTypesMutation();
   const [postAreaType] = usePostAreaTypeMutation();
 
@@ -56,6 +65,7 @@ function AreaTypeForm() {
       Id: values.Id,
       Name: values.Name,
       Value: values.Value,
+      ListTagTypes: [],
       Description: values.Description,
       LayoutType: values.LayoutType.value,
       UserRole: values.UserRole.map((r) => r.value),
@@ -63,6 +73,14 @@ function AreaTypeForm() {
   };
 
   const handleEditClick = (row: AreaTypeInput) => {
+    if (
+      row.LayoutType.value === LayoutTypeDTO.List ||
+      row.LayoutType.value === LayoutTypeDTO.KeyValueList
+    ) {
+      navigate("List");
+      return;
+    }
+
     setValue("Id", row.Id);
     setValue("Name", row.Name);
     setValue("Value", row.Value);

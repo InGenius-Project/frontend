@@ -1,4 +1,4 @@
-import { TagDTO } from "types/TagDTO";
+import { TagDTO, TagTypeDTO } from "types/TagDTO";
 import { UserRole } from "./UserDTO";
 
 export interface AreaDTO {
@@ -14,6 +14,48 @@ export interface AreaDTO {
   KeyValueListLayout?: KeyValueListLayoutDTO;
 }
 
+export class Area {
+  Id: string;
+  Sequence: number;
+  IsDisplayed: boolean;
+  Title: string;
+  LayoutType?: LayoutTypeDTO;
+  AreaType?: AreaTypeDTO;
+  TextLayout?: TextLayoutDTO;
+  ImageTextLayout?: ImageTextLayoutDTO;
+  ListLayout?: ListLayoutDTO;
+  KeyValueListLayout?: KeyValueListLayoutDTO;
+  constructor(area: AreaDTO) {
+    this.Id = area.Id;
+    this.Sequence = area.Sequence;
+    this.IsDisplayed = area.IsDisplayed;
+    this.Title = area.Title;
+    this.LayoutType = area.LayoutType;
+    this.AreaType = area.AreaType;
+    this.TextLayout = area.TextLayout;
+    this.ImageTextLayout = area.ImageTextLayout;
+    this.ListLayout = area.ListLayout;
+    this.KeyValueListLayout = area.KeyValueListLayout;
+  }
+  /**
+   * getAraTitle
+   */
+  public getAreaTitle(): string {
+    return this.AreaType ? this.AreaType.Name : this.Title;
+  }
+
+  /**
+   * isLayourType
+   */
+  public isLayoutType(type: LayoutTypeDTO): boolean {
+    if (this.AreaType) {
+      return this.AreaType.LayoutType === type;
+    } else {
+      return this.LayoutType === type;
+    }
+  }
+}
+
 export interface AreaTypeDTO {
   Id: number;
   Name: string;
@@ -21,6 +63,7 @@ export interface AreaTypeDTO {
   Description: string;
   LayoutType: LayoutTypeDTO;
   UserRole: Array<UserRole>;
+  ListTagTypes: Array<TagTypeDTO>;
 }
 
 export interface AreaPostDTO extends Omit<AreaDTO, "Id"> {

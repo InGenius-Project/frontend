@@ -88,8 +88,11 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
-      const { Title, AreaType, LayoutType, Sequence, Id, IsDisplayed } =
-        action.payload;
+      const { Title, AreaType, Sequence, Id, IsDisplayed } = action.payload;
+
+      const LayoutType = action.payload.AreaType
+        ? action.payload.AreaType.LayoutType
+        : action.payload.LayoutType;
 
       var parseArea: Layout = {
         ...state,
@@ -100,6 +103,7 @@ const layoutSlice = createSlice({
         areaType: AreaType,
         layoutType: LayoutType,
       };
+
       switch (LayoutType) {
         case LayoutTypeDTO.Text:
           parseArea.content = action.payload.TextLayout?.Content;
@@ -152,6 +156,11 @@ export const selectLayoutType = (state: RootState) =>
     ? state.layoutState.areaType.LayoutType
     : state.layoutState.layoutType;
 
+export const selectLayoutTitle = (state: RootState) =>
+  state.layoutState.areaType
+    ? state.layoutState.areaType.Name
+    : state.layoutState.title;
+
 export const generateImageBase64Src = (contentType: string, content: string) =>
   `data:${contentType};base64,${content}`;
 
@@ -168,14 +177,14 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
     LayoutType: layoutState.layoutType,
     AreaType: layoutState.areaType || undefined,
     TextLayout:
-      layoutState.layoutType === LayoutTypeDTO.Text
+      selectLayoutType(state) === LayoutTypeDTO.Text
         ? {
             Id: NIL,
             Content: JSON.stringify(layoutState.content),
           }
         : undefined,
     ImageTextLayout:
-      layoutState.layoutType === LayoutTypeDTO.ImageText
+      selectLayoutType(state) === LayoutTypeDTO.ImageText
         ? {
             Id: NIL,
             Content: JSON.stringify(layoutState.content),
@@ -188,14 +197,14 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
           }
         : undefined,
     ListLayout:
-      layoutState.layoutType === LayoutTypeDTO.List
+      selectLayoutType(state) === LayoutTypeDTO.List
         ? {
             Id: NIL,
             Items: layoutState.listItems,
           }
         : undefined,
     KeyValueListLayout:
-      layoutState.layoutType === LayoutTypeDTO.KeyValueList
+      selectLayoutType(state) === LayoutTypeDTO.KeyValueList
         ? {
             Id: NIL,
             Items: layoutState.keyValueListItems,
@@ -225,14 +234,14 @@ export const getUpdatedArea = (state: RootState) => {
     LayoutType: layoutState.layoutType,
     AreaType: layoutState.areaType || undefined,
     TextLayout:
-      layoutState.layoutType === LayoutTypeDTO.Text
+      selectLayoutType(state) === LayoutTypeDTO.Text
         ? {
             Id: layoutState.id,
             Content: JSON.stringify(layoutState.content),
           }
         : undefined,
     ImageTextLayout:
-      layoutState.layoutType === LayoutTypeDTO.ImageText
+      selectLayoutType(state) === LayoutTypeDTO.ImageText
         ? {
             Id: layoutState.id,
             Content: JSON.stringify(layoutState.content),
@@ -245,7 +254,7 @@ export const getUpdatedArea = (state: RootState) => {
           }
         : undefined,
     ListLayout:
-      layoutState.layoutType === LayoutTypeDTO.List
+      selectLayoutType(state) === LayoutTypeDTO.List
         ? {
             Id: layoutState.id,
             // sort item
@@ -253,7 +262,7 @@ export const getUpdatedArea = (state: RootState) => {
           }
         : undefined,
     KeyValueListLayout:
-      layoutState.layoutType === LayoutTypeDTO.KeyValueList
+      selectLayoutType(state) === LayoutTypeDTO.KeyValueList
         ? {
             Id: layoutState.id,
             Items: layoutState.keyValueListItems,

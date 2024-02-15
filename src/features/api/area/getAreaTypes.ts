@@ -1,10 +1,9 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { baseApi } from "../baseApi";
 import { AreaTypeDTO } from "types/DTO/AreaDTO";
-import { getUserApi } from "../user/getUser";
+import { ResponseDTO } from "types/DTO/ResponseDTO";
 import { UserRole } from "types/DTO/UserDTO";
+import { baseApi } from "../baseApi";
 
-type GetAreaTypesRequest = { userRoles?: UserRole[] };
+type GetAreaTypesRequest = { roles?: UserRole[] };
 export const getAreaTypesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAreaTypes: builder.query<
@@ -15,7 +14,7 @@ export const getAreaTypesApi = baseApi.injectEndpoints({
         return {
           url: "/Area/type",
           method: "GET",
-          params: params.userRoles && { userRoles: params.userRoles },
+          params: params.roles && { roles: params.roles },
         };
       },
       providesTags: ["AreaType"],

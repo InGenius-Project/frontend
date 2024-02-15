@@ -19,6 +19,7 @@ import {
 } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { useConfirm } from "material-ui-confirm";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const areaOptions = ["簡介", "專業技能", "教育背景"];
@@ -26,13 +27,17 @@ const areaOptions = ["簡介", "專業技能", "教育背景"];
 export default function AreaNewModel() {
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const { data: userData } = useGetUserQuery(null);
+  const { data: userData, isSuccess: isGettingUserSuccess } =
+    useGetUserQuery(null);
   const { data: areaTypesData } = useGetAreaTypesQuery(
     {
-      userRoles: userData?.result?.Role ? [userData?.result?.Role] : undefined,
+      roles:
+        userData?.result?.Role !== undefined
+          ? [userData.result.Role]
+          : undefined,
     },
     {
-      skip: !userData, // prefetch user data
+      skip: !isGettingUserSuccess,
     }
   );
 
