@@ -15,7 +15,7 @@ import { usePostTagTypeMutation } from "features/api/tag/postTagType";
 import React, { useEffect } from "react";
 import { ChromePicker } from "react-color";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { TagTypeDTO } from "types/TagDTO";
+import { ITagType } from "types/interfaces/ITag";
 import { TypeOf, z } from "zod";
 
 const tagTypeSchema = z.object({
@@ -75,9 +75,9 @@ function TagTypeForm() {
     postTagType(values);
   };
 
-  const handleEditClick = (row: TagTypeDTO) => {
+  const handleEditClick = (row: ITagType) => {
     Object.entries(row).forEach(([key, value]) => {
-      setValue(key as keyof TagTypeDTO, value);
+      setValue(key as keyof ITagType, value);
     });
   };
 
@@ -88,7 +88,7 @@ function TagTypeForm() {
   return (
     <FormProvider {...methods}>
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
-        <Table<TagTypeDTO, keyof TagTypeInput>
+        <Table<ITagType, keyof TagTypeInput>
           title="標籤類型"
           data={tagTypesData?.result || []}
           defaultOrderBy="Name"

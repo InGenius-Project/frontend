@@ -1,11 +1,11 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { AreaDTO, AreaPostDTO } from "types/DTO/AreaDTO";
+import { IArea, IAreaPost } from "types/interfaces/IArea";
 import { setFocusedArea } from "features/areas/areasSlice";
 
 export const postAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postArea: builder.mutation<ResponseDTO<AreaDTO>, AreaPostDTO>({
+    postArea: builder.mutation<IResponse<IArea>, IAreaPost>({
       query: ({ Id, ...body }) => {
         return {
           url: `Area/${Id}`,

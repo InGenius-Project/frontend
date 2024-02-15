@@ -19,7 +19,7 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { logout } from "features/user/userSlice";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { UserRole } from "types/DTO/UserDTO";
+import { UserRole } from "types/enums/UserRole";
 
 export default function Header() {
   const theme = useTheme();

@@ -3,14 +3,16 @@ import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import RichTextEditor from "components/RichTextEditor";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { Area, AreaDTO, LayoutTypeDTO } from "types/DTO/AreaDTO";
+import { LayoutType } from "types/enums/LayoutType";
+import { IArea } from "types/interfaces/IArea";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
+import { Area } from "types/classes/Area";
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
   id: string;
-  area: AreaDTO;
+  area: IArea;
   focused?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
 
@@ -77,7 +79,7 @@ const AreaItem = ({
       </Box>
       <Stack spacing={1}>
         <Typography variant="h4">{a.getAreaTitle()}</Typography>
-        {a.isLayoutType(LayoutTypeDTO.ImageText) &&
+        {a.isLayoutType(LayoutType.ImageText) &&
           area.ImageTextLayout?.Image?.Content && (
             <Stack direction={"row"} spacing={1}>
               <img
@@ -95,18 +97,18 @@ const AreaItem = ({
             </Stack>
           )}
 
-        {a.isLayoutType(LayoutTypeDTO.Text) && (
+        {a.isLayoutType(LayoutType.Text) && (
           <RichTextEditor
             controllable={false}
             initialEditorState={area.TextLayout?.Content}
           ></RichTextEditor>
         )}
-        {a.isLayoutType(LayoutTypeDTO.List) &&
+        {a.isLayoutType(LayoutType.List) &&
           area.ListLayout?.Items?.map((i) => (
             <AreaListItem id={i.Id} content={i.Name} key={i.Id} />
           ))}
 
-        {a.isLayoutType(LayoutTypeDTO.KeyValueList) &&
+        {a.isLayoutType(LayoutType.KeyValueList) &&
           area.KeyValueListLayout?.Items?.map((i) => (
             <AreaKeyValueListItem
               id={i.Id}

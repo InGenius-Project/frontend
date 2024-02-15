@@ -1,10 +1,10 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { ResumeDTO } from "types/DTO/ResumeDTO";
+import { IResume } from "types/interfaces/IResume";
 
 export const getResumesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getResumes: builder.query<ResponseDTO<Array<ResumeDTO>>, null>({
+    getResumes: builder.query<IResponse<Array<IResume>>, null>({
       query() {
         return {
           url: "Resume",

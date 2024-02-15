@@ -1,10 +1,10 @@
-import { AreaTypeDTO } from "types/DTO/AreaDTO";
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IAreaType } from "types/interfaces/IArea";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
 
 export const getAreaTypeByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAreaTypeById: builder.query<ResponseDTO<AreaTypeDTO>, number>({
+    getAreaTypeById: builder.query<IResponse<IAreaType>, number>({
       query(areaTypeId) {
         return {
           url: `Area/${areaTypeId}`,

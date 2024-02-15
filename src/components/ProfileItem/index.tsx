@@ -20,7 +20,7 @@ import ImageCrop from "components/ImageCrop";
 import { usePostUserMutation } from "features/api/user/postUser";
 import { useAppSelector } from "features/store";
 import { useCallback, useState } from "react";
-import { ImageDTO } from "types/DTO/AreaDTO";
+import { IImage } from "types/interfaces/IArea";
 import { NIL } from "uuid";
 
 type ProfileItemProps = {
@@ -39,7 +39,7 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
   const userState = useAppSelector((state) => state.userState);
   const [userNameState, setUserNameState] = useState(userState.User?.Username);
   const debouncedUserName = useDebounce(userNameState);
-  const [image, setImage] = useState<ImageDTO | undefined>(
+  const [image, setImage] = useState<IImage | undefined>(
     userState.User?.Avatar
   );
 
@@ -51,11 +51,11 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
     setUserNameState(event.target.value);
   };
 
-  const handleChangeAvatar = useCallback((image: ImageDTO) => {
+  const handleChangeAvatar = useCallback((image: IImage) => {
     setImage(image);
   }, []);
   const handleAvatarCropDone = useCallback(
-    (image: ImageDTO) => {
+    (image: IImage) => {
       postUser({
         Username: userState.User?.Username || "",
         Avatar: image,

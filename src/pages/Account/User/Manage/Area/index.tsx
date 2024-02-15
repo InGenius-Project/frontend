@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Autocomplete, Box, TextField, useTheme } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import FormInput from "components/FormInput";
 import Table from "components/Table";
 import { useDeletAreaTypesMutation } from "features/api/area/deleteAreaTypes";
@@ -13,12 +13,8 @@ import {
   useForm,
 } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import {
-  AreaTypeDTO,
-  LayoutTypeDTO,
-  LayoutTypeObject,
-} from "types/DTO/AreaDTO";
-import { UserRole, UserRoleObject } from "types/DTO/UserDTO";
+import { LayoutType, LayoutTypeObject } from "types/enums/LayoutType";
+import { UserRole, UserRoleObject } from "types/enums/UserRole";
 import { TypeOf, z } from "zod";
 
 const areaTypeSchema = z.object({
@@ -74,8 +70,8 @@ function AreaTypeForm() {
 
   const handleEditClick = (row: AreaTypeInput) => {
     if (
-      row.LayoutType.value === LayoutTypeDTO.List ||
-      row.LayoutType.value === LayoutTypeDTO.KeyValueList
+      row.LayoutType.value === LayoutType.List ||
+      row.LayoutType.value === LayoutType.KeyValueList
     ) {
       navigate("List");
       return;

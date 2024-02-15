@@ -1,15 +1,12 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { ResumeDTO, ResumePostDTO } from "types/DTO/ResumeDTO";
+import { IResume, IResumePost } from "types/interfaces/IResume";
 import { getResumeByIdApi } from "./getResumeById";
 import { NIL } from "uuid";
 
 export const postResumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postResume: builder.mutation<
-      ResponseDTO<ResumeDTO>,
-      Partial<ResumePostDTO>
-    >({
+    postResume: builder.mutation<IResponse<IResume>, Partial<IResumePost>>({
       query(body) {
         return {
           url: "Resume",
@@ -33,7 +30,7 @@ export const postResumeApi = baseApi.injectEndpoints({
               return {
                 ...draft,
                 result: {
-                  ...(draft.result as ResumeDTO),
+                  ...(draft.result as IResume),
                   Areas: body.Areas || [],
                 },
               };

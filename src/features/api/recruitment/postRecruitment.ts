@@ -1,5 +1,5 @@
-import { RecruitmentDTO, RecruitmentPostDTO } from "types/DTO/RecruitmentDTO";
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IRecruitment, IRecruitmentPost } from "types/interfaces/IRecruitment";
+import { IResponse } from "types/interfaces/IResponse";
 import { NIL } from "uuid";
 import { baseApi } from "../baseApi";
 import { getRecruitmentByIdApi } from "./getRecruitmentById";
@@ -7,8 +7,8 @@ import { getRecruitmentByIdApi } from "./getRecruitmentById";
 export const postRecruitment = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postRecruitment: builder.mutation<
-      ResponseDTO<RecruitmentDTO>,
-      RecruitmentPostDTO
+      IResponse<IRecruitment>,
+      IRecruitmentPost
     >({
       query(body) {
         return {
@@ -33,7 +33,7 @@ export const postRecruitment = baseApi.injectEndpoints({
               return {
                 ...draft,
                 result: {
-                  ...(draft.result as RecruitmentDTO),
+                  ...(draft.result as IRecruitment),
                   Areas: body.Areas || [],
                 },
               };

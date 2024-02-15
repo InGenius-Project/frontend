@@ -12,9 +12,9 @@ import {
   useForm,
 } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { LayoutTypeDTO } from "types/DTO/AreaDTO";
-import { UserRoleObject } from "types/DTO/UserDTO";
-import { TagTypeDTO } from "types/TagDTO";
+import { LayoutType } from "types/enums/LayoutType";
+import { UserRoleObject } from "types/enums/UserRole";
+import { ITagType } from "types/interfaces/ITag";
 import { TypeOf, z } from "zod";
 
 const areaListTypeSchema = z.object({
@@ -35,7 +35,7 @@ function ManageAreaList() {
     parseInt(areaTypeId || "0")
   );
   const [postAreaType] = usePostAreaTypeMutation();
-  const [selectTagTypes, setSelectTagTypes] = useState<TagTypeDTO[]>([]);
+  const [selectTagTypes, setSelectTagTypes] = useState<ITagType[]>([]);
 
   const onSubmitHandler: SubmitHandler<AreaListTypeInput> = () => {
     if (areaTypeData && areaTypeData.result)
@@ -103,13 +103,11 @@ function ManageAreaList() {
         {areaTypeData?.result && (
           <>
             <TextField disabled value={areaTypeData.result.Name}></TextField>
-            {areaTypeData.result.LayoutType === LayoutTypeDTO.List ||
-              (areaTypeData.result.LayoutType ===
-                LayoutTypeDTO.KeyValueList && (
+            {areaTypeData.result.LayoutType === LayoutType.List ||
+              (areaTypeData.result.LayoutType === LayoutType.KeyValueList && (
                 <Autocomplete
                   multiple={
-                    areaTypeData.result.LayoutType ===
-                    LayoutTypeDTO.KeyValueList
+                    areaTypeData.result.LayoutType === LayoutType.KeyValueList
                   }
                   options={tagTypesData?.result || []}
                   getOptionLabel={(d) => `${d.Name} ( ${d.Value} )`}
@@ -118,7 +116,7 @@ function ManageAreaList() {
                   )}
                   value={selectTagTypes}
                   onChange={(e, data) => {
-                    setSelectTagTypes([data].flat(1) as TagTypeDTO[]);
+                    setSelectTagTypes([data].flat(1) as ITagType[]);
                   }}
                 />
               ))}

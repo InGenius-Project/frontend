@@ -24,7 +24,8 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { KeyValueItemDTO, LayoutTypeDTO } from "types/DTO/AreaDTO";
+import { LayoutType } from "types/enums/LayoutType";
+import { IKeyValueItem } from "types/interfaces/IArea";
 import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
@@ -108,7 +109,7 @@ export default function AreaEditModel({
     );
   };
 
-  const handleKeyValueListItemChange = (item: KeyValueItemDTO) => {
+  const handleKeyValueListItemChange = (item: IKeyValueItem) => {
     dispatch(
       setKetValueListItems(
         layoutState.keyValueListItems.map((i) => {
@@ -173,7 +174,7 @@ export default function AreaEditModel({
         <Typography variant="h4">內容</Typography>
 
         {/* Image */}
-        {layoutTypeState === LayoutTypeDTO.ImageText && (
+        {layoutTypeState === LayoutType.ImageText && (
           <ImageCrop
             height={150}
             width={150}
@@ -183,8 +184,8 @@ export default function AreaEditModel({
         )}
 
         {/* Text */}
-        {(layoutTypeState === LayoutTypeDTO.Text ||
-          layoutTypeState === LayoutTypeDTO.ImageText) && (
+        {(layoutTypeState === LayoutType.Text ||
+          layoutTypeState === LayoutType.ImageText) && (
           <RichTextEditor
             controllable
             onChange={handleEditorChange}
@@ -193,7 +194,7 @@ export default function AreaEditModel({
         )}
 
         {/* Key value list */}
-        {layoutTypeState === LayoutTypeDTO.KeyValueList && (
+        {layoutTypeState === LayoutType.KeyValueList && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,
@@ -232,7 +233,7 @@ export default function AreaEditModel({
         )}
 
         {/* List */}
-        {layoutTypeState === LayoutTypeDTO.List && (
+        {layoutTypeState === LayoutType.List && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,

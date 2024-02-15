@@ -1,10 +1,10 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { TagDTO } from "types/TagDTO";
+import { IResponse } from "types/interfaces/IResponse";
+import { ITag } from "types/interfaces/ITag";
 import { baseApi } from "../baseApi";
 
 export const getTagsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getTags: builder.query<ResponseDTO<TagDTO[]>, void>({
+    getTags: builder.query<IResponse<ITag[]>, void>({
       query() {
         return {
           url: "/Tag",

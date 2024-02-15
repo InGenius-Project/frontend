@@ -1,10 +1,10 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { ResumeDTO } from "types/DTO/ResumeDTO";
+import { IResponse } from "types/interfaces/IResponse";
+import { IResume } from "types/interfaces/IResume";
 import { baseApi } from "../baseApi";
 
 export const getResumeByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getResumeById: builder.query<ResponseDTO<ResumeDTO>, string>({
+    getResumeById: builder.query<IResponse<IResume>, string>({
       query(id) {
         return {
           url: `Resume/${id}`,
@@ -14,7 +14,7 @@ export const getResumeByIdApi = baseApi.injectEndpoints({
       providesTags: (result) => {
         return [{ type: "Resume", id: result?.result?.Id }];
       },
-      transformResponse: (response: ResponseDTO<ResumeDTO>, meta, arg) => {
+      transformResponse: (response: IResponse<IResume>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.result) {
           const orderedArea = response.result.Areas.sort(

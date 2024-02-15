@@ -7,13 +7,13 @@ import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 import AreaControl from "../AreaControl";
 import AreaEmpty from "../AreaEmpty";
 import AreaItem from "../AreaItem";
 
 type AreaContainerProps = {
-  onPost?: (areas: Array<AreaDTO>) => Promise<void>;
+  onPost?: (areas: Array<IArea>) => Promise<void>;
 };
 
 function AreaEditor({ onPost }: AreaContainerProps) {

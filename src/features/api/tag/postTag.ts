@@ -1,12 +1,12 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { TagDTO } from "types/TagDTO";
+import { IResponse } from "types/interfaces/IResponse";
+import { ITag } from "types/interfaces/ITag";
 import { baseApi } from "../baseApi";
 
 export const postTag = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postTag: builder.mutation<
-      ResponseDTO<null>,
-      Partial<Pick<TagDTO, "Id">> & Omit<TagDTO, "Id">
+      IResponse<null>,
+      Partial<Pick<ITag, "Id">> & Omit<ITag, "Id">
     >({
       query: (body) => {
         return {

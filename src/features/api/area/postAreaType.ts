@@ -1,12 +1,12 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { AreaTypeDTO } from "types/DTO/AreaDTO";
+import { IAreaType } from "types/interfaces/IArea";
 
 export const postAreaType = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postAreaType: builder.mutation<
-      ResponseDTO<null>,
-      Partial<Pick<AreaTypeDTO, "Id">> & Omit<AreaTypeDTO, "Id">
+      IResponse<null>,
+      Partial<Pick<IAreaType, "Id">> & Omit<IAreaType, "Id">
     >({
       query: (body) => {
         return {

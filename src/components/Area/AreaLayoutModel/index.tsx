@@ -14,7 +14,7 @@ import { setLayoutType } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutTypeDTO } from "types/DTO/AreaDTO";
+import { LayoutType } from "types/enums/LayoutType";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,
@@ -55,9 +55,9 @@ export default function Layout() {
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newSelectedLayout: LayoutTypeDTO | null
+    newSelectedLayout: LayoutType | null
   ) => {
-    dispatch(setLayoutType(newSelectedLayout || LayoutTypeDTO.Text));
+    dispatch(setLayoutType(newSelectedLayout || LayoutType.Text));
   };
 
   const handleNext = () => {
@@ -75,7 +75,7 @@ export default function Layout() {
         value={layoutState.layoutType}
         onChange={handleChange}
       >
-        <LayoutButton value={LayoutTypeDTO.Text}>
+        <LayoutButton value={LayoutType.Text}>
           <TextFrame />
           <Typography variant="body1">純文字</Typography>
         </LayoutButton>
@@ -83,15 +83,15 @@ export default function Layout() {
           <IconTextFrame />
           <Typography variant="body1">貼圖與文字</Typography>
         </LayoutButton> */}
-        <LayoutButton value={LayoutTypeDTO.ImageText}>
+        <LayoutButton value={LayoutType.ImageText}>
           <ImageTextFrame />
           <Typography variant="body1">文字與圖片</Typography>
         </LayoutButton>
-        <LayoutButton value={LayoutTypeDTO.List}>
+        <LayoutButton value={LayoutType.List}>
           <ListFrame />
           <Typography variant="body1">條列文字</Typography>
         </LayoutButton>
-        <LayoutButton value={LayoutTypeDTO.KeyValueList}>
+        <LayoutButton value={LayoutType.KeyValueList}>
           <KeyValueListFrame />
           <Typography variant="body1">鍵值條列文字</Typography>
         </LayoutButton>

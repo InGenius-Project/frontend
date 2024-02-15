@@ -1,10 +1,10 @@
-export interface TagDTO {
+export interface ITag {
   Id: string;
   Name: string;
-  Type: TagTypeDTO;
+  Type: ITagType;
 }
 
-export interface TagTypeDTO {
+export interface ITagType {
   Id: number;
   Name: string;
   Value: string;

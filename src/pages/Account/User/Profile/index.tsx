@@ -6,7 +6,7 @@ import { usePostUserMutation } from "features/api/user/postUser";
 import { AreasType, setAreas } from "features/areas/areasSlice";
 import { useAppDispatch } from "features/store";
 import { useEffect } from "react";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 
 export default function Profile() {
   const { data: userData } = useGetUserQuery(null);
@@ -26,7 +26,7 @@ export default function Profile() {
 
   const [postUser] = usePostUserMutation();
 
-  const handlePostProfileArea = async (areas: Array<AreaDTO>) => {
+  const handlePostProfileArea = async (areas: Array<IArea>) => {
     await postUser({
       Username: userData?.result?.Username || "",
       Areas: areas,

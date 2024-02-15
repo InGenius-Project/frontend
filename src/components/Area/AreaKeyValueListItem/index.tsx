@@ -9,19 +9,18 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { KeyValueItemDTO } from "types/DTO/AreaDTO";
-import { TagDTO } from "types/TagDTO";
-import { v4 as uuid } from "uuid";
+import { IKeyValueItem } from "types/interfaces/IArea";
+import { ITag } from "types/interfaces/ITag";
 
 type AreaListItemProps = {
   id: string;
-  itemKey?: TagDTO;
+  itemKey?: ITag;
   value?: string;
   editable?: boolean;
   onClickDelete?: (id: string) => void;
-  onChange?: (item: KeyValueItemDTO) => void;
+  onChange?: (item: IKeyValueItem) => void;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 function AreaListItem({
@@ -34,7 +33,7 @@ function AreaListItem({
   ...props
 }: AreaListItemProps) {
   const theme = useTheme();
-  const [itemState, setItemState] = useState<KeyValueItemDTO>();
+  // const [itemState, setItemState] = useState<IKeyValueItem>();
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     onClickDelete && onClickDelete(id);

@@ -1,11 +1,11 @@
 import { setUserInfo } from "features/user/userSlice";
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { UserInfoDTO } from "types/DTO/UserDTO";
+import { IResponse } from "types/interfaces/IResponse";
+import { IUserInfo } from "types/interfaces/IUser";
 import { baseApi } from "../baseApi";
 
 export const getUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<ResponseDTO<UserInfoDTO>, null>({
+    getUser: builder.query<IResponse<IUserInfo>, null>({
       query: () => ({
         url: "/user",
       }),
@@ -15,7 +15,7 @@ export const getUserApi = baseApi.injectEndpoints({
           data.result && dispatch(setUserInfo(data.result));
         } catch (error) {}
       },
-      transformResponse: (response: ResponseDTO<UserInfoDTO>, meta, arg) => {
+      transformResponse: (response: IResponse<IUserInfo>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.result && response.result.Areas) {
           const orderedArea = response.result.Areas.sort(

@@ -8,7 +8,7 @@ import { AreasType, setAreas } from "features/areas/areasSlice";
 import { useAppDispatch } from "features/store";
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
@@ -46,7 +46,7 @@ export default function ResumeEdit() {
       .unwrap()
       .then(() => navigate(".."));
   };
-  const handlePostAreas = async (areas: Array<AreaDTO>) => {
+  const handlePostAreas = async (areas: Array<IArea>) => {
     if (resumeData && resumeData.result)
       await postResume({
         Title: resumeData.result.Title,

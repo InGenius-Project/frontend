@@ -1,7 +1,7 @@
 import { useAppSelector } from "features/store";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserRole } from "types/DTO/UserDTO";
+import { UserRole } from "types/enums/UserRole";
 
 const InternalUserRoute = () => {
   const userRole = useAppSelector((state) => state.userState.User?.Role);

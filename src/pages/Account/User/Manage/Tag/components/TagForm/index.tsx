@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MenuItem } from "@mui/base";
 import { Autocomplete, Box, Chip, TextField, useTheme } from "@mui/material";
 import FormInput from "components/FormInput";
 import Table from "components/Table";
@@ -14,7 +13,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { TagDTO } from "types/TagDTO";
+import { ITag } from "types/interfaces/ITag";
 import { NIL } from "uuid";
 import { TypeOf, z } from "zod";
 
@@ -74,7 +73,7 @@ function TagForm() {
     });
   };
 
-  const handleEditClick = (row: TagDTO) => {
+  const handleEditClick = (row: ITag) => {
     setValue("Id", row.Id);
     setValue("Name", row.Name);
     setValue("Type", row.Type);
@@ -87,7 +86,7 @@ function TagForm() {
   return (
     <FormProvider {...methods}>
       <Box noValidate component="form" onSubmit={handleSubmit(onSubmitHandler)}>
-        <Table<TagDTO, keyof TagInput>
+        <Table<ITag, keyof TagInput>
           title="標籤"
           data={tagsData?.result || []}
           defaultOrderBy="Name"

@@ -1,9 +1,9 @@
-import { UserRole } from "types/DTO/UserDTO";
-import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
+import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
+import { UserRole } from "types/enums/UserRole";
 
 const navigationConfig = [
   {

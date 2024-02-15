@@ -6,7 +6,7 @@ import { AreasType, setAreas } from "features/areas/areasSlice";
 import { useAppDispatch } from "features/store";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 
 function RecruitmentEdit() {
   const { recruitmentId = "" } = useParams();
@@ -16,7 +16,7 @@ function RecruitmentEdit() {
     skip: recruitmentId === "",
   });
 
-  const handlePostAreas = async (areas: Array<AreaDTO>) => {
+  const handlePostAreas = async (areas: Array<IArea>) => {
     if (recruitmentData && recruitmentData.result)
       await postRecruitment({
         Id: recruitmentId,

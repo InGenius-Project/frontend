@@ -21,7 +21,7 @@ import ReactCrop, {
   makeAspectCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { ImageDTO } from "types/DTO/AreaDTO";
+import { IImage } from "types/interfaces/IArea";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
 import resizeImage from "./resizeImage";
@@ -50,9 +50,9 @@ function base64ToBytes(base64: string): number {
 type ImageCropProps = {
   width?: string | number;
   height?: string | number;
-  image: ImageDTO;
-  onChange?: (image: ImageDTO) => void;
-  onCropDone?: (image: ImageDTO) => void;
+  image: IImage;
+  onChange?: (image: IImage) => void;
+  onCropDone?: (image: IImage) => void;
   circularCrop?: boolean;
 };
 export default function ImageCrop({
@@ -63,7 +63,7 @@ export default function ImageCrop({
   onChange,
   onCropDone,
 }: ImageCropProps) {
-  const [imageState, setImageState] = useState<ImageDTO>(image);
+  const [imageState, setImageState] = useState<IImage>(image);
   const [imgSrc, setImgSrc] = useState("");
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -121,7 +121,7 @@ export default function ImageCrop({
         var dataUrl = previewCanvasRef.current.toDataURL();
 
         resizeImage(dataUrl, 100, 1).then((res) => {
-          const newImageState: ImageDTO = {
+          const newImageState: IImage = {
             ...imageState,
             Content: res.split(",")[1],
             ContentType: res.split(",")[0].split(":")[1].split(";")[0],
