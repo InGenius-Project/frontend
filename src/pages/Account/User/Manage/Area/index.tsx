@@ -30,6 +30,7 @@ type AreaTypeInput = TypeOf<typeof areaTypeSchema>;
 
 function AreaTypeForm() {
   const navigate = useNavigate();
+
   const { data: areaTypesData } = useGetAreaTypesQuery({
     roles: Object.keys(UserRole).filter(
       (v) => !isNaN(Number(v))
@@ -61,7 +62,7 @@ function AreaTypeForm() {
       Id: values.Id,
       Name: values.Name,
       Value: values.Value,
-      ListTagTypes: [],
+      ListTagTypeIds: [],
       Description: values.Description,
       LayoutType: values.LayoutType.value,
       UserRole: values.UserRole.map((r) => r.value),
@@ -73,7 +74,7 @@ function AreaTypeForm() {
       row.LayoutType.value === LayoutType.List ||
       row.LayoutType.value === LayoutType.KeyValueList
     ) {
-      navigate("List");
+      navigate(`List/${row.Id}`);
       return;
     }
 

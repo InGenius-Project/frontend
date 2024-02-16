@@ -25,6 +25,11 @@ export interface IAreaType {
   ListTagTypes: Array<ITagType>;
 }
 
+export interface IAreaTypePost extends Omit<IAreaType, "ListTagTypes" | "Id"> {
+  Id?: number;
+  ListTagTypeIds: number[];
+}
+
 export interface IAreaPost extends Omit<IArea, "Id"> {
   Id?: string;
 }

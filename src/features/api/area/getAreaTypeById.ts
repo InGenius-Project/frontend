@@ -7,7 +7,7 @@ export const getAreaTypeByIdApi = baseApi.injectEndpoints({
     getAreaTypeById: builder.query<IResponse<IAreaType>, number>({
       query(areaTypeId) {
         return {
-          url: `Area/${areaTypeId}`,
+          url: `Area/type/${areaTypeId}`,
           method: "GET",
         };
       },

@@ -1,10 +1,15 @@
 import ForgetPassword from "pages/Account/ForgetPassword";
+import ManageArea from "pages/Account/User/Manage/Area";
+import ManageTag from "pages/Account/User/Manage/Tag";
 import Profile from "pages/Account/User/Profile";
 import ProfileArea from "pages/Account/User/Profile/Area";
 import ProfileAreaLayout from "pages/Account/User/Profile/Layout";
 import ProfileAreaNew from "pages/Account/User/Profile/New";
 import Recruitment from "pages/Account/User/Recruitment";
 import RecruitmentEdit from "pages/Account/User/Recruitment/Edit";
+import RecruitmentArea from "pages/Account/User/Recruitment/Edit/Area";
+import RecruitmentAreaLayout from "pages/Account/User/Recruitment/Edit/Layout";
+import RecruitementAreaNew from "pages/Account/User/Recruitment/Edit/New";
 import Resume from "pages/Account/User/Resume";
 import ResumeEdit from "pages/Account/User/Resume/Edit";
 import ResumeArea from "pages/Account/User/Resume/Edit/Area";
@@ -19,15 +24,11 @@ import Root from "../pages";
 import Login from "../pages/Account/Login";
 import Register from "../pages/Account/Register";
 import AuthRoute from "./AuthRoute";
+import InternalUserRoute from "./InternalUserRoute";
 import MainRoute from "./MainRoute";
 import UnAuthRoute from "./UnAuthRoute";
 import UserRoute from "./UserRoute";
-import RecruitementAreaNew from "pages/Account/User/Recruitment/Edit/New";
-import RecruitmentAreaLayout from "pages/Account/User/Recruitment/Edit/Layout";
-import RecruitmentArea from "pages/Account/User/Recruitment/Edit/Area";
-import InternalUserRoute from "./InternalUserRoute";
-import ManageTag from "pages/Account/User/Manage/Tag";
-import ManageArea from "pages/Account/User/Manage/Area";
+import ManageAreaList from "pages/Account/User/Manage/Area/List";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -141,11 +142,14 @@ const router = createBrowserRouter(
                 element={<ManageTag />}
                 handle={{ crumb: "標籤管理" }}
               ></Route>
-              <Route
-                path="Area"
-                element={<ManageArea />}
-                handle={{ crumb: "區塊管理" }}
-              ></Route>
+              <Route path="Area" handle={{ crumb: "區塊管理" }}>
+                <Route path="" element={<ManageArea />}></Route>
+                <Route
+                  path="List/:areaTypeId"
+                  element={<ManageAreaList />}
+                  handle={{ crumb: "列表管理" }}
+                ></Route>
+              </Route>
             </Route>
           </Route>
         </Route>
