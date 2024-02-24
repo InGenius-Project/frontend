@@ -1,6 +1,6 @@
+import { IAreaTypePost } from "types/interfaces/IArea";
 import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { IAreaType, IAreaTypePost } from "types/interfaces/IArea";
 
 export const postAreaType = baseApi.injectEndpoints({
   endpoints: (builder) => ({

@@ -15,14 +15,13 @@ import { useGetAreaTypesQuery } from "features/api/area/getAreaTypes";
 import { useGetUserQuery } from "features/api/user/getUser";
 import {
   initializeStateWithoutFocusedArea,
-  setAreaType,
+  setAreaTypeId,
 } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { useConfirm } from "material-ui-confirm";
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const areaOptions = ["簡介", "專業技能", "教育背景"];
+import { IAreaType } from "types/interfaces/IArea";
 
 export default function AreaNewModel() {
   const navigate = useNavigate();
@@ -41,12 +40,13 @@ export default function AreaNewModel() {
     }
   );
 
-  const { areaType } = useAppSelector((state) => state.layoutState);
+  const [selectAreaType, setSelectAreaType] = useState<IAreaType | null>();
+  const { areaTypeId: areaType } = useAppSelector((state) => state.layoutState);
 
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    if (!areaType) {
+    if (!selectAreaType) {
       confirm({
         title: "尚未選擇預設類型，確定要繼續?",
         description:
@@ -62,6 +62,7 @@ export default function AreaNewModel() {
         })
         .catch(() => {});
     } else {
+      selectAreaType && dispatch(setAreaTypeId(selectAreaType.Id));
       navigate(`../Area`);
     }
   };
@@ -83,9 +84,9 @@ export default function AreaNewModel() {
           {areaTypesData?.result && (
             <Autocomplete
               options={areaTypesData.result}
-              value={areaType || null}
+              value={selectAreaType || null}
               getOptionLabel={(option) => option.Name}
-              onChange={(e: any, value) => dispatch(setAreaType(value))}
+              onChange={(e: any, value) => setSelectAreaType(value)}
               sx={{ width: 300 }}
               renderInput={(params) => (
                 <TextField
@@ -116,10 +117,12 @@ export default function AreaNewModel() {
             areaTypesData.result.map((o, i) => (
               <Chip
                 key={i}
-                icon={areaType && o === areaType ? <CheckIcon /> : <AddIcon />}
+                icon={
+                  areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />
+                }
                 label={o.Name}
                 onClick={() => {
-                  dispatch(setAreaType(o));
+                  setSelectAreaType(o);
                 }}
               />
             ))}

@@ -1,7 +1,6 @@
 import { LayoutType } from "types/enums/LayoutType";
 import {
   IArea,
-  IAreaType,
   IImageTextLayout,
   IKeyValueListLayout,
   IListLayout,
@@ -14,7 +13,7 @@ export class Area {
   IsDisplayed: boolean;
   Title: string;
   LayoutType?: LayoutType;
-  AreaType?: IAreaType;
+  AreaType?: number;
   TextLayout?: ITextLayout;
   ImageTextLayout?: IImageTextLayout;
   ListLayout?: IListLayout;
@@ -25,27 +24,17 @@ export class Area {
     this.IsDisplayed = area.IsDisplayed;
     this.Title = area.Title;
     this.LayoutType = area.LayoutType;
-    this.AreaType = area.AreaType;
+    this.AreaType = area.AreaTypeId;
     this.TextLayout = area.TextLayout;
     this.ImageTextLayout = area.ImageTextLayout;
     this.ListLayout = area.ListLayout;
     this.KeyValueListLayout = area.KeyValueListLayout;
   }
-  /**
-   * getAraTitle
-   */
   public getAreaTitle(): string {
-    return this.AreaType ? this.AreaType.Name : this.Title;
+    return this.Title;
   }
 
-  /**
-   * isLayourType
-   */
   public isLayoutType(type: LayoutType): boolean {
-    if (this.AreaType) {
-      return this.AreaType.LayoutType === type;
-    } else {
-      return this.LayoutType === type;
-    }
+    return this.LayoutType === type;
   }
 }

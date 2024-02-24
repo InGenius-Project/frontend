@@ -8,7 +8,7 @@ export interface IArea {
   IsDisplayed: boolean;
   Title: string;
   LayoutType?: LayoutType;
-  AreaType?: IAreaType;
+  AreaTypeId?: number;
   TextLayout?: ITextLayout;
   ImageTextLayout?: IImageTextLayout;
   ListLayout?: IListLayout;

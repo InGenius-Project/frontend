@@ -17,7 +17,7 @@ interface ILayout {
   isDisplayed: boolean;
   id: string;
   layoutType?: LayoutType;
-  areaType?: IAreaType | null;
+  areaTypeId?: number | null;
   title: string;
   content?: EditorState | string;
   image: IImage;
@@ -63,8 +63,8 @@ const layoutSlice = createSlice({
     setContent: (state, action: PayloadAction<EditorState>) => {
       state.content = action.payload;
     },
-    setAreaType: (state, action: PayloadAction<IAreaType | null>) => {
-      state.areaType = action.payload;
+    setAreaTypeId: (state, action: PayloadAction<number | null>) => {
+      state.areaTypeId = action.payload;
     },
     setImage: (state, action: PayloadAction<ILayout["image"]>) => {
       state.image = action.payload;
@@ -88,11 +88,15 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
-      const { Title, AreaType, Sequence, Id, IsDisplayed } = action.payload;
+      const {
+        Title,
+        AreaTypeId: AreaType,
+        Sequence,
+        Id,
+        IsDisplayed,
+      } = action.payload;
 
-      const layoutType = action.payload.AreaType
-        ? action.payload.AreaType.LayoutType
-        : action.payload.LayoutType;
+      const layoutType = action.payload.LayoutType;
 
       var parseArea: ILayout = {
         ...state,
@@ -100,7 +104,7 @@ const layoutSlice = createSlice({
         sequence: Sequence,
         isDisplayed: IsDisplayed,
         title: Title,
-        areaType: AreaType,
+        areaTypeId: AreaType,
         layoutType,
       };
 
@@ -141,7 +145,7 @@ export const {
   setImageFilename,
   setTitle,
   setContent,
-  setAreaType,
+  setAreaTypeId,
   setLayoutType,
   setListItem,
   setLayoutByArea,
@@ -152,14 +156,9 @@ export const {
 } = layoutSlice.actions;
 
 export const selectLayoutType = (state: RootState) =>
-  state.layoutState.areaType
-    ? state.layoutState.areaType.LayoutType
-    : state.layoutState.layoutType;
+  state.layoutState.layoutType;
 
-export const selectLayoutTitle = (state: RootState) =>
-  state.layoutState.areaType
-    ? state.layoutState.areaType.Name
-    : state.layoutState.title;
+export const selectLayoutTitle = (state: RootState) => state.layoutState.title;
 
 export const generateImageBase64Src = (contentType: string, content: string) =>
   `data:${contentType};base64,${content}`;
@@ -175,7 +174,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
     IsDisplayed: true,
     Title: layoutState.title,
     LayoutType: layoutState.layoutType,
-    AreaType: layoutState.areaType || undefined,
+    AreaTypeId: layoutState.areaTypeId || undefined,
     TextLayout:
       selectLayoutType(state) === LayoutType.Text
         ? {
@@ -232,7 +231,7 @@ export const getUpdatedArea = (state: RootState) => {
     IsDisplayed: layoutState.isDisplayed,
     Title: layoutState.title,
     LayoutType: layoutState.layoutType,
-    AreaType: layoutState.areaType || undefined,
+    AreaTypeId: layoutState.areaTypeId || undefined,
     TextLayout:
       selectLayoutType(state) === LayoutType.Text
         ? {

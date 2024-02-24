@@ -29,6 +29,7 @@ import { IKeyValueItem } from "types/interfaces/IArea";
 import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
+import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -42,6 +43,12 @@ export default function AreaEditModel({
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
   const layoutTypeState = useAppSelector(selectLayoutType);
+  const { data: areaTypeData } = useGetAreaTypeByIdQuery(
+    layoutState.areaTypeId!,
+    {
+      skip: !layoutState.areaTypeId,
+    }
+  );
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -142,18 +149,14 @@ export default function AreaEditModel({
           >
             <TextField
               label="標題"
-              value={
-                layoutState.areaType
-                  ? layoutState.areaType.Name
-                  : layoutState.title
-              }
+              value={layoutState.title}
               onChange={(event) => dispatch(setTitle(event.target.value))}
-              disabled={!!layoutState.areaType}
+              disabled={!!layoutState.areaTypeId}
               fullWidth
               sx={{ flexGrow: 1 }}
             />
             <Typography variant="caption">
-              {layoutState.areaType ? layoutState.areaType.Description : ""}
+              {areaTypeData ? areaTypeData.result?.Description : ""}
             </Typography>
           </Stack>
           <Box sx={{ whiteSpace: "nowrap" }}>
