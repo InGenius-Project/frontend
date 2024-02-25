@@ -2,9 +2,13 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   Chip,
   Container,
+  FormControl,
+  InputLabel,
   Link,
   Menu,
   MenuItem,
+  Select,
+  SelectChangeEvent,
   Stack,
   useTheme,
 } from "@mui/material";
@@ -14,12 +18,16 @@ import Typography from "@mui/material/Typography";
 import { ReactComponent as Logo } from "assets/images/logo/logo.svg";
 import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
 import { getNavigationConfig } from "components/SideBar/navigationConfig";
+import { useLoginMutation } from "features/api/auth/login";
 import { baseApi } from "features/api/baseApi";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { logout } from "features/user/userSlice";
 import * as React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserRole } from "types/enums/UserRole";
+import { UserRole, UserRoleLoginData } from "types/enums/UserRole";
+
+const env = process.env.REACT_APP_NODE_ENV as string;
 
 export default function Header() {
   const theme = useTheme();
@@ -34,6 +42,16 @@ export default function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [login] = useLoginMutation();
+  const [role, setRole] = useState(user?.Role);
+  const handleChange = (e:  SelectChangeEvent<UserRole>) => {
+    setRole((e.target as any).value);
+    const loginData = UserRoleLoginData.find(u => u.Id === e.target.value);
+    login({
+      email: loginData?.Email || "",
+      password: loginData?.password || "",
+    });
+  }
 
   const handleLogout = () => {
     dispatch(logout()); // initial state
@@ -80,7 +98,27 @@ export default function Header() {
         <Box height="100%">
           {user ? (
             <Stack spacing={1} direction={"row"} alignItems={"center"}>
-              <Chip label={UserRole[user.Role as unknown as UserRole]} />
+              {env === "development" && (
+              
+                <FormControl size="small">
+                  <InputLabel >Role</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Role"
+                    value={role}
+                    onChange={handleChange}
+                >
+                  {UserRoleLoginData.map((item) => {
+                    return (
+                      <MenuItem key={item.Id} value={item.Id}>
+                        {item.Label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>)
+            }
               <Button
                 variant="text"
                 startIcon={
