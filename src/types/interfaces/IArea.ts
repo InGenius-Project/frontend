@@ -31,7 +31,7 @@ export interface IAreaTypePost extends Omit<IAreaType, "ListTagTypes" | "Id"> {
 }
 
 export interface IAreaPost extends Omit<IArea, "Id"> {
-  Id?: string;
+  Id: string;
 }
 
 export interface ILayout {

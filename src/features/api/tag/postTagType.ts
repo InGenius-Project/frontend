@@ -12,7 +12,7 @@ export const postTagType = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["TagType"],
+      invalidatesTags: ["TagType", "Tag"],
     }),
   }),
 });

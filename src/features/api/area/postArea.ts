@@ -6,9 +6,9 @@ import { setFocusedArea } from "features/areas/areasSlice";
 export const postAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postArea: builder.mutation<IResponse<IArea>, IAreaPost>({
-      query: ({ Id, ...body }) => {
+      query: (body) => {
         return {
-          url: `Area/${Id}`,
+          url: `Area`,
           method: "POST",
           body,
         };
