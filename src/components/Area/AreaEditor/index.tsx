@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Portal, Stack } from "@mui/material";
 import DragDropContainer from "components/DragDropContainer";
 import { useDeleteAreaMutation } from "features/api/area/deleteArea";
 import { usePostAreaMutation } from "features/api/area/postArea";
@@ -11,7 +11,7 @@ import { IArea } from "types/interfaces/IArea";
 import AreaControl from "../AreaControl";
 import AreaEmpty from "../AreaEmpty";
 import AreaItem from "../AreaItem";
-
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 type AreaContainerProps = {
   onPost?: (areas: Array<IArea>) => Promise<void>;
 };
@@ -101,7 +101,20 @@ function AreaEditor({ onPost }: AreaContainerProps) {
           position: "relative",
         }}
       >
-        {isEmptyAreas && <AreaEmpty />}
+        {isEmptyAreas && (
+          <>
+            <AreaEmpty />
+            <Portal container={() => document.getElementById("userHeader")}>
+              <IconButton
+                size="small"
+                sx={{ ml: 1 }}
+                onClick={() => navigate("New")}
+              >
+                <CreateOutlinedIcon />
+              </IconButton>
+            </Portal>
+          </>
+        )}
 
         {areasState.areas && (
           <DragDropContainer
@@ -126,25 +139,27 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         )}
       </Stack>
 
-      <Box
-        sx={{
-          flexShrink: 0,
-          width: "var(--ing-width-area-control)",
-          position: "relative",
-        }}
-      >
-        <AreaControl
-          top={controlTop}
-          disabled={!areasState.focusedArea}
-          visibled={
-            areasState.focusedArea && areasState.focusedArea.IsDisplayed
-          }
-          onAddClick={handleAddClick}
-          onDeleteClick={handleDeleteClick}
-          onEditClick={handleEditClick}
-          onVisibilityChange={handleVisibilityChange}
-        />
-      </Box>
+      {!isEmptyAreas && (
+        <Box
+          sx={{
+            flexShrink: 0,
+            width: "var(--ing-width-area-control)",
+            position: "relative",
+          }}
+        >
+          <AreaControl
+            top={controlTop}
+            disabled={!areasState.focusedArea}
+            visibled={
+              areasState.focusedArea && areasState.focusedArea.IsDisplayed
+            }
+            onAddClick={handleAddClick}
+            onDeleteClick={handleDeleteClick}
+            onEditClick={handleEditClick}
+            onVisibilityChange={handleVisibilityChange}
+          />
+        </Box>
+      )}
     </Box>
   );
 }
