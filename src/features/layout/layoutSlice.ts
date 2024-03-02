@@ -81,6 +81,17 @@ const layoutSlice = createSlice({
     setListItem: (state, action: PayloadAction<Array<ITag>>) => {
       state.listItems = action.payload;
     },
+    pushListItem: (state, action: PayloadAction<ITag>) => {
+      state.listItems?.push(action.payload);
+    },
+    updateListItem: (state, action: PayloadAction<ITag>) => {
+      const index = state.listItems?.findIndex(
+        (item) => item.Id === action.payload.Id
+      );
+      if (index !== -1 && index) {
+        state.listItems![index] = action.payload;
+      }
+    },
     setKetValueListItems: (
       state,
       action: PayloadAction<Array<IKeyValueItem>>
@@ -148,6 +159,8 @@ export const {
   setAreaTypeId,
   setLayoutType,
   setListItem,
+  pushListItem,
+  updateListItem,
   setLayoutByArea,
   setImageContent,
   setImageContentType,

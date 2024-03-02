@@ -10,3 +10,7 @@ export interface ITagType {
   Value: string;
   Color: string;
 }
+
+export interface ITagTypeDetail extends ITagType {
+  Tags: ITag[];
+}

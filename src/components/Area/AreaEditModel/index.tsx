@@ -1,11 +1,13 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
+  Autocomplete,
   Box,
   Button,
   Paper,
   Stack,
   TextField,
   Typography,
+  createFilterOptions,
   useTheme,
 } from "@mui/material";
 import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
@@ -13,12 +15,14 @@ import DragDropContainer from "components/DragDropContainer";
 import ImageCrop from "components/ImageCrop";
 import RichTextEditor from "components/RichTextEditor";
 import {
+  pushListItem,
   selectLayoutType,
   setContent,
   setImage,
   setKetValueListItems,
   setListItem,
   setTitle,
+  updateListItem,
 } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
@@ -30,11 +34,18 @@ import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
 import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
+import { useLazyGetAreaTypesQuery } from "features/api/area/getAreaTypes";
+import { useGetTagTypeByIdQuery, useLazyGetTagTypeByIdQuery } from "features/api/tag/getTagTypeById";
+import { ITag } from "types/interfaces/ITag";
+import { useGetTagTypesQuery } from "features/api/tag/getTagTypes";
+import { custom } from "zod";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   loading?: boolean;
 };
+
+const filter = createFilterOptions<ITag>();
 
 export default function AreaEditModel({
   onAddClick,
@@ -49,6 +60,8 @@ export default function AreaEditModel({
       skip: !layoutState.areaTypeId,
     }
   );
+  const [getListTags, { data: listTags }] = useLazyGetTagTypeByIdQuery()
+  const { data: customTagTypeData } = useGetTagTypeByIdQuery("1");
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -93,20 +106,18 @@ export default function AreaEditModel({
   };
 
   const handleListAddClick = () => {
-    if (layoutState.listItems) {
-      // TODO: fix this
-      // dispatch(
-      //   setListItem([
-      //     ...layoutState.listItems,
-      //     {
-      //       id: uuid(),
-      //       name: "",
-      //       type: "CUSTOM",
-      //     },
-      //   ])
-      // );
-    } else {
-      // dispatch(setListItem([{ id: uuid(), name: "", type: "CUSTOM" }]));
+    if(areaTypeData?.result && areaTypeData.result.ListTagTypes.length > 0)
+      getListTags(areaTypeData.result.ListTagTypes[0].Id.toString() || "")
+    
+    // set empty item
+    if (customTagTypeData?.result) {
+      dispatch(
+        setListItem([{
+          Id: uuid(),
+          Name: "",
+          Type: customTagTypeData.result
+        }])
+      )
     }
   };
 
@@ -128,6 +139,25 @@ export default function AreaEditModel({
       )
     );
   };
+
+  const handleListItemChange = (event: React.SyntheticEvent<Element, Event>, value: string | ITag | null) => {
+    var foundListItem = layoutState.listItems?.find((item) => item.Id === value);
+    if (foundListItem) {
+      if (typeof value === "object" && value)
+        dispatch(updateListItem(value));
+     }
+    else {
+        if(typeof value === "string" && customTagTypeData?.result)
+          dispatch(pushListItem({
+            Id: uuid(),
+            Name: value,
+            Type: customTagTypeData.result,
+          }))
+        if(typeof value === "object" && value)
+          dispatch(pushListItem(value))
+    }
+  }
+
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -255,17 +285,53 @@ export default function AreaEditModel({
                   key={i.Id}
                   id={i.Id}
                   onClickDelete={handleListRemoveClick}
-                  onChange={(event) =>
-                    dispatch(
-                      setListItem(
-                        (layoutState.listItems || []).map((item) => {
-                          if (item.Id === i.Id)
-                            return { ...item, name: event.target.value };
-                          return item;
-                        })
-                      )
-                    )
-                  }
+                  
+                  renderInput={
+                    <Autocomplete
+                      sx={{width: "20em"}}
+                      freeSolo
+                      options={listTags?.result ? listTags.result.Tags : []}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="standard"
+                          fullWidth
+                        />
+                      )}
+                      getOptionLabel={(option) => {
+                        if (typeof option === "string") {
+                          return option;
+                        }
+                        if (option.Name) {
+                          return option.Name;
+                        }
+                        return "";
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        return option.Id === value.Id;
+                      }}
+                      selectOnFocus
+                      clearOnBlur
+                      handleHomeEndKeys
+                      value={i}
+                      onChange={handleListItemChange}
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+                        const { inputValue } = params;
+                        // Suggest the creation of a new value
+                        const isExisting = options.some((option: ITag) => inputValue === option.Name);
+                        if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
+                          filtered.push({
+                            Id: uuid(),
+                            Name: `Add "${inputValue}"`,
+                            Type: customTagTypeData?.result
+                          });
+                        }
+                        
+                        return filtered;
+            
+                      }}
+                    />}
                 />
               ))}
             </DragDropContainer>

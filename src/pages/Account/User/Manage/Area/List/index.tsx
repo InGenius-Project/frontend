@@ -78,7 +78,7 @@ function ManageAreaList() {
       .unwrap()
       .then(() => {
         toast.success("修改成功");
-        navigate("..", { replace: true });
+        // navigate("..", { replace: true });
       });
   };
 
@@ -100,12 +100,11 @@ function ManageAreaList() {
               (d) => d.value === areaTypeData.result?.LayoutType
             )?.label || "",
         },
-
         ListTagTypes: areaTypeData.result.ListTagTypes,
       };
       reset(defaultFormData, { keepDirty: true });
     }
-  }, [areaTypeData, areaTypeData?.result, reset]);
+  }, [areaTypeData, areaTypeData?.result  , reset]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -121,6 +120,7 @@ function ManageAreaList() {
         sx={{ p: 2 }}
       >
         <Stack spacing={2} width={"100%"}>
+          <FormInput name="Id" sx={{ display: "none" }} />
           <FormInput name="Name" label="名稱" />
           <FormInput name="Value" label="值" />
           <FormInput name="Description" label="描述" />
