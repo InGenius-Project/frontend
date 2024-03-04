@@ -5,7 +5,9 @@ import {
   Box,
   Button,
   Chip,
+  Divider,
   InputAdornment,
+  Paper,
   Stack,
   TextField,
   Typography,
@@ -73,64 +75,68 @@ export default function AreaNewModel() {
   };
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="h3">選擇類型</Typography>
-      <Typography variant="caption">
-        使用預設的內容類型，讓你的主頁更加美觀，並且讓企業更容易依據內容搜尋到你的資訊!
-      </Typography>
-
+    <Paper sx={{ padding: 2 }}>
       <Stack spacing={2}>
-        <Stack direction={"row"} spacing={1} alignItems={"flex-end"}>
-          {areaTypesData?.result && (
-            <Autocomplete
-              options={areaTypesData.result}
-              value={selectAreaType || null}
-              getOptionLabel={(option) => option.Name}
-              onChange={(e: any, value) => setSelectAreaType(value)}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="查詢區塊類型"
-                  InputProps={{
-                    ...params.InputProps,
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
+        <Stack>
+          <Typography variant="h4">新增區塊</Typography>
+          <Typography variant="caption">預設內容類型</Typography>
+          <Divider />
+        </Stack>
+
+        <Stack spacing={2}>
+          <Stack direction={"row"} spacing={1} alignItems={"flex-end"}>
+            {areaTypesData?.result && (
+              <Autocomplete
+                size="small"
+                options={areaTypesData.result}
+                value={selectAreaType || null}
+                getOptionLabel={(option) => option.Name}
+                onChange={(e: any, value) => setSelectAreaType(value)}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="查詢區塊類型"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            )}
+            <Box>
+              <Button variant="outlined" onClick={handleCustomClick}>
+                自定義
+              </Button>
+            </Box>
+          </Stack>
+
+          <Stack direction="row" spacing={2} alignItems={"center"}>
+            <Typography variant="body1">預設類型</Typography>
+            {areaTypesData?.result &&
+              areaTypesData.result.map((o, i) => (
+                <Chip
+                  key={i}
+                  icon={
+                    areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />
+                  }
+                  label={o.Name}
+                  onClick={() => {
+                    setSelectAreaType(o);
                   }}
                 />
-              )}
-            />
-          )}
+              ))}
+          </Stack>
           <Box>
-            <Button variant="outlined" onClick={handleCustomClick}>
-              自定義
-            </Button>
+            <Button onClick={handleClick}>下一步</Button>
           </Box>
         </Stack>
-
-        <Stack direction="row" spacing={2} alignItems={"center"}>
-          <Typography variant="body1">常見類型</Typography>
-          {areaTypesData?.result &&
-            areaTypesData.result.map((o, i) => (
-              <Chip
-                key={i}
-                icon={
-                  areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />
-                }
-                label={o.Name}
-                onClick={() => {
-                  setSelectAreaType(o);
-                }}
-              />
-            ))}
-        </Stack>
-        <Box>
-          <Button onClick={handleClick}>下一步</Button>
-        </Box>
       </Stack>
-    </Stack>
+    </Paper>
   );
 }

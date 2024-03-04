@@ -6,6 +6,7 @@ import { usePostUserMutation } from "features/api/user/postUser";
 import { AreasType, setAreas } from "features/areas/areasSlice";
 import { useAppDispatch } from "features/store";
 import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import { IArea } from "types/interfaces/IArea";
 
 export default function Profile() {
@@ -36,6 +37,7 @@ export default function Profile() {
   return (
     <Stack spacing={1}>
       <ProfileItem editable />
+      <Outlet />
       <Box
         sx={{
           display: "flex",

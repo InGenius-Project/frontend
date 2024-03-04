@@ -1,5 +1,7 @@
 import {
   Button,
+  Divider,
+  Paper,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -65,43 +67,48 @@ export default function Layout() {
   };
 
   return (
-    <Stack spacing={1}>
-      <Typography variant="h3">區塊排列方式</Typography>
-      <Typography variant="caption">
-        選擇區塊內的排版，依據您的需求選擇是否要放入圖片，或者用條列式的方式呈現
-      </Typography>
-      <LayoutButtonGroup
-        exclusive
-        value={layoutState.layoutType}
-        onChange={handleChange}
-      >
-        <LayoutButton value={LayoutType.Text}>
-          <TextFrame />
-          <Typography variant="body1">純文字</Typography>
-        </LayoutButton>
-        {/* <LayoutButton value={LayoutTypeDTO.ICONTEXT}>
+    <Paper sx={{ padding: 2 }}>
+      <Stack spacing={1}>
+        <Stack>
+          <Typography variant="h4">區塊排列方式</Typography>
+          <Typography variant="caption">
+            選擇區塊內的排版，依據您的需求選擇是否要放入圖片，或者用條列式的方式呈現
+          </Typography>
+          <Divider />
+        </Stack>
+        <LayoutButtonGroup
+          exclusive
+          value={layoutState.layoutType}
+          onChange={handleChange}
+        >
+          <LayoutButton value={LayoutType.Text}>
+            <TextFrame />
+            <Typography variant="body1">純文字</Typography>
+          </LayoutButton>
+          {/* <LayoutButton value={LayoutTypeDTO.ICONTEXT}>
           <IconTextFrame />
           <Typography variant="body1">貼圖與文字</Typography>
         </LayoutButton> */}
-        <LayoutButton value={LayoutType.ImageText}>
-          <ImageTextFrame />
-          <Typography variant="body1">文字與圖片</Typography>
-        </LayoutButton>
-        <LayoutButton value={LayoutType.List}>
-          <ListFrame />
-          <Typography variant="body1">條列文字</Typography>
-        </LayoutButton>
-        <LayoutButton value={LayoutType.KeyValueList}>
-          <KeyValueListFrame />
-          <Typography variant="body1">鍵值條列文字</Typography>
-        </LayoutButton>
-      </LayoutButtonGroup>
-      <Stack direction="row" spacing={1}>
-        <Button variant="outlined" onClick={() => navigate("../New")}>
-          上一步
-        </Button>
-        <Button onClick={handleNext}>下一步</Button>
+          <LayoutButton value={LayoutType.ImageText}>
+            <ImageTextFrame />
+            <Typography variant="body1">文字與圖片</Typography>
+          </LayoutButton>
+          <LayoutButton value={LayoutType.List}>
+            <ListFrame />
+            <Typography variant="body1">條列文字</Typography>
+          </LayoutButton>
+          <LayoutButton value={LayoutType.KeyValueList}>
+            <KeyValueListFrame />
+            <Typography variant="body1">鍵值條列文字</Typography>
+          </LayoutButton>
+        </LayoutButtonGroup>
+        <Stack direction="row" spacing={1}>
+          <Button variant="outlined" onClick={() => navigate("../New")}>
+            上一步
+          </Button>
+          <Button onClick={handleNext}>下一步</Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </Paper>
   );
 }

@@ -14,8 +14,14 @@ import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
 import DragDropContainer from "components/DragDropContainer";
 import ImageCrop from "components/ImageCrop";
 import RichTextEditor from "components/RichTextEditor";
+import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
+import {
+  useGetTagTypeByIdQuery,
+  useLazyGetTagTypeByIdQuery,
+} from "features/api/tag/getTagTypeById";
 import {
   pushListItem,
+  selectLayoutTitle,
   selectLayoutType,
   setContent,
   setImage,
@@ -26,26 +32,21 @@ import {
 } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LayoutType } from "types/enums/LayoutType";
 import { IKeyValueItem } from "types/interfaces/IArea";
-import { v4 as uuid } from "uuid";
+import { IInnerTag, ITag } from "types/interfaces/ITag";
+import { NIL, v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
-import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
-import { useLazyGetAreaTypesQuery } from "features/api/area/getAreaTypes";
-import { useGetTagTypeByIdQuery, useLazyGetTagTypeByIdQuery } from "features/api/tag/getTagTypeById";
-import { ITag } from "types/interfaces/ITag";
-import { useGetTagTypesQuery } from "features/api/tag/getTagTypes";
-import { custom } from "zod";
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   loading?: boolean;
 };
 
-const filter = createFilterOptions<ITag>();
+const filter = createFilterOptions<IInnerTag>();
 
 export default function AreaEditModel({
   onAddClick,
@@ -54,16 +55,29 @@ export default function AreaEditModel({
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
   const layoutTypeState = useAppSelector(selectLayoutType);
+  const layoutTitle = useAppSelector(selectLayoutTitle);
   const { data: areaTypeData } = useGetAreaTypeByIdQuery(
     layoutState.areaTypeId!,
     {
       skip: !layoutState.areaTypeId,
     }
   );
-  const [getListTags, { data: listTags }] = useLazyGetTagTypeByIdQuery()
+  const { data: tagTypeData } = useGetTagTypeByIdQuery(
+    (areaTypeData?.result?.ListTagTypes[0].Id || "0").toString(),
+    {
+      skip:
+        !areaTypeData?.result || areaTypeData.result.ListTagTypes.length === 0,
+    }
+  );
   const { data: customTagTypeData } = useGetTagTypeByIdQuery("1");
   const navigate = useNavigate();
   const theme = useTheme();
+
+  useEffect(() => {
+    if (areaTypeData?.result) {
+      dispatch(setTitle(areaTypeData.result.Name));
+    }
+  }, [areaTypeData?.result, dispatch]);
 
   const handleEditorChange = (
     editorState: EditorState,
@@ -106,24 +120,22 @@ export default function AreaEditModel({
   };
 
   const handleListAddClick = () => {
-    if(areaTypeData?.result && areaTypeData.result.ListTagTypes.length > 0)
-      getListTags(areaTypeData.result.ListTagTypes[0].Id.toString() || "")
-    
     // set empty item
     if (customTagTypeData?.result) {
       dispatch(
-        setListItem([{
-          Id: uuid(),
+        pushListItem({
+          InnerId: NIL,
+          Id: NIL,
           Name: "",
-          Type: customTagTypeData.result
-        }])
-      )
+          Type: customTagTypeData.result,
+        })
+      );
     }
   };
 
   const handleListRemoveClick = (id: string) => {
     dispatch(
-      setListItem((layoutState.listItems || []).filter((i) => i.Id !== id))
+      setListItem((layoutState.listItems || []).filter((i) => i.InnerId !== id))
     );
   };
 
@@ -140,24 +152,38 @@ export default function AreaEditModel({
     );
   };
 
-  const handleListItemChange = (event: React.SyntheticEvent<Element, Event>, value: string | ITag | null) => {
-    var foundListItem = layoutState.listItems?.find((item) => item.Id === value);
+  const handleListItemChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string | IInnerTag | null
+  ) => {
+    var foundListItem = layoutState.listItems?.find(
+      (item) => item.InnerId === value
+    );
     if (foundListItem) {
-      if (typeof value === "object" && value)
-        dispatch(updateListItem(value));
-     }
-    else {
-        if(typeof value === "string" && customTagTypeData?.result)
-          dispatch(pushListItem({
-            Id: uuid(),
+      if (typeof value === "object" && value) dispatch(updateListItem(value));
+    } else {
+      if (typeof value === "string" && customTagTypeData?.result)
+        dispatch(
+          updateListItem({
+            InnerId: uuid(),
+            Id: NIL,
             Name: value,
             Type: customTagTypeData.result,
-          }))
-        if(typeof value === "object" && value)
-          dispatch(pushListItem(value))
+          })
+        );
+      else if (typeof value === "object" && value)
+        dispatch(
+          updateListItem({
+            ...value,
+            InnerId: value.InnerId,
+          })
+        );
     }
-  }
+  };
 
+  React.useEffect(() => {
+    console.log(layoutState.listItems);
+  }, [layoutState.listItems]);
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -177,14 +203,18 @@ export default function AreaEditModel({
             }}
             spacing={1}
           >
-            <TextField
-              label="標題"
-              value={layoutState.title}
-              onChange={(event) => dispatch(setTitle(event.target.value))}
-              disabled={!!layoutState.areaTypeId}
-              fullWidth
-              sx={{ flexGrow: 1 }}
-            />
+            {layoutState.areaTypeId !== null ? (
+              <Typography variant="h4">新增{layoutTitle}</Typography>
+            ) : (
+              <TextField
+                label="標題"
+                value={layoutState.title}
+                onChange={(event) => dispatch(setTitle(event.target.value))}
+                disabled={!!layoutState.areaTypeId}
+                fullWidth
+                sx={{ flexGrow: 1 }}
+              />
+            )}
             <Typography variant="caption">
               {areaTypeData ? areaTypeData.result?.Description : ""}
             </Typography>
@@ -204,7 +234,6 @@ export default function AreaEditModel({
             </LoadingButton>
           </Box>
         </Box>
-        <Typography variant="h4">內容</Typography>
 
         {/* Image */}
         {layoutTypeState === LayoutType.ImageText && (
@@ -274,66 +303,80 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={(layoutState.listItems || []).map((item) => item.Id)}
+              items={(layoutState.listItems || []).map((item) => item.InnerId)}
               spacing={0}
               onDragEnd={handleListItemDragEnd}
             >
-              {(layoutState.listItems || []).map((i) => (
-                <AreaListItem
-                  content={i.Name}
-                  editable
-                  key={i.Id}
-                  id={i.Id}
-                  onClickDelete={handleListRemoveClick}
-                  
-                  renderInput={
-                    <Autocomplete
-                      sx={{width: "20em"}}
-                      freeSolo
-                      options={listTags?.result ? listTags.result.Tags : []}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="standard"
-                          fullWidth
-                        />
-                      )}
-                      getOptionLabel={(option) => {
-                        if (typeof option === "string") {
-                          return option;
+              {layoutState.listItems &&
+                layoutState.listItems.map((i) => (
+                  <AreaListItem
+                    content={i.Name}
+                    editable
+                    key={i.InnerId}
+                    id={i.InnerId}
+                    onClickDelete={handleListRemoveClick}
+                    renderInput={
+                      <Autocomplete
+                        sx={{ width: "20em" }}
+                        freeSolo
+                        options={
+                          tagTypeData?.result
+                            ? tagTypeData.result.Tags.map((t) => ({
+                                ...t,
+                                InnerId: uuid(),
+                              }))
+                            : []
                         }
-                        if (option.Name) {
-                          return option.Name;
-                        }
-                        return "";
-                      }}
-                      isOptionEqualToValue={(option, value) => {
-                        return option.Id === value.Id;
-                      }}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      value={i}
-                      onChange={handleListItemChange}
-                      filterOptions={(options, params) => {
-                        const filtered = filter(options, params);
-                        const { inputValue } = params;
-                        // Suggest the creation of a new value
-                        const isExisting = options.some((option: ITag) => inputValue === option.Name);
-                        if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
-                          filtered.push({
-                            Id: uuid(),
-                            Name: `Add "${inputValue}"`,
-                            Type: customTagTypeData?.result
-                          });
-                        }
-                        
-                        return filtered;
-            
-                      }}
-                    />}
-                />
-              ))}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            fullWidth
+                            placeholder={`請輸入${layoutState.title}`}
+                          />
+                        )}
+                        getOptionLabel={(option) => {
+                          if (typeof option === "string") {
+                            return option;
+                          }
+                          if (option.Name) {
+                            return option.Name;
+                          }
+                          return "";
+                        }}
+                        value={i}
+                        isOptionEqualToValue={(option, value) => {
+                          return option.InnerId === value.InnerId;
+                        }}
+                        selectOnFocus
+                        handleHomeEndKeys
+                        onChange={handleListItemChange}
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some(
+                            (option: IInnerTag) => inputValue === option.Name
+                          );
+                          if (
+                            inputValue !== "" &&
+                            !isExisting &&
+                            customTagTypeData?.result
+                          ) {
+                            filtered.push({
+                              InnerId: uuid(),
+                              Id: NIL,
+                              Name: inputValue,
+                              Type: customTagTypeData?.result,
+                            });
+                          }
+
+                          return filtered;
+                        }}
+                      />
+                    }
+                  />
+                ))}
             </DragDropContainer>
             <Button
               color="info"

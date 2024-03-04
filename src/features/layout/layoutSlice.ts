@@ -2,14 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "features/store";
 import { EditorState } from "lexical";
 import { LayoutType } from "types/enums/LayoutType";
-import {
-  IArea,
-  IAreaType,
-  IImage,
-  IKeyValueItem,
-} from "types/interfaces/IArea";
-import { ITag } from "types/interfaces/ITag";
-import { NIL } from "uuid";
+import { IArea, IImage, IKeyValueItem } from "types/interfaces/IArea";
+import { IInnerTag } from "types/interfaces/ITag";
+import { NIL, v4 as uuid } from "uuid";
 
 interface ILayout {
   areaId: string;
@@ -21,7 +16,7 @@ interface ILayout {
   title: string;
   content?: EditorState | string;
   image: IImage;
-  listItems?: Array<ITag>;
+  listItems?: Array<IInnerTag>;
   keyValueListItems: Array<IKeyValueItem>;
 }
 
@@ -78,18 +73,33 @@ const layoutSlice = createSlice({
     setImageContentType: (state, action: PayloadAction<string>) => {
       state.image.ContentType = action.payload;
     },
-    setListItem: (state, action: PayloadAction<Array<ITag>>) => {
+    setListItem: (state, action: PayloadAction<Array<IInnerTag>>) => {
       state.listItems = action.payload;
     },
-    pushListItem: (state, action: PayloadAction<ITag>) => {
-      state.listItems?.push(action.payload);
+    pushListItem: (state, action: PayloadAction<IInnerTag>) => {
+      state.listItems ??= [];
+
+      state.listItems.push(action.payload);
     },
-    updateListItem: (state, action: PayloadAction<ITag>) => {
-      const index = state.listItems?.findIndex(
-        (item) => item.Id === action.payload.Id
+    updateListItem: (state, action: PayloadAction<IInnerTag>) => {
+      state.listItems ??= [];
+
+      var index = state.listItems.findIndex(
+        (item) => item.InnerId === action.payload.InnerId
       );
-      if (index !== -1 && index) {
-        state.listItems![index] = action.payload;
+
+      // Find the empty Items if not exist
+      if (index === -1 || !index) {
+        index = state.listItems?.findIndex((item) => item.InnerId === NIL);
+      }
+
+      if (index !== -1 && index !== undefined) {
+        return {
+          ...state,
+          listItems: state.listItems.map((item, i) =>
+            i === index ? action.payload : item
+          ),
+        };
       }
     },
     setKetValueListItems: (
@@ -137,7 +147,10 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.List:
           parseArea.id = action.payload.ListLayout?.Id!;
-          parseArea.listItems = action.payload.ListLayout?.Items;
+          parseArea.listItems = action.payload.ListLayout?.Items?.map((i) => ({
+            InnerId: uuid(),
+            ...i,
+          }));
           break;
         case LayoutType.KeyValueList:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
@@ -212,7 +225,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.List
         ? {
             Id: NIL,
-            Items: layoutState.listItems,
+            Items: layoutState.listItems?.filter((l) => l.Name !== ""),
           }
         : undefined,
     KeyValueListLayout:
@@ -270,7 +283,7 @@ export const getUpdatedArea = (state: RootState) => {
         ? {
             Id: layoutState.id,
             // sort item
-            Items: layoutState.listItems,
+            Items: layoutState.listItems?.filter((l) => l.Name !== ""),
           }
         : undefined,
     KeyValueListLayout:

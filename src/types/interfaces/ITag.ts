@@ -4,6 +4,13 @@ export interface ITag {
   Type: ITagType;
 }
 
+export interface IInnerTag {
+  Id: string;
+  Name: string;
+  Type: ITagType;
+  InnerId: string;
+}
+
 export interface ITagType {
   Id: number;
   Name: string;
