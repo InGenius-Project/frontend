@@ -29,7 +29,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
       direction={"row"}
       sx={{
         alignItems: "center",
-        height: "var(--ing-height-userHeader)",
+        height: "var(--ing-height-user-header)",
       }}
       id={"userHeader"}
     >

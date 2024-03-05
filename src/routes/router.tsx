@@ -29,6 +29,7 @@ import MainRoute from "./MainRoute";
 import UnAuthRoute from "./UnAuthRoute";
 import UserRoute from "./UserRoute";
 import ManageAreaList from "pages/Account/User/Manage/Area/List";
+import Message from "pages/Account/User/Message";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -157,6 +158,11 @@ const router = createBrowserRouter(
                 ></Route>
               </Route>
             </Route>
+            <Route
+              element={<Message />}
+              path="Message"
+              handle={{ crumb: "訊息" }}
+            />
           </Route>
         </Route>
       </Route>

@@ -1,3 +1,4 @@
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
@@ -35,6 +36,11 @@ const navigationConfig = [
         value: "Recruitment",
         icon: <WorkOutlineOutlinedIcon />,
       },
+      {
+        name: "訊息",
+        value: "Message",
+        icon: <MessageOutlinedIcon />,
+      },
     ],
   },
   {
@@ -61,6 +67,11 @@ const navigationConfig = [
         value: "Recruitment",
         icon: <WorkOutlineOutlinedIcon />,
       },
+      {
+        name: "訊息",
+        value: "Message",
+        icon: <MessageOutlinedIcon />,
+      },
     ],
   },
   {
@@ -79,6 +90,11 @@ const navigationConfig = [
         name: "區塊管理",
         value: "Manage/Area",
         icon: <DashboardOutlinedIcon />,
+      },
+      {
+        name: "訊息",
+        value: "Message",
+        icon: <MessageOutlinedIcon />,
       },
     ],
   },
