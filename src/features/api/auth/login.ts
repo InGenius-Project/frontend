@@ -1,13 +1,13 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
 import { LoginInput } from "pages/Account/Login";
-import { TokenDTO } from "types/DTO/TokenDTO";
+import { IToken } from "types/interfaces/IToken";
 import { getUserApi } from "../user/getUser";
 import { setToken } from "features/user/userSlice";
 
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<ResponseDTO<TokenDTO>, LoginInput>({
+    login: builder.mutation<IResponse<IToken>, LoginInput>({
       query(data) {
         return {
           url: "user/login",
@@ -18,9 +18,9 @@ export const loginApi = baseApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          data.Data && dispatch(setToken(data.Data));
-          data.Data &&
-            localStorage.setItem("accessToken", data.Data.AccessToken);
+          data.result && dispatch(setToken(data.result));
+          data.result &&
+            localStorage.setItem("accessToken", data.result.AccessToken);
 
           dispatch(
             getUserApi.endpoints.getUser.initiate(null, {

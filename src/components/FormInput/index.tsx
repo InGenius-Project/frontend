@@ -2,12 +2,17 @@ import { TextField, TextFieldProps } from "@mui/material";
 import { FC } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-type IFormInputProps = {
+type FormInputProps = {
   name: string;
-  label: string;
+  label?: string;
+  inlined?: boolean;
 } & TextFieldProps;
 
-const FormInput: FC<IFormInputProps> = ({ name, label, ...otherProps }) => {
+export default function FormInput({
+  name,
+  label = "",
+  ...otherProps
+}: FormInputProps) {
   const {
     control,
     formState: { errors },
@@ -20,15 +25,13 @@ const FormInput: FC<IFormInputProps> = ({ name, label, ...otherProps }) => {
       name={name}
       render={({ field }) => (
         <TextField
+          {...otherProps}
           {...field}
           label={label}
           error={!!errors[name]}
           helperText={errors[name] ? errors[name]?.message?.toString() : ""}
-          {...otherProps}
         />
       )}
     />
   );
-};
-
-export default FormInput;
+}

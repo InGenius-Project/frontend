@@ -1,15 +1,15 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
 import { RegisterInput } from "pages/Account/Register";
 import { getUserApi } from "../user/getUser";
-import { TokenDTO } from "types/DTO/TokenDTO";
+import { IToken } from "types/interfaces/IToken";
 import { setToken } from "features/user/userSlice";
-import { UserRole } from "types/DTO/UserDTO";
+import { UserRole } from "types/enums/UserRole";
 
 export const registerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation<
-      ResponseDTO<TokenDTO>,
+      IResponse<IToken>,
       RegisterInput & { Role: UserRole }
     >({
       query(data) {
@@ -22,9 +22,9 @@ export const registerApi = baseApi.injectEndpoints({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.Data) {
-            dispatch(setToken(data.Data));
-            localStorage.setItem("accessToken", data.Data.AccessToken);
+          if (data.result) {
+            dispatch(setToken(data.result));
+            localStorage.setItem("accessToken", data.result.AccessToken);
           }
 
           dispatch(

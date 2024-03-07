@@ -1,25 +1,25 @@
 import { Box, Stack } from "@mui/material";
-import FullScreenLoader from "components/FullScreenLoader";
+import AreaEditor from "components/Area/AreaEditor";
 import ProfileItem from "components/ProfileItem";
 import { useGetUserQuery } from "features/api/user/getUser";
-import { useEffect } from "react";
 import { usePostUserMutation } from "features/api/user/postUser";
-import { useAppDispatch } from "features/store";
 import { AreasType, setAreas } from "features/areas/areasSlice";
-import { AreaDTO } from "types/DTO/AreaDTO";
-import AreaEditor from "components/Area/AreaEditor";
+import { useAppDispatch } from "features/store";
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { IArea } from "types/interfaces/IArea";
 
 export default function Profile() {
+  const { data: userData } = useGetUserQuery(null);
   const dispatch = useAppDispatch();
-  const { data: userData } = useGetUserQuery(null, {});
 
   useEffect(() => {
-    if (userData && userData.Data) {
+    if (userData && userData.result) {
       dispatch(
         setAreas({
-          id: userData.Data?.Id,
+          id: userData.result?.Id,
           type: AreasType.PROFILE,
-          areas: userData?.Data?.Areas || [],
+          areas: userData?.result?.Areas || [],
         })
       );
     }
@@ -27,9 +27,9 @@ export default function Profile() {
 
   const [postUser] = usePostUserMutation();
 
-  const handlePostProfileArea = async (areas: Array<AreaDTO>) => {
+  const handlePostProfileArea = async (areas: Array<IArea>) => {
     await postUser({
-      Username: userData?.Data?.Username || "",
+      Username: userData?.result?.Username || "",
       Areas: areas,
     });
   };
@@ -37,6 +37,7 @@ export default function Profile() {
   return (
     <Stack spacing={1}>
       <ProfileItem editable />
+      <Outlet />
       <Box
         sx={{
           display: "flex",

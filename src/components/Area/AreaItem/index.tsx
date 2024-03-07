@@ -1,17 +1,18 @@
-import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
+import RichTextEditor from "components/RichTextEditor";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
-import RichTextEditor from "components/RichTextEditor";
-import AreaListItem from "../AreaListItem";
+import { LayoutType } from "types/enums/LayoutType";
+import { IArea } from "types/interfaces/IArea";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
-import layoutSlice from "features/layout/layoutSlice";
+import AreaListItem from "../AreaListItem";
+import { Area } from "types/classes/Area";
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
   id: string;
-  area: AreaDTO;
+  area: IArea;
   focused?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
 
@@ -35,6 +36,8 @@ const AreaItem = ({
   useEffect(() => {
     setFocusState(focused ? focused : false);
   }, [focused]);
+
+  const a = new Area(area);
 
   return (
     <Paper
@@ -75,8 +78,8 @@ const AreaItem = ({
         <DragHandleIcon color="primary" />
       </Box>
       <Stack spacing={1}>
-        <Typography variant="h4">{area.Title ? area.Title : "標題"}</Typography>
-        {area.Arrangement === LayoutArrangement.IMAGETEXT &&
+        <Typography variant="h4">{a.getAreaTitle()}</Typography>
+        {a.isLayoutType(LayoutType.ImageText) &&
           area.ImageTextLayout?.Image?.Content && (
             <Stack direction={"row"} spacing={1}>
               <img
@@ -94,26 +97,26 @@ const AreaItem = ({
             </Stack>
           )}
 
-        {area.Arrangement === LayoutArrangement.TEXT && (
+        {a.isLayoutType(LayoutType.Text) && (
           <RichTextEditor
             controllable={false}
             initialEditorState={area.TextLayout?.Content}
           ></RichTextEditor>
         )}
-        {area.Arrangement === LayoutArrangement.LIST &&
+        {a.isLayoutType(LayoutType.List) &&
           area.ListLayout?.Items?.map((i) => (
             <AreaListItem id={i.Id} content={i.Name} key={i.Id} />
           ))}
 
-        {area.Arrangement === LayoutArrangement.KEYVALUELIST &&
+        {a.isLayoutType(LayoutType.KeyValueList) &&
           area.KeyValueListLayout?.Items?.map((i) => (
             <AreaKeyValueListItem
               id={i.Id}
               key={i.Id}
               itemKey={{
-                id: i.Key.Id,
-                name: i.Key.Name,
-                type: i.Key.Type,
+                Id: i.Key.Id,
+                Name: i.Key.Name,
+                Type: i.Key.Type,
               }}
               value={i.Value}
             />

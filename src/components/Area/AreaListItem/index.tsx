@@ -16,16 +16,16 @@ type AreaListItemProps = {
   id: string;
   content?: string;
   editable?: boolean;
+  renderInput?: React.ReactNode;
   onClickDelete?: (id: string) => void;
-  onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 function AreaListItem({
   id,
   content,
   editable = false,
+  renderInput,
   onClickDelete,
-  onChange,
   ...props
 }: AreaListItemProps) {
   const theme = useTheme();
@@ -56,11 +56,7 @@ function AreaListItem({
       }}
     >
       {editable ? (
-        <TextField
-          variant="standard"
-          defaultValue={content}
-          onChange={onChange}
-        />
+        renderInput
       ) : (
         <Typography variant="body1">{content}</Typography>
       )}

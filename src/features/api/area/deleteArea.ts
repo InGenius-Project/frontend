@@ -1,9 +1,9 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
 
 export const deleteAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    deleteArea: builder.mutation<ResponseDTO<null>, string>({
+    deleteArea: builder.mutation<IResponse<null>, string>({
       query(areaId) {
         return {
           url: `Area/${areaId}`,

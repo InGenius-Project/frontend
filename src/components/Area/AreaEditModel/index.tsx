@@ -1,31 +1,43 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
+  Autocomplete,
   Box,
   Button,
   Paper,
   Stack,
   TextField,
   Typography,
+  createFilterOptions,
   useTheme,
 } from "@mui/material";
 import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
 import DragDropContainer from "components/DragDropContainer";
 import ImageCrop from "components/ImageCrop";
 import RichTextEditor from "components/RichTextEditor";
+import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
 import {
-  KeyValueListItem,
+  useGetTagTypeByIdQuery,
+  useLazyGetTagTypeByIdQuery,
+} from "features/api/tag/getTagTypeById";
+import {
+  pushListItem,
+  selectLayoutTitle,
+  selectLayoutType,
   setContent,
   setImage,
   setKetValueListItems,
   setListItem,
   setTitle,
+  updateListItem,
 } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import { EditorState, LexicalEditor } from "lexical";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
-import { v4 as uuid } from "uuid";
+import { LayoutType } from "types/enums/LayoutType";
+import { IKeyValueItem } from "types/interfaces/IArea";
+import { IInnerTag, ITag } from "types/interfaces/ITag";
+import { NIL, v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
 
@@ -34,14 +46,38 @@ type AreaEditModelProps = {
   loading?: boolean;
 };
 
+const filter = createFilterOptions<IInnerTag>();
+
 export default function AreaEditModel({
   onAddClick,
   loading,
 }: AreaEditModelProps) {
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
+  const layoutTypeState = useAppSelector(selectLayoutType);
+  const layoutTitle = useAppSelector(selectLayoutTitle);
+  const { data: areaTypeData } = useGetAreaTypeByIdQuery(
+    layoutState.areaTypeId!,
+    {
+      skip: !layoutState.areaTypeId,
+    }
+  );
+  const { data: tagTypeData } = useGetTagTypeByIdQuery(
+    (areaTypeData?.result?.ListTagTypes[0].Id || "0").toString(),
+    {
+      skip:
+        !areaTypeData?.result || areaTypeData.result.ListTagTypes.length === 0,
+    }
+  );
+  const { data: customTagTypeData } = useGetTagTypeByIdQuery("1");
   const navigate = useNavigate();
   const theme = useTheme();
+
+  useEffect(() => {
+    if (areaTypeData?.result) {
+      dispatch(setTitle(areaTypeData.result.Name));
+    }
+  }, [areaTypeData?.result, dispatch]);
 
   const handleEditorChange = (
     editorState: EditorState,
@@ -52,7 +88,7 @@ export default function AreaEditModel({
 
   const handleListItemDragEnd = (item: string[]) => {
     const newListItem = item
-      .map((id) => (layoutState.listItems || []).find((item) => item.id === id))
+      .map((id) => (layoutState.listItems || []).find((item) => item.Id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setListItem(newListItem));
@@ -60,56 +96,54 @@ export default function AreaEditModel({
 
   const handleKeyValueListItemDragEnd = (item: string[]) => {
     const newListItems = item
-      .map((id) => layoutState.keyValueListItems.find((item) => item.id === id))
+      .map((id) => layoutState.keyValueListItems.find((item) => item.Id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setKetValueListItems(newListItems));
   };
   const handleKeyValueListAddClick = () => {
-    dispatch(
-      setKetValueListItems([
-        ...layoutState.keyValueListItems,
-        {
-          id: uuid(),
-          key: {
-            id: uuid(),
-            name: "",
-            type: "CUSTOM",
-          },
-          value: "",
-        },
-      ])
-    );
+    // TODO: fix this
+    // dispatch(
+    //   setKetValueListItems([
+    //     ...layoutState.keyValueListItems,
+    //     {
+    //       Id: uuid(),
+    //       Key: {
+    //         id: uuid(),
+    //         name: "",
+    //         type: "CUSTOM",
+    //       },
+    //       value: "",
+    //     },
+    //   ])
+    // );
   };
 
   const handleListAddClick = () => {
-    if (layoutState.listItems) {
+    // set empty item
+    if (customTagTypeData?.result) {
       dispatch(
-        setListItem([
-          ...layoutState.listItems,
-          {
-            id: uuid(),
-            name: "",
-            type: "CUSTOM",
-          },
-        ])
+        pushListItem({
+          InnerId: NIL,
+          Id: NIL,
+          Name: "",
+          Type: customTagTypeData.result,
+        })
       );
-    } else {
-      dispatch(setListItem([{ id: uuid(), name: "", type: "CUSTOM" }]));
     }
   };
 
   const handleListRemoveClick = (id: string) => {
     dispatch(
-      setListItem((layoutState.listItems || []).filter((i) => i.id !== id))
+      setListItem((layoutState.listItems || []).filter((i) => i.InnerId !== id))
     );
   };
 
-  const handleKeyValueListItemChange = (item: KeyValueListItem) => {
+  const handleKeyValueListItemChange = (item: IKeyValueItem) => {
     dispatch(
       setKetValueListItems(
         layoutState.keyValueListItems.map((i) => {
-          if (i.id === item.id) {
+          if (i.Id === item.Id) {
             return item;
           }
           return i;
@@ -117,6 +151,39 @@ export default function AreaEditModel({
       )
     );
   };
+
+  const handleListItemChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string | IInnerTag | null
+  ) => {
+    var foundListItem = layoutState.listItems?.find(
+      (item) => item.InnerId === value
+    );
+    if (foundListItem) {
+      if (typeof value === "object" && value) dispatch(updateListItem(value));
+    } else {
+      if (typeof value === "string" && customTagTypeData?.result)
+        dispatch(
+          updateListItem({
+            InnerId: uuid(),
+            Id: NIL,
+            Name: value,
+            Type: customTagTypeData.result,
+          })
+        );
+      else if (typeof value === "object" && value)
+        dispatch(
+          updateListItem({
+            ...value,
+            InnerId: value.InnerId,
+          })
+        );
+    }
+  };
+
+  React.useEffect(() => {
+    console.log(layoutState.listItems);
+  }, [layoutState.listItems]);
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -129,15 +196,29 @@ export default function AreaEditModel({
             gap: 1,
           }}
         >
-          <TextField
-            label="標題"
-            value={layoutState.title}
-            onChange={(event) => dispatch(setTitle(event.target.value))}
-            disabled={layoutState.type !== LayoutType.CUSTOM ? true : false} // disabled if area type is not custom
-            fullWidth
-            sx={{ flexGrow: 1 }}
-          />
-
+          <Stack
+            direction={"column"}
+            sx={{
+              flex: "1 1 auto",
+            }}
+            spacing={1}
+          >
+            {layoutState.areaTypeId !== null ? (
+              <Typography variant="h4">新增{layoutTitle}</Typography>
+            ) : (
+              <TextField
+                label="標題"
+                value={layoutState.title}
+                onChange={(event) => dispatch(setTitle(event.target.value))}
+                disabled={!!layoutState.areaTypeId}
+                fullWidth
+                sx={{ flexGrow: 1 }}
+              />
+            )}
+            <Typography variant="caption">
+              {areaTypeData ? areaTypeData.result?.Description : ""}
+            </Typography>
+          </Stack>
           <Box sx={{ whiteSpace: "nowrap" }}>
             <Button variant="outlined" onClick={() => navigate(-1)}>
               上一步
@@ -153,10 +234,9 @@ export default function AreaEditModel({
             </LoadingButton>
           </Box>
         </Box>
-        <Typography variant="h4">內容</Typography>
 
         {/* Image */}
-        {layoutState.arrangement === LayoutArrangement.IMAGETEXT && (
+        {layoutTypeState === LayoutType.ImageText && (
           <ImageCrop
             height={150}
             width={150}
@@ -166,8 +246,8 @@ export default function AreaEditModel({
         )}
 
         {/* Text */}
-        {(layoutState.arrangement === LayoutArrangement.TEXT ||
-          layoutState.arrangement === LayoutArrangement.IMAGETEXT) && (
+        {(layoutTypeState === LayoutType.Text ||
+          layoutTypeState === LayoutType.ImageText) && (
           <RichTextEditor
             controllable
             onChange={handleEditorChange}
@@ -176,7 +256,7 @@ export default function AreaEditModel({
         )}
 
         {/* Key value list */}
-        {layoutState.arrangement === LayoutArrangement.KEYVALUELIST && (
+        {layoutTypeState === LayoutType.KeyValueList && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,
@@ -184,16 +264,16 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={layoutState.keyValueListItems.map((item) => item.id)}
+              items={layoutState.keyValueListItems.map((item) => item.Id)}
               spacing={0}
               onDragEnd={handleKeyValueListItemDragEnd}
             >
               {layoutState.keyValueListItems.map((item) => (
                 <AreaKeyValueListItem
-                  id={item.id}
-                  itemKey={item.key}
-                  value={item.value}
-                  key={item.id}
+                  id={item.Id}
+                  itemKey={item.Key}
+                  value={item.Value}
+                  key={item.Id}
                   editable
                   onChange={handleKeyValueListItemChange}
                 />
@@ -215,7 +295,7 @@ export default function AreaEditModel({
         )}
 
         {/* List */}
-        {layoutState.arrangement === LayoutArrangement.LIST && (
+        {layoutTypeState === LayoutType.List && (
           <Box
             sx={{
               border: `1px solid ${theme.palette.divider}`,
@@ -223,30 +303,80 @@ export default function AreaEditModel({
           >
             <DragDropContainer
               droppableId={uuid()}
-              items={(layoutState.listItems || []).map((item) => item.id)}
+              items={(layoutState.listItems || []).map((item) => item.InnerId)}
               spacing={0}
               onDragEnd={handleListItemDragEnd}
             >
-              {(layoutState.listItems || []).map((i) => (
-                <AreaListItem
-                  content={i.name}
-                  editable
-                  key={i.id}
-                  id={i.id}
-                  onClickDelete={handleListRemoveClick}
-                  onChange={(event) =>
-                    dispatch(
-                      setListItem(
-                        (layoutState.listItems || []).map((item) => {
-                          if (item.id === i.id)
-                            return { ...item, name: event.target.value };
-                          return item;
-                        })
-                      )
-                    )
-                  }
-                />
-              ))}
+              {layoutState.listItems &&
+                layoutState.listItems.map((i) => (
+                  <AreaListItem
+                    content={i.Name}
+                    editable
+                    key={i.InnerId}
+                    id={i.InnerId}
+                    onClickDelete={handleListRemoveClick}
+                    renderInput={
+                      <Autocomplete
+                        sx={{ width: "20em" }}
+                        freeSolo
+                        options={
+                          tagTypeData?.result
+                            ? tagTypeData.result.Tags.map((t) => ({
+                                ...t,
+                                InnerId: uuid(),
+                              }))
+                            : []
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            fullWidth
+                            placeholder={`請輸入${layoutState.title}`}
+                          />
+                        )}
+                        getOptionLabel={(option) => {
+                          if (typeof option === "string") {
+                            return option;
+                          }
+                          if (option.Name) {
+                            return option.Name;
+                          }
+                          return "";
+                        }}
+                        value={i}
+                        isOptionEqualToValue={(option, value) => {
+                          return option.InnerId === value.InnerId;
+                        }}
+                        selectOnFocus
+                        handleHomeEndKeys
+                        onChange={handleListItemChange}
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some(
+                            (option: IInnerTag) => inputValue === option.Name
+                          );
+                          if (
+                            inputValue !== "" &&
+                            !isExisting &&
+                            customTagTypeData?.result
+                          ) {
+                            filtered.push({
+                              InnerId: uuid(),
+                              Id: NIL,
+                              Name: inputValue,
+                              Type: customTagTypeData?.result,
+                            });
+                          }
+
+                          return filtered;
+                        }}
+                      />
+                    }
+                  />
+                ))}
             </DragDropContainer>
             <Button
               color="info"

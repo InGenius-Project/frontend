@@ -1,20 +1,19 @@
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Portal, Stack } from "@mui/material";
 import DragDropContainer from "components/DragDropContainer";
 import { useDeleteAreaMutation } from "features/api/area/deleteArea";
 import { usePostAreaMutation } from "features/api/area/postArea";
 import { selectIsEmptyAreas, setFocusedArea } from "features/areas/areasSlice";
-import { setType } from "features/layout/layoutSlice";
 import { useAppDispatch, useAppSelector } from "features/store";
 import React from "react";
 import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
-import { AreaDTO, LayoutType } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 import AreaControl from "../AreaControl";
 import AreaEmpty from "../AreaEmpty";
 import AreaItem from "../AreaItem";
-
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 type AreaContainerProps = {
-  onPost?: (areas: Array<AreaDTO>) => Promise<void>;
+  onPost?: (areas: Array<IArea>) => Promise<void>;
 };
 
 function AreaEditor({ onPost }: AreaContainerProps) {
@@ -59,7 +58,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (
     event
   ) => {
-    dispatch(setType(LayoutType.USER));
+    // TODO: setAreaType
     navigate("New");
   };
 
@@ -102,7 +101,20 @@ function AreaEditor({ onPost }: AreaContainerProps) {
           position: "relative",
         }}
       >
-        {isEmptyAreas && <AreaEmpty />}
+        {isEmptyAreas && (
+          <>
+            <AreaEmpty />
+            <Portal container={() => document.getElementById("userHeader")}>
+              <IconButton
+                size="small"
+                sx={{ ml: 1 }}
+                onClick={() => navigate("New")}
+              >
+                <CreateOutlinedIcon />
+              </IconButton>
+            </Portal>
+          </>
+        )}
 
         {areasState.areas && (
           <DragDropContainer
@@ -127,25 +139,27 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         )}
       </Stack>
 
-      <Box
-        sx={{
-          flexShrink: 0,
-          width: "var(--ing-width-area-control)",
-          position: "relative",
-        }}
-      >
-        <AreaControl
-          top={controlTop}
-          disabled={!areasState.focusedArea}
-          visibled={
-            areasState.focusedArea && areasState.focusedArea.IsDisplayed
-          }
-          onAddClick={handleAddClick}
-          onDeleteClick={handleDeleteClick}
-          onEditClick={handleEditClick}
-          onVisibilityChange={handleVisibilityChange}
-        />
-      </Box>
+      {!isEmptyAreas && (
+        <Box
+          sx={{
+            flexShrink: 0,
+            width: "var(--ing-width-area-control)",
+            position: "relative",
+          }}
+        >
+          <AreaControl
+            top={controlTop}
+            disabled={!areasState.focusedArea}
+            visibled={
+              areasState.focusedArea && areasState.focusedArea.IsDisplayed
+            }
+            onAddClick={handleAddClick}
+            onDeleteClick={handleDeleteClick}
+            onEditClick={handleEditClick}
+            onVisibilityChange={handleVisibilityChange}
+          />
+        </Box>
+      )}
     </Box>
   );
 }

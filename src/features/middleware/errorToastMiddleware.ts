@@ -4,6 +4,7 @@ import {
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { IResponse } from "types/interfaces/IResponse";
 
 const errorToastMiddleware: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
@@ -12,17 +13,15 @@ const errorToastMiddleware: Middleware =
         toast.error("伺服器未回應");
         return next(action);
       }
+      const error = action.payload.data as IResponse<any>;
 
-      if (
-        action.payload.data.StatusCode === 500 ||
-        action.payload.data.StatusCode === 400
-      ) {
-        toast.error(action.payload.data.Message);
+      if (error.isError && error.responseException) {
+        if (error.statusCode === 500) {
+          toast.error("伺服器錯誤");
+        } else if (error.statusCode !== 401) {
+          toast.error(error.responseException.exceptionMessage);
+        }
         return next(action);
-      }
-
-      if (action.payload.data.Exception) {
-        toast.error(action.payload.data.Exception);
       }
     }
 

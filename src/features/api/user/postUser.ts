@@ -1,11 +1,11 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { IResponse } from "types/interfaces/IResponse";
 import { baseApi } from "../baseApi";
-import { UserInfoDTO, UserInfoPostDTO } from "types/DTO/UserDTO";
+import { IUserInfo, IUserInfoPost } from "types/interfaces/IUser";
 import { getUserApi } from "./getUser";
 
 export const postUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postUser: builder.mutation<ResponseDTO<UserInfoDTO>, UserInfoPostDTO>({
+    postUser: builder.mutation<IResponse<IUserInfo>, IUserInfoPost>({
       query: (body) => ({
         url: "/user",
         method: "POST",
@@ -18,8 +18,8 @@ export const postUserApi = baseApi.injectEndpoints({
           getUserApi.util.updateQueryData("getUser", null, (draft) => {
             return {
               ...draft,
-              Data: {
-                ...(draft.Data as UserInfoDTO),
+              result: {
+                ...(draft.result as IUserInfo),
                 Areas: request.Areas || [],
               },
             };

@@ -1,5 +1,5 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 import { RootState } from "features/store";
 import { v4 as uuid } from "uuid";
 
@@ -12,8 +12,8 @@ export enum AreasType {
 type AreasStateType = {
   id: string;
   type?: AreasType;
-  areas?: Array<AreaDTO>;
-  focusedArea?: AreaDTO;
+  areas?: Array<IArea>;
+  focusedArea?: IArea;
 };
 
 const initialState: AreasStateType = {
@@ -33,7 +33,7 @@ const areasSlice = createSlice({
         | {
             id: string;
             type: AreasType;
-            areas: Array<AreaDTO>;
+            areas: Array<IArea>;
           }
         | undefined
       >
@@ -54,7 +54,7 @@ const areasSlice = createSlice({
         };
       return initialState;
     },
-    setFocusedArea: (state, action: PayloadAction<AreaDTO>) => {
+    setFocusedArea: (state, action: PayloadAction<IArea>) => {
       state.focusedArea = action.payload;
     },
   },

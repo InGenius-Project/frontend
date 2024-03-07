@@ -8,7 +8,7 @@ import { AreasType, setAreas } from "features/areas/areasSlice";
 import { useAppDispatch } from "features/store";
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { IArea } from "types/interfaces/IArea";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();
@@ -21,23 +21,23 @@ export default function ResumeEdit() {
 
   useEffect(() => {
     // set areas state after query subscription success
-    if (resumeData?.Data)
+    if (resumeData?.result)
       dispatch(
         setAreas({
-          id: resumeData.Data.Id,
+          id: resumeData.result.Id,
           type: AreasType.RESUME,
-          areas: resumeData.Data.Areas,
+          areas: resumeData.result.Areas,
         })
       );
   }, [resumeData, dispatch]);
 
   const handleChangeTitle = (title: string) => {
-    if (resumeData && resumeData.Data)
+    if (resumeData && resumeData.result)
       postResume({
         Title: title,
         Id: resumeId,
-        Areas: resumeData?.Data.Areas,
-        Visibility: resumeData.Data.Visibility,
+        Areas: resumeData?.result.Areas,
+        Visibility: resumeData.result.Visibility,
       });
   };
 
@@ -46,13 +46,13 @@ export default function ResumeEdit() {
       .unwrap()
       .then(() => navigate(".."));
   };
-  const handlePostAreas = async (areas: Array<AreaDTO>) => {
-    if (resumeData && resumeData.Data)
+  const handlePostAreas = async (areas: Array<IArea>) => {
+    if (resumeData && resumeData.result)
       await postResume({
-        Title: resumeData.Data.Title,
+        Title: resumeData.result.Title,
         Id: resumeId,
         Areas: areas,
-        Visibility: resumeData.Data.Visibility,
+        Visibility: resumeData.result.Visibility,
       });
   };
 
@@ -60,13 +60,13 @@ export default function ResumeEdit() {
   if (!resumeId) {
     return <Navigate to=".." />;
   }
-  if (resumeData && resumeData.Data) {
+  if (resumeData && resumeData.result) {
     return (
       <Stack spacing={1}>
         <ResumeItem
-          title={resumeData.Data.Title}
-          id={resumeData.Data.Id}
-          modifiedAt={resumeData.Data.ModifiedAt}
+          title={resumeData.result.Title}
+          id={resumeData.result.Id}
+          modifiedAt={resumeData.result.ModifiedAt}
           isEditable={true}
           onChangeTitle={handleChangeTitle}
           onDelete={handleDeleteResume}

@@ -31,6 +31,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
         alignItems: "center",
         height: "var(--ing-height-userHeader)",
       }}
+      id={"userHeader"}
     >
       <Checkbox
         checked={toggle}
