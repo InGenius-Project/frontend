@@ -64,8 +64,6 @@ export default function ImageCrop({
   onChange,
   onCropDone,
 }: ImageCropProps) {
-  const theme = useTheme();
-
   const [imageState, setImageState] = useState<ImageDTO>(image);
   const [imgSrc, setImgSrc] = useState("");
 
