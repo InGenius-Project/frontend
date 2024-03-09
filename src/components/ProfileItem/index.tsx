@@ -13,16 +13,15 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { useDebounce, useMount, useUpdateEffect } from "ahooks";
-import dummyCover from "assets/images/png/dummyCover.jpg";
+import { useDebounce, useUpdateEffect } from "ahooks";
 import avatarFallback from "assets/images/png/avatarFallback.json";
+import dummyCover from "assets/images/png/dummyCover.jpg";
 import ImageCrop from "components/ImageCrop";
 import { usePostUserMutation } from "features/api/user/postUser";
 import { useAppSelector } from "features/store";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ImageDTO } from "types/DTO/AreaDTO";
 import { NIL } from "uuid";
-import { setImage } from "features/layout/layoutSlice";
 
 type ProfileItemProps = {
   editable?: boolean;

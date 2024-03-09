@@ -1,5 +1,5 @@
-import * as React from "react";
-import Autocomplete from "@mui/material/Autocomplete";
+import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -10,16 +10,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CheckIcon from "@mui/icons-material/Check";
-import { useNavigate } from "react-router-dom";
-import { useConfirm } from "material-ui-confirm";
-import { useAppDispatch, useAppSelector } from "features/store";
+import Autocomplete from "@mui/material/Autocomplete";
 import {
-  initializeState,
   initializeStateWithoutFocusedArea,
   setTitle,
 } from "features/layout/layoutSlice";
+import { useAppDispatch, useAppSelector } from "features/store";
+import { useConfirm } from "material-ui-confirm";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
 
 const areaOptions = ["簡介", "專業技能", "教育背景"];
 
