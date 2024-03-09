@@ -1,7 +1,7 @@
 FROM node:lts as builder
 WORKDIR /app
 COPY . .
-RUN yarn install
+RUN yarn install --production
 RUN yarn build
 
 FROM nginx:latest as release
