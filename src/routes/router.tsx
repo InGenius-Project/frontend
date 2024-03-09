@@ -29,6 +29,7 @@ import MainRoute from "./MainRoute";
 import UnAuthRoute from "./UnAuthRoute";
 import UserRoute from "./UserRoute";
 import ManageAreaList from "pages/Account/User/Manage/Area/List";
+import InitDepartment from "pages/Account/User/Init/Department";
 
 declare module "@remix-run/router/dist/utils" {
   type AgnosticBaseRouteObject = {
@@ -50,6 +51,9 @@ const router = createBrowserRouter(
         </Route>
         <Route element={<AuthRoute />}>
           <Route element={<UserRoute />} path="User">
+            <Route path="Init">
+              <Route path="Department" element={<InitDepartment />}></Route>
+            </Route>
             <Route
               path="Profile?"
               handle={{
