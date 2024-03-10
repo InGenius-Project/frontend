@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
   styled,
-  useTheme,
 } from "@mui/material";
 import { useUpdateEffect } from "ahooks";
 import { generateImageBase64Src } from "features/layout/layoutSlice";
