@@ -1,9 +1,34 @@
+# Use the official Node image as the base image
 FROM node:lts as builder
+
+# Set the working directory
 WORKDIR /app
+
+# Copy package.json and package-lock.json
 COPY . .
-RUN yarn install --ignore-engines
+
+# Install dependencies
+RUN yarn install
+
+# Copy the rest of the application code
+COPY . .
+
+# Set the build argument (default to 'production' if not provided)
+ARG REACT_APP_ENV=production
+
+# Copy the environment-specific file
+COPY .env.${REACT_APP_ENV} .env
+
+# Build the application
 RUN yarn build
 
+# Expose the application port
+EXPOSE 3000
+
+# Run the application
+CMD ["yarn", "start"]
+
+# Run nginx
 FROM nginx:latest as release
 WORKDIR /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
