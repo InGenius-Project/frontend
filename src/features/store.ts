@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import layoutReducer from "features/layout/layoutSlice";
-import userReducer from "features/user/userSlice";
-import areasReducer from "features/areas/areasSlice";
+import layoutReducer from "@/features/layout/layoutSlice";
+import userReducer from "@/features/user/userSlice";
+import areasReducer from "@/features/areas/areasSlice";
 import { baseApi } from "./api/baseApi";
 import errorToastMiddleware from "./middleware/errorToastMiddleware";
 
@@ -13,7 +13,7 @@ export const store = configureStore({
     layoutState: layoutReducer,
     areasState: areasReducer,
   },
-  devTools: process.env.NODE_ENV === "development",
+  devTools: import.meta.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

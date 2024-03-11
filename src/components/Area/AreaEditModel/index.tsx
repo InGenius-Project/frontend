@@ -8,10 +8,10 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
-import DragDropContainer from "components/DragDropContainer";
-import ImageCrop from "components/ImageCrop";
-import RichTextEditor from "components/RichTextEditor";
+import isNotNullOrUndefined from "@/assets/utils/isNotNullorUndefined";
+import DragDropContainer from "@/components/DragDropContainer";
+import ImageCrop from "@/components/ImageCrop";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   KeyValueListItem,
   setContent,
@@ -19,12 +19,12 @@ import {
   setKetValueListItems,
   setListItem,
   setTitle,
-} from "features/layout/layoutSlice";
-import { useAppDispatch, useAppSelector } from "features/store";
+} from "@/features/layout/layoutSlice";
+import { useAppDispatch, useAppSelector } from "@/features/store";
 import { EditorState, LexicalEditor } from "lexical";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutArrangement, LayoutType } from "types/DTO/AreaDTO";
+import { LayoutArrangement, LayoutType } from "@/types/DTO/AreaDTO";
 import { v4 as uuid } from "uuid";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";

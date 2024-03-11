@@ -1,5 +1,5 @@
-import { RecruitmentDTO, RecruitmentPostDTO } from "types/DTO/RecruitmentDTO";
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { RecruitmentDTO, RecruitmentPostDTO } from "@/types/DTO/RecruitmentDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { NIL } from "uuid";
 import { baseApi } from "../baseApi";
 import { getRecruitmentByIdApi } from "./getRecruitmentById";

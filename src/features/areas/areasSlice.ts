@@ -1,6 +1,6 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { AreaDTO } from "types/DTO/AreaDTO";
-import { RootState } from "features/store";
+import { AreaDTO } from "@/types/DTO/AreaDTO";
+import { RootState } from "@/features/store";
 import { v4 as uuid } from "uuid";
 
 export enum AreasType {

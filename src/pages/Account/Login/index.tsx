@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
+import LoginSvg from "@/assets/images/svg/login.svg?react";
 import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -19,9 +19,9 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import FormInput from "components/FormInput";
+import FormInput from "@/components/FormInput";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useLoginMutation } from "features/api/auth/login";
+import { useLoginMutation } from "@/features/api/auth/login";
 
 const loginSchema = object({
   email: string()

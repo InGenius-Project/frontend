@@ -1,5 +1,5 @@
-import { getUserApi } from "features/api/user/getUser";
-import { useAppSelector } from "features/store";
+import { getUserApi } from "@/features/api/user/getUser";
+import { useAppSelector } from "@/features/store";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export default function AuthRoute() {

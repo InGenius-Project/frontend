@@ -1,9 +1,9 @@
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import { Box, ButtonBase, styled } from "@mui/material";
-import { usePostRecruitmentMutation } from "features/api/recruitment/postRecruitment";
+import { usePostRecruitmentMutation } from "@/features/api/recruitment/postRecruitment";
 import { NIL } from "uuid";
 import React from "react";
-import { useAppSelector } from "features/store";
+import { useAppSelector } from "@/features/store";
 import { useNavigate } from "react-router-dom";
 
 const RecruitmentNewButtonBase = styled(ButtonBase)(({ theme }) => ({

@@ -1,6 +1,6 @@
-import { setUserInfo } from "features/user/userSlice";
-import { ResponseDTO } from "types/DTO/ResponseDTO";
-import { UserInfoDTO } from "types/DTO/UserDTO";
+import { setUserInfo } from "@/features/user/userSlice";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
+import { UserInfoDTO } from "@/types/DTO/UserDTO";
 import { baseApi } from "../baseApi";
 
 export const getUserApi = baseApi.injectEndpoints({

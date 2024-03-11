@@ -1,4 +1,4 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
 
 export const deleteAreaApi = baseApi.injectEndpoints({

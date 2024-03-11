@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserDTO, UserInfoDTO } from "types/DTO/UserDTO";
+import { UserDTO, UserInfoDTO } from "@/types/DTO/UserDTO";
 import { TokenDTO } from "./../../types/DTO/TokenDTO";
 
 type userSliceType = {

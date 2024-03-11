@@ -1,6 +1,6 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { ResumeDTO } from "types/DTO/ResumeDTO";
+import { ResumeDTO } from "@/types/DTO/ResumeDTO";
 
 export const getResumesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

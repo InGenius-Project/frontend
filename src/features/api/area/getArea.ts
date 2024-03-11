@@ -1,6 +1,6 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { AreaDTO } from "@/types/DTO/AreaDTO";
 
 export const getAreaByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

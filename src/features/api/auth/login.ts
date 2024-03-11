@@ -1,9 +1,9 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { LoginInput } from "pages/Account/Login";
-import { TokenDTO } from "types/DTO/TokenDTO";
+import { LoginInput } from "@/pages/Account/Login";
+import { TokenDTO } from "@/types/DTO/TokenDTO";
 import { getUserApi } from "../user/getUser";
-import { setToken } from "features/user/userSlice";
+import { setToken } from "@/features/user/userSlice";
 
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

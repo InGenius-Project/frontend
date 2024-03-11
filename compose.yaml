@@ -5,22 +5,22 @@ services:
     build:
       context: .
       args:
-        - REACT_APP_ENV=development
+        - VITE_APP_ENV=development
 
   react-app-test:
     build:
       context: .
       args:
-        - REACT_APP_ENV=testing
+        - VITE_APP_ENV=testing
 
   react-app-staging:
     build:
       context: .
       args:
-        - REACT_APP_ENV=staging
+        - VITE_APP_ENV=staging
 
   react-app-prod:
     build:
       context: .
       args:
-        - REACT_APP_ENV=prodoction
+        - VITE_APP_ENV=prodoction

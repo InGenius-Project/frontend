@@ -1,6 +1,6 @@
-import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
+import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface BreakpointOverrides {
     xs: false; // removes the `xs` breakpoint
     sm: false;
@@ -21,43 +21,43 @@ declare module "@mui/material/styles" {
     lighter?: string;
   }
   interface Palette {
-    white: Palette["primary"];
+    white: Palette['primary'];
   }
 
   interface PaletteOptions {
-    white?: PaletteOptions["primary"];
+    white?: PaletteOptions['primary'];
   }
 }
 
-declare module "@mui/material/Button" {
+declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     white: true;
   }
 }
 
-let theme = extendTheme({
-  cssVarPrefix: "ing",
+const theme = extendTheme({
+  cssVarPrefix: 'ing',
   colorSchemes: {
     light: {
       palette: {
         primary: {
-          main: "#874983",
-          lighter: "#F2F0FE",
+          main: '#874983',
+          lighter: '#F2F0FE',
         },
         secondary: {
-          main: "#00C9C8",
+          main: '#00C9C8',
         },
         common: {
-          background: "#fcebfb",
+          background: '#fcebfb',
         },
         info: {
-          main: "#808080",
+          main: '#808080',
         },
         text: {
-          primary: "#404040",
+          primary: '#404040',
         },
         white: {
-          main: "#FFFFFF",
+          main: '#FFFFFF',
         },
       },
     },
@@ -72,44 +72,44 @@ let theme = extendTheme({
   },
   typography: {
     fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
+      '-apple-system',
+      'BlinkMacSystemFont',
       '"Segoe UI"',
-      "Roboto",
+      'Roboto',
       '"Helvetica Neue"',
-      "Arial",
-      "Noto Sans TC",
-      "sans-serif",
+      'Arial',
+      'Noto Sans TC',
+      'sans-serif',
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(","),
+    ].join(','),
     h1: {
-      fontSize: "5rem",
-      fontWeight: "bold",
+      fontSize: '5rem',
+      fontWeight: 'bold',
     },
     h2: {
-      fontSize: "3.5rem",
-      fontWeight: "default",
+      fontSize: '3.5rem',
+      fontWeight: 'default',
     },
     h3: {
-      fontSize: "2rem",
-      fontWeight: "bold",
+      fontSize: '2rem',
+      fontWeight: 'bold',
     },
     h4: {
-      fontSize: "1.3rem",
-      fontWeight: "bold",
+      fontSize: '1.3rem',
+      fontWeight: 'bold',
     },
   },
   components: {
     MuiContainer: {
       defaultProps: {
-        maxWidth: "laptop",
+        maxWidth: 'laptop',
       },
     },
     MuiDialog: {
       defaultProps: {
-        maxWidth: "laptop",
+        maxWidth: 'laptop',
       },
     },
     MuiLink: {
@@ -126,7 +126,7 @@ let theme = extendTheme({
         }),
       },
       defaultProps: {
-        variant: "contained",
+        variant: 'contained',
       },
     },
     MuiTypography: {
@@ -139,7 +139,7 @@ let theme = extendTheme({
     MuiChip: {
       styleOverrides: {
         root: ({ theme: t }) => ({
-          borderRadius: "0.5em",
+          borderRadius: '0.5em',
         }),
       },
     },

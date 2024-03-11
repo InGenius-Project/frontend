@@ -14,10 +14,10 @@ RUN yarn install
 COPY . .
 
 # Set the build argument (default to 'production' if not provided)
-ARG REACT_APP_ENV=production
+ARG VITE_APP_ENV=production
 
 # Copy the environment-specific file
-COPY .env.${REACT_APP_ENV} .env
+COPY .env.${VITE_APP_ENV} .env
 
 # Build the application
 RUN yarn build

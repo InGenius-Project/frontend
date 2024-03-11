@@ -12,14 +12,14 @@ import {
   MenuItem,
   Chip,
 } from "@mui/material";
-import { ReactComponent as Logo } from "assets/images/logo/logo.svg";
-import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
-import { useAppDispatch, useAppSelector } from "features/store";
+import Logo from "@/assets/images/logo/logo.svg?react";
+import dummyUserImage from "@/assets/images/png/dummyUserImage.jpg";
+import { useAppDispatch, useAppSelector } from "@/features/store";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { logout } from "features/user/userSlice";
-import { baseApi } from "features/api/baseApi";
-import { UserRole } from "types/DTO/UserDTO";
-import { navigationConfig } from "components/SideBar";
+import { logout } from "@/features/user/userSlice";
+import { baseApi } from "@/features/api/baseApi";
+import { UserRole } from "@/types/DTO/UserDTO";
+import { navigationConfig } from "@/components/SideBar";
 
 export default function Header() {
   const theme = useTheme();

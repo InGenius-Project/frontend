@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
+import LoginSvg from "@/assets/images/svg/login.svg?react";
 import { Link as RouterLink } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { motion } from "framer-motion";

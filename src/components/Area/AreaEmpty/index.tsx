@@ -1,9 +1,9 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { setType } from "features/layout/layoutSlice";
-import { useAppDispatch } from "features/store";
+import { setType } from "@/features/layout/layoutSlice";
+import { useAppDispatch } from "@/features/store";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutType } from "types/DTO/AreaDTO";
+import { LayoutType } from "@/types/DTO/AreaDTO";
 
 function AreaEmpty() {
   const dispatch = useAppDispatch();

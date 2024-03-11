@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import dummyUserImage from "assets/images/png/dummyUserImage.jpg";
+import dummyUserImage from "@/assets/images/png/dummyUserImage.jpg";
 import { motion } from "framer-motion";
-import { useAppSelector } from "features/store";
-import { UserRole } from "types/DTO/UserDTO";
+import { useAppSelector } from "@/features/store";
+import { UserRole } from "@/types/DTO/UserDTO";
 
 const SideBarToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {

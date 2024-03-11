@@ -14,8 +14,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import {
   initializeStateWithoutFocusedArea,
   setTitle,
-} from "features/layout/layoutSlice";
-import { useAppDispatch, useAppSelector } from "features/store";
+} from "@/features/layout/layoutSlice";
+import { useAppDispatch, useAppSelector } from "@/features/store";
 import { useConfirm } from "material-ui-confirm";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";

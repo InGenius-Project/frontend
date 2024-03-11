@@ -14,13 +14,13 @@ import {
   useTheme,
 } from "@mui/material";
 import { useDebounce, useUpdateEffect } from "ahooks";
-import avatarFallback from "assets/images/png/avatarFallback.json";
-import dummyCover from "assets/images/png/dummyCover.jpg";
-import ImageCrop from "components/ImageCrop";
-import { usePostUserMutation } from "features/api/user/postUser";
-import { useAppSelector } from "features/store";
+import avatarFallback from "@/assets/images/png/avatarFallback.json";
+import dummyCover from "@/assets/images/png/dummyCover.jpg";
+import ImageCrop from "@/components/ImageCrop";
+import { usePostUserMutation } from "@/features/api/user/postUser";
+import { useAppSelector } from "@/features/store";
 import { useCallback, useState } from "react";
-import { ImageDTO } from "types/DTO/AreaDTO";
+import { ImageDTO } from "@/types/DTO/AreaDTO";
 import { NIL } from "uuid";
 
 type ProfileItemProps = {

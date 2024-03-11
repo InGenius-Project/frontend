@@ -6,16 +6,16 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { ReactComponent as TextFrame } from "assets/images/svg/text-frame.svg";
-import { ReactComponent as ImageTextFrame } from "assets/images/svg/image-text-frame.svg";
-import { ReactComponent as ListFrame } from "assets/images/svg/list-frame.svg";
-import { ReactComponent as KeyValueListFrame } from "assets/images/svg/key-value-list-frame.svg";
-import { ReactComponent as IconTextFrame } from "assets/images/svg/icon-text-frame.svg";
+import TextFrame from "@/assets/images/svg/text-frame.svg?react";
+import ImageTextFrame from "@/assets/images/svg/image-text-frame.svg?react";
+import ListFrame from "@/assets/images/svg/list-frame.svg?react";
+import KeyValueListFrame from "@/assets/images/svg/key-value-list-frame.svg?react";
+import IconTextFrame from "@/assets/images/svg/icon-text-frame.svg?react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "features/store";
-import { setArrangement } from "features/layout/layoutSlice";
-import { LayoutArrangement } from "types/DTO/AreaDTO";
+import { useAppDispatch, useAppSelector } from "@/features/store";
+import { setArrangement } from "@/features/layout/layoutSlice";
+import { LayoutArrangement } from "@/types/DTO/AreaDTO";
 
 const LayoutButton = styled(ToggleButton)(({ theme }) => ({
   width: 200,

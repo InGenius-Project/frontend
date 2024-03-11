@@ -1,14 +1,14 @@
 import { Stack } from "@mui/material";
-import AreaEditor from "components/Area/AreaEditor";
-import { ResumeItem } from "components/Resume";
-import { useDeleteResumeMutation } from "features/api/resume/deleteResume";
-import { useGetResumeByIdQuery } from "features/api/resume/getResumeById";
-import { usePostResumeMutation } from "features/api/resume/postResume";
-import { AreasType, setAreas } from "features/areas/areasSlice";
-import { useAppDispatch } from "features/store";
+import AreaEditor from "@/components/Area/AreaEditor";
+import { ResumeItem } from "@/components/Resume";
+import { useDeleteResumeMutation } from "@/features/api/resume/deleteResume";
+import { useGetResumeByIdQuery } from "@/features/api/resume/getResumeById";
+import { usePostResumeMutation } from "@/features/api/resume/postResume";
+import { AreasType, setAreas } from "@/features/areas/areasSlice";
+import { useAppDispatch } from "@/features/store";
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { AreaDTO } from "types/DTO/AreaDTO";
+import { AreaDTO } from "@/types/DTO/AreaDTO";
 
 export default function ResumeEdit() {
   const { resumeId = "" } = useParams();

@@ -1,7 +1,7 @@
 import { Box, Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import Sidebar from "components/SideBar";
-import UserHeader from "components/UserHeader";
+import Sidebar from "@/components/SideBar";
+import UserHeader from "@/components/UserHeader";
 
 import { AnimatePresence, useCycle } from "framer-motion";
 

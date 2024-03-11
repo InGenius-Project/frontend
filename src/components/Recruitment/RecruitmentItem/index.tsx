@@ -2,27 +2,27 @@ import { Box, Chip, IconButton, Link, Stack, useTheme } from "@mui/material";
 import TagIcon from "@mui/icons-material/Tag";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Typography from "@mui/material/Typography";
-import { useAppSelector } from "features/store";
-import { UserRole } from "types/DTO/UserDTO";
+import { useAppSelector } from "@/features/store";
+import { UserRole } from "@/types/DTO/UserDTO";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import { useDeleteRecruitmentMutation } from "features/api/recruitment/deleteRecruitment";
+import { useDeleteRecruitmentMutation } from "@/features/api/recruitment/deleteRecruitment";
 
 type RecruitmentItemProps = {
-  id: string,
-  title?: string,
-}
+  id: string;
+  title?: string;
+};
 
-export default function RecruitmentItem({id, title}: RecruitmentItemProps) {
+export default function RecruitmentItem({ id, title }: RecruitmentItemProps) {
   const theme = useTheme();
   const userState = useAppSelector((state) => state.userState);
-  const [deleteRecruitment] = useDeleteRecruitmentMutation()
+  const [deleteRecruitment] = useDeleteRecruitmentMutation();
 
   const handleClickDelete = () => {
     deleteRecruitment(id);
-  }
-  
+  };
+
   return (
     <Stack
       spacing={1}

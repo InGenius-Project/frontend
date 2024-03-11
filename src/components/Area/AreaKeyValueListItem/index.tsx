@@ -9,7 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { KeyValueListItem, Tag } from "features/layout/layoutSlice";
+import { KeyValueListItem, Tag } from "@/features/layout/layoutSlice";
 import React, { useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";

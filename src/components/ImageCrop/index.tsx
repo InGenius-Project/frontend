@@ -12,7 +12,7 @@ import {
   styled,
 } from "@mui/material";
 import { useUpdateEffect } from "ahooks";
-import { generateImageBase64Src } from "features/layout/layoutSlice";
+import { generateImageBase64Src } from "@/features/layout/layoutSlice";
 import React, { useMemo, useRef, useState } from "react";
 import ReactCrop, {
   Crop,
@@ -21,7 +21,7 @@ import ReactCrop, {
   makeAspectCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { ImageDTO } from "types/DTO/AreaDTO";
+import { ImageDTO } from "@/types/DTO/AreaDTO";
 import UploadImageButton from "./UploadImageButton";
 import canvasPreview from "./canvasPreview";
 import resizeImage from "./compressToMaxCanvasSize";

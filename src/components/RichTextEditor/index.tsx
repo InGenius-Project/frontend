@@ -9,7 +9,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { Box, useTheme } from "@mui/material";
 
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import lexicalTheme from "assets/theme/lexicalTheme";
+import lexicalTheme from "@/assets/theme/lexicalTheme";
 import React from "react";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import ControlPlugin from "./ToolbarPlugin";

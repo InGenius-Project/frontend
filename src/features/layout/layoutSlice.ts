@@ -1,13 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "features/store";
-import { EditorState } from "lexical";
-import {
-  AreaDTO,
-  ImageDTO,
-  LayoutArrangement,
-  LayoutType,
-} from "types/DTO/AreaDTO";
-import { NIL } from "uuid";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '@/features/store';
+import { EditorState } from 'lexical';
+import { AreaDTO, ImageDTO, LayoutArrangement, LayoutType } from '@/types/DTO/AreaDTO';
+import { NIL } from 'uuid';
 
 interface Layout {
   areaId: string;
@@ -36,26 +31,26 @@ export interface KeyValueListItem {
 }
 
 const initialState: Layout = {
-  areaId: "",
+  areaId: '',
   isDisplayed: true,
   sequence: 0,
-  id: "",
-  title: "",
+  id: '',
+  title: '',
   type: LayoutType.CUSTOM,
   arrangement: LayoutArrangement.TEXT,
   content: undefined,
   image: {
-    Id: "",
-    Filename: "",
-    ContentType: "",
-    Content: "",
+    Id: '',
+    Filename: '',
+    ContentType: '',
+    Content: '',
   },
   listItems: undefined,
   keyValueListItems: [],
 };
 
 const layoutSlice = createSlice({
-  name: "layout",
+  name: 'layout',
   initialState,
   reducers: {
     initializeState: (state) => {
@@ -81,7 +76,7 @@ const layoutSlice = createSlice({
     setLayout: (state, action: PayloadAction<Layout>) => {
       state = action.payload;
     },
-    setImage: (state, action: PayloadAction<Layout["image"]>) => {
+    setImage: (state, action: PayloadAction<Layout['image']>) => {
       state.image = action.payload;
     },
     setImageFilename: (state, action: PayloadAction<string>) => {
@@ -96,15 +91,11 @@ const layoutSlice = createSlice({
     setListItem: (state, action: PayloadAction<Array<Tag>>) => {
       state.listItems = action.payload;
     },
-    setKetValueListItems: (
-      state,
-      action: PayloadAction<Array<KeyValueListItem>>
-    ) => {
+    setKetValueListItems: (state, action: PayloadAction<Array<KeyValueListItem>>) => {
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<AreaDTO>) => {
-      const { Title, Type, Arrangement, Sequence, Id, IsDisplayed } =
-        action.payload;
+      const { Title, Type, Arrangement, Sequence, Id, IsDisplayed } = action.payload;
 
       var parseArea: Layout = {
         ...state,
@@ -125,11 +116,10 @@ const layoutSlice = createSlice({
           parseArea.id = action.payload.ImageTextLayout?.Id!;
           parseArea.content = action.payload.ImageTextLayout?.Content;
           parseArea.image = {
-            Id: action.payload.ImageTextLayout?.Image?.Id || "",
-            Filename: action.payload.ImageTextLayout?.Image?.Filename || "",
-            ContentType:
-              action.payload.ImageTextLayout?.Image?.ContentType || "",
-            Content: action.payload.ImageTextLayout?.Image?.Content || "",
+            Id: action.payload.ImageTextLayout?.Image?.Id || '',
+            Filename: action.payload.ImageTextLayout?.Image?.Filename || '',
+            ContentType: action.payload.ImageTextLayout?.Image?.ContentType || '',
+            Content: action.payload.ImageTextLayout?.Image?.Content || '',
           };
           break;
         case LayoutArrangement.LIST:
@@ -137,21 +127,20 @@ const layoutSlice = createSlice({
           parseArea.listItems = action.payload.ListLayout!.Items!.map((i) => ({
             id: i.Id,
             name: i.Name,
-            type: "CUSTOM",
+            type: 'CUSTOM',
           }));
           break;
         case LayoutArrangement.KEYVALUELIST:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
-          parseArea.keyValueListItems =
-            action.payload.KeyValueListLayout!.Items!.map((i) => ({
-              id: i.Id,
-              key: {
-                id: i.Key.Id,
-                name: i.Key.Name,
-                type: "CUSTOM",
-              },
-              value: i.Value,
-            }));
+          parseArea.keyValueListItems = action.payload.KeyValueListLayout!.Items!.map((i) => ({
+            id: i.Id,
+            key: {
+              id: i.Key.Id,
+              name: i.Key.Name,
+              type: 'CUSTOM',
+            },
+            value: i.Value,
+          }));
           break;
       }
       return parseArea;
@@ -177,8 +166,7 @@ export const {
 } = layoutSlice.actions;
 
 // TODO: remove createSelector
-export const generateImageBase64Src = (contentType: string, content: string) =>
-  `data:${contentType};base64,${content}`;
+export const generateImageBase64Src = (contentType: string, content: string) => `data:${contentType};base64,${content}`;
 
 export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
   const areasState = state.areasState;
@@ -206,9 +194,9 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
             Content: JSON.stringify(layoutState.content),
             Image: {
               Id: NIL,
-              Content: layoutState.image?.Content || "",
-              ContentType: layoutState.image?.ContentType || "image/jpeg",
-              Filename: layoutState.image?.Filename || "",
+              Content: layoutState.image?.Content || '',
+              ContentType: layoutState.image?.ContentType || 'image/jpeg',
+              Filename: layoutState.image?.Filename || '',
             },
           }
         : undefined,
@@ -219,7 +207,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
             Items: (layoutState.listItems || []).map((i) => ({
               Id: NIL,
               Name: i.name,
-              Type: "CUSTOM", // TODO: Base on area type
+              Type: 'CUSTOM', // TODO: Base on area type
             })),
           }
         : undefined,
@@ -232,7 +220,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
               Key: {
                 Id: NIL,
                 Name: i.key.name,
-                Type: "CUSTOM",
+                Type: 'CUSTOM',
               },
               Value: i.value,
             })),
@@ -275,9 +263,9 @@ export const getUpdatedArea = (state: RootState) => {
             Content: JSON.stringify(layoutState.content),
             Image: {
               Id: layoutState.image.Id,
-              Content: layoutState.image?.Content || "",
-              ContentType: layoutState.image?.ContentType || "image/jpeg",
-              Filename: layoutState.image?.Filename || "",
+              Content: layoutState.image?.Content || '',
+              ContentType: layoutState.image?.ContentType || 'image/jpeg',
+              Filename: layoutState.image?.Filename || '',
             },
           }
         : undefined,
@@ -289,7 +277,7 @@ export const getUpdatedArea = (state: RootState) => {
             Items: (layoutState.listItems || []).map((i) => ({
               Id: NIL,
               Name: i.name,
-              Type: "CUSTOM", // TODO: Base on area type
+              Type: 'CUSTOM', // TODO: Base on area type
             })),
           }
         : undefined,
@@ -302,7 +290,7 @@ export const getUpdatedArea = (state: RootState) => {
               Key: {
                 Id: NIL,
                 Name: i.key.name,
-                Type: "CUSTOM",
+                Type: 'CUSTOM',
               },
               Value: i.value,
             })),

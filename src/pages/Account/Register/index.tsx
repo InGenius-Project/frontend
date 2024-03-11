@@ -15,9 +15,9 @@ import {
   useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import FormInput from "components/FormInput";
-import { useRegisterMutation } from "features/api/auth/register";
+import LoginSvg from "@/assets/images/svg/login.svg?react";
+import FormInput from "@/components/FormInput";
+import { useRegisterMutation } from "@/features/api/auth/register";
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";

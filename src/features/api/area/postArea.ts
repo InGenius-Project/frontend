@@ -1,7 +1,7 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { AreaDTO, AreaPostDTO } from "types/DTO/AreaDTO";
-import { setFocusedArea } from "features/areas/areasSlice";
+import { AreaDTO, AreaPostDTO } from "@/types/DTO/AreaDTO";
+import { setFocusedArea } from "@/features/areas/areasSlice";
 
 export const postAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

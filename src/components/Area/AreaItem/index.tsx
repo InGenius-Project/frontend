@@ -1,9 +1,9 @@
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
-import RichTextEditor from "components/RichTextEditor";
+import RichTextEditor from "@/components/RichTextEditor";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { AreaDTO, LayoutArrangement } from "types/DTO/AreaDTO";
+import { AreaDTO, LayoutArrangement } from "@/types/DTO/AreaDTO";
 import AreaKeyValueListItem from "../AreaKeyValueListItem";
 import AreaListItem from "../AreaListItem";
 

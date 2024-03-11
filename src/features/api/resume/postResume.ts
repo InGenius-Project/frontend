@@ -1,6 +1,6 @@
-import { ResponseDTO } from "types/DTO/ResponseDTO";
+import { ResponseDTO } from "@/types/DTO/ResponseDTO";
 import { baseApi } from "../baseApi";
-import { ResumeDTO, ResumePostDTO } from "types/DTO/ResumeDTO";
+import { ResumeDTO, ResumePostDTO } from "@/types/DTO/ResumeDTO";
 import { getResumeByIdApi } from "./getResumeById";
 import { NIL } from "uuid";
 

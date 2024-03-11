@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import Footer from "components/Footer";
-import { getUserApi } from "features/api/user/getUser";
+import Footer from "@/components/Footer";
+import { getUserApi } from "@/features/api/user/getUser";
 import { AnimatePresence } from "framer-motion";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
