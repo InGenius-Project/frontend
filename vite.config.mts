@@ -19,7 +19,9 @@ export default defineConfig(() => {
       strictPort: true,
     },
     server: {
-      host: true,
+      host: '0.0.0.0',
+      // @ts-ignore
+      port: import.meta.env.PORT || 3000,
     },
   };
 });
