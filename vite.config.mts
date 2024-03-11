@@ -14,5 +14,12 @@ export default defineConfig(() => {
     build: {
       outDir: 'build',
     },
+    preview: {
+      port: 3000,
+      strictPort: true,
+    },
+    server: {
+      host: true,
+    },
   };
 });

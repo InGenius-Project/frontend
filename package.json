@@ -57,6 +57,7 @@
     "test": "vite test",
     "eject": "vite eject",
     "build": "vite build",
+    "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
     "start:dev": "env-cmd -f .env.development vite start",
     "start:test": "env-cmd -f .env.testing vite start",
