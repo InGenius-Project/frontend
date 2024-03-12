@@ -1,18 +1,10 @@
-import ClearIcon from "@mui/icons-material/Clear";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import {
-  Divider,
-  IconButton,
-  ListItem,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import React from "react";
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import { IKeyValueItem } from "types/interfaces/IArea";
-import { ITag } from "types/interfaces/ITag";
+import ClearIcon from '@mui/icons-material/Clear';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { Divider, IconButton, ListItem, Stack, TextField, Typography, useTheme } from '@mui/material';
+import React from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import { IKeyValueItem } from '@/types/interfaces/IArea';
+import { ITag } from '@/types/interfaces/ITag';
 
 type AreaListItemProps = {
   id: string;
@@ -26,7 +18,7 @@ type AreaListItemProps = {
 function AreaListItem({
   id,
   itemKey,
-  value = "",
+  value = '',
   editable = false,
   onClickDelete,
   onChange,
@@ -44,7 +36,7 @@ function AreaListItem({
       sx={{
         borderBottom: `1px solid ${theme.palette.divider}`,
         padding: 2,
-        borderRadius: "var(--ing-shape-borderRadius)",
+        borderRadius: 'var(--ing-shape-borderRadius)',
       }}
     >
       {editable ? (
@@ -76,9 +68,9 @@ function AreaListItem({
               // }));
               // onChange && onChange(itemState);
             }}
-            sx={{ flex: "1 1 auto" }}
+            sx={{ flex: '1 1 auto' }}
           />
-          <Stack direction={"row"} spacing={1}>
+          <Stack direction={'row'} spacing={1}>
             <Divider orientation="vertical" flexItem />
             <IconButton onClick={handleDeleteClick}>
               <ClearIcon />
@@ -89,7 +81,7 @@ function AreaListItem({
           </Stack>
         </Stack>
       ) : (
-        <Stack spacing={1} direction={"row"}>
+        <Stack spacing={1} direction={'row'}>
           <Typography variant="body1">{itemKey?.Name}</Typography>
           <Divider orientation="vertical" flexItem />
           <Typography variant="body1">{value}</Typography>

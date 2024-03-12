@@ -1,7 +1,7 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { baseApi } from "../baseApi";
-import { IArea, IAreaPost } from "types/interfaces/IArea";
-import { setFocusedArea } from "features/areas/areasSlice";
+import { setFocusedArea } from '@/features/areas/areasSlice';
+import { IArea, IAreaPost } from '@/types/interfaces/IArea';
+import { IResponse } from '@/types/interfaces/IResponse';
+import { baseApi } from '../baseApi';
 
 export const postAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,12 +9,12 @@ export const postAreaApi = baseApi.injectEndpoints({
       query: (body) => {
         return {
           url: `Area`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
       invalidatesTags: (result, error, arg) => {
-        return [{ type: "Resume" }, { type: "Area", id: arg.Id }, "User"];
+        return [{ type: 'Resume' }, { type: 'Area', id: arg.Id }, 'User'];
       },
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area

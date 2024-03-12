@@ -1,4 +1,4 @@
-import { AreaNewModel } from "components/Area";
+import { AreaNewModel } from "@/components/Area";
 
 export default function RecruitementAreaNew() {
   return <AreaNewModel />;

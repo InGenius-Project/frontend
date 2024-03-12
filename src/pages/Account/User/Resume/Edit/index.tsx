@@ -1,17 +1,17 @@
-import { Stack } from "@mui/material";
-import AreaEditor from "components/Area/AreaEditor";
-import { ResumeItem } from "components/Resume";
-import { useDeleteResumeMutation } from "features/api/resume/deleteResume";
-import { useGetResumeByIdQuery } from "features/api/resume/getResumeById";
-import { usePostResumeMutation } from "features/api/resume/postResume";
-import { AreasType, setAreas } from "features/areas/areasSlice";
-import { useAppDispatch } from "features/store";
-import { useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { IArea } from "types/interfaces/IArea";
+import AreaEditor from '@/components/Area/AreaEditor';
+import { ResumeItem } from '@/components/Resume';
+import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
+import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
+import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { AreasType, setAreas } from '@/features/areas/areasSlice';
+import { useAppDispatch } from '@/features/store';
+import { IArea } from '@/types/interfaces/IArea';
+import { Stack } from '@mui/material';
+import { useEffect } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 export default function ResumeEdit() {
-  const { resumeId = "" } = useParams();
+  const { resumeId = '' } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export default function ResumeEdit() {
           id: resumeData.result.Id,
           type: AreasType.RESUME,
           areas: resumeData.result.Areas,
-        })
+        }),
       );
   }, [resumeData, dispatch]);
 
@@ -44,7 +44,7 @@ export default function ResumeEdit() {
   const handleDeleteResume = async (id: string) => {
     await deleteResume(id)
       .unwrap()
-      .then(() => navigate(".."));
+      .then(() => navigate('..'));
   };
   const handlePostAreas = async (areas: Array<IArea>) => {
     if (resumeData && resumeData.result)

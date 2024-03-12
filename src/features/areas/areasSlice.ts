@@ -1,12 +1,11 @@
-import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { IArea } from "types/interfaces/IArea";
-import { RootState } from "features/store";
-import { v4 as uuid } from "uuid";
+import { RootState } from '@/features/store';
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
 
 export enum AreasType {
-  "RESUME" = "RESUME",
-  "PROFILE" = "PROFILE",
-  "RECRUITMENT" = "RECRUITMENT",
+  'RESUME' = 'RESUME',
+  'PROFILE' = 'PROFILE',
+  'RECRUITMENT' = 'RECRUITMENT',
 }
 
 type AreasStateType = {
@@ -24,7 +23,7 @@ const initialState: AreasStateType = {
 };
 
 const areasSlice = createSlice({
-  name: "areas",
+  name: 'areas',
   initialState,
   reducers: {
     setAreas: (
@@ -36,7 +35,7 @@ const areasSlice = createSlice({
             areas: Array<IArea>;
           }
         | undefined
-      >
+      >,
     ) => {
       if (action.payload)
         return {
@@ -48,9 +47,7 @@ const areasSlice = createSlice({
            *  cause underneath code to set first area
            */
           focusedArea:
-            !state.focusedArea || action.payload.type !== state.type
-              ? action.payload.areas[0]
-              : state.focusedArea,
+            !state.focusedArea || action.payload.type !== state.type ? action.payload.areas[0] : state.focusedArea,
         };
       return initialState;
     },
@@ -62,7 +59,7 @@ const areasSlice = createSlice({
 
 export const selectIsEmptyAreas = createSelector(
   [(state: RootState) => state.areasState],
-  (a) => !!a.areas && a.areas.length === 0
+  (a) => !!a.areas && a.areas.length === 0,
 );
 export const { setAreas, setFocusedArea } = areasSlice.actions;
 

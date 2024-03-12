@@ -1,14 +1,14 @@
-import { AreaEditModel } from "components/Area";
-import { useGetAreaByIdQuery } from "features/api/area/getArea";
-import { usePostAreaMutation } from "features/api/area/postArea";
-import { useGetRecruitmentByIdQuery } from "features/api/recruitment/getRecruitmentById";
-import { usePostRecruitmentMutation } from "features/api/recruitment/postRecruitment";
+import { AreaEditModel } from "@/components/Area";
+import { useGetAreaByIdQuery } from "@/features/api/area/getArea";
+import { usePostAreaMutation } from "@/features/api/area/postArea";
+import { useGetRecruitmentByIdQuery } from "@/features/api/recruitment/getRecruitmentById";
+import { usePostRecruitmentMutation } from "@/features/api/recruitment/postRecruitment";
 import {
   getUpdatedArea,
   getUpdatedAreas,
   setLayoutByArea,
-} from "features/layout/layoutSlice";
-import { store, useAppDispatch, useAppSelector } from "features/store";
+} from "@/features/layout/layoutSlice";
+import { store, useAppDispatch, useAppSelector } from "@/features/store";
 import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 

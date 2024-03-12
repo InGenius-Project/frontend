@@ -1,4 +1,6 @@
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import { generateImageBase64Src } from '@/features/layout/layoutSlice';
+import { IImage } from '@/types/interfaces/IArea';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import {
   Box,
   Button,
@@ -10,31 +12,24 @@ import {
   TextField,
   Typography,
   styled,
-} from "@mui/material";
-import { useUpdateEffect } from "ahooks";
-import { generateImageBase64Src } from "features/layout/layoutSlice";
-import React, { useMemo, useRef, useState } from "react";
-import ReactCrop, {
-  Crop,
-  centerCrop,
-  convertToPixelCrop,
-  makeAspectCrop,
-} from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
-import { IImage } from "types/interfaces/IArea";
-import UploadImageButton from "./UploadImageButton";
-import canvasPreview from "./canvasPreview";
-import resizeImage from "./resizeImage";
+} from '@mui/material';
+import { useUpdateEffect } from 'ahooks';
+import React, { useMemo, useRef, useState } from 'react';
+import ReactCrop, { Crop, centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import UploadImageButton from './UploadImageButton';
+import canvasPreview from './canvasPreview';
+import resizeImage from './resizeImage';
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
   height: 1,
-  overflow: "hidden",
-  position: "absolute",
+  overflow: 'hidden',
+  position: 'absolute',
   bottom: 0,
   left: 0,
-  whiteSpace: "nowrap",
+  whiteSpace: 'nowrap',
   width: 1,
 });
 const MAX_KB_SIZE = 100;
@@ -64,7 +59,7 @@ export default function ImageCrop({
   onCropDone,
 }: ImageCropProps) {
   const [imageState, setImageState] = useState<IImage>(image);
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrc, setImgSrc] = useState('');
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -80,8 +75,8 @@ export default function ImageCrop({
     if (e && e.target.files && e.target.files.length > 0) {
       setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImgSrc(reader.result?.toString() || "");
+      reader.addEventListener('load', () => {
+        setImgSrc(reader.result?.toString() || '');
       });
 
       reader.readAsDataURL(e.target.files[0]);
@@ -95,12 +90,12 @@ export default function ImageCrop({
 
     const crop = makeAspectCrop(
       {
-        unit: "%",
+        unit: '%',
         width: cropWidthInPercent,
       },
       ASPECT_RATIO,
       width,
-      height
+      height,
     );
     const centeredCrop = centerCrop(crop, width, height);
     setCrop(centeredCrop);
@@ -115,7 +110,7 @@ export default function ImageCrop({
       canvasPreview(
         imgRef.current, // HTMLImageElement
         previewCanvasRef.current, // HTMLCanvasElement
-        convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height)
+        convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height),
       );
       if (imgRef.current && previewCanvasRef.current && crop) {
         var dataUrl = previewCanvasRef.current.toDataURL();
@@ -123,8 +118,8 @@ export default function ImageCrop({
         resizeImage(dataUrl, 100, 1).then((res) => {
           const newImageState: IImage = {
             ...imageState,
-            Content: res.split(",")[1],
-            ContentType: res.split(",")[0].split(":")[1].split(";")[0],
+            Content: res.split(',')[1],
+            ContentType: res.split(',')[0].split(':')[1].split(';')[0],
           };
 
           onCropDone && onCropDone(newImageState);
@@ -141,44 +136,34 @@ export default function ImageCrop({
       canvasPreview(
         imgRef.current, // HTMLImageElement
         previewCanvasRef.current, // HTMLCanvasElement
-        convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height)
+        convertToPixelCrop(crop, imgRef.current.width, imgRef.current.height),
       );
       if (imgRef.current && previewCanvasRef.current && crop) {
         const dataUrl = previewCanvasRef.current.toDataURL();
-        setExpectSizeState(
-          Math.floor((base64ToBytes(dataUrl.split(",")[1]) / 1024) * 100) / 100
-        );
+        setExpectSizeState(Math.floor((base64ToBytes(dataUrl.split(',')[1]) / 1024) * 100) / 100);
       }
     }
   };
 
-  const imgPreviewUrl = useMemo(
-    () => generateImageBase64Src(imageState.ContentType, imageState.Content),
-    [imageState]
-  );
+  const imgPreviewUrl = useMemo(() => generateImageBase64Src(imageState.ContentType, imageState.Content), [imageState]);
 
   return (
     <Box className="App">
-      <Dialog
-        onClose={() => setOpen(false)}
-        open={open}
-        fullWidth
-        maxWidth="laptop"
-      >
+      <Dialog onClose={() => setOpen(false)} open={open} fullWidth maxWidth="laptop">
         <DialogTitle>裁切圖片</DialogTitle>
 
         <DialogContent
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
             gap: 1,
           }}
         >
           <TextField
             sx={{ mt: 1 }}
             label="檔案名稱"
-            value={imageState?.Filename || ""}
+            value={imageState?.Filename || ''}
             onChange={(e) => {
               setImageState((prev) => ({
                 ...prev,
@@ -189,11 +174,11 @@ export default function ImageCrop({
 
           <Box
             sx={{
-              width: "100%",
-              height: "55vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: '100%',
+              height: '55vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             {imgSrc && (
@@ -207,10 +192,10 @@ export default function ImageCrop({
               >
                 <img
                   ref={imgRef}
-                  alt={imageState ? imageState.Filename : "Crop preview"}
+                  alt={imageState ? imageState.Filename : 'Crop preview'}
                   src={imgSrc}
                   style={{
-                    maxHeight: "55vh",
+                    maxHeight: '55vh',
                   }}
                   onLoad={onImageLoad}
                 />
@@ -221,8 +206,8 @@ export default function ImageCrop({
               <canvas
                 ref={previewCanvasRef}
                 style={{
-                  display: "none",
-                  objectFit: "contain",
+                  display: 'none',
+                  objectFit: 'contain',
                   height,
                   width,
                 }}
@@ -232,9 +217,7 @@ export default function ImageCrop({
         </DialogContent>
 
         <DialogActions>
-          <Typography
-            color={expectSizeState > MAX_CANVAS_SIZE ? "error" : "primary"}
-          >
+          <Typography color={expectSizeState > MAX_CANVAS_SIZE ? 'error' : 'primary'}>
             檔案大小: {expectSizeState}
           </Typography>
           <Button onClick={handleClose}>裁切</Button>
@@ -242,39 +225,27 @@ export default function ImageCrop({
       </Dialog>
 
       <Stack direction="row" spacing={2}>
-        {imageState.Content === "" ? (
-          <UploadImageButton
-            color="white"
-            component="label"
-            width={width}
-            height={height}
-            circularCrop={circularCrop}
-          >
+        {imageState.Content === '' ? (
+          <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
             <ImageOutlinedIcon />
             <Typography variant="body1">上傳圖片</Typography>
 
             <VisuallyHiddenInput
               type="file"
               onChange={handleSelectFile}
-              onClick={(e) => ((e.target as any).value = "")}
+              onClick={(e) => ((e.target as any).value = '')}
               accept="image/*"
             />
           </UploadImageButton>
         ) : (
-          <UploadImageButton
-            color="white"
-            component="label"
-            width={width}
-            height={height}
-            circularCrop={circularCrop}
-          >
+          <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
             <img
               width={256}
               height={256}
               src={imgPreviewUrl}
               alt={imageState?.Filename}
               style={{
-                overflow: "hidden",
+                overflow: 'hidden',
                 width,
                 height,
                 padding: 0,
@@ -283,7 +254,7 @@ export default function ImageCrop({
             <VisuallyHiddenInput
               type="file"
               onChange={handleSelectFile}
-              onClick={(e) => ((e.target as any).value = "")}
+              onClick={(e) => ((e.target as any).value = '')}
               accept="image/*"
             />
           </UploadImageButton>

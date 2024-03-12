@@ -1,32 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Lock from "@mui/icons-material/Lock";
-import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  Box,
-  Button,
-  Container,
-  InputAdornment,
-  Link,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import FormInput from "components/FormInput";
-import { useLoginMutation } from "features/api/auth/login";
-import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { TypeOf, object, string } from "zod";
+import LoginSvg from '@/assets/images/svg/login.svg?react';
+import FormInput from '@/components/FormInput';
+import { useLoginMutation } from '@/features/api/auth/login';
+import { zodResolver } from '@hookform/resolvers/zod';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Lock from '@mui/icons-material/Lock';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Button, Container, InputAdornment, Link, Stack, Typography, useTheme } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { TypeOf, object, string } from 'zod';
 
 const loginSchema = object({
-  email: string()
-    .min(1, "Email address is required")
-    .email("Email Address is invalid"),
-  password: string().min(1, "Password is required"),
+  email: string().min(1, 'Email address is required').email('Email Address is invalid'),
+  password: string().min(1, 'Password is required'),
 });
 
 export type LoginInput = TypeOf<typeof loginSchema>;
@@ -38,8 +27,7 @@ export default function Login() {
   const [loginUser, { isLoading, isSuccess }] = useLoginMutation();
 
   // Previous page
-  const from =
-    ((location.state as any)?.from.pathname as string) || "/Account/User";
+  const from = ((location.state as any)?.from.pathname as string) || '/Account/User';
 
   // Set up form
   const methods = useForm<LoginInput>({
@@ -69,7 +57,7 @@ export default function Login() {
   return (
     <Box
       sx={{
-        alignSelf: "center",
+        alignSelf: 'center',
         flexGrow: 1,
       }}
     >
@@ -77,18 +65,18 @@ export default function Login() {
         <Grid
           container
           sx={{
-            width: "100%",
+            width: '100%',
           }}
         >
           <Grid
             tablet={6}
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <LoginSvg width={"70%"} />
+            <LoginSvg width={'70%'} />
           </Grid>
           <Grid mobile={12} tablet={6}>
             <motion.div
@@ -105,14 +93,14 @@ export default function Login() {
                 opacity: 0,
               }}
               transition={{
-                type: "linear",
+                type: 'linear',
               }}
             >
               <FormProvider {...methods}>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: theme.spacing(3),
                   }}
                   noValidate
@@ -150,18 +138,11 @@ export default function Login() {
                       ),
                     }}
                   />
-                  <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      loading={isLoading}
-                    >
+                  <Stack direction="row" spacing={2} alignItems={'flex-end'}>
+                    <LoadingButton type="submit" variant="contained" loading={isLoading}>
                       登入
                     </LoadingButton>
-                    <Button
-                      variant="outlined"
-                      onClick={() => navigate("/Account/Register")}
-                    >
+                    <Button variant="outlined" onClick={() => navigate('/Account/Register')}>
                       註冊
                     </Button>
                     <Link component={RouterLink} to="/Account/ForgetPassword">

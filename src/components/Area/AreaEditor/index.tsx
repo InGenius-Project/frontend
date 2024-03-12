@@ -1,17 +1,17 @@
-import { Box, IconButton, Portal, Stack } from "@mui/material";
-import DragDropContainer from "components/DragDropContainer";
-import { useDeleteAreaMutation } from "features/api/area/deleteArea";
-import { usePostAreaMutation } from "features/api/area/postArea";
-import { selectIsEmptyAreas, setFocusedArea } from "features/areas/areasSlice";
-import { useAppDispatch, useAppSelector } from "features/store";
-import React from "react";
-import { DropResult, OnDragStartResponder } from "react-beautiful-dnd";
-import { useNavigate } from "react-router-dom";
-import { IArea } from "types/interfaces/IArea";
-import AreaControl from "../AreaControl";
-import AreaEmpty from "../AreaEmpty";
-import AreaItem from "../AreaItem";
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
+import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { selectIsEmptyAreas, setFocusedArea } from '@/features/areas/areasSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store';
+import { IArea } from '@/types/interfaces/IArea';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { Box, IconButton, Portal, Stack } from '@mui/material';
+import DragDropContainer from '@/components/DragDropContainer';
+import React from 'react';
+import { DropResult, OnDragStartResponder } from 'react-beautiful-dnd';
+import { useNavigate } from 'react-router-dom';
+import AreaControl from '../AreaControl';
+import AreaEmpty from '../AreaEmpty';
+import AreaItem from '../AreaItem';
 type AreaContainerProps = {
   onPost?: (areas: Array<IArea>) => Promise<void>;
 };
@@ -32,7 +32,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         if (findArea) {
           return { ...findArea, Sequence: index };
         } else {
-          throw new Error("移動區塊時發生問題");
+          throw new Error('移動區塊時發生問題');
         }
       });
 
@@ -40,9 +40,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
 
       // set AreaControl top after drag end
       const dragItem = result
-        ? document.querySelector<HTMLElement>(
-            `[data-rbd-draggable-id='${result.draggableId}']`
-          )
+        ? document.querySelector<HTMLElement>(`[data-rbd-draggable-id='${result.draggableId}']`)
         : undefined;
       dragItem && setControlTop(dragItem?.offsetTop);
     }
@@ -55,11 +53,9 @@ function AreaEditor({ onPost }: AreaContainerProps) {
     }
   };
 
-  const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
+  const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     // TODO: setAreaType
-    navigate("New");
+    navigate('New');
   };
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -70,10 +66,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
     areasState.focusedArea && navigate(`Area/${areasState.focusedArea.Id}`);
   };
 
-  const handleVisibilityChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => {
+  const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     areasState.focusedArea &&
       postArea({
         ...areasState.focusedArea,
@@ -87,29 +80,25 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   return (
     <Box
       sx={{
-        display: "flex",
-        width: "100%",
+        display: 'flex',
+        width: '100%',
         flexGrow: 1,
         gap: 1,
-        minHeight: "var(--ing-height-area-control)",
+        minHeight: 'var(--ing-height-area-control)',
       }}
     >
       <Stack
         spacing={1}
         sx={{
-          flex: "1 1 auto",
-          position: "relative",
+          flex: '1 1 auto',
+          position: 'relative',
         }}
       >
         {isEmptyAreas && (
           <>
             <AreaEmpty />
-            <Portal container={() => document.getElementById("userHeader")}>
-              <IconButton
-                size="small"
-                sx={{ ml: 1 }}
-                onClick={() => navigate("New")}
-              >
+            <Portal container={() => document.getElementById('userHeader')}>
+              <IconButton size="small" sx={{ ml: 1 }} onClick={() => navigate('New')}>
                 <CreateOutlinedIcon />
               </IconButton>
             </Portal>
@@ -143,16 +132,14 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         <Box
           sx={{
             flexShrink: 0,
-            width: "var(--ing-width-area-control)",
-            position: "relative",
+            width: 'var(--ing-width-area-control)',
+            position: 'relative',
           }}
         >
           <AreaControl
             top={controlTop}
             disabled={!areasState.focusedArea}
-            visibled={
-              areasState.focusedArea && areasState.focusedArea.IsDisplayed
-            }
+            visibled={areasState.focusedArea && areasState.focusedArea.IsDisplayed}
             onAddClick={handleAddClick}
             onDeleteClick={handleDeleteClick}
             onEditClick={handleEditClick}

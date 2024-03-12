@@ -1,35 +1,23 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Autocomplete,
-  Button,
-  Paper,
-  Stack,
-  TextField,
-  useTheme,
-} from "@mui/material";
-import FormInput from "components/FormInput";
-import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
-import { usePostAreaTypeMutation } from "features/api/area/postAreaType";
-import { useGetTagTypesQuery } from "features/api/tag/getTagTypes";
-import { useEffect } from "react";
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { LayoutTypeObject } from "types/enums/LayoutType";
-import { UserRoleObject } from "types/enums/UserRole";
-import { ITagType } from "types/interfaces/ITag";
-import { TypeOf, z } from "zod";
+import FormInput from '@/components/FormInput';
+import { useGetAreaTypeByIdQuery } from '@/features/api/area/getAreaTypeById';
+import { usePostAreaTypeMutation } from '@/features/api/area/postAreaType';
+import { useGetTagTypesQuery } from '@/features/api/tag/getTagTypes';
+import { LayoutTypeObject } from '@/types/enums/LayoutType';
+import { UserRoleObject } from '@/types/enums/UserRole';
+import { ITagType } from '@/types/interfaces/ITag';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Autocomplete, Button, Paper, Stack, TextField, useTheme } from '@mui/material';
+import { useEffect } from 'react';
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { TypeOf, z } from 'zod';
 
 const areaListTypeSchema = z.object({
   Id: z.coerce.number(),
-  Name: z.string().min(1, "請輸入名稱").max(20, "名稱過長"),
+  Name: z.string().min(1, '請輸入名稱').max(20, '名稱過長'),
   Value: z.string(),
-  Description: z.string({ required_error: "請輸入描述" }),
+  Description: z.string({ required_error: '請輸入描述' }),
   LayoutType: z.object({ value: z.number(), label: z.string() }),
   UserRole: z.array(z.object({ value: z.number(), label: z.string() })),
   ListTagTypes: z.array(
@@ -38,7 +26,7 @@ const areaListTypeSchema = z.object({
       Name: z.string(),
       Color: z.string(),
       Value: z.string(),
-    })
+    }),
   ),
 });
 
@@ -47,9 +35,7 @@ type AreaListTypeInput = TypeOf<typeof areaListTypeSchema>;
 function ManageAreaList() {
   const { areaTypeId } = useParams<{ areaTypeId: string }>();
   const { data: tagTypesData } = useGetTagTypesQuery();
-  const { data: areaTypeData } = useGetAreaTypeByIdQuery(
-    parseInt(areaTypeId || "0")
-  );
+  const { data: areaTypeData } = useGetAreaTypeByIdQuery(parseInt(areaTypeId || '0'));
   const [postAreaType] = usePostAreaTypeMutation();
   const { data: allTagTypes } = useGetTagTypesQuery();
   const navigate = useNavigate();
@@ -77,7 +63,7 @@ function ManageAreaList() {
     })
       .unwrap()
       .then(() => {
-        toast.success("修改成功");
+        toast.success('修改成功');
         // navigate("..", { replace: true });
       });
   };
@@ -91,20 +77,17 @@ function ManageAreaList() {
         Description: areaTypeData.result.Description,
         UserRole: areaTypeData.result.UserRole.map((d) => ({
           value: d,
-          label: UserRoleObject.find((o) => o.value === d)?.label || "",
+          label: UserRoleObject.find((o) => o.value === d)?.label || '',
         })),
         LayoutType: {
           value: areaTypeData.result.LayoutType,
-          label:
-            LayoutTypeObject.find(
-              (d) => d.value === areaTypeData.result?.LayoutType
-            )?.label || "",
+          label: LayoutTypeObject.find((d) => d.value === areaTypeData.result?.LayoutType)?.label || '',
         },
         ListTagTypes: areaTypeData.result.ListTagTypes,
       };
       reset(defaultFormData, { keepDirty: true });
     }
-  }, [areaTypeData, areaTypeData?.result  , reset]);
+  }, [areaTypeData, areaTypeData?.result, reset]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -114,13 +97,9 @@ function ManageAreaList() {
 
   return (
     <FormProvider {...methods}>
-      <Paper
-        component={"form"}
-        onSubmit={handleSubmit(onSubmitHandler)}
-        sx={{ p: 2 }}
-      >
-        <Stack spacing={2} width={"100%"}>
-          <FormInput name="Id" sx={{ display: "none" }} />
+      <Paper component={'form'} onSubmit={handleSubmit(onSubmitHandler)} sx={{ p: 2 }}>
+        <Stack spacing={2} width={'100%'}>
+          <FormInput name="Id" sx={{ display: 'none' }} />
           <FormInput name="Name" label="名稱" />
           <FormInput name="Value" label="值" />
           <FormInput name="Description" label="描述" />
@@ -132,13 +111,9 @@ function ManageAreaList() {
               <Autocomplete
                 multiple
                 options={UserRoleObject}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                getOptionLabel={(d) => (d ? d.label : "")}
-                renderInput={(params) => (
-                  <TextField {...params} label="使用者" />
-                )}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
+                getOptionLabel={(d) => (d ? d.label : '')}
+                renderInput={(params) => <TextField {...params} label="使用者" />}
                 onChange={(e, data) => onChange(data || [])}
                 value={value || []}
               />
@@ -150,13 +125,11 @@ function ManageAreaList() {
             render={({ field: { onChange, value } }) => (
               <Autocomplete
                 options={LayoutTypeObject}
-                getOptionLabel={(d) => (d ? d.label : "")}
+                getOptionLabel={(d) => (d ? d.label : '')}
                 renderInput={(params) => <TextField {...params} label="版面" />}
                 onChange={(e, data) => onChange(data || null)}
                 value={value || null}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
+                isOptionEqualToValue={(option, value) => option.value === value.value}
               />
             )}
           />
@@ -168,27 +141,21 @@ function ManageAreaList() {
                 <Autocomplete
                   multiple
                   options={allTagTypes?.result || []}
-                  getOptionLabel={(d) => (d ? `${d.Name} ( ${d.Value} )` : "")}
-                  renderInput={(params) => (
-                    <TextField {...params} label="可選標籤類型" />
-                  )}
+                  getOptionLabel={(d) => (d ? `${d.Name} ( ${d.Value} )` : '')}
+                  renderInput={(params) => <TextField {...params} label="可選標籤類型" />}
                   onChange={(e, data) => {
                     onChange(([data].flat(1) as ITagType[]) || []);
                   }}
                   value={value || []}
-                  isOptionEqualToValue={(option, value) =>
-                    option.Id === value.Id
-                  }
+                  isOptionEqualToValue={(option, value) => option.Id === value.Id}
                 />
               )}
             />
           )}
 
-          <Stack direction={"row"} spacing={1}>
+          <Stack direction={'row'} spacing={1}>
             <Button type="submit">儲存</Button>
-            <Button onClick={() => navigate("..", { replace: true })}>
-              取消
-            </Button>
+            <Button onClick={() => navigate('..', { replace: true })}>取消</Button>
           </Stack>
         </Stack>
       </Paper>

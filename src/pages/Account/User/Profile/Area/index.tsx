@@ -1,14 +1,14 @@
-import { AreaEditModel } from "components/Area";
-import { useGetAreaByIdQuery } from "features/api/area/getArea";
-import { usePostAreaMutation } from "features/api/area/postArea";
-import { useGetUserQuery } from "features/api/user/getUser";
-import { usePostUserMutation } from "features/api/user/postUser";
+import { AreaEditModel } from "@/components/Area";
+import { useGetAreaByIdQuery } from "@/features/api/area/getArea";
+import { usePostAreaMutation } from "@/features/api/area/postArea";
+import { useGetUserQuery } from "@/features/api/user/getUser";
+import { usePostUserMutation } from "@/features/api/user/postUser";
 import {
   getUpdatedArea,
   getUpdatedAreas,
   setLayoutByArea,
-} from "features/layout/layoutSlice";
-import { store, useAppDispatch, useAppSelector } from "features/store";
+} from "@/features/layout/layoutSlice";
+import { store, useAppDispatch, useAppSelector } from "@/features/store";
 import { useLayoutEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 

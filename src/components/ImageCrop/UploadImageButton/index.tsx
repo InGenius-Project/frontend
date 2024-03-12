@@ -1,13 +1,6 @@
-import {
-  Button,
-  ButtonBase,
-  ButtonBaseTypeMap,
-  ButtonProps,
-  ExtendButtonBase,
-  useTheme,
-} from "@mui/material";
-import { motion } from "framer-motion";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import { Button, ButtonProps, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
 import React from "react";
 
 type UploadImageButtonProps = {

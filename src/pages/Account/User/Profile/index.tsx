@@ -1,13 +1,13 @@
-import { Box, Stack } from "@mui/material";
-import AreaEditor from "components/Area/AreaEditor";
-import ProfileItem from "components/ProfileItem";
-import { useGetUserQuery } from "features/api/user/getUser";
-import { usePostUserMutation } from "features/api/user/postUser";
-import { AreasType, setAreas } from "features/areas/areasSlice";
-import { useAppDispatch } from "features/store";
-import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { IArea } from "types/interfaces/IArea";
+import AreaEditor from '@/components/Area/AreaEditor';
+import ProfileItem from '@/components/ProfileItem';
+import { useGetUserQuery } from '@/features/api/user/getUser';
+import { usePostUserMutation } from '@/features/api/user/postUser';
+import { AreasType, setAreas } from '@/features/areas/areasSlice';
+import { useAppDispatch } from '@/features/store';
+import { IArea } from '@/types/interfaces/IArea';
+import { Box, Stack } from '@mui/material';
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 
 export default function Profile() {
   const { data: userData } = useGetUserQuery(null);
@@ -20,7 +20,7 @@ export default function Profile() {
           id: userData.result?.Id,
           type: AreasType.PROFILE,
           areas: userData?.result?.Areas || [],
-        })
+        }),
       );
     }
   }, [dispatch, userData]);
@@ -29,7 +29,7 @@ export default function Profile() {
 
   const handlePostProfileArea = async (areas: Array<IArea>) => {
     await postUser({
-      Username: userData?.result?.Username || "",
+      Username: userData?.result?.Username || '',
       Areas: areas,
     });
   };
@@ -40,8 +40,8 @@ export default function Profile() {
       <Outlet />
       <Box
         sx={{
-          display: "flex",
-          width: "100%",
+          display: 'flex',
+          width: '100%',
           flexGrow: 1,
           gap: 1,
         }}

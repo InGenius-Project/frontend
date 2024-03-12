@@ -1,25 +1,20 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Autocomplete, Box, Chip, TextField, useTheme } from "@mui/material";
-import FormInput from "components/FormInput";
-import Table from "components/Table";
-import { useDeleteTagsMutation } from "features/api/tag/deleteTag";
-import { useGetTagTypesQuery } from "features/api/tag/getTagTypes";
-import { useGetTagsQuery } from "features/api/tag/getTags";
-import { usePostTagMutation } from "features/api/tag/postTag";
-import { useEffect } from "react";
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { ITag } from "types/interfaces/ITag";
-import { NIL } from "uuid";
-import { TypeOf, z } from "zod";
+import FormInput from '@/components/FormInput';
+import Table from '@/components/Table';
+import { useDeleteTagsMutation } from '@/features/api/tag/deleteTag';
+import { useGetTagTypesQuery } from '@/features/api/tag/getTagTypes';
+import { useGetTagsQuery } from '@/features/api/tag/getTags';
+import { usePostTagMutation } from '@/features/api/tag/postTag';
+import { ITag } from '@/types/interfaces/ITag';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Autocomplete, Box, Chip, TextField, useTheme } from '@mui/material';
+import { useEffect } from 'react';
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { NIL } from 'uuid';
+import { TypeOf, z } from 'zod';
 
 const tagSchema = z.object({
   Id: z.string().optional(),
-  Name: z.string().min(1, "請輸入名稱").max(20, "名稱過長"),
+  Name: z.string().min(1, '請輸入名稱').max(20, '名稱過長'),
   Type: z
     .object({
       Id: z.number(),
@@ -74,9 +69,9 @@ function TagForm() {
   };
 
   const handleEditClick = (row: ITag) => {
-    setValue("Id", row.Id);
-    setValue("Name", row.Name);
-    setValue("Type", row.Type);
+    setValue('Id', row.Id);
+    setValue('Name', row.Name);
+    setValue('Type', row.Type);
   };
 
   const handleDeleteClick = (ids: readonly string[]) => {
@@ -96,30 +91,22 @@ function TagForm() {
           onDelete={handleDeleteClick}
           cells={[
             {
-              id: "Id",
-              label: "Id",
+              id: 'Id',
+              label: 'Id',
               hidden: true,
               getCellLabel: (row) => row.Id,
-              sx: { display: "none" },
-              formInput: (
-                <FormInput
-                  name={"Id"}
-                  label={"Id"}
-                  variant="standard"
-                  disabled
-                  hidden
-                />
-              ),
+              sx: { display: 'none' },
+              formInput: <FormInput name={'Id'} label={'Id'} variant="standard" disabled hidden />,
             },
             {
-              id: "Name",
-              label: "名稱",
+              id: 'Name',
+              label: '名稱',
               getCellLabel: (row) => row.Name,
-              formInput: <FormInput name={"Name"} variant="standard" />,
+              formInput: <FormInput name={'Name'} variant="standard" />,
             },
             {
-              id: "Type",
-              label: "類型",
+              id: 'Type',
+              label: '類型',
               getCellLabel: (row) => (
                 <Chip
                   label={row.Type.Name}
@@ -137,9 +124,7 @@ function TagForm() {
                       {...props}
                       options={tagTypesData?.result || []}
                       getOptionLabel={(d) => `${d.Name} ( ${d.Value} )`}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" />
-                      )}
+                      renderInput={(params) => <TextField {...params} variant="standard" />}
                       onChange={(e, data) => onChange(data)}
                       value={null}
                     />

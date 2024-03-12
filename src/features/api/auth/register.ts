@@ -1,21 +1,18 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { baseApi } from "../baseApi";
-import { RegisterInput } from "pages/Account/Register";
-import { getUserApi } from "../user/getUser";
-import { IToken } from "types/interfaces/IToken";
-import { setToken } from "features/user/userSlice";
-import { UserRole } from "types/enums/UserRole";
+import { setToken } from '@/features/user/userSlice';
+import { RegisterInput } from '@/pages/Account/Register';
+import { UserRole } from '@/types/enums/UserRole';
+import { IResponse } from '@/types/interfaces/IResponse';
+import { IToken } from '@/types/interfaces/IToken';
+import { baseApi } from '../baseApi';
+import { getUserApi } from '../user/getUser';
 
 export const registerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation<
-      IResponse<IToken>,
-      RegisterInput & { Role: UserRole }
-    >({
+    register: builder.mutation<IResponse<IToken>, RegisterInput & { Role: UserRole }>({
       query(data) {
         return {
-          url: "/user/signup",
-          method: "POST",
+          url: '/user/signup',
+          method: 'POST',
           body: data,
         };
       },
@@ -24,13 +21,13 @@ export const registerApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data.result) {
             dispatch(setToken(data.result));
-            localStorage.setItem("accessToken", data.result.AccessToken);
+            localStorage.setItem('accessToken', data.result.AccessToken);
           }
 
           dispatch(
             getUserApi.endpoints.getUser.initiate(null, {
               forceRefetch: true,
-            })
+            }),
           );
         } catch (error) {}
       },

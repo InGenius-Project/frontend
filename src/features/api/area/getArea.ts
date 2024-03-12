@@ -1,6 +1,6 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { baseApi } from "../baseApi";
-import { IArea } from "types/interfaces/IArea";
+import { IResponse } from '@/types/interfaces/IResponse';
+import { baseApi } from '../baseApi';
+import { IArea } from '@/types/interfaces/IArea';
 
 export const getAreaByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,11 +8,11 @@ export const getAreaByIdApi = baseApi.injectEndpoints({
       query(areaId) {
         return {
           url: `Area/${areaId}`,
-          method: "GET",
+          method: 'GET',
         };
       },
       providesTags: (result, error, arg) => {
-        return [{ type: "Area", id: result?.result?.Id }];
+        return [{ type: 'Area', id: result?.result?.Id }];
       },
     }),
   }),

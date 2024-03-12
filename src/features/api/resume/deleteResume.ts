@@ -1,5 +1,5 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { baseApi } from "../baseApi";
+import { IResponse } from '@/types/interfaces/IResponse';
+import { baseApi } from '../baseApi';
 
 export const deleteResumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -7,10 +7,10 @@ export const deleteResumeApi = baseApi.injectEndpoints({
       query(id) {
         return {
           url: `Resume/${id}`,
-          method: "DELETE",
+          method: 'DELETE',
         };
       },
-      invalidatesTags: ["ResumeLists"],
+      invalidatesTags: ['ResumeLists'],
     }),
   }),
 });

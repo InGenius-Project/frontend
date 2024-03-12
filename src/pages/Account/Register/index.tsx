@@ -1,46 +1,30 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Lock from "@mui/icons-material/Lock";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  Box,
-  Container,
-  InputAdornment,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { ReactComponent as LoginSvg } from "assets/images/svg/login.svg";
-import FormInput from "components/FormInput";
-import { useRegisterMutation } from "features/api/auth/register";
-import { motion } from "framer-motion";
-import React, { useEffect } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { TypeOf, object, string } from "zod";
+import LoginSvg from '@/assets/images/svg/login.svg?react';
+import FormInput from '@/components/FormInput';
+import { useRegisterMutation } from '@/features/api/auth/register';
+import { zodResolver } from '@hookform/resolvers/zod';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Lock from '@mui/icons-material/Lock';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Container, InputAdornment, Link, Stack, Tab, Tabs, Typography, useTheme } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { TypeOf, object, string } from 'zod';
 
 const registerSchema = object({
-  Username: string().min(1, "請輸入名稱").max(100),
-  Email: string().min(1, "請輸入帳號").email("請輸入正確的帳號格式"),
-  Password: string()
-    .min(1, "請輸入密碼")
-    .min(8, "密碼必須大於8個字元")
-    .max(32, "密碼必須小於32個字元"),
-  PasswordConfirm: string().min(1, "請確認密碼"),
+  Username: string().min(1, '請輸入名稱').max(100),
+  Email: string().min(1, '請輸入帳號').email('請輸入正確的帳號格式'),
+  Password: string().min(1, '請輸入密碼').min(8, '密碼必須大於8個字元').max(32, '密碼必須小於32個字元'),
+  PasswordConfirm: string().min(1, '請確認密碼'),
 }).refine((data) => data.Password === data.PasswordConfirm, {
-  path: ["PasswordConfirm"],
-  message: "密碼不相符",
+  path: ['PasswordConfirm'],
+  message: '密碼不相符',
 });
 
-export type RegisterInput = Omit<
-  TypeOf<typeof registerSchema>,
-  "PasswordConfirm"
->;
+export type RegisterInput = Omit<TypeOf<typeof registerSchema>, 'PasswordConfirm'>;
 
 export default function Register() {
   const theme = useTheme();
@@ -59,7 +43,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/Account/User");
+      navigate('/Account/User');
     }
   }, [isSuccess, navigate]);
 
@@ -87,7 +71,7 @@ export default function Register() {
   return (
     <Box
       sx={{
-        alignSelf: "center",
+        alignSelf: 'center',
         flexGrow: 1,
       }}
     >
@@ -95,18 +79,18 @@ export default function Register() {
         <Grid
           container
           sx={{
-            width: "100%",
+            width: '100%',
           }}
         >
           <Grid
             tablet={6}
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <LoginSvg width={"70%"} />
+            <LoginSvg width={'70%'} />
           </Grid>
           <Grid mobile={12} tablet={6}>
             <motion.div
@@ -123,14 +107,14 @@ export default function Register() {
                 opacity: 0,
               }}
               transition={{
-                type: "linear",
+                type: 'linear',
               }}
             >
               <FormProvider {...methods}>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: theme.spacing(3),
                   }}
                   noValidate
@@ -139,20 +123,12 @@ export default function Register() {
                 >
                   <Typography variant="h3">註冊</Typography>
 
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <Tabs
-                      value={role}
-                      onChange={handleChange}
-                      aria-label="basic tabs example"
-                    >
+                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={role} onChange={handleChange} aria-label="basic tabs example">
                       <Tab label="一般" value={0} />
                       <Tab label="企業端" value={1} />
-                      {process.env.REACT_APP_NODE_ENV === "development" && (
-                        <Tab label="管理員" value={2} />
-                      )}
-                      {process.env.REACT_APP_NODE_ENV === "development" && (
-                        <Tab label="內部管理員" value={3} />
-                      )}
+                      {process.env.REACT_APP_NODE_ENV === 'development' && <Tab label="管理員" value={2} />}
+                      {process.env.REACT_APP_NODE_ENV === 'development' && <Tab label="內部管理員" value={3} />}
                     </Tabs>
                   </Box>
 
@@ -207,12 +183,8 @@ export default function Register() {
                     }}
                   />
 
-                  <Stack direction="row" spacing={2} alignItems={"flex-end"}>
-                    <LoadingButton
-                      variant="contained"
-                      loading={isLoading}
-                      type="submit"
-                    >
+                  <Stack direction="row" spacing={2} alignItems={'flex-end'}>
+                    <LoadingButton variant="contained" loading={isLoading} type="submit">
                       註冊
                     </LoadingButton>
                     <Link component={RouterLink} to="/Account/Login">

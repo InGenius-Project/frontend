@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "features/store";
-import { EditorState } from "lexical";
-import { LayoutType } from "types/enums/LayoutType";
-import { IArea, IImage, IKeyValueItem } from "types/interfaces/IArea";
-import { IInnerTag } from "types/interfaces/ITag";
-import { NIL, v4 as uuid } from "uuid";
+import { RootState } from '@/features/store';
+import { LayoutType } from '@/types/enums/LayoutType';
+import { IArea, IImage, IKeyValueItem } from '@/types/interfaces/IArea';
+import { IInnerTag } from '@/types/interfaces/ITag';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { EditorState } from 'lexical';
+import { NIL, v4 as uuid } from 'uuid';
 
 interface ILayout {
   areaId: string;
@@ -21,24 +21,24 @@ interface ILayout {
 }
 
 const initialState: ILayout = {
-  areaId: "",
+  areaId: '',
   isDisplayed: true,
   sequence: 0,
-  id: "",
-  title: "",
+  id: '',
+  title: '',
   content: undefined,
   image: {
-    Id: "",
-    Filename: "",
-    ContentType: "",
-    Content: "",
+    Id: '',
+    Filename: '',
+    ContentType: '',
+    Content: '',
   },
   listItems: undefined,
   keyValueListItems: [],
 };
 
 const layoutSlice = createSlice({
-  name: "layout",
+  name: 'layout',
   initialState,
   reducers: {
     initializeState: (state) => {
@@ -61,7 +61,7 @@ const layoutSlice = createSlice({
     setAreaTypeId: (state, action: PayloadAction<number | null>) => {
       state.areaTypeId = action.payload;
     },
-    setImage: (state, action: PayloadAction<ILayout["image"]>) => {
+    setImage: (state, action: PayloadAction<ILayout['image']>) => {
       state.image = action.payload;
     },
     setImageFilename: (state, action: PayloadAction<string>) => {
@@ -84,9 +84,7 @@ const layoutSlice = createSlice({
     updateListItem: (state, action: PayloadAction<IInnerTag>) => {
       state.listItems ??= [];
 
-      var index = state.listItems.findIndex(
-        (item) => item.InnerId === action.payload.InnerId
-      );
+      var index = state.listItems.findIndex((item) => item.InnerId === action.payload.InnerId);
 
       // Find the empty Items if not exist
       if (index === -1 || !index) {
@@ -96,26 +94,15 @@ const layoutSlice = createSlice({
       if (index !== -1 && index !== undefined) {
         return {
           ...state,
-          listItems: state.listItems.map((item, i) =>
-            i === index ? action.payload : item
-          ),
+          listItems: state.listItems.map((item, i) => (i === index ? action.payload : item)),
         };
       }
     },
-    setKetValueListItems: (
-      state,
-      action: PayloadAction<Array<IKeyValueItem>>
-    ) => {
+    setKetValueListItems: (state, action: PayloadAction<Array<IKeyValueItem>>) => {
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
-      const {
-        Title,
-        AreaTypeId: AreaType,
-        Sequence,
-        Id,
-        IsDisplayed,
-      } = action.payload;
+      const { Title, AreaTypeId: AreaType, Sequence, Id, IsDisplayed } = action.payload;
 
       const layoutType = action.payload.LayoutType;
 
@@ -138,11 +125,10 @@ const layoutSlice = createSlice({
           parseArea.id = action.payload.ImageTextLayout?.Id!;
           parseArea.content = action.payload.ImageTextLayout?.Content;
           parseArea.image = {
-            Id: action.payload.ImageTextLayout?.Image?.Id || "",
-            Filename: action.payload.ImageTextLayout?.Image?.Filename || "",
-            ContentType:
-              action.payload.ImageTextLayout?.Image?.ContentType || "",
-            Content: action.payload.ImageTextLayout?.Image?.Content || "",
+            Id: action.payload.ImageTextLayout?.Image?.Id || '',
+            Filename: action.payload.ImageTextLayout?.Image?.Filename || '',
+            ContentType: action.payload.ImageTextLayout?.Image?.ContentType || '',
+            Content: action.payload.ImageTextLayout?.Image?.Content || '',
           };
           break;
         case LayoutType.List:
@@ -154,8 +140,7 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.KeyValueList:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
-          parseArea.keyValueListItems =
-            action.payload.KeyValueListLayout?.Items || [];
+          parseArea.keyValueListItems = action.payload.KeyValueListLayout?.Items || [];
           break;
       }
       return parseArea;
@@ -181,13 +166,11 @@ export const {
   setImage,
 } = layoutSlice.actions;
 
-export const selectLayoutType = (state: RootState) =>
-  state.layoutState.layoutType;
+export const selectLayoutType = (state: RootState) => state.layoutState.layoutType;
 
 export const selectLayoutTitle = (state: RootState) => state.layoutState.title;
 
-export const generateImageBase64Src = (contentType: string, content: string) =>
-  `data:${contentType};base64,${content}`;
+export const generateImageBase64Src = (contentType: string, content: string) => `data:${contentType};base64,${content}`;
 
 export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
   const areasState = state.areasState;
@@ -215,9 +198,9 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
             Content: JSON.stringify(layoutState.content),
             Image: {
               Id: NIL,
-              Content: layoutState.image?.Content || "",
-              ContentType: layoutState.image?.ContentType || "image/jpeg",
-              Filename: layoutState.image?.Filename || "",
+              Content: layoutState.image?.Content || '',
+              ContentType: layoutState.image?.ContentType || 'image/jpeg',
+              Filename: layoutState.image?.Filename || '',
             },
           }
         : undefined,
@@ -225,7 +208,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.List
         ? {
             Id: NIL,
-            Items: layoutState.listItems?.filter((l) => l.Name !== ""),
+            Items: layoutState.listItems?.filter((l) => l.Name !== ''),
           }
         : undefined,
     KeyValueListLayout:
@@ -272,9 +255,9 @@ export const getUpdatedArea = (state: RootState) => {
             Content: JSON.stringify(layoutState.content),
             Image: {
               Id: layoutState.image.Id,
-              Content: layoutState.image?.Content || "",
-              ContentType: layoutState.image?.ContentType || "image/jpeg",
-              Filename: layoutState.image?.Filename || "",
+              Content: layoutState.image?.Content || '',
+              ContentType: layoutState.image?.ContentType || 'image/jpeg',
+              Filename: layoutState.image?.Filename || '',
             },
           }
         : undefined,
@@ -283,7 +266,7 @@ export const getUpdatedArea = (state: RootState) => {
         ? {
             Id: layoutState.id,
             // sort item
-            Items: layoutState.listItems?.filter((l) => l.Name !== ""),
+            Items: layoutState.listItems?.filter((l) => l.Name !== ''),
           }
         : undefined,
     KeyValueListLayout:

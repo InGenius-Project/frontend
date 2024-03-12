@@ -1,24 +1,9 @@
-import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  createFilterOptions,
-  useTheme,
-} from "@mui/material";
-import isNotNullOrUndefined from "assets/utils/isNotNullorUndefined";
-import DragDropContainer from "components/DragDropContainer";
-import ImageCrop from "components/ImageCrop";
-import RichTextEditor from "components/RichTextEditor";
-import { useGetAreaTypeByIdQuery } from "features/api/area/getAreaTypeById";
-import {
-  useGetTagTypeByIdQuery,
-  useLazyGetTagTypeByIdQuery,
-} from "features/api/tag/getTagTypeById";
+import isNotNullOrUndefined from '@/assets/utils/isNotNullorUndefined';
+import DragDropContainer from '@/components/DragDropContainer';
+import ImageCrop from '@/components/ImageCrop';
+import RichTextEditor from '@/components/RichTextEditor';
+import { useGetAreaTypeByIdQuery } from '@/features/api/area/getAreaTypeById';
+import { useGetTagTypeByIdQuery } from '@/features/api/tag/getTagTypeById';
 import {
   pushListItem,
   selectLayoutTitle,
@@ -29,17 +14,29 @@ import {
   setListItem,
   setTitle,
   updateListItem,
-} from "features/layout/layoutSlice";
-import { useAppDispatch, useAppSelector } from "features/store";
-import { EditorState, LexicalEditor } from "lexical";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { LayoutType } from "types/enums/LayoutType";
-import { IKeyValueItem } from "types/interfaces/IArea";
-import { IInnerTag, ITag } from "types/interfaces/ITag";
-import { NIL, v4 as uuid } from "uuid";
-import AreaKeyValueListItem from "../AreaKeyValueListItem";
-import AreaListItem from "../AreaListItem";
+} from '@/features/layout/layoutSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store';
+import { LayoutType } from '@/types/enums/LayoutType';
+import { IKeyValueItem } from '@/types/interfaces/IArea';
+import { IInnerTag } from '@/types/interfaces/ITag';
+import LoadingButton from '@mui/lab/LoadingButton';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+  createFilterOptions,
+  useTheme,
+} from '@mui/material';
+import { EditorState, LexicalEditor } from 'lexical';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { NIL, v4 as uuid } from 'uuid';
+import AreaKeyValueListItem from '../AreaKeyValueListItem';
+import AreaListItem from '../AreaListItem';
 
 type AreaEditModelProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -48,28 +45,18 @@ type AreaEditModelProps = {
 
 const filter = createFilterOptions<IInnerTag>();
 
-export default function AreaEditModel({
-  onAddClick,
-  loading,
-}: AreaEditModelProps) {
+export default function AreaEditModel({ onAddClick, loading }: AreaEditModelProps) {
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
   const layoutTypeState = useAppSelector(selectLayoutType);
   const layoutTitle = useAppSelector(selectLayoutTitle);
-  const { data: areaTypeData } = useGetAreaTypeByIdQuery(
-    layoutState.areaTypeId!,
-    {
-      skip: !layoutState.areaTypeId,
-    }
-  );
-  const { data: tagTypeData } = useGetTagTypeByIdQuery(
-    (areaTypeData?.result?.ListTagTypes[0].Id || "0").toString(),
-    {
-      skip:
-        !areaTypeData?.result || areaTypeData.result.ListTagTypes.length === 0,
-    }
-  );
-  const { data: customTagTypeData } = useGetTagTypeByIdQuery("1");
+  const { data: areaTypeData } = useGetAreaTypeByIdQuery(layoutState.areaTypeId!, {
+    skip: !layoutState.areaTypeId,
+  });
+  const { data: tagTypeData } = useGetTagTypeByIdQuery((areaTypeData?.result?.ListTagTypes[0].Id || '0').toString(), {
+    skip: !areaTypeData?.result || areaTypeData.result.ListTagTypes.length === 0,
+  });
+  const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -79,10 +66,7 @@ export default function AreaEditModel({
     }
   }, [areaTypeData?.result, dispatch]);
 
-  const handleEditorChange = (
-    editorState: EditorState,
-    editor: LexicalEditor
-  ) => {
+  const handleEditorChange = (editorState: EditorState, editor: LexicalEditor) => {
     dispatch(setContent(editorState));
   };
 
@@ -126,17 +110,15 @@ export default function AreaEditModel({
         pushListItem({
           InnerId: NIL,
           Id: NIL,
-          Name: "",
+          Name: '',
           Type: customTagTypeData.result,
-        })
+        }),
       );
     }
   };
 
   const handleListRemoveClick = (id: string) => {
-    dispatch(
-      setListItem((layoutState.listItems || []).filter((i) => i.InnerId !== id))
-    );
+    dispatch(setListItem((layoutState.listItems || []).filter((i) => i.InnerId !== id)));
   };
 
   const handleKeyValueListItemChange = (item: IKeyValueItem) => {
@@ -147,36 +129,31 @@ export default function AreaEditModel({
             return item;
           }
           return i;
-        })
-      )
+        }),
+      ),
     );
   };
 
-  const handleListItemChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: string | IInnerTag | null
-  ) => {
-    var foundListItem = layoutState.listItems?.find(
-      (item) => item.InnerId === value
-    );
+  const handleListItemChange = (event: React.SyntheticEvent<Element, Event>, value: string | IInnerTag | null) => {
+    var foundListItem = layoutState.listItems?.find((item) => item.InnerId === value);
     if (foundListItem) {
-      if (typeof value === "object" && value) dispatch(updateListItem(value));
+      if (typeof value === 'object' && value) dispatch(updateListItem(value));
     } else {
-      if (typeof value === "string" && customTagTypeData?.result)
+      if (typeof value === 'string' && customTagTypeData?.result)
         dispatch(
           updateListItem({
             InnerId: uuid(),
             Id: NIL,
             Name: value,
             Type: customTagTypeData.result,
-          })
+          }),
         );
-      else if (typeof value === "object" && value)
+      else if (typeof value === 'object' && value)
         dispatch(
           updateListItem({
             ...value,
             InnerId: value.InnerId,
-          })
+          }),
         );
     }
   };
@@ -190,16 +167,16 @@ export default function AreaEditModel({
       <Stack spacing={2}>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "flex-end",
-            width: "100%",
+            display: 'flex',
+            alignItems: 'flex-end',
+            width: '100%',
             gap: 1,
           }}
         >
           <Stack
-            direction={"column"}
+            direction={'column'}
             sx={{
-              flex: "1 1 auto",
+              flex: '1 1 auto',
             }}
             spacing={1}
           >
@@ -215,21 +192,15 @@ export default function AreaEditModel({
                 sx={{ flexGrow: 1 }}
               />
             )}
-            <Typography variant="caption">
-              {areaTypeData ? areaTypeData.result?.Description : ""}
-            </Typography>
+            <Typography variant="caption">{areaTypeData ? areaTypeData.result?.Description : ''}</Typography>
           </Stack>
-          <Box sx={{ whiteSpace: "nowrap" }}>
+          <Box sx={{ whiteSpace: 'nowrap' }}>
             <Button variant="outlined" onClick={() => navigate(-1)}>
               上一步
             </Button>
           </Box>
           <Box>
-            <LoadingButton
-              variant="contained"
-              onClick={onAddClick}
-              loading={loading}
-            >
+            <LoadingButton variant="contained" onClick={onAddClick} loading={loading}>
               新增
             </LoadingButton>
           </Box>
@@ -246,13 +217,8 @@ export default function AreaEditModel({
         )}
 
         {/* Text */}
-        {(layoutTypeState === LayoutType.Text ||
-          layoutTypeState === LayoutType.ImageText) && (
-          <RichTextEditor
-            controllable
-            onChange={handleEditorChange}
-            initialEditorState={layoutState.content}
-          />
+        {(layoutTypeState === LayoutType.Text || layoutTypeState === LayoutType.ImageText) && (
+          <RichTextEditor controllable onChange={handleEditorChange} initialEditorState={layoutState.content} />
         )}
 
         {/* Key value list */}
@@ -283,8 +249,8 @@ export default function AreaEditModel({
               color="info"
               variant="text"
               sx={{
-                width: "100%",
-                borderRadius: "4px",
+                width: '100%',
+                borderRadius: '4px',
                 padding: 0.2,
               }}
               onClick={handleKeyValueListAddClick}
@@ -317,7 +283,7 @@ export default function AreaEditModel({
                     onClickDelete={handleListRemoveClick}
                     renderInput={
                       <Autocomplete
-                        sx={{ width: "20em" }}
+                        sx={{ width: '20em' }}
                         freeSolo
                         options={
                           tagTypeData?.result
@@ -336,13 +302,13 @@ export default function AreaEditModel({
                           />
                         )}
                         getOptionLabel={(option) => {
-                          if (typeof option === "string") {
+                          if (typeof option === 'string') {
                             return option;
                           }
                           if (option.Name) {
                             return option.Name;
                           }
-                          return "";
+                          return '';
                         }}
                         value={i}
                         isOptionEqualToValue={(option, value) => {
@@ -355,14 +321,8 @@ export default function AreaEditModel({
                           const filtered = filter(options, params);
                           const { inputValue } = params;
                           // Suggest the creation of a new value
-                          const isExisting = options.some(
-                            (option: IInnerTag) => inputValue === option.Name
-                          );
-                          if (
-                            inputValue !== "" &&
-                            !isExisting &&
-                            customTagTypeData?.result
-                          ) {
+                          const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
+                          if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
                             filtered.push({
                               InnerId: uuid(),
                               Id: NIL,
@@ -382,8 +342,8 @@ export default function AreaEditModel({
               color="info"
               variant="text"
               sx={{
-                width: "100%",
-                borderRadius: "4px",
+                width: '100%',
+                borderRadius: '4px',
                 padding: 0.2,
               }}
               onClick={handleListAddClick}

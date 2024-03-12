@@ -1,27 +1,22 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Autocomplete, Box, TextField } from "@mui/material";
-import FormInput from "components/FormInput";
-import Table from "components/Table";
-import { useDeletAreaTypesMutation } from "features/api/area/deleteAreaTypes";
-import { useGetAreaTypesQuery } from "features/api/area/getAreaTypes";
-import { usePostAreaTypeMutation } from "features/api/area/postAreaType";
-import { useEffect } from "react";
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { LayoutType, LayoutTypeObject } from "types/enums/LayoutType";
-import { UserRole, UserRoleObject } from "types/enums/UserRole";
-import { TypeOf, z } from "zod";
+import FormInput from '@/components/FormInput';
+import Table from '@/components/Table';
+import { useDeletAreaTypesMutation } from '@/features/api/area/deleteAreaTypes';
+import { useGetAreaTypesQuery } from '@/features/api/area/getAreaTypes';
+import { usePostAreaTypeMutation } from '@/features/api/area/postAreaType';
+import { LayoutType, LayoutTypeObject } from '@/types/enums/LayoutType';
+import { UserRole, UserRoleObject } from '@/types/enums/UserRole';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Autocomplete, Box, TextField } from '@mui/material';
+import { useEffect } from 'react';
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { TypeOf, z } from 'zod';
 
 const areaTypeSchema = z.object({
   Id: z.coerce.number(),
-  Name: z.string().min(1, "請輸入名稱").max(20, "名稱過長"),
+  Name: z.string().min(1, '請輸入名稱').max(20, '名稱過長'),
   Value: z.string(),
-  Description: z.string({ required_error: "請輸入描述" }),
+  Description: z.string({ required_error: '請輸入描述' }),
   LayoutType: z.object({ value: z.number(), label: z.string() }),
   UserRole: z.array(z.object({ value: z.number(), label: z.string() })),
 });
@@ -32,9 +27,7 @@ function AreaTypeForm() {
   const navigate = useNavigate();
 
   const { data: areaTypesData } = useGetAreaTypesQuery({
-    roles: Object.keys(UserRole).filter(
-      (v) => !isNaN(Number(v))
-    ) as unknown as UserRole[],
+    roles: Object.keys(UserRole).filter((v) => !isNaN(Number(v))) as unknown as UserRole[],
   });
   const [deleteAreaType] = useDeletAreaTypesMutation();
   const [postAreaType] = usePostAreaTypeMutation();
@@ -70,20 +63,17 @@ function AreaTypeForm() {
   };
 
   const handleEditClick = (row: AreaTypeInput) => {
-    if (
-      row.LayoutType.value === LayoutType.List ||
-      row.LayoutType.value === LayoutType.KeyValueList
-    ) {
+    if (row.LayoutType.value === LayoutType.List || row.LayoutType.value === LayoutType.KeyValueList) {
       navigate(`List/${row.Id}`);
       return;
     }
 
-    setValue("Id", row.Id);
-    setValue("Name", row.Name);
-    setValue("Value", row.Value);
-    setValue("Description", row.Description);
-    setValue("LayoutType", row.LayoutType);
-    setValue("UserRole", row.UserRole);
+    setValue('Id', row.Id);
+    setValue('Name', row.Name);
+    setValue('Value', row.Value);
+    setValue('Description', row.Description);
+    setValue('LayoutType', row.LayoutType);
+    setValue('UserRole', row.UserRole);
   };
 
   const handleDeleteClick = (ids: readonly string[]) => {
@@ -96,14 +86,12 @@ function AreaTypeForm() {
         <Table<AreaTypeInput, keyof AreaTypeInput>
           title="區域類型"
           data={
-            areaTypesData?.result?.map((r) => ({
+            areaTypesData?.result?.map((r: any) => ({
               ...r,
-              LayoutType: LayoutTypeObject.find(
-                (l) => l.value === r.LayoutType
-              ) || { value: 0, label: "" },
-              UserRole: r.UserRole.map((r) => ({
+              LayoutType: LayoutTypeObject.find((l) => l.value === r.LayoutType) || { value: 0, label: '' },
+              UserRole: r.UserRole.map((r: any) => ({
                 value: r as number,
-                label: UserRoleObject.find((u) => u.value === r)?.label || "",
+                label: UserRoleObject.find((u) => u.value === r)?.label || '',
               })),
             })) || []
           }
@@ -114,42 +102,34 @@ function AreaTypeForm() {
           onDelete={handleDeleteClick}
           cells={[
             {
-              id: "Id",
-              label: "Id",
+              id: 'Id',
+              label: 'Id',
               hidden: true,
               getCellLabel: (row) => row.Id,
-              sx: { display: "none" },
-              formInput: (
-                <FormInput
-                  name={"Id"}
-                  label={"Id"}
-                  variant="standard"
-                  disabled
-                  hidden
-                />
-              ),
+              sx: { display: 'none' },
+              formInput: <FormInput name={'Id'} label={'Id'} variant="standard" disabled hidden />,
             },
             {
-              id: "Name",
-              label: "名稱",
+              id: 'Name',
+              label: '名稱',
               getCellLabel: (row) => row.Name,
-              formInput: <FormInput name={"Name"} variant="standard" />,
+              formInput: <FormInput name={'Name'} variant="standard" />,
             },
             {
-              id: "Value",
-              label: "值",
+              id: 'Value',
+              label: '值',
               getCellLabel: (row) => row.Value,
-              formInput: <FormInput name={"Value"} variant="standard" />,
+              formInput: <FormInput name={'Value'} variant="standard" />,
             },
             {
-              id: "Description",
-              label: "描述",
+              id: 'Description',
+              label: '描述',
               getCellLabel: (row) => row.Description,
-              formInput: <FormInput name={"Description"} variant="standard" />,
+              formInput: <FormInput name={'Description'} variant="standard" />,
             },
             {
-              id: "LayoutType",
-              label: "版型",
+              id: 'LayoutType',
+              label: '版型',
               getCellLabel: (row) => row.LayoutType.label,
               formInput: (
                 <Controller
@@ -159,9 +139,7 @@ function AreaTypeForm() {
                       {...props}
                       options={LayoutTypeObject}
                       getOptionLabel={(d) => d.label}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" />
-                      )}
+                      renderInput={(params) => <TextField {...params} variant="standard" />}
                       onChange={(e, data) => onChange(data)}
                       value={undefined}
                     />
@@ -171,12 +149,10 @@ function AreaTypeForm() {
               ),
             },
             {
-              id: "UserRole",
-              label: "使用者角色",
+              id: 'UserRole',
+              label: '使用者角色',
               getCellLabel: (row) =>
-                row.UserRole.map(
-                  (r) => UserRoleObject.find((u) => u.value === r.value)?.label
-                ).join(", "),
+                row.UserRole.map((r) => UserRoleObject.find((u) => u.value === r.value)?.label).join(', '),
               formInput: (
                 <Controller
                   name="UserRole"
@@ -186,9 +162,7 @@ function AreaTypeForm() {
                       multiple
                       options={UserRoleObject}
                       getOptionLabel={(d) => d.label}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" />
-                      )}
+                      renderInput={(params) => <TextField {...params} variant="standard" />}
                       value={undefined}
                       onChange={(e, data) => onChange(data)}
                     />

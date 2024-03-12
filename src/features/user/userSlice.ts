@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUser, IUserInfo } from "types/interfaces/IUser";
-import { IToken } from "../../types/interfaces/IToken";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IUser, IUserInfo } from '@/types/interfaces/IUser';
+import { IToken } from '@/types/interfaces/IToken';
 
 type userSliceType = {
   User?: IUserInfo;
@@ -14,7 +14,7 @@ const initialState: userSliceType = {
 
 export const userSlice = createSlice({
   initialState,
-  name: "userSlice",
+  name: 'userSlice',
   reducers: {
     setUser: (state, action: PayloadAction<IUser>) => {
       state = action.payload;
@@ -26,7 +26,7 @@ export const userSlice = createSlice({
       state.Token = action.payload;
     },
     logout: () => {
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem('accessToken');
       return initialState;
     },
   },
