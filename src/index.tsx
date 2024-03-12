@@ -11,7 +11,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/features/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-``;
 root.render(
   <CssVarsProvider theme={theme}>
     <React.StrictMode>
