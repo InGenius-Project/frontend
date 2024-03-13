@@ -1,9 +1,10 @@
-import { UserRole } from '@/types/enums/UserRole';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
-import dummyUserImage from '@/assets/images/png/dummyUserImage.jpg';
+import dummyUserImage from 'assets/images/png/dummyUserImage.jpg';
+import { UserRole } from '@/types/enums/UserRole';
 
 const navigationConfig = [
   {
@@ -35,6 +36,11 @@ const navigationConfig = [
         value: 'Recruitment',
         icon: <WorkOutlineOutlinedIcon />,
       },
+      {
+        name: '訊息',
+        value: 'Message',
+        icon: <MessageOutlinedIcon />,
+      },
     ],
   },
   {
@@ -61,6 +67,11 @@ const navigationConfig = [
         value: 'Recruitment',
         icon: <WorkOutlineOutlinedIcon />,
       },
+      {
+        name: '訊息',
+        value: 'Message',
+        icon: <MessageOutlinedIcon />,
+      },
     ],
   },
   {
@@ -79,6 +90,11 @@ const navigationConfig = [
         name: '區塊管理',
         value: 'Manage/Area',
         icon: <DashboardOutlinedIcon />,
+      },
+      {
+        name: '訊息',
+        value: 'Message',
+        icon: <MessageOutlinedIcon />,
       },
     ],
   },

@@ -3,6 +3,9 @@
   --ing-height-profile-cover: 125px;
   --ing-height-profile-avatar: 5rem;
   --ing-height-area-control: 180px;
+  --ing-height-user-route: calc(100vh - var(--ing-height-navbar));
+  --ing-height-user-header: 2em;
+  --ing-height-user-inner: calc(var(--ing-height-user-route) - var(--ing-height-user-header) - 32px);
 
   --ing-width-sidebar: 9rem;
   --ing-width-area-control: 56px;

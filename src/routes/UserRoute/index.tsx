@@ -20,7 +20,7 @@ export default function UserRoute() {
 
       <Box
         sx={{
-          minHeight: "calc(100vh - var(--ing-height-navbar))",
+          minHeight: "var(--ing-height-user-route)",
           width: "100%",
           flexGrow: 1,
         }}
