@@ -72,7 +72,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
         <DragHandleIcon color="primary" />
       </Box>
       <Stack spacing={1}>
-        <Typography variant="h4">{a.getAreaTitle()}</Typography>
+        <Typography variant="subtitle1">{a.getAreaTitle()}</Typography>
         {a.isLayoutType(LayoutType.ImageText) && area.ImageTextLayout?.Image?.Content && (
           <Stack direction={'row'} spacing={1}>
             <img

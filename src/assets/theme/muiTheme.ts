@@ -86,22 +86,6 @@ let theme = extendTheme(
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(','),
-      h1: {
-        fontSize: '5rem',
-        fontWeight: 'bold',
-      },
-      h2: {
-        fontSize: '3.5rem',
-        fontWeight: 'default',
-      },
-      h3: {
-        fontSize: '2rem',
-        fontWeight: 'bold',
-      },
-      h4: {
-        fontSize: '1.3rem',
-        fontWeight: 'bold',
-      },
     },
     components: {
       MuiContainer: {
@@ -131,13 +115,6 @@ let theme = extendTheme(
           variant: 'contained',
         },
       },
-      MuiTypography: {
-        styleOverrides: {
-          root: ({ theme: t }) => ({
-            color: t.vars.palette.text.primary,
-          }),
-        },
-      },
       MuiChip: {
         styleOverrides: {
           root: ({ theme: t }) => ({
@@ -149,5 +126,116 @@ let theme = extendTheme(
   },
   zhTW,
 );
+
+theme.typography = {
+  ...theme.typography,
+  h1: {
+    fontWeight: 'bold',
+    fontSize: '2rem', // Default font size for mobile
+    color: theme.colorSchemes.light.palette.text.primary,
+
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '2.5rem', // Adjust font size for tablet
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '3rem', // Adjust font size for laptop
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '3.5rem', // Adjust font size for desktop
+    },
+  },
+  h2: {
+    fontSize: '1.8rem',
+    fontWeight: 'bold',
+    color: theme.colorSchemes.light.palette.text.primary,
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '2.2rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '2.5rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '3rem',
+    },
+  },
+  h3: {
+    fontSize: '1.6rem',
+    fontWeight: 'bold',
+    color: theme.colorSchemes.light.palette.text.primary,
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '1.8rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '2rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '2.5rem',
+    },
+  },
+  h4: {
+    fontSize: '1.4rem',
+    color: theme.colorSchemes.light.palette.text.primary,
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '1.6rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '1.8rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '2rem',
+    },
+  },
+  h5: {
+    fontSize: '1.2rem',
+    color: theme.colorSchemes.light.palette.text.primary,
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '1.4rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '1.6rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '1.8rem',
+    },
+  },
+  h6: {
+    fontSize: '1rem',
+    color: theme.colorSchemes.light.palette.text.primary,
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '1.2rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '1.4rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '1.6rem',
+    },
+  },
+  subtitle1: {
+    fontSize: '1rem',
+    color: theme.colorSchemes.light.palette.text.primary,
+    fontWeight: '600',
+    [theme.breakpoints.up('tablet')]: {
+      fontSize: '1.2rem',
+    },
+    [theme.breakpoints.up('laptop')]: {
+      fontSize: '1.4rem',
+    },
+    [theme.breakpoints.up('desktop')]: {
+      fontSize: '1.6rem',
+    },
+  },
+
+  body1: {
+    color: theme.colorSchemes.light.palette.text.primary,
+  },
+  body2: {
+    color: theme.colorSchemes.light.palette.text.secondary,
+  },
+  caption: {
+    fontSize: '0.8rem',
+    color: theme.colorSchemes.light.palette.text.secondary,
+  },
+};
 
 export default theme;

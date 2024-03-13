@@ -127,8 +127,8 @@ export default function Register() {
                     <Tabs value={role} onChange={handleChange} aria-label="basic tabs example">
                       <Tab label="一般" value={0} />
                       <Tab label="企業端" value={1} />
-                      {process.env.REACT_APP_NODE_ENV === 'development' && <Tab label="管理員" value={2} />}
-                      {process.env.REACT_APP_NODE_ENV === 'development' && <Tab label="內部管理員" value={3} />}
+                      {import.meta.env.VITE_APP_ENV === 'development' && <Tab label="管理員" value={2} />}
+                      {import.meta.env.VITE_APP_ENV === 'development' && <Tab label="內部管理員" value={3} />}
                     </Tabs>
                   </Box>
 
