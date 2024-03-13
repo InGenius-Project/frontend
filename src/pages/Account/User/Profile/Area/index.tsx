@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function ProfileArea() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const areasState = useAppSelector((state) => state.areasState);
+  const layoutState = useAppSelector((state) => state.layoutState);
 
   const { areaId } = useParams();
 
@@ -40,10 +40,7 @@ export default function ProfileArea() {
         // Post full Resume for update the sequence of the areas
         postUser({
           Username: userData.result.Username,
-          Areas: getUpdatedAreas(
-            state,
-            areasState.focusedArea ? areasState.focusedArea.Sequence : (userData?.result?.Areas || []).length,
-          ),
+          Areas: getUpdatedAreas(state, layoutState.sequence),
         })
           .unwrap()
           .then(() => {
