@@ -43,7 +43,7 @@ export default function Register() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/Account/User');
+      navigate('/Account/User/Init/Department');
     }
   }, [isSuccess, navigate]);
 

@@ -16,6 +16,7 @@ import ResumeEdit from '@/pages/Account/User/Resume/Edit';
 import ResumeArea from '@/pages/Account/User/Resume/Edit/Area';
 import ResumeAreaLayout from '@/pages/Account/User/Resume/Edit/Layout';
 import ResumeAreaNew from '@/pages/Account/User/Resume/Edit/New';
+import InitDepartment from '@/pages/Account/User/Init/Department';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Root from '../pages';
 import Login from '../pages/Account/Login';
@@ -46,6 +47,9 @@ const router = createBrowserRouter(
         </Route>
         <Route element={<AuthRoute />}>
           <Route element={<UserRoute />} path="User">
+            <Route path="Init">
+              <Route path="Department" element={<InitDepartment />}></Route>
+            </Route>
             <Route
               path="Profile?"
               handle={{
