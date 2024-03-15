@@ -10,6 +10,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {
   Container,
   FormControl,
+  IconButton,
   InputLabel,
   Link,
   Menu,
@@ -25,6 +26,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import MessageModel from '../Message/MessageModel';
 
 const env = import.meta.env.VITE_APP_ENV as string;
 
@@ -33,13 +36,20 @@ export default function Header() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userState.User);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const [navAnchorEl, setNavAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [messageAnchorEl, setMessageAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(navAnchorEl);
+  const handleNavClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setNavAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleMessageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMessageAnchorEl(event.currentTarget);
+  };
+  const handleNavClose = () => {
+    setNavAnchorEl(null);
+  };
+  const handleMessageClose = () => {
+    setMessageAnchorEl(null);
   };
   const [login] = useLoginMutation();
   const [role, setRole] = useState(user?.Role);
@@ -113,6 +123,29 @@ export default function Header() {
                   </Select>
                 </FormControl>
               )}
+
+              {/* Message Model */}
+              <IconButton onClick={handleMessageClick}>
+                <MessageOutlinedIcon />
+              </IconButton>
+
+              <Menu
+                anchorEl={messageAnchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(messageAnchorEl)}
+                onClose={handleMessageClose}
+              >
+                <MessageModel />
+              </Menu>
+
+              {/* User Navigate */}
               <Button
                 variant="text"
                 startIcon={
@@ -127,11 +160,12 @@ export default function Header() {
                   />
                 }
                 endIcon={<ArrowDropDownIcon />}
-                onClick={handleClick}
+                onClick={handleNavClick}
               >
                 {user.Username}
               </Button>
-              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+
+              <Menu anchorEl={navAnchorEl} open={open} onClose={handleNavClose}>
                 {getNavigationConfig(user?.Role || 0)?.map((item) => {
                   return (
                     <MenuItem

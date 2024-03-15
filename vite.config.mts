@@ -5,7 +5,18 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), svgr()],
+    optimizeDeps: {
+      include: ['@emotion/react', '@emotion/styled'],
+    },
+    plugins: [
+      react({
+        jsxImportSource: '@emotion/react',
+        babel: {
+          plugins: ['@emotion/babel-plugin'],
+        },
+      }),
+      svgr(),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
