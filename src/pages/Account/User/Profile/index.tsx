@@ -37,7 +37,6 @@ export default function Profile() {
   return (
     <Stack spacing={1}>
       <ProfileItem editable />
-      <Outlet />
       <Box
         sx={{
           display: 'flex',

@@ -56,8 +56,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   };
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    // TODO: setAreaType
-    // dispatch(setLayoutByArea());
+    // TODO: post emptyArea
   };
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
