@@ -1,4 +1,4 @@
-import { setFocusedArea } from '@/features/areas/areasSlice';
+import { setLayoutByArea } from '@/features/layout/layoutSlice';
 import { IArea, IAreaPost } from '@/types/interfaces/IArea';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
@@ -19,7 +19,7 @@ export const postAreaApi = baseApi.injectEndpoints({
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area
         const res = await queryFulfilled;
-        res.data.result && dispatch(setFocusedArea(res.data.result));
+        res.data.result && dispatch(setLayoutByArea(res.data.result));
       },
     }),
   }),
