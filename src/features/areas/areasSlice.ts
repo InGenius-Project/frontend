@@ -44,6 +44,12 @@ const areasSlice = createSlice({
         };
       return initialState;
     },
+    pushArea: (state, action: PayloadAction<IArea>) => {
+      return {
+        ...state,
+        areas: state.areas?.concat(action.payload),
+      };
+    },
   },
 });
 

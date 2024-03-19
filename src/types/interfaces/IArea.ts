@@ -1,6 +1,6 @@
-import { ITag, ITagType } from "types/interfaces/ITag";
-import { LayoutType } from "types/enums/LayoutType";
-import { UserRole } from "types/enums/UserRole";
+import { ITag, ITagType } from '@/types/interfaces/ITag';
+import { LayoutType } from '@/types/enums/LayoutType';
+import { UserRole } from '@/types/enums/UserRole';
 
 export interface IArea {
   Id: string;
@@ -25,12 +25,11 @@ export interface IAreaType {
   ListTagTypes: Array<ITagType>;
 }
 
-export interface IAreaTypePost extends Omit<IAreaType, "ListTagTypes" | "Id"> {
+export interface IAreaTypePost extends Omit<IAreaType, 'Id'> {
   Id?: number;
-  ListTagTypeIds: number[];
 }
 
-export interface IAreaPost extends Omit<IArea, "Id"> {
+export interface IAreaPost extends Omit<IArea, 'Id'> {
   Id: string;
 }
 

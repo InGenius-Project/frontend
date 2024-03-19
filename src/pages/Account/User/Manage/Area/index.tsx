@@ -55,10 +55,10 @@ function AreaTypeForm() {
       Id: values.Id,
       Name: values.Name,
       Value: values.Value,
-      ListTagTypeIds: [],
       Description: values.Description,
       LayoutType: values.LayoutType.value,
       UserRole: values.UserRole.map((r) => r.value),
+      ListTagTypes: [],
     });
   };
 

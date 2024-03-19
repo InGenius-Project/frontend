@@ -1,21 +1,18 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { ITag } from "types/interfaces/ITag";
-import { baseApi } from "../baseApi";
+import { IResponse } from '@/types/interfaces/IResponse';
+import { ITag, ITagPost } from '@/types/interfaces/ITag';
+import { baseApi } from '../baseApi';
 
 export const postTag = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postTag: builder.mutation<
-      IResponse<null>,
-      Partial<Pick<ITag, "Id">> & Omit<ITag, "Id">
-    >({
+    postTag: builder.mutation<IResponse<null>, ITagPost>({
       query: (body) => {
         return {
           url: `Tag`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["Tag"],
+      invalidatesTags: ['Tag'],
     }),
   }),
 });

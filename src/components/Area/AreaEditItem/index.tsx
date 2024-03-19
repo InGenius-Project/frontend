@@ -19,7 +19,6 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
 import { EditorState, LexicalEditor } from 'lexical';
 import React, { useEffect } from 'react';
@@ -43,7 +42,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     skip: !layoutState.areaTypeId,
   });
   const listTagTypes = areaTypeData?.result?.ListTagTypes ?? [];
-  const tagTypeId = listTagTypes?.length > 0 ? listTagTypes[0].Id : '1';
+  const tagTypeId = listTagTypes?.length > 0 ? listTagTypes[0].Id.toString() : '1';
   const { data: tagTypeData } = useGetTagTypeByIdQuery(tagTypeId, {
     skip: !listTagTypes || listTagTypes.length <= 0,
   });
@@ -179,12 +178,6 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
           )}
           <Typography variant="caption">{areaTypeData ? areaTypeData.result?.Description : ''}</Typography>
         </Stack>
-
-        <Box>
-          <LoadingButton variant="contained" onClick={onAddClick} loading={loading}>
-            儲存
-          </LoadingButton>
-        </Box>
       </Box>
 
       {/* Image */}
@@ -263,7 +256,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                       freeSolo
                       options={
                         tagTypeData?.result
-                          ? tagTypeData.result.Tags.map((t) => ({
+                          ? tagTypeData.result.Tags.map((t: any) => ({
                               ...t,
                               InnerId: uuid(),
                             }))

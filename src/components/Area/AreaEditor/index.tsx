@@ -117,7 +117,6 @@ function AreaEditor({ onPost }: AreaContainerProps) {
                 focused={layoutState.areaId === a.Id}
                 onClick={(element) => {
                   setControlTop(element.offsetTop);
-                  dispatch(setLayoutByArea(a));
                 }}
               ></AreaItem>
             ))}

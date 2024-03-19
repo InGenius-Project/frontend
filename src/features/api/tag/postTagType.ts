@@ -1,6 +1,6 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { ITagType } from "types/interfaces/ITag";
-import { baseApi } from "../baseApi";
+import { IResponse } from '@/types/interfaces/IResponse';
+import { ITagType } from '@/types/interfaces/ITag';
+import { baseApi } from '../baseApi';
 
 export const postTagType = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,11 +8,11 @@ export const postTagType = baseApi.injectEndpoints({
       query: (body) => {
         return {
           url: `Tag/type`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["TagType", "Tag"],
+      invalidatesTags: ['TagType', 'Tag'],
     }),
   }),
 });

@@ -2,10 +2,18 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
+import { lazy } from 'react';
+import pluginChecker from 'vite-plugin-checker';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), svgr()],
+    plugins: [
+      react(),
+      svgr(),
+      pluginChecker({
+        typescript: true,
+      }),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),

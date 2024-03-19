@@ -1,15 +1,19 @@
 import RichTextEditor from '@/components/RichTextEditor';
-import { useAppSelector } from '@/features/store';
+import { useAppDispatch, useAppSelector } from '@/features/store';
 import { Area } from '@/types/classes/Area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import { Box, Paper, Stack, Typography, useTheme } from '@mui/material';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { Box, Button, Paper, Stack, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import AreaEditItem from '../AreaEditItem';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
+import { selectLayoutType, setLayoutByArea } from '@/features/layout/layoutSlice';
+import AreaNewItem from '../AreaNewItem';
+import AreaDisplayItem from '../AreaDisplayItem';
+import AreaLayoutItem from '../AreaLayoutItem';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -20,21 +24,84 @@ export type AreaItemProps = {
 
 const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChildren<AreaItemProps>) => {
   const [isHover, setIsHover] = React.useState(false);
+  const dispatch = useAppDispatch();
   const theme = useTheme();
   const ref = React.useRef<HTMLDivElement>(null);
   const [focusedState, setFocusState] = useState(false);
   const layoutState = useAppSelector((state) => state.layoutState);
+  const layoutType = useAppSelector(selectLayoutType);
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const [skipped, setSkipped] = React.useState(new Set<number>());
+
+  const isStepOptional = (step: number) => {
+    return step === 0;
+  };
+
+  const isStepSkipped = (step: number) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
 
   const handleClick = () => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     onClick && onClick(ref.current as HTMLElement);
   };
 
+  const steps = useMemo(
+    () => [
+      {
+        label: '選擇預設類型',
+        item: <AreaNewItem onClickNext={handleNext} />,
+      },
+      {
+        label: '選擇版面',
+        item: <AreaLayoutItem />,
+      },
+      {
+        label: '編輯內容',
+        item: <AreaEditItem />,
+      },
+    ],
+    [handleNext],
+  );
+
   useEffect(() => {
     setFocusState(focused ? focused : false);
   }, [focused]);
-
-  const a = new Area(area);
 
   return (
     <Paper
@@ -76,44 +143,49 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
       </Box>
 
       {layoutState.areaId === area.Id ? (
-        <AreaEditItem />
+        <>
+          <Stepper activeStep={activeStep}>
+            {steps.map(({ label }, index) => {
+              const stepProps: { completed?: boolean } = {};
+              const labelProps: {
+                optional?: React.ReactNode;
+              } = {};
+              if (isStepOptional(index)) {
+                labelProps.optional = <Typography variant="caption">(選填)</Typography>;
+              }
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
+              return (
+                <Step key={label} {...stepProps}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <AreaDisplayItem area={area} />
+          ) : (
+            <Box sx={{ py: 2 }}>
+              {steps[activeStep].item}
+
+              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                  上一步
+                </Button>
+                <Box sx={{ flex: '1 1 auto' }} />
+                {isStepOptional(activeStep) && (
+                  <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                    跳過
+                  </Button>
+                )}
+                <Button onClick={handleNext}>{activeStep === steps.length - 1 ? 'Finish' : 'Next'}</Button>
+              </Box>
+            </Box>
+          )}
+        </>
       ) : (
-        <Stack spacing={1}>
-          <Typography variant="h4">{a.getAreaTitle()}</Typography>
-          {a.isLayoutType(LayoutType.ImageText) && area.ImageTextLayout?.Image?.Content && (
-            <Stack direction={'row'} spacing={1}>
-              <img
-                src={`data:${area.ImageTextLayout?.Image?.ContentType};base64,${area.ImageTextLayout?.Image?.Content}`}
-                alt={area.ImageTextLayout.Image.Filename}
-                style={{
-                  width: '15vw',
-                  height: '15vw',
-                }}
-              />
-              <RichTextEditor controllable={false} initialEditorState={area.ImageTextLayout?.Content}></RichTextEditor>
-            </Stack>
-          )}
-
-          {a.isLayoutType(LayoutType.Text) && (
-            <RichTextEditor controllable={false} initialEditorState={area.TextLayout?.Content}></RichTextEditor>
-          )}
-          {a.isLayoutType(LayoutType.List) &&
-            area.ListLayout?.Items?.map((i) => <AreaListItem id={i.Id} content={i.Name} key={i.Id} />)}
-
-          {a.isLayoutType(LayoutType.KeyValueList) &&
-            area.KeyValueListLayout?.Items?.map((i) => (
-              <AreaKeyValueListItem
-                id={i.Id}
-                key={i.Id}
-                itemKey={{
-                  Id: i.Key.Id,
-                  Name: i.Key.Name,
-                  Type: i.Key.Type,
-                }}
-                value={i.Value}
-              />
-            ))}
-        </Stack>
+        <AreaDisplayItem area={area} />
       )}
     </Paper>
   );
