@@ -53,8 +53,10 @@ export default function AreaEditModel({ onAddClick, loading }: AreaEditModelProp
   const { data: areaTypeData } = useGetAreaTypeByIdQuery(layoutState.areaTypeId!, {
     skip: !layoutState.areaTypeId,
   });
-  const { data: tagTypeData } = useGetTagTypeByIdQuery((areaTypeData?.result?.ListTagTypes[0].Id || '0').toString(), {
-    skip: !areaTypeData?.result || areaTypeData.result.ListTagTypes.length === 0,
+  const listTagTypes = areaTypeData?.result?.ListTagTypes ?? [];
+  const tagTypeId = listTagTypes?.length > 0 ? listTagTypes[0].Id.toString() : '1';
+  const { data: tagTypeData } = useGetTagTypeByIdQuery(tagTypeId, {
+    skip: !listTagTypes || listTagTypes.length <= 0,
   });
   const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const navigate = useNavigate();
@@ -287,7 +289,7 @@ export default function AreaEditModel({ onAddClick, loading }: AreaEditModelProp
                         freeSolo
                         options={
                           tagTypeData?.result
-                            ? tagTypeData.result.Tags.map((t) => ({
+                            ? tagTypeData.result.Tags.map((t: any) => ({
                                 ...t,
                                 InnerId: uuid(),
                               }))

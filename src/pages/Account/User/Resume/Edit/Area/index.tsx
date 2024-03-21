@@ -1,22 +1,18 @@
-import { AreaEditModel } from "@/components/Area";
-import { useGetAreaByIdQuery } from "@/features/api/area/getArea";
-import { usePostAreaMutation } from "@/features/api/area/postArea";
-import { useGetResumeByIdQuery } from "@/features/api/resume/getResumeById";
-import { usePostResumeMutation } from "@/features/api/resume/postResume";
-import {
-  getUpdatedArea,
-  getUpdatedAreas,
-  setLayoutByArea,
-} from "@/features/layout/layoutSlice";
-import { store, useAppDispatch, useAppSelector } from "@/features/store";
-import { useLayoutEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { AreaEditModel } from '@/components/Area';
+import { useGetAreaByIdQuery } from '@/features/api/area/getArea';
+import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
+import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { getUpdatedArea, getUpdatedAreas, setLayoutByArea } from '@/features/layout/layoutSlice';
+import { store, useAppDispatch, useAppSelector } from '@/features/store';
+import { useLayoutEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ResumeArea() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { resumeId = "", areaId } = useParams();
+  const { resumeId = '', areaId } = useParams();
 
   const [postArea, { isLoading }] = usePostAreaMutation();
   const [postResume] = usePostResumeMutation();
@@ -25,7 +21,7 @@ export default function ResumeArea() {
     skip: !areaId,
   });
 
-  const areasState = useAppSelector((state) => state.areasState);
+  const layoutState = useAppSelector((state) => state.layoutState);
 
   useLayoutEffect(() => {
     if (areaData && areaData.result) {
@@ -37,9 +33,7 @@ export default function ResumeArea() {
     if (resumeData && resumeData.result) {
       let areas = Array.from(resumeData.result.Areas);
 
-      const existAreaIndex = areas.findIndex(
-        (area) => area.Id === areaData?.result?.Id
-      );
+      const existAreaIndex = areas.findIndex((area) => area.Id === areaData?.result?.Id);
 
       const state = store.getState();
       // Create a new area if not exist
@@ -48,24 +42,19 @@ export default function ResumeArea() {
         postResume({
           Id: resumeId,
           Title: resumeData.result.Title,
-          Areas: getUpdatedAreas(
-            state,
-            areasState.focusedArea
-              ? areasState.focusedArea.Sequence
-              : resumeData.result.Areas.length
-          ),
+          Areas: getUpdatedAreas(state, layoutState.areaId ? layoutState.sequence : resumeData.result.Areas.length),
           Visibility: resumeData.result.Visibility,
         })
           .unwrap()
           .then(() => {
-            navigate("..");
+            navigate('..');
             return;
           });
       } else {
         postArea(getUpdatedArea(state))
           .unwrap()
           .then(() => {
-            navigate("..");
+            navigate('..');
             return;
           });
       }

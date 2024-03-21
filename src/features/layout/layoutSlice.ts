@@ -7,7 +7,7 @@ import { EditorState } from 'lexical';
 import { NIL, v4 as uuid } from 'uuid';
 
 interface ILayout {
-  areaId: string;
+  areaId?: string;
   sequence: number;
   isDisplayed: boolean;
   id: string;
@@ -21,7 +21,7 @@ interface ILayout {
 }
 
 const initialState: ILayout = {
-  areaId: '',
+  areaId: undefined,
   isDisplayed: true,
   sequence: 0,
   id: '',
@@ -235,7 +235,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
 export const getUpdatedArea = (state: RootState) => {
   const layoutState = state.layoutState;
   const updatedArea: IArea = {
-    Id: layoutState.areaId,
+    Id: layoutState.areaId || NIL,
     Sequence: layoutState.sequence,
     IsDisplayed: layoutState.isDisplayed,
     Title: layoutState.title,

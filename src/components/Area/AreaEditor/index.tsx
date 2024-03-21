@@ -1,11 +1,12 @@
+import DragDropContainer from '@/components/DragDropContainer';
 import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
-import { selectIsEmptyAreas, setFocusedArea } from '@/features/areas/areasSlice';
-import { useAppDispatch, useAppSelector } from '@/features/store';
+import { selectIsEmptyAreas } from '@/features/areas/areasSlice';
+import { getUpdatedArea, setLayoutByArea } from '@/features/layout/layoutSlice';
+import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Box, IconButton, Portal, Stack } from '@mui/material';
-import DragDropContainer from '@/components/DragDropContainer';
 import React from 'react';
 import { DropResult, OnDragStartResponder } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +21,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const areasState = useAppSelector((state) => state.areasState);
+  const layoutState = useAppSelector((state) => state.layoutState);
   const isEmptyAreas = useAppSelector(selectIsEmptyAreas);
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
   const [deleteArea] = useDeleteAreaMutation();
@@ -49,32 +51,27 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   const handleDragStart: OnDragStartResponder = ({ draggableId }) => {
     if (areasState && areasState.areas) {
       const findArea = areasState.areas.find((a) => a.Id === draggableId);
-      findArea && dispatch(setFocusedArea(findArea));
+      findArea && dispatch(setLayoutByArea(findArea));
     }
   };
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    // TODO: setAreaType
-    navigate('New');
+    // TODO: post emptyArea
   };
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    areasState.focusedArea && deleteArea(areasState.focusedArea.Id);
-  };
-
-  const handleEditClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    areasState.focusedArea && navigate(`Area/${areasState.focusedArea.Id}`);
+    layoutState.areaId && deleteArea(layoutState.areaId);
   };
 
   const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    areasState.focusedArea &&
+    if (layoutState.areaId) {
+      const updatedArea = getUpdatedArea(store.getState());
       postArea({
-        ...areasState.focusedArea,
-        // ResumeId:
-        //   areasState.type === AreasType.RESUME ? areasState.id : undefined,
+        ...updatedArea,
         //TODO: PROFILE ID
         IsDisplayed: !checked,
       });
+    }
   };
 
   return (
@@ -117,10 +114,9 @@ function AreaEditor({ onPost }: AreaContainerProps) {
                 key={a.Id}
                 id={a.Id}
                 area={a}
-                focused={areasState.focusedArea?.Id === a.Id}
+                focused={layoutState.areaId === a.Id}
                 onClick={(element) => {
                   setControlTop(element.offsetTop);
-                  dispatch(setFocusedArea(a));
                 }}
               ></AreaItem>
             ))}
@@ -138,11 +134,10 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         >
           <AreaControl
             top={controlTop}
-            disabled={!areasState.focusedArea}
-            visibled={areasState.focusedArea && areasState.focusedArea.IsDisplayed}
+            disabled={!layoutState.areaId}
+            visibled={layoutState.isDisplayed}
             onAddClick={handleAddClick}
             onDeleteClick={handleDeleteClick}
-            onEditClick={handleEditClick}
             onVisibilityChange={handleVisibilityChange}
           />
         </Box>

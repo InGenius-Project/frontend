@@ -1,3 +1,6 @@
+import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { getUpdatedArea } from '@/features/layout/layoutSlice';
+import { store } from '@/features/store';
 import WarningIcon from '@mui/icons-material/Warning';
 import { ButtonBase, Stack, Typography, useTheme } from '@mui/material';
 import React from 'react';
@@ -6,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 function AreaEmpty() {
   const navigate = useNavigate();
   const theme = useTheme();
+  const [postArea] = usePostAreaMutation();
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    navigate('New');
+    postArea(getUpdatedArea(store.getState()));
   };
 
   return (

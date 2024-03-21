@@ -1,11 +1,5 @@
-import { LayoutType } from "types/enums/LayoutType";
-import {
-  IArea,
-  IImageTextLayout,
-  IKeyValueListLayout,
-  IListLayout,
-  ITextLayout,
-} from "types/interfaces/IArea";
+import { LayoutType } from '@/types/enums/LayoutType';
+import { IArea, IImageTextLayout, IKeyValueListLayout, IListLayout, ITextLayout } from '@/types/interfaces/IArea';
 
 export class Area {
   Id: string;

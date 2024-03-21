@@ -1,7 +1,7 @@
-import { IAreaType, IAreaTypePost } from "types/interfaces/IArea";
-import { IResponse } from "types/interfaces/IResponse";
-import { baseApi } from "../baseApi";
-import { getAreaTypeByIdApi } from "./getAreaTypeById";
+import { IAreaType, IAreaTypePost } from '@/types/interfaces/IArea';
+import { IResponse } from '@/types/interfaces/IResponse';
+import { baseApi } from '../baseApi';
+import { getAreaTypeByIdApi } from './getAreaTypeById';
 
 export const postAreaType = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,27 +9,23 @@ export const postAreaType = baseApi.injectEndpoints({
       query: (body) => {
         return {
           url: `Area/type`,
-          method: "POST",
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["AreaType"],
+      invalidatesTags: ['AreaType'],
       onQueryStarted: (request, { dispatch }) => {
         // optimistic update to prvent flicking Area
         if (request.Id) {
           dispatch(
-            getAreaTypeByIdApi.util.updateQueryData(
-              "getAreaTypeById",
-              request.Id,
-              (draft) => {
-                return {
-                  ...draft,
-                  result: {
-                    ...(draft.result as IAreaType),
-                  },
-                };
-              }
-            )
+            getAreaTypeByIdApi.util.updateQueryData('getAreaTypeById', request.Id, (draft) => {
+              return {
+                ...draft,
+                result: {
+                  ...(draft.result as IAreaType),
+                },
+              };
+            }),
           );
         }
       },
