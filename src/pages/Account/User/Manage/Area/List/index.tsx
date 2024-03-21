@@ -6,7 +6,7 @@ import { LayoutTypeObject } from '@/types/enums/LayoutType';
 import { UserRoleObject } from '@/types/enums/UserRole';
 import { ITagType } from '@/types/interfaces/ITag';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Autocomplete, Button, Paper, Stack, TextField, useTheme } from '@mui/material';
+import { Autocomplete, Button, Paper, Stack, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -34,12 +34,10 @@ type AreaListTypeInput = TypeOf<typeof areaListTypeSchema>;
 
 function ManageAreaList() {
   const { areaTypeId } = useParams<{ areaTypeId: string }>();
-  const { data: tagTypesData } = useGetTagTypesQuery();
   const { data: areaTypeData } = useGetAreaTypeByIdQuery(parseInt(areaTypeId || '0'));
   const [postAreaType] = usePostAreaTypeMutation();
   const { data: allTagTypes } = useGetTagTypesQuery();
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const methods = useForm<AreaListTypeInput>({
     resolver: zodResolver(areaListTypeSchema),
@@ -59,7 +57,7 @@ function ManageAreaList() {
       Description: data.Description,
       LayoutType: data.LayoutType.value,
       UserRole: data.UserRole.map((d) => d.value),
-      ListTagTypeIds: data.ListTagTypes.map((d) => d.Id),
+      ListTagTypes: data.ListTagTypes,
     })
       .unwrap()
       .then(() => {

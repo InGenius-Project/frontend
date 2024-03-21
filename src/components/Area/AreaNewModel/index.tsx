@@ -101,7 +101,7 @@ export default function AreaNewModel() {
           <Stack direction="row" spacing={2} alignItems={'center'}>
             <Typography variant="body1">預設類型</Typography>
             {areaTypesData?.result &&
-              areaTypesData.result.map((o, i) => (
+              areaTypesData.result.map((o: any, i: any) => (
                 <Chip
                   key={i}
                   icon={areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />}

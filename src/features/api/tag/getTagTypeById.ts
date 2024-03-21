@@ -1,6 +1,6 @@
-import { IResponse } from "types/interfaces/IResponse";
-import { ITagTypeDetail } from "types/interfaces/ITag";
-import { baseApi } from "../baseApi";
+import { IResponse } from '@/types/interfaces/IResponse';
+import { ITagTypeDetail } from '@/types/interfaces/ITag';
+import { baseApi } from '../baseApi';
 
 export const getTagTypeById = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,19 +8,18 @@ export const getTagTypeById = baseApi.injectEndpoints({
       query(id) {
         return {
           url: `/Tag/type/${id}`,
-          method: "GET",
+          method: 'GET',
         };
       },
       providesTags: (result, error, args) => [
-        "TagType",
+        'TagType',
         {
           id: args,
-          type: "TagType",
+          type: 'TagType',
         },
       ],
     }),
   }),
 });
 
-export const { useLazyGetTagTypeByIdQuery, useGetTagTypeByIdQuery } =
-  getTagTypeById;
+export const { useLazyGetTagTypeByIdQuery, useGetTagTypeByIdQuery } = getTagTypeById;

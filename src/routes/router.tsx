@@ -57,11 +57,7 @@ const router = createBrowserRouter(
                 crumb: '個人首頁',
               }}
               element={<Profile />}
-            >
-              <Route path="Area/:areaId?" handle={{ crumb: '編輯區塊內容' }} element={<ProfileArea />}></Route>
-              <Route path="New" handle={{ crumb: '新增個人首頁區塊' }} element={<ProfileAreaNew />}></Route>
-              <Route path="Layout" handle={{ crumb: '選擇區塊排列方式' }} element={<ProfileAreaLayout />}></Route>
-            </Route>
+            ></Route>
             <Route
               path="Resume"
               handle={{

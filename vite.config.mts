@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
+import pluginChecker from 'vite-plugin-checker';
 
 export default defineConfig(() => {
   return {
@@ -16,6 +17,9 @@ export default defineConfig(() => {
         },
       }),
       svgr(),
+      pluginChecker({
+        typescript: true,
+      }),
     ],
     resolve: {
       alias: {

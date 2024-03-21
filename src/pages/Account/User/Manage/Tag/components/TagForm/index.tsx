@@ -57,14 +57,9 @@ function TagForm() {
 
   const onSubmitHandler: SubmitHandler<TagInput> = (values) => {
     postTag({
-      Id: values.Id,
+      Id: values.Id || NIL,
       Name: values.Name,
-      Type: {
-        Id: values.Type.Id,
-        Name: values.Type.Name,
-        Value: values.Type.Value,
-        Color: values.Type.Color,
-      },
+      TagTypeId: values.Type.Id,
     });
   };
 

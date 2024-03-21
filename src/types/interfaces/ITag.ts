@@ -4,6 +4,12 @@ export interface ITag {
   Type: ITagType;
 }
 
+export interface ITagPost {
+  Id: string;
+  Name: string;
+  TagTypeId: number;
+}
+
 export interface IInnerTag {
   Id: string;
   Name: string;

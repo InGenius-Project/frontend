@@ -1,11 +1,10 @@
-import { Stack, useTheme, Box, Checkbox, IconButton } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { useAnimate, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Box, Checkbox, IconButton, Stack, useTheme } from '@mui/material';
+import { motion, useAnimate } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
 
 type AreaControlProps = {
   top: number | undefined;
@@ -13,22 +12,10 @@ type AreaControlProps = {
   visibled?: boolean;
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   onDeleteClick?: React.MouseEventHandler<HTMLButtonElement>;
-  onEditClick?: React.MouseEventHandler<HTMLButtonElement>;
-  onVisibilityChange?: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
+  onVisibilityChange?: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 };
 
-const AreaControl = ({
-  top,
-  disabled,
-  visibled,
-  onAddClick,
-  onDeleteClick,
-  onEditClick,
-  onVisibilityChange,
-}: AreaControlProps) => {
+const AreaControl = ({ top, disabled, visibled, onAddClick, onDeleteClick, onVisibilityChange }: AreaControlProps) => {
   const theme = useTheme();
   const [motionRef, animate] = useAnimate();
   const [visibledCheckState, setVisibledCheckState] = useState(visibled);
@@ -38,19 +25,11 @@ const AreaControl = ({
   }, [visibled]);
 
   React.useEffect(() => {
-    // animate(motionRef.current, { top });。
-    if (
-      motionRef.current.parentElement.clientHeight -
-        (top || 0) -
-        motionRef.current.clientHeight >
-      0
-    ) {
+    if (motionRef.current.parentElement.clientHeight - (top || 0) - motionRef.current.clientHeight > 0) {
       animate(motionRef.current, { top });
     } else {
       animate(motionRef.current, {
-        top:
-          motionRef.current.parentElement.clientHeight -
-          motionRef.current.clientHeight,
+        top: motionRef.current.parentElement.clientHeight - motionRef.current.clientHeight,
       });
     }
   }, [top, motionRef, animate]);
@@ -59,28 +38,23 @@ const AreaControl = ({
     <motion.div
       ref={motionRef}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
-        width: "var(--ing-width-area-control)",
-        height: "var(--ing-height-area-control)",
+        width: 'var(--ing-width-area-control)',
+        height: 'var(--ing-height-area-control)',
       }}
     >
       <Stack
         spacing={1}
         sx={{
           backgroundColor: theme.palette.common.white,
-          height: "fit-content",
+          height: 'fit-content',
           padding: 1,
-          alignItems: "center",
+          alignItems: 'center',
         }}
       >
         <Box>
-          <IconButton
-            disabled={disabled}
-            size="small"
-            onClick={onAddClick}
-            onMouseDown={(e) => e.preventDefault()}
-          >
+          <IconButton disabled={disabled} size="small" onClick={onAddClick} onMouseDown={(e) => e.preventDefault()}>
             <AddIcon />
           </IconButton>
         </Box>
@@ -93,23 +67,9 @@ const AreaControl = ({
           onChange={onVisibilityChange}
           onMouseDown={(e) => e.preventDefault()}
         />
+
         <Box>
-          <IconButton
-            size="small"
-            disabled={disabled}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={onEditClick}
-          >
-            <EditIcon />
-          </IconButton>
-        </Box>
-        <Box>
-          <IconButton
-            size="small"
-            disabled={disabled}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={onDeleteClick}
-          >
+          <IconButton size="small" disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onDeleteClick}>
             <DeleteIcon />
           </IconButton>
         </Box>
