@@ -16,9 +16,9 @@
     "@mui/material": "^5.14.17",
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/dom": "^9.3.4",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^27.5.2",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "20.11.25",
@@ -58,7 +58,7 @@
   },
   "scripts": {
     "start": "vite",
-    "test": "vite test",
+    "test": "vitest",
     "eject": "vite eject",
     "build": "vite build",
     "preview": "vite preview",
@@ -107,10 +107,12 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jsdom": "^24.0.0",
     "lodash": "^4.17.21",
     "prettier-eslint": "^16.1.2",
     "vite-plugin-checker": "^0.6.4",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^1.4.0"
   },
   "husky": {
     "hooks": {
