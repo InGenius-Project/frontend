@@ -112,6 +112,7 @@ export default function Login() {
                     <Link>一般</Link>
                     <Link>企業</Link>
                   </Stack>
+
                   <FormInput
                     name="email"
                     type="email"
