@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
 import AreaItem from '../AreaItem';
+import { NIL } from 'uuid';
 type AreaContainerProps = {
   onPost?: (areas: Array<IArea>) => Promise<void>;
 };
@@ -55,8 +56,14 @@ function AreaEditor({ onPost }: AreaContainerProps) {
     }
   };
 
-  const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleAddClick = () => {
     // TODO: post emptyArea
+    postArea({
+      Id: NIL,
+      Sequence: layoutState.sequence,
+      IsDisplayed: true,
+      Title: 'New Area',
+    });
   };
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -72,6 +79,10 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         IsDisplayed: !checked,
       });
     }
+  };
+
+  const handleClickItem = (element: HTMLElement) => {
+    setControlTop(element.offsetTop);
   };
 
   return (
@@ -93,7 +104,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
       >
         {isEmptyAreas && (
           <>
-            <AreaEmpty />
+            <AreaEmpty onClick={handleAddClick} />
             <Portal container={() => document.getElementById('userHeader')}>
               <IconButton size="small" sx={{ ml: 1 }} onClick={() => navigate('New')}>
                 <CreateOutlinedIcon />
@@ -115,9 +126,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
                 id={a.Id}
                 area={a}
                 focused={layoutState.areaId === a.Id}
-                onClick={(element) => {
-                  setControlTop(element.offsetTop);
-                }}
+                onClick={handleClickItem}
               ></AreaItem>
             ))}
           </DragDropContainer>

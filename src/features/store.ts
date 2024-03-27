@@ -18,8 +18,8 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // ignore layout.content serialization problem
-        ignoredPaths: ['layoutState.content'],
-        ignoredActions: ['layout/setContent'],
+        ignoredPaths: ['layoutState.content', 'layout.setLayoutByArea'],
+        ignoredActions: ['layout/setContent', 'layout/setLayoutByArea'],
       },
     }).concat([baseApi.middleware, errorToastMiddleware]),
 });

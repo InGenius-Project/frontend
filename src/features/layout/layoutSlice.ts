@@ -52,7 +52,7 @@ const layoutSlice = createSlice({
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
     },
-    setLayoutType: (state, action: PayloadAction<LayoutType>) => {
+    setLayoutType: (state, action: PayloadAction<LayoutType | undefined>) => {
       state.layoutType = action.payload;
     },
     setContent: (state, action: PayloadAction<EditorState>) => {

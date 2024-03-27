@@ -25,6 +25,7 @@ import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
+import { useGetTagsQuery } from '@/features/api/tag/getTags';
 
 type AreaEditItemProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -42,10 +43,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     skip: !layoutState.areaTypeId,
   });
   const listTagTypes = areaTypeData?.result?.ListTagTypes ?? [];
-  const tagTypeId = listTagTypes?.length > 0 ? listTagTypes[0].Id.toString() : '1';
-  const { data: tagTypeData } = useGetTagTypeByIdQuery(tagTypeId, {
-    skip: !listTagTypes || listTagTypes.length <= 0,
-  });
+  const { data: tagsData } = useGetTagsQuery(listTagTypes.map((l) => l.Id.toString()));
+
   const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const theme = useTheme();
 
@@ -255,8 +254,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                       sx={{ width: '20em' }}
                       freeSolo
                       options={
-                        tagTypeData?.result
-                          ? tagTypeData.result.Tags.map((t: any) => ({
+                        tagsData && tagsData.result
+                          ? tagsData.result.map((t: any) => ({
                               ...t,
                               InnerId: uuid(),
                             }))

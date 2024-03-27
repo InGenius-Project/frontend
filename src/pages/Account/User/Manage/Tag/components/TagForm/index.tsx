@@ -4,6 +4,7 @@ import { useDeleteTagsMutation } from '@/features/api/tag/deleteTag';
 import { useGetTagTypesQuery } from '@/features/api/tag/getTagTypes';
 import { useGetTagsQuery } from '@/features/api/tag/getTags';
 import { usePostTagMutation } from '@/features/api/tag/postTag';
+import { UserRole } from '@/types/enums/UserRole';
 import { ITag } from '@/types/interfaces/ITag';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Autocomplete, Box, Chip, TextField, useTheme } from '@mui/material';
@@ -29,9 +30,9 @@ type TagInput = TypeOf<typeof tagSchema>;
 
 function TagForm() {
   const theme = useTheme();
-  const { data: tagsData } = useGetTagsQuery();
   const [deleteTag] = useDeleteTagsMutation();
   const [postTag] = usePostTagMutation();
+  const { data: tagsData } = useGetTagsQuery(Object.values(UserRole).filter((value) => typeof value === 'number'));
   const { data: tagTypesData } = useGetTagTypesQuery();
 
   const methods = useForm<TagInput>({

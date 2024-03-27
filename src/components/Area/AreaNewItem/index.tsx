@@ -1,6 +1,6 @@
 import { useGetAreaTypesQuery } from '@/features/api/area/getAreaTypes';
 import { useGetUserQuery } from '@/features/api/user/getUser';
-import { setAreaTypeId } from '@/features/layout/layoutSlice';
+import { setAreaTypeId, setLayoutType } from '@/features/layout/layoutSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { IAreaType } from '@/types/interfaces/IArea';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useConfirm } from 'material-ui-confirm';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 type AreaNewItemProps = {
   onClickNext?: () => void;
@@ -32,13 +32,16 @@ export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
 
   const dispatch = useAppDispatch();
 
-  const handleClick = () => {
-    if (!selectAreaType) {
-      onClickNext && onClickNext();
-    } else {
-      selectAreaType && dispatch(setAreaTypeId(selectAreaType.Id));
-      onClickNext && onClickNext();
+  const handleChange = (e: React.SyntheticEvent, value: IAreaType | null) => {
+    setSelectAreaType(value);
+
+    if (value) {
+      dispatch(setAreaTypeId(value.Id));
+      dispatch(setLayoutType(value?.LayoutType));
+      return;
     }
+    dispatch(setAreaTypeId(null));
+    dispatch(setLayoutType(undefined));
   };
 
   return (
@@ -48,9 +51,13 @@ export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
           <Autocomplete
             size="small"
             options={areaTypesData.result}
-            value={selectAreaType || null}
+            value={
+              selectAreaType === undefined || selectAreaType === null || areaTypesData.result.length === 0
+                ? null
+                : selectAreaType
+            }
             getOptionLabel={(option) => option.Name}
-            onChange={(e: any, value) => setSelectAreaType(value)}
+            onChange={handleChange}
             sx={{ flex: '1 1 auto' }}
             renderInput={(params) => (
               <TextField
@@ -78,8 +85,8 @@ export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
               key={i}
               icon={areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />}
               label={o.Name}
-              onClick={() => {
-                setSelectAreaType(o);
+              onClick={(e) => {
+                handleChange(e, o);
               }}
             />
           ))}

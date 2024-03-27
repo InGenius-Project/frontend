@@ -288,7 +288,7 @@ export default function AreaEditModel({ onAddClick, loading }: AreaEditModelProp
                         sx={{ width: '20em' }}
                         freeSolo
                         options={
-                          tagTypeData?.result
+                          tagTypeData && tagTypeData.result && tagTypeData.result.Tags
                             ? tagTypeData.result.Tags.map((t: any) => ({
                                 ...t,
                                 InnerId: uuid(),

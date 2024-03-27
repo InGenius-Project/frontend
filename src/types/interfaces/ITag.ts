@@ -25,5 +25,5 @@ export interface ITagType {
 }
 
 export interface ITagTypeDetail extends ITagType {
-  Tags: ITag[];
+  Tags?: ITag[];
 }

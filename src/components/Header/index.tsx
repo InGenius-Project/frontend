@@ -110,7 +110,7 @@ export default function Header() {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Role"
-                    value={role}
+                    value={role === null || role === undefined || UserRoleLoginData.length === 0 ? '' : role}
                     onChange={handleChange}
                   >
                     {UserRoleLoginData.map((item) => {
