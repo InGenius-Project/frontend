@@ -55,6 +55,12 @@ export interface IListLayout extends ILayout {
   Items?: Array<ITag>;
 }
 
+export interface IListLayoutPost {
+  areaId: string;
+  Id?: string;
+  Items?: Array<ITag>;
+}
+
 export interface IKeyValueListLayout extends ILayout {
   Items?: Array<IKeyValueItem>;
 }

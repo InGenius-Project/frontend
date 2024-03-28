@@ -1,24 +1,25 @@
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea, IImageTextLayout, IKeyValueListLayout, IListLayout, ITextLayout } from '@/types/interfaces/IArea';
 
-export class Area {
-  Id: string;
-  Sequence: number;
-  IsDisplayed: boolean;
-  Title: string;
-  LayoutType?: LayoutType;
-  AreaType?: number;
-  TextLayout?: ITextLayout;
-  ImageTextLayout?: IImageTextLayout;
-  ListLayout?: IListLayout;
-  KeyValueListLayout?: IKeyValueListLayout;
+export class Area implements IArea {
+  Id: IArea['Id'];
+  Sequence: IArea['Sequence'];
+  IsDisplayed: IArea['IsDisplayed'];
+  Title: IArea['Title'];
+  LayoutType?: IArea['LayoutType'];
+  AreaTypeId?: IArea['AreaTypeId'];
+  TextLayout?: IArea['TextLayout'];
+  ImageTextLayout?: IArea['ImageTextLayout'];
+  ListLayout?: IArea['ListLayout'];
+  KeyValueListLayout?: IArea['KeyValueListLayout'];
+
   constructor(area: IArea) {
     this.Id = area.Id;
     this.Sequence = area.Sequence;
     this.IsDisplayed = area.IsDisplayed;
     this.Title = area.Title;
     this.LayoutType = area.LayoutType;
-    this.AreaType = area.AreaTypeId;
+    this.AreaTypeId = area.AreaTypeId;
     this.TextLayout = area.TextLayout;
     this.ImageTextLayout = area.ImageTextLayout;
     this.ListLayout = area.ListLayout;

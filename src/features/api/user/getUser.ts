@@ -2,6 +2,7 @@ import { setUserInfo } from '@/features/user/userSlice';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { IUserInfo } from '@/types/interfaces/IUser';
 import { baseApi } from '../baseApi';
+import { TagDescription } from '@reduxjs/toolkit/query';
 
 export const getUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,7 +30,13 @@ export const getUserApi = baseApi.injectEndpoints({
         }
         return response;
       },
-      providesTags: ['User'],
+      providesTags: (res) =>
+        res
+          ? [
+              ...(res.result?.Areas ?? []).map((a) => ({ type: 'Area' as const, id: a.Id })),
+              { type: 'User', id: res.result?.Id },
+            ]
+          : [],
     }),
   }),
 });

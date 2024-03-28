@@ -13,8 +13,8 @@ export const postAreaApi = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Resume' }, { type: 'Area', id: arg.Id }, 'User'];
+      invalidatesTags: (res) => {
+        return [{ type: 'Area', id: res?.result?.Id }];
       },
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area

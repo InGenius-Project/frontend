@@ -1,6 +1,6 @@
 import { useGetAreaTypesQuery } from '@/features/api/area/getAreaTypes';
 import { useGetUserQuery } from '@/features/api/user/getUser';
-import { initializeStateWithoutFocusedArea, setAreaTypeId } from '@/features/layout/layoutSlice';
+import { initializeState, setAreaTypeId } from '@/features/layout/layoutSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { IAreaType } from '@/types/interfaces/IArea';
 import AddIcon from '@mui/icons-material/Add';
@@ -52,7 +52,7 @@ export default function AreaNewModel() {
   };
 
   const handleCustomClick = () => {
-    dispatch(initializeStateWithoutFocusedArea());
+    dispatch(initializeState());
     navigate(`../Layout`);
   };
 

@@ -15,7 +15,7 @@ type AreaListItemProps = {
   onChange?: (item: IKeyValueItem) => void;
 } & Partial<DraggableProvidedDragHandleProps>;
 
-function AreaListItem({
+function AreaKeyValueListItem({
   id,
   itemKey,
   value = '',
@@ -91,4 +91,4 @@ function AreaListItem({
   );
 }
 
-export default AreaListItem;
+export default AreaKeyValueListItem;

@@ -1,29 +1,24 @@
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
-import { Box, Button, Paper, Stack, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
-
-import { store, useAppDispatch, useAppSelector } from '@/features/store';
-import { Area } from '@/types/classes/Area';
-import { LayoutType } from '@/types/enums/LayoutType';
-import { IArea } from '@/types/interfaces/IArea';
-
-import RichTextEditor from '@/components/RichTextEditor';
-import AreaEditItem from '../AreaEditItem';
-import AreaKeyValueListItem from '../AreaKeyValueListItem';
-import AreaListItem from '../AreaListItem';
-import AreaNewItem from '../AreaNewItem';
-import AreaDisplayItem from '../AreaDisplayItem';
-import AreaLayoutItem from '../AreaLayoutItem';
-
+import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { usePostListLayoutMutation } from '@/features/api/postListLayout';
 import {
+  AreaStep,
   getUpdatedArea,
+  initializeState,
   selectLayoutType,
   setAreaTypeId,
   setLayoutByArea,
   setLayoutType,
 } from '@/features/layout/layoutSlice';
-import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { store, useAppDispatch, useAppSelector } from '@/features/store';
+import { IArea } from '@/types/interfaces/IArea';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import AreaDisplayItem from '../AreaDisplayItem';
+import AreaEditItem from '../AreaEditItem';
+import AreaLayoutItem from '../AreaLayoutItem';
+import AreaNewItem from '../AreaNewItem';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -31,12 +26,6 @@ export type AreaItemProps = {
   area: IArea;
   focused?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
-
-enum AreaStep {
-  New,
-  Layout,
-  Edit,
-}
 
 const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChildren<AreaItemProps>) => {
   const theme = useTheme();
@@ -46,7 +35,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const [isHover, setIsHover] = React.useState(false);
   const [focusedState, setFocusState] = useState(false);
 
-  const [activeStep, setActiveStep] = React.useState<AreaStep>(AreaStep.New);
+  const [activeStep, setActiveStep] = useState(AreaStep.New);
   const [warning, setWarning] = useState('');
   const [hisSteps, setHisSteps] = React.useState(new Set<AreaStep>());
 
@@ -54,6 +43,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const layoutType = useAppSelector(selectLayoutType);
 
   const [postArea] = usePostAreaMutation();
+  const [postListLayout] = usePostListLayoutMutation();
 
   const isStepDone = (step: number) => {
     return hisSteps.has(step);
@@ -88,7 +78,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
     }
 
     setHisSteps(newHisSteps);
-  }, [activeStep, hisSteps, layoutType]);
+  }, [hisSteps, activeStep, layoutType]);
 
   const handleSkip = useCallback(() => {
     setHisSteps(new Set<AreaStep>([AreaStep.New]));
@@ -101,6 +91,11 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   }, [dispatch]);
 
   const handleBack = () => {
+    if (activeStep === AreaStep.New) {
+      dispatch(initializeState());
+      return;
+    }
+
     const prevStep = Math.max(...hisSteps);
 
     setHisSteps((prevSteps) => {
@@ -117,8 +112,21 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   };
 
   const handleSave = () => {
-    setActiveStep(0);
-    postArea(getUpdatedArea(store.getState()));
+    const updateArea = getUpdatedArea(store.getState());
+
+    postArea(updateArea)
+      .then((res: any) => {
+        if (res.data.result) {
+          postListLayout({
+            areaId: res.data.result.Id,
+            Id: updateArea.ListLayout?.Id,
+            Items: updateArea.ListLayout?.Items,
+          });
+        }
+      })
+      .then(() => {
+        dispatch(initializeState());
+      });
   };
 
   const steps = useMemo(
@@ -141,6 +149,13 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
     ],
     [handleNext],
   );
+
+  const handleDisplayItemClick = () => {
+    dispatch(setLayoutByArea(area));
+    if (!!store.getState().layoutState.areaTypeId) {
+      setActiveStep(AreaStep.Edit);
+    }
+  };
 
   useEffect(() => {
     setFocusState(focused ? focused : false);
@@ -168,7 +183,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
       }}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      onClick={() => handleItemClick()}
+      onClick={handleItemClick}
     >
       <Box
         sx={{
@@ -206,34 +221,31 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
               );
             })}
           </Stepper>
-          {activeStep === steps.length ? (
-            <AreaDisplayItem area={area} />
-          ) : (
-            <Box sx={{ py: 2 }}>
-              <Typography color="error">{warning}</Typography>
-              {steps[activeStep].item}
 
-              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-                  上一步
+          <Box sx={{ py: 2 }}>
+            <Typography color="error">{warning}</Typography>
+            {steps[activeStep].item}
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                {activeStep === AreaStep.New ? '取消' : '上一步'}
+              </Button>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {isStepOptional(activeStep) && (
+                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                  跳過
                 </Button>
-                <Box sx={{ flex: '1 1 auto' }} />
-                {isStepOptional(activeStep) && (
-                  <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                    跳過
-                  </Button>
-                )}
-                {activeStep === steps.length - 1 ? (
-                  <Button onClick={handleSave}>儲存</Button>
-                ) : (
-                  <Button onClick={handleNext}>下一步</Button>
-                )}
-              </Box>
+              )}
+              {activeStep === steps.length - 1 ? (
+                <Button onClick={handleSave}>儲存</Button>
+              ) : (
+                <Button onClick={handleNext}>下一步</Button>
+              )}
             </Box>
-          )}
+          </Box>
         </>
       ) : (
-        <AreaDisplayItem area={area} />
+        <AreaDisplayItem area={area} onClick={handleDisplayItemClick} />
       )}
     </Paper>
   );

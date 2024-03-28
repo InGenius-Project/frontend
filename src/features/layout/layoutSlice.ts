@@ -6,6 +6,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { EditorState } from 'lexical';
 import { NIL, v4 as uuid } from 'uuid';
 
+export enum AreaStep {
+  New,
+  Layout,
+  Edit,
+}
+
 interface ILayout {
   areaId?: string;
   sequence: number;
@@ -43,11 +49,6 @@ const layoutSlice = createSlice({
   reducers: {
     initializeState: (state) => {
       return initialState;
-    },
-    initializeStateWithoutFocusedArea: (state) => {
-      return {
-        ...initialState,
-      };
     },
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
@@ -102,17 +103,19 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
-      const { Title, AreaTypeId: AreaType, Sequence, Id, IsDisplayed } = action.payload;
+      console.log('setLayoutByArea', action.payload);
+      const { Title, AreaTypeId, Sequence, Id, IsDisplayed } = action.payload;
 
       const layoutType = action.payload.LayoutType;
 
+      // TODO: state init
       var parseArea: ILayout = {
         ...state,
         areaId: Id,
         sequence: Sequence,
         isDisplayed: IsDisplayed,
         title: Title,
-        areaTypeId: AreaType,
+        areaTypeId: AreaTypeId,
         layoutType,
       };
 
@@ -150,7 +153,6 @@ const layoutSlice = createSlice({
 
 export const {
   initializeState,
-  initializeStateWithoutFocusedArea,
   setImageFilename,
   setTitle,
   setContent,
