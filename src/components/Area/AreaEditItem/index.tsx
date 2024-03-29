@@ -43,7 +43,12 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     skip: !layoutState.areaTypeId,
   });
   const listTagTypes = areaTypeData?.result?.ListTagTypes ?? [];
-  const { data: tagsData } = useGetTagsQuery(listTagTypes.map((l) => l.Id.toString()));
+  const { data: tagsData } = useGetTagsQuery(
+    listTagTypes.map((l) => l.Id.toString()),
+    {
+      skip: !(listTagTypes.length > 0),
+    },
+  );
 
   const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const theme = useTheme();
@@ -123,26 +128,17 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
   };
 
   const handleListItemChange = (event: React.SyntheticEvent<Element, Event>, value: string | IInnerTag | null) => {
-    var foundListItem = layoutState.listItems?.find((item) => item.InnerId === value);
-    if (foundListItem) {
-      if (typeof value === 'object' && value) dispatch(updateListItem(value));
-    } else {
-      if (typeof value === 'string' && customTagTypeData?.result)
-        dispatch(
-          updateListItem({
-            InnerId: uuid(),
-            Id: NIL,
-            Name: value,
-            Type: customTagTypeData.result,
-          }),
-        );
-      else if (typeof value === 'object' && value)
-        dispatch(
-          updateListItem({
-            ...value,
-            InnerId: value.InnerId,
-          }),
-        );
+    if (typeof value === 'object' && value) {
+      dispatch(updateListItem(value));
+    } else if (typeof value === 'string' && customTagTypeData?.result) {
+      dispatch(
+        updateListItem({
+          InnerId: uuid(),
+          Id: NIL,
+          Name: value,
+          Type: customTagTypeData.result,
+        }),
+      );
     }
   };
 
@@ -257,7 +253,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                         tagsData && tagsData.result
                           ? tagsData.result.map((t: any) => ({
                               ...t,
-                              InnerId: uuid(),
+                              InnerId: i.InnerId,
                             }))
                           : []
                       }

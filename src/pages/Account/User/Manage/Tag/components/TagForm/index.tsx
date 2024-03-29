@@ -32,7 +32,7 @@ function TagForm() {
   const theme = useTheme();
   const [deleteTag] = useDeleteTagsMutation();
   const [postTag] = usePostTagMutation();
-  const { data: tagsData } = useGetTagsQuery(Object.values(UserRole).filter((value) => typeof value === 'number'));
+  const { data: tagsData } = useGetTagsQuery(undefined);
   const { data: tagTypesData } = useGetTagTypesQuery();
 
   const methods = useForm<TagInput>({

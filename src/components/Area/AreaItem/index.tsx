@@ -2,6 +2,7 @@ import { usePostAreaMutation } from '@/features/api/area/postArea';
 import { usePostListLayoutMutation } from '@/features/api/postListLayout';
 import {
   AreaStep,
+  getUpdateAreaPost,
   getUpdatedArea,
   initializeState,
   selectLayoutType,
@@ -13,6 +14,7 @@ import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
+import { useConfirm } from 'material-ui-confirm';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import AreaDisplayItem from '../AreaDisplayItem';
@@ -30,6 +32,7 @@ export type AreaItemProps = {
 const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChildren<AreaItemProps>) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const confirm = useConfirm();
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [isHover, setIsHover] = React.useState(false);
@@ -91,19 +94,22 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   }, [dispatch]);
 
   const handleBack = () => {
-    if (activeStep === AreaStep.New) {
-      dispatch(initializeState());
-      return;
-    }
-
     const prevStep = Math.max(...hisSteps);
 
-    setHisSteps((prevSteps) => {
-      const newHisSteps = new Set(prevSteps);
-      newHisSteps.delete(prevStep);
-      return newHisSteps;
-    });
-    setActiveStep(prevStep);
+    if (prevStep === AreaStep.New && activeStep === AreaStep.Edit) {
+      confirm({ description: '確定要捨棄目前的內容嗎' })
+        .then(() => {
+          setHisSteps((prevSteps) => {
+            const newHisSteps = new Set(prevSteps);
+            newHisSteps.delete(prevStep);
+            return newHisSteps;
+          });
+          setActiveStep(prevStep);
+        })
+        .catch(() => {
+          return;
+        });
+    }
   };
 
   const handleItemClick = () => {
@@ -112,9 +118,11 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   };
 
   const handleSave = () => {
-    const updateArea = getUpdatedArea(store.getState());
+    const state = store.getState();
+    const updateAreaPost = getUpdateAreaPost(state);
+    const updateArea = getUpdatedArea(state);
 
-    postArea(updateArea)
+    postArea(updateAreaPost)
       .then((res: any) => {
         if (res.data.result) {
           postListLayout({
@@ -153,6 +161,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const handleDisplayItemClick = () => {
     dispatch(setLayoutByArea(area));
     if (!!store.getState().layoutState.areaTypeId) {
+      setHisSteps(new Set<AreaStep>([AreaStep.New]));
       setActiveStep(AreaStep.Edit);
     }
   };

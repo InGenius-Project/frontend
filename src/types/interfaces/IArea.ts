@@ -29,8 +29,13 @@ export interface IAreaTypePost extends Omit<IAreaType, 'Id'> {
   Id?: number;
 }
 
-export interface IAreaPost extends Omit<IArea, 'Id'> {
+export interface IAreaPost {
   Id: string;
+  Sequence: number;
+  IsDisplayed: boolean;
+  Title: string;
+  LayoutType?: LayoutType;
+  AreaTypeId?: number;
 }
 
 export interface ILayout {

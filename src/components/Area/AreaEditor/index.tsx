@@ -2,7 +2,7 @@ import DragDropContainer from '@/components/DragDropContainer';
 import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
 import { selectIsEmptyAreas } from '@/features/areas/areasSlice';
-import { getUpdatedArea, setLayoutByArea } from '@/features/layout/layoutSlice';
+import { getUpdateAreaPost, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
@@ -10,10 +10,10 @@ import { Box, IconButton, Portal, Stack } from '@mui/material';
 import React from 'react';
 import { DropResult, OnDragStartResponder } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
+import { NIL } from 'uuid';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
 import AreaItem from '../AreaItem';
-import { NIL } from 'uuid';
 type AreaContainerProps = {
   onPost?: (areas: Array<IArea>) => Promise<void>;
 };
@@ -72,7 +72,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
 
   const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     if (layoutState.areaId) {
-      const updatedArea = getUpdatedArea(store.getState());
+      const updatedArea = getUpdateAreaPost(store.getState());
       postArea({
         ...updatedArea,
         //TODO: PROFILE ID

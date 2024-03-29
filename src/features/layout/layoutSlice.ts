@@ -1,6 +1,6 @@
 import { RootState } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
-import { IArea, IImage, IKeyValueItem } from '@/types/interfaces/IArea';
+import { IArea, IAreaPost, IImage, IKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { EditorState } from 'lexical';
@@ -88,11 +88,11 @@ const layoutSlice = createSlice({
       var index = state.listItems.findIndex((item) => item.InnerId === action.payload.InnerId);
 
       // Find the empty Items if not exist
-      if (index === -1 || !index) {
+      if (index === -1) {
         index = state.listItems?.findIndex((item) => item.InnerId === NIL);
       }
 
-      if (index !== -1 && index !== undefined) {
+      if (index !== -1) {
         return {
           ...state,
           listItems: state.listItems.map((item, i) => (i === index ? action.payload : item)),
@@ -103,7 +103,6 @@ const layoutSlice = createSlice({
       state.keyValueListItems = action.payload;
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
-      console.log('setLayoutByArea', action.payload);
       const { Title, AreaTypeId, Sequence, Id, IsDisplayed } = action.payload;
 
       const layoutType = action.payload.LayoutType;
@@ -281,6 +280,18 @@ export const getUpdatedArea = (state: RootState) => {
   };
 
   return updatedArea;
+};
+
+export const getUpdateAreaPost = (state: RootState): IAreaPost => {
+  const updatedArea = getUpdatedArea(state);
+  return {
+    Id: updatedArea.Id,
+    Sequence: updatedArea.Sequence,
+    IsDisplayed: updatedArea.IsDisplayed,
+    Title: updatedArea.Title,
+    LayoutType: updatedArea.LayoutType,
+    AreaTypeId: updatedArea.AreaTypeId,
+  };
 };
 
 export default layoutSlice.reducer;
