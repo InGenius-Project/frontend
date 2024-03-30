@@ -39,18 +39,7 @@ function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
         area.ListLayout?.Items?.map((i) => <AreaListItem id={i.Id} key={i.Id} content={i.Name} />)}
 
       {a.isLayoutType(LayoutType.KeyValueList) &&
-        area.KeyValueListLayout?.Items?.map((i) => (
-          <AreaKeyValueListItem
-            id={i.Id}
-            key={i.Id}
-            itemKey={{
-              Id: i.Key.Id,
-              Name: i.Key.Name,
-              Type: i.Key.Type,
-            }}
-            value={i.Value}
-          />
-        ))}
+        area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} />)}
     </Stack>
   );
 }

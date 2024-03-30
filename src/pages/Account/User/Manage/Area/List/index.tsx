@@ -2,7 +2,7 @@ import FormInput from '@/components/FormInput';
 import { useGetAreaTypeByIdQuery } from '@/features/api/area/getAreaTypeById';
 import { usePostAreaTypeMutation } from '@/features/api/area/postAreaType';
 import { useGetTagTypesQuery } from '@/features/api/tag/getTagTypes';
-import { LayoutTypeObject } from '@/types/enums/LayoutType';
+import { LayoutType, LayoutTypeObject } from '@/types/enums/LayoutType';
 import { UserRoleObject } from '@/types/enums/UserRole';
 import { ITagType } from '@/types/interfaces/ITag';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -137,7 +137,7 @@ function ManageAreaList() {
               name="ListTagTypes"
               render={({ field: { onChange, value } }) => (
                 <Autocomplete
-                  multiple
+                  multiple={areaTypeData?.result?.LayoutType === LayoutType.List ? false : true}
                   options={allTagTypes?.result || []}
                   getOptionLabel={(d) => (d ? `${d.Name} ( ${d.Value} )` : '')}
                   renderInput={(params) => <TextField {...params} label="可選標籤類型" />}

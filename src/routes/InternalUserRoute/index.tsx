@@ -11,7 +11,6 @@ const InternalUserRoute = () => {
   if (userRole === UserRole.InternalUser || userRole === UserRole.Admin) {
     return <Outlet />;
   } else {
-    toast.warn('您沒有權限訪問此頁面');
     return <Navigate to={from} replace={true} />;
   }
 };

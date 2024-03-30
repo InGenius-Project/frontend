@@ -2,7 +2,7 @@ import DragDropContainer from '@/components/DragDropContainer';
 import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
 import { selectIsEmptyAreas } from '@/features/areas/areasSlice';
-import { getUpdateAreaPost, setLayoutByArea } from '@/features/layout/layoutSlice';
+import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
@@ -57,7 +57,8 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   };
 
   const handleAddClick = () => {
-    // TODO: post emptyArea
+    dispatch(initializeState());
+
     postArea({
       Id: NIL,
       Sequence: layoutState.sequence,

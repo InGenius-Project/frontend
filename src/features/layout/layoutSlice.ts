@@ -1,6 +1,6 @@
 import { RootState } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
-import { IArea, IAreaPost, IImage, IKeyValueItem } from '@/types/interfaces/IArea';
+import { IArea, IAreaPost, IImage, IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { EditorState } from 'lexical';
@@ -23,7 +23,7 @@ interface ILayout {
   content?: EditorState | string;
   image: IImage;
   listItems?: Array<IInnerTag>;
-  keyValueListItems: Array<IKeyValueItem>;
+  keyValueListItems: Array<IInnerKeyValueItem>;
 }
 
 const initialState: ILayout = {
@@ -99,8 +99,30 @@ const layoutSlice = createSlice({
         };
       }
     },
-    setKetValueListItems: (state, action: PayloadAction<Array<IKeyValueItem>>) => {
+    setKetValueListItems: (state, action: PayloadAction<Array<IInnerKeyValueItem>>) => {
       state.keyValueListItems = action.payload;
+    },
+    pushKeyValueListItem: (state, action: PayloadAction<IInnerKeyValueItem>) => {
+      state.keyValueListItems ??= [];
+
+      state.keyValueListItems.push(action.payload);
+    },
+    updateKeyValueListItem: (state, action: PayloadAction<IInnerKeyValueItem>) => {
+      state.keyValueListItems ??= [];
+
+      var index = state.keyValueListItems.findIndex((item) => item.InnerId === action.payload.InnerId);
+
+      // Find the empty Items if not exist
+      if (index === -1) {
+        index = state.keyValueListItems?.findIndex((item) => item.InnerId === NIL);
+      }
+
+      if (index !== -1) {
+        return {
+          ...state,
+          keyValueListItems: state.keyValueListItems.map((item, i) => (i === index ? action.payload : item)),
+        };
+      }
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
       const { Title, AreaTypeId, Sequence, Id, IsDisplayed } = action.payload;
@@ -142,7 +164,11 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.KeyValueList:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
-          parseArea.keyValueListItems = action.payload.KeyValueListLayout?.Items || [];
+          parseArea.keyValueListItems =
+            action.payload.KeyValueListLayout?.Items?.map((i) => ({
+              InnerId: uuid(),
+              ...i,
+            })) || [];
           break;
       }
       return parseArea;
@@ -164,6 +190,8 @@ export const {
   setImageContent,
   setImageContentType,
   setKetValueListItems,
+  pushKeyValueListItem,
+  updateKeyValueListItem,
   setImage,
 } = layoutSlice.actions;
 
@@ -216,7 +244,9 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.KeyValueList
         ? {
             Id: NIL,
-            Items: layoutState.keyValueListItems,
+            Items: layoutState.keyValueListItems
+              .filter((l) => !!l.Key && l.Value !== '')
+              .map(({ InnerId, ...i }) => i) as IKeyValueItem[],
           }
         : undefined,
   };
@@ -274,7 +304,9 @@ export const getUpdatedArea = (state: RootState) => {
       selectLayoutType(state) === LayoutType.KeyValueList
         ? {
             Id: layoutState.id,
-            Items: layoutState.keyValueListItems,
+            Items: layoutState.keyValueListItems
+              .filter((l) => !!l.Key && l.Value !== '')
+              .map(({ InnerId, ...i }) => i) as IKeyValueItem[],
           }
         : undefined,
   };

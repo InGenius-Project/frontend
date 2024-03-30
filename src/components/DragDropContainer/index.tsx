@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -7,8 +7,8 @@ import {
   DroppableProps,
   OnDragStartResponder,
   OnDragUpdateResponder,
-} from "react-beautiful-dnd";
-import { Box, Stack } from "@mui/material";
+} from 'react-beautiful-dnd';
+import { Box, Stack } from '@mui/material';
 
 export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
   const [enabled, setEnabled] = useState(false);
@@ -69,27 +69,15 @@ const DragDropContainer = ({
       return;
     }
 
-    const updatedItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
+    const updatedItems = reorder(items, result.source.index, result.destination.index);
     onDragEnd && onDragEnd(updatedItems, result);
   };
 
   return (
-    <DragDropContext
-      onDragEnd={handleDragEnd}
-      onDragStart={onDragStart}
-      onDragUpdate={onDragUpdate}
-    >
+    <DragDropContext onDragEnd={handleDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
       <StrictModeDroppable droppableId={droppableId}>
         {(provided, snapshot) => (
-          <Stack
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            spacing={spacing}
-          >
+          <Stack {...provided.droppableProps} ref={provided.innerRef} spacing={spacing}>
             {React.Children.map(children, (child, index) => {
               if (React.isValidElement(child)) {
                 return (

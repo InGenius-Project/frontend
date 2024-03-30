@@ -45,6 +45,11 @@ export interface ILayout {
 export interface ITextLayout extends ILayout {
   Content: string;
 }
+
+export interface ITextLayoutPost extends Omit<ITextLayout, 'Id'> {
+  areaId: string;
+}
+
 export interface IImageTextLayout extends ILayout {
   Content: string;
   Image?: IImage;
@@ -62,7 +67,6 @@ export interface IListLayout extends ILayout {
 
 export interface IListLayoutPost {
   areaId: string;
-  Id?: string;
   Items?: Array<ITag>;
 }
 
@@ -70,8 +74,23 @@ export interface IKeyValueListLayout extends ILayout {
   Items?: Array<IKeyValueItem>;
 }
 
+export interface IKeyValueListLayoutPost {
+  areaId: string;
+  Items?: Array<IKeyValueItemPostDTO>;
+}
+
 export interface IKeyValueItem {
   Id: string;
-  Key: ITag;
+  Key?: ITag;
+  Value: string;
+}
+
+export interface IInnerKeyValueItem extends IKeyValueItem {
+  InnerId: string;
+}
+
+export interface IKeyValueItemPostDTO {
+  Id?: string;
+  TagId?: string;
   Value: string;
 }

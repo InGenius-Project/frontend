@@ -1,73 +1,74 @@
-import ClearIcon from '@mui/icons-material/Clear';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Divider, IconButton, ListItem, Stack, TextField, Typography, useTheme } from '@mui/material';
-import React from 'react';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { IKeyValueItem } from '@/types/interfaces/IArea';
 import { ITag } from '@/types/interfaces/ITag';
+import ClearIcon from '@mui/icons-material/Clear';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { Autocomplete, Divider, IconButton, ListItem, Stack, TextField, Typography, useTheme } from '@mui/material';
+import { useDebounce } from 'ahooks';
+import React, { useEffect } from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
-type AreaListItemProps = {
+type AreaKeyValueListItemProps = {
   id: string;
-  itemKey?: ITag;
-  value?: string;
+  item: IKeyValueItem;
+  keyOptions?: Array<ITag>;
   editable?: boolean;
   onClickDelete?: (id: string) => void;
   onChange?: (item: IKeyValueItem) => void;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 function AreaKeyValueListItem({
-  id,
-  itemKey,
-  value = '',
+  item,
+  keyOptions,
   editable = false,
   onClickDelete,
   onChange,
   ...props
-}: AreaListItemProps) {
+}: AreaKeyValueListItemProps) {
   const theme = useTheme();
-  // const [itemState, setItemState] = useState<IKeyValueItem>();
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    onClickDelete && onClickDelete(id);
+    onClickDelete && onClickDelete(item.Id);
+  };
+
+  const handleKeyChange = (event: React.ChangeEvent<{}>, value: ITag | null) => {
+    onChange &&
+      onChange({
+        ...item,
+        Key: value || undefined,
+      });
+  };
+
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange &&
+      onChange({
+        ...item,
+        Value: event.target.value,
+      });
   };
 
   return (
     <ListItem
       sx={{
-        borderBottom: `1px solid ${theme.palette.divider}`,
         padding: 2,
-        borderRadius: 'var(--ing-shape-borderRadius)',
       }}
     >
       {editable ? (
         <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
-          <TextField
-            variant="standard"
-            defaultValue={itemKey ? itemKey.Name : undefined}
-            onChange={(event) => {
-              //TODO: fix this
-              // setItemState((state) => ({
-              //   ...state,
-              //   Key: {
-              //     ...state.key,
-              //     name: event.target.value,
-              //   },
-              // }));
-              // onChange && onChange(itemState);
+          <Autocomplete
+            options={keyOptions || []}
+            onChange={handleKeyChange}
+            getOptionLabel={(o) => o.Name}
+            renderInput={(params) => <TextField {...params} variant="standard" />}
+            sx={{
+              flex: '1 1 5em',
             }}
           />
+
           <Divider orientation="vertical" flexItem />
           <TextField
             variant="standard"
-            defaultValue={value}
-            onChange={(event) => {
-              //TODO: fix this
-              // setItemState((state) => ({
-              //   ...state,
-              //   value: event.target.value,
-              // }));
-              // onChange && onChange(itemState);
-            }}
+            defaultValue={item.Value}
+            onChange={handleValueChange}
             sx={{ flex: '1 1 auto' }}
           />
           <Stack direction={'row'} spacing={1}>
@@ -82,9 +83,17 @@ function AreaKeyValueListItem({
         </Stack>
       ) : (
         <Stack spacing={1} direction={'row'}>
-          <Typography variant="body1">{itemKey?.Name}</Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 'bold',
+              minWidth: '5em',
+            }}
+          >
+            {item.Key?.Name}
+          </Typography>
           <Divider orientation="vertical" flexItem />
-          <Typography variant="body1">{value}</Typography>
+          <Typography variant="body1">{item.Value}</Typography>
         </Stack>
       )}
     </ListItem>

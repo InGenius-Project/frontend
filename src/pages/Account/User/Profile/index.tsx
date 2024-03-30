@@ -7,7 +7,6 @@ import { useAppDispatch } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import { Box, Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
 
 export default function Profile() {
   const { data: userData } = useGetUserQuery(null);
@@ -30,7 +29,14 @@ export default function Profile() {
   const handlePostProfileArea = async (areas: Array<IArea>) => {
     await postUser({
       Username: userData?.result?.Username || '',
-      Areas: areas,
+      Areas: areas.map((area) => ({
+        Id: area.Id,
+        Sequence: area.Sequence,
+        IsDisplayed: area.IsDisplayed,
+        Title: area.Title,
+        LayoutType: area.LayoutType,
+        AreaTypeId: area.AreaTypeId,
+      })),
     });
   };
 
