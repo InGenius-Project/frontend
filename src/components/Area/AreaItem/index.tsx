@@ -1,7 +1,7 @@
 import { usePostAreaMutation } from '@/features/api/area/postArea';
-import { usePostKeyValueListLayoutMutation } from '@/features/api/postKeyValueListLayout';
-import { usePostListLayoutMutation } from '@/features/api/postListLayout';
-import { usePostTextLayoutMutation } from '@/features/api/postTextLayout';
+import { usePostKeyValueListLayoutMutation } from '@/features/api/area/postKeyValueListLayout';
+import { usePostListLayoutMutation } from '@/features/api/area/postListLayout';
+import { usePostTextLayoutMutation } from '@/features/api/area/postTextLayout';
 import {
   AreaStep,
   getUpdateAreaPost,
@@ -23,7 +23,7 @@ import AreaDisplayItem from '../AreaDisplayItem';
 import AreaEditItem from '../AreaEditItem';
 import AreaLayoutItem from '../AreaLayoutItem';
 import AreaNewItem from '../AreaNewItem';
-import { usePostImageTextLayoutMutation } from '@/features/api/postImageLayout';
+import { usePostImageTextLayoutMutation } from '@/features/api/area/postImageLayout';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;

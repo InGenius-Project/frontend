@@ -1,5 +1,5 @@
 import { IResponse } from '@/types/interfaces/IResponse';
-import { baseApi } from './baseApi';
+import { baseApi } from '../baseApi';
 
 export const postImageTextLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

@@ -1,6 +1,6 @@
 import { IKeyValueListLayoutPost } from '@/types/interfaces/IArea';
 import { IResponse } from '@/types/interfaces/IResponse';
-import { baseApi } from './baseApi';
+import { baseApi } from '../baseApi';
 
 export const postKeyValueListLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

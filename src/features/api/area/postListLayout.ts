@@ -1,12 +1,12 @@
-import { ITextLayoutPost } from '@/types/interfaces/IArea';
 import { IResponse } from '@/types/interfaces/IResponse';
-import { baseApi } from './baseApi';
+import { baseApi } from '../baseApi';
+import { IListLayoutPost } from '@/types/interfaces/IArea';
 
-export const postTextLayoutApi = baseApi.injectEndpoints({
+export const postListLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    postTextLayout: builder.mutation<IResponse<void>, ITextLayoutPost>({
+    postListLayout: builder.mutation<IResponse<void>, IListLayoutPost>({
       query: ({ areaId, ...body }) => ({
-        url: `/area/TextLayout`,
+        url: `/area/ListLayout`,
         method: 'POST',
         body,
         params: {
@@ -20,4 +20,4 @@ export const postTextLayoutApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { usePostTextLayoutMutation } = postTextLayoutApi;
+export const { usePostListLayoutMutation } = postListLayoutApi;

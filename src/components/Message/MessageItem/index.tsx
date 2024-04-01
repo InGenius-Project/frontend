@@ -1,46 +1,51 @@
-import { Avatar, Box, Chip, Typography } from "@mui/material";
-import React from "react";
+import { Avatar, Box, Chip, Typography } from '@mui/material';
+import React from 'react';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 interface MessageItemProps {
-  align: "left" | "right";
+  align: 'left' | 'right';
+  label: string;
 }
 
-function MessageItem({ align }: MessageItemProps) {
+function MessageItem({ align, label }: MessageItemProps) {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: 'flex',
         gap: 1,
-        maxWidth: "30em",
-        alignItems: "flex-end",
-        alignSelf: align === "left" ? "flex-start" : "flex-end",
-        flexDirection: align === "left" ? "row" : "row-reverse",
+        maxWidth: '30em',
+        alignItems: 'flex-end',
+        alignSelf: align === 'left' ? 'flex-start' : 'flex-end',
+        flexDirection: align === 'left' ? 'row' : 'row-reverse',
       }}
     >
       <Box
         sx={{
-          height: "100%",
-          alignSelf: "center",
+          height: '100%',
+          alignSelf: 'center',
         }}
       >
-        <Avatar sx={{ width: "1.5em", height: "1.5em" }}></Avatar>
+        {align === 'left' ? (
+          <Avatar>
+            <SmartToyIcon />{' '}
+          </Avatar>
+        ) : (
+          <Avatar sx={{ width: '1.5em', height: '1.5em' }}></Avatar>
+        )}
       </Box>
       <Chip
-        label="Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum nesciunt
-        sed repellat quos laboriosam optio porro doloremque ratione,
-        consequuntur reprehenderit ut labore tempora, architecto dolorem velit
-        magnam dolores hic aperiam."
+        label={label}
         sx={{
-          height: "auto",
-          "& .MuiChip-label": {
-            display: "block",
-            whiteSpace: "normal",
+          height: 'auto',
+          '& .MuiChip-label': {
+            display: 'block',
+            whiteSpace: 'normal',
           },
           p: 1,
         }}
-        color={align === "left" ? "default" : "primary"}
+        color={align === 'left' ? 'default' : 'primary'}
       />
-      <Typography variant={"caption"}>19:30</Typography>
+      {/* <Typography variant={'caption'}>19:30</Typography> */}
     </Box>
   );
 }

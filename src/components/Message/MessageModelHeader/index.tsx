@@ -1,27 +1,32 @@
-import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import React from "react";
+import { Avatar, Box, IconButton, Stack, Typography } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React from 'react';
 
-function MessageModelHeader() {
+type MessageModelHeaderProps = {
+  avatar: React.ReactNode;
+  username: string;
+  role: string;
+};
+
+function MessageModelHeader({ avatar, username, role }: MessageModelHeaderProps) {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: 'flex',
         gap: 2,
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "100%",
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
       }}
     >
-      <Avatar />
+      <Avatar>{avatar}</Avatar>
       <Stack
-        spacing={1}
         sx={{
-          flex: "1 1 auto",
+          flex: '1 1 auto',
         }}
       >
-        <Typography variant="body1">Username</Typography>
-        <Typography variant="caption">Intern</Typography>
+        <Typography variant="subtitle1">{username}</Typography>
+        <Typography variant="caption">{role}</Typography>
       </Stack>
       <IconButton>
         <MoreVertIcon />
