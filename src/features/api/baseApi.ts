@@ -7,7 +7,9 @@ const baseUrl = import.meta.env.VITE_APP_SERVER_ENDPOINT as string;
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/api`,
   prepareHeaders: (headers, { getState }) => {
-    headers.set('Accept', 'application/json');
+    // if (!headers.has('Content-Type')) {
+    //   headers.set('Content-Type', 'application/json');
+    // }
 
     var token = (getState() as RootState).userState.Token?.AccessToken;
     if (!token) {

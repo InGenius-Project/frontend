@@ -1,5 +1,4 @@
-import { generateImageBase64Src } from '@/features/layout/layoutSlice';
-import { IImage } from '@/types/interfaces/IArea';
+import { IImageInfo } from '@/types/interfaces/IArea';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import {
   Box,
@@ -14,7 +13,7 @@ import {
   styled,
 } from '@mui/material';
 import { useUpdateEffect } from 'ahooks';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactCrop, { Crop, centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import UploadImageButton from './UploadImageButton';
@@ -45,9 +44,10 @@ function base64ToBytes(base64: string): number {
 type ImageCropProps = {
   width?: string | number;
   height?: string | number;
-  image: IImage;
-  onChange?: (image: IImage) => void;
-  onCropDone?: (image: IImage) => void;
+  image?: IImageInfo;
+  onChange?: (image: IImageInfo | undefined) => void;
+  onCropDone?: (image: IImageInfo | undefined) => void;
+  onChangeFileName?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   circularCrop?: boolean;
 };
 export default function ImageCrop({
@@ -57,8 +57,9 @@ export default function ImageCrop({
   circularCrop,
   onChange,
   onCropDone,
+  onChangeFileName,
 }: ImageCropProps) {
-  const [imageState, setImageState] = useState<IImage>(image);
+  const [imageState, setImageState] = useState<IImageInfo | undefined>(image);
   const [imgSrc, setImgSrc] = useState('');
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -115,10 +116,21 @@ export default function ImageCrop({
       if (imgRef.current && previewCanvasRef.current && crop) {
         var dataUrl = previewCanvasRef.current.toDataURL();
 
+        function dataURItoBlob(dataURI: string) {
+          var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+          var binary = atob(dataURI.split(',')[1]);
+          var array = [];
+          for (var i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+          }
+          return new Blob([new Uint8Array(array)], { type: mime });
+        }
+
         resizeImage(dataUrl, 100, 1).then((res) => {
-          const newImageState: IImage = {
-            ...imageState,
-            Content: res.split(',')[1],
+          const newImageState: IImageInfo = {
+            Id: imageState?.Id || '',
+            AltContent: imageState?.AltContent || '',
+            Uri: URL.createObjectURL(dataURItoBlob(res)),
             ContentType: res.split(',')[0].split(':')[1].split(';')[0],
           };
 
@@ -145,8 +157,6 @@ export default function ImageCrop({
     }
   };
 
-  const imgPreviewUrl = useMemo(() => generateImageBase64Src(imageState.ContentType, imageState.Content), [imageState]);
-
   return (
     <Box className="App">
       <Dialog onClose={() => setOpen(false)} open={open} fullWidth maxWidth="laptop">
@@ -163,12 +173,15 @@ export default function ImageCrop({
           <TextField
             sx={{ mt: 1 }}
             label="檔案名稱"
-            value={imageState?.Filename || ''}
+            value={imageState?.AltContent || ''}
             onChange={(e) => {
               setImageState((prev) => ({
-                ...prev,
-                filename: (e.target as any).value,
+                ContentType: prev?.ContentType || '',
+                Uri: prev?.Uri || '',
+                Id: prev?.Id || '',
+                AltContent: (e.target as any).value,
               }));
+              onChangeFileName && onChangeFileName(e);
             }}
           ></TextField>
 
@@ -192,7 +205,7 @@ export default function ImageCrop({
               >
                 <img
                   ref={imgRef}
-                  alt={imageState ? imageState.Filename : 'Crop preview'}
+                  alt={imageState ? imageState.AltContent : 'Crop preview'}
                   src={imgSrc}
                   style={{
                     maxHeight: '55vh',
@@ -225,7 +238,7 @@ export default function ImageCrop({
       </Dialog>
 
       <Stack direction="row" spacing={2}>
-        {imageState.Content === '' ? (
+        {!imageState ? (
           <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
             <ImageOutlinedIcon />
             <Typography variant="body1">上傳圖片</Typography>
@@ -242,8 +255,8 @@ export default function ImageCrop({
             <img
               width={256}
               height={256}
-              src={imgPreviewUrl}
-              alt={imageState?.Filename}
+              src={imageState.Uri}
+              alt={imageState?.AltContent}
               style={{
                 overflow: 'hidden',
                 width,

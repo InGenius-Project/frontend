@@ -170,7 +170,12 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
       {/* Image */}
       {layoutTypeState === LayoutType.ImageText && (
-        <ImageCrop height={150} width={150} image={layoutState.image} onChange={(image) => dispatch(setImage(image))} />
+        <ImageCrop
+          height={150}
+          width={150}
+          image={layoutState.image}
+          onCropDone={(image) => dispatch(setImage(image))}
+        />
       )}
 
       {/* Text */}

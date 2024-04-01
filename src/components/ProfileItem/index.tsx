@@ -3,7 +3,7 @@ import dummyCover from '@/assets/images/png/dummyCover.jpg';
 import ImageCrop from '@/components/ImageCrop';
 import { usePostUserMutation } from '@/features/api/user/postUser';
 import { useAppSelector } from '@/features/store';
-import { IImage } from '@/types/interfaces/IArea';
+import { IImageInfo } from '@/types/interfaces/IArea';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import {
@@ -39,7 +39,7 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
   const userState = useAppSelector((state) => state.userState);
   const [userNameState, setUserNameState] = useState(userState.User?.Username);
   const debouncedUserName = useDebounce(userNameState);
-  const [image, setImage] = useState<IImage | undefined>(userState.User?.Avatar);
+  const [image, setImage] = useState<IImageInfo | undefined>(userState.User?.Avatar);
 
   const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
 
@@ -47,11 +47,11 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
     setUserNameState(event.target.value);
   };
 
-  const handleChangeAvatar = useCallback((image: IImage) => {
+  const handleChangeAvatar = useCallback((image: IImageInfo | undefined) => {
     setImage(image);
   }, []);
   const handleAvatarCropDone = useCallback(
-    (image: IImage) => {
+    (image: IImageInfo | undefined) => {
       postUser({
         Username: userState.User?.Username || '',
         Avatar: image,
@@ -113,8 +113,8 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
             image || {
               Id: NIL,
               ContentType: '',
-              Filename: '',
-              Content: avatarFallback.src,
+              AltContent: '',
+              Uri: avatarFallback.src,
             }
           }
           onChange={handleChangeAvatar}

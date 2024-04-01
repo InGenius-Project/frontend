@@ -51,14 +51,22 @@ export interface ITextLayoutPost extends Omit<ITextLayout, 'Id'> {
 }
 
 export interface IImageTextLayout extends ILayout {
-  Content: string;
-  Image?: IImage;
+  TextContent: string;
+  Image?: IImageInfo;
 }
-export interface IImage {
+
+export interface IImageTextLayoutPostDTO {
+  AreaId: string;
+  TextContent: string;
+  AltContent: string;
+  Image: FormData;
+}
+
+export interface IImageInfo {
   Id: string;
-  Filename: string;
-  Content: string;
+  Uri: string;
   ContentType: string;
+  AltContent: string;
 }
 
 export interface IListLayout extends ILayout {

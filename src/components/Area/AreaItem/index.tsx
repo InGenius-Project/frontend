@@ -23,6 +23,7 @@ import AreaDisplayItem from '../AreaDisplayItem';
 import AreaEditItem from '../AreaEditItem';
 import AreaLayoutItem from '../AreaLayoutItem';
 import AreaNewItem from '../AreaNewItem';
+import { usePostImageTextLayoutMutation } from '@/features/api/postImageLayout';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -51,6 +52,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const [postListLayout] = usePostListLayoutMutation();
   const [postTextLayout] = usePostTextLayoutMutation();
   const [postKeyValueListLayout] = usePostKeyValueListLayoutMutation();
+  const [postImageTextLayout] = usePostImageTextLayoutMutation();
 
   const isStepDone = (step: number) => {
     return hisSteps.has(step);
@@ -127,13 +129,13 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
     onClick && onClick(ref.current as HTMLElement);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const state = store.getState();
     const updateAreaPost = getUpdateAreaPost(state);
     const updateArea = getUpdatedArea(state);
 
     postArea(updateAreaPost)
-      .then((res: any) => {
+      .then(async (res: any) => {
         if (res.data.result) {
           switch (layoutType) {
             case LayoutType.List:
@@ -157,8 +159,23 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
                   Value: i.Value,
                 })),
               };
-
               postKeyValueListLayout(a);
+              break;
+            case LayoutType.ImageText:
+              const form = new FormData();
+
+              let blob = await fetch(updateArea.ImageTextLayout?.Image?.Uri || '').then((r) => r.blob());
+
+              form.append('Image', blob, updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
+              form.append('TextContent', updateArea.ImageTextLayout?.TextContent || '');
+              form.append('AltContent', updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
+
+              postImageTextLayout({
+                AreaId: res.data.result.Id,
+                FormData: form,
+              });
+
+              break;
           }
         }
       })

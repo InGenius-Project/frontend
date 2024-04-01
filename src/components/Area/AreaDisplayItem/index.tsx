@@ -18,17 +18,28 @@ function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
   return (
     <Stack spacing={1} onClick={onClick} sx={{ cursor: 'pointer' }}>
       <Typography variant="h4">{a.getAreaTitle() || 'Untitled'}</Typography>
-      {a.isLayoutType(LayoutType.ImageText) && a.ImageTextLayout?.Image?.Content && (
+      {a.isLayoutType(LayoutType.ImageText) && (
         <Stack direction={'row'} spacing={1}>
-          <img
-            src={`data:${a.ImageTextLayout?.Image?.ContentType};base64,${a.ImageTextLayout?.Image?.Content}`}
-            alt={a.ImageTextLayout.Image.Filename}
-            style={{
-              width: '15vw',
-              height: '15vw',
-            }}
-          />
-          <RichTextEditor controllable={false} initialEditorState={a.ImageTextLayout?.Content}></RichTextEditor>
+          {a.ImageTextLayout?.Image ? (
+            <img
+              src={a.ImageTextLayout.Image.Uri}
+              alt={a.ImageTextLayout.Image.AltContent}
+              style={{
+                width: '15vw',
+                height: '15vw',
+              }}
+            />
+          ) : (
+            <img
+              src="https://via.placeholder.com/150"
+              alt="placeholder"
+              style={{
+                width: '15vw',
+                height: '15vw',
+              }}
+            />
+          )}
+          <RichTextEditor controllable={false} initialEditorState={a.ImageTextLayout?.TextContent}></RichTextEditor>
         </Stack>
       )}
 

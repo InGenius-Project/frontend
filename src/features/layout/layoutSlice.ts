@@ -1,6 +1,6 @@
 import { RootState } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
-import { IArea, IAreaPost, IImage, IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
+import { IArea, IAreaPost, IImageInfo, IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { EditorState } from 'lexical';
@@ -21,7 +21,7 @@ interface ILayout {
   areaTypeId?: number | null;
   title: string;
   content?: EditorState | string;
-  image: IImage;
+  image?: IImageInfo;
   listItems?: Array<IInnerTag>;
   keyValueListItems: Array<IInnerKeyValueItem>;
 }
@@ -33,12 +33,7 @@ const initialState: ILayout = {
   id: '',
   title: '',
   content: undefined,
-  image: {
-    Id: '',
-    Filename: '',
-    ContentType: '',
-    Content: '',
-  },
+  image: undefined,
   listItems: undefined,
   keyValueListItems: [],
 };
@@ -64,15 +59,6 @@ const layoutSlice = createSlice({
     },
     setImage: (state, action: PayloadAction<ILayout['image']>) => {
       state.image = action.payload;
-    },
-    setImageFilename: (state, action: PayloadAction<string>) => {
-      state.image.Filename = action.payload;
-    },
-    setImageContent: (state, action: PayloadAction<string>) => {
-      state.image.Content = action.payload;
-    },
-    setImageContentType: (state, action: PayloadAction<string>) => {
-      state.image.ContentType = action.payload;
     },
     setListItem: (state, action: PayloadAction<Array<IInnerTag>>) => {
       state.listItems = action.payload;
@@ -147,12 +133,11 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.ImageText:
           parseArea.id = action.payload.ImageTextLayout?.Id!;
-          parseArea.content = action.payload.ImageTextLayout?.Content;
           parseArea.image = {
             Id: action.payload.ImageTextLayout?.Image?.Id || '',
-            Filename: action.payload.ImageTextLayout?.Image?.Filename || '',
+            AltContent: action.payload.ImageTextLayout?.Image?.AltContent || '',
             ContentType: action.payload.ImageTextLayout?.Image?.ContentType || '',
-            Content: action.payload.ImageTextLayout?.Image?.Content || '',
+            Uri: action.payload.ImageTextLayout?.Image?.Uri || '',
           };
           break;
         case LayoutType.List:
@@ -178,7 +163,6 @@ const layoutSlice = createSlice({
 
 export const {
   initializeState,
-  setImageFilename,
   setTitle,
   setContent,
   setAreaTypeId,
@@ -187,8 +171,6 @@ export const {
   pushListItem,
   updateListItem,
   setLayoutByArea,
-  setImageContent,
-  setImageContentType,
   setKetValueListItems,
   pushKeyValueListItem,
   updateKeyValueListItem,
@@ -224,13 +206,13 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.ImageText
         ? {
             Id: NIL,
-            Content: JSON.stringify(layoutState.content),
             Image: {
               Id: NIL,
-              Content: layoutState.image?.Content || '',
-              ContentType: layoutState.image?.ContentType || 'image/jpeg',
-              Filename: layoutState.image?.Filename || '',
+              AltContent: JSON.stringify(layoutState.image?.AltContent),
+              ContentType: layoutState.image?.ContentType || '',
+              Uri: layoutState.image?.Uri || '',
             },
+            TextContent: JSON.stringify(layoutState.content),
           }
         : undefined,
     ListLayout:
@@ -283,13 +265,13 @@ export const getUpdatedArea = (state: RootState) => {
       selectLayoutType(state) === LayoutType.ImageText
         ? {
             Id: layoutState.id,
-            Content: JSON.stringify(layoutState.content),
             Image: {
-              Id: layoutState.image.Id,
-              Content: layoutState.image?.Content || '',
-              ContentType: layoutState.image?.ContentType || 'image/jpeg',
-              Filename: layoutState.image?.Filename || '',
+              Id: NIL,
+              AltContent: JSON.stringify(layoutState.image?.AltContent),
+              ContentType: layoutState.image?.ContentType || '',
+              Uri: layoutState.image?.Uri || '',
             },
+            TextContent: JSON.stringify(layoutState.content),
           }
         : undefined,
     ListLayout:

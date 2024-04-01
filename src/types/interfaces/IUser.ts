@@ -1,5 +1,5 @@
 import { UserRole } from '@/types/enums/UserRole';
-import { IArea, IAreaPost, IImage } from './IArea';
+import { IArea, IAreaPost, IImageInfo } from './IArea';
 import { IToken } from './IToken';
 
 export interface IUser {
@@ -12,7 +12,7 @@ export interface IUserInfo {
   Email: string;
   Username: string;
   Role: UserRole;
-  Avatar?: IImage;
+  Avatar?: IImageInfo;
   Areas?: Array<IArea> | null;
 }
 
