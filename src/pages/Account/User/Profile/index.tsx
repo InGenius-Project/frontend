@@ -35,7 +35,7 @@ export default function Profile() {
           gap: 1,
         }}
       >
-        <AreaEditor></AreaEditor>
+        <AreaEditor />
       </Box>
     </Stack>
   );

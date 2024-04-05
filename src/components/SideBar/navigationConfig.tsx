@@ -5,6 +5,7 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import dummyUserImage from '@/assets/images/png/dummyUserImage.jpg';
 import { UserRole } from '@/types/enums/UserRole';
+import UserAvatar from '../UserAvatar';
 
 const navigationConfig = [
   {
@@ -13,18 +14,7 @@ const navigationConfig = [
       {
         name: '個人首頁',
         value: 'Profile',
-        icon: (
-          <img
-            src={dummyUserImage}
-            alt="userImage"
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              objectFit: 'contain',
-            }}
-          />
-        ),
+        icon: <UserAvatar />,
       },
       {
         name: '履歷管理',

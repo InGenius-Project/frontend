@@ -1,9 +1,10 @@
-import avatarFallback from '@/assets/images/png/avatarFallback.json';
 import dummyCover from '@/assets/images/png/dummyCover.jpg';
 import ImageCrop from '@/components/ImageCrop';
 import { usePostUserMutation } from '@/features/api/user/postUser';
+import { useUploadAvatarMutation } from '@/features/api/user/uploadAvatar';
 import { useAppSelector } from '@/features/store';
 import { IImageInfo } from '@/types/interfaces/IArea';
+import { AvatarPostFormData } from '@/types/interfaces/IUser';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import {
@@ -21,7 +22,6 @@ import {
 } from '@mui/material';
 import { useDebounce, useUpdateEffect } from 'ahooks';
 import { useCallback, useState } from 'react';
-import { NIL } from 'uuid';
 
 type ProfileItemProps = {
   editable?: boolean;
@@ -35,11 +35,10 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
 }));
 function ProfileItem({ editable = false }: ProfileItemProps) {
   const theme = useTheme();
-
   const userState = useAppSelector((state) => state.userState);
   const [userNameState, setUserNameState] = useState(userState.User?.Username);
+  const [uploadAvatar] = useUploadAvatarMutation();
   const debouncedUserName = useDebounce(userNameState);
-  const [image, setImage] = useState<IImageInfo | undefined>(userState.User?.Avatar);
 
   const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
 
@@ -47,16 +46,17 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
     setUserNameState(event.target.value);
   };
 
-  const handleChangeAvatar = useCallback((image: IImageInfo | undefined) => {
-    setImage(image);
-  }, []);
   const handleAvatarCropDone = useCallback(
-    (image: IImageInfo | undefined) => {
-      postUser({
-        Username: userState.User?.Username || '',
-      });
+    async (image: IImageInfo | undefined) => {
+      if (image !== undefined) {
+        const form: AvatarPostFormData = new FormData();
+        let blob = await fetch(image?.Uri || '').then((r) => r.blob());
+        form.append('Image', blob, image?.AltContent || 'Untitled');
+
+        uploadAvatar(form);
+      }
     },
-    [postUser, userState],
+    [uploadAvatar],
   );
 
   useUpdateEffect(() => {
@@ -108,14 +108,7 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
           width="var(--ing-height-profile-avatar)"
           height="var(--ing-height-profile-avatar)"
           circularCrop
-          image={
-            image || {
-              Id: NIL,
-              AltContent: '',
-              Uri: avatarFallback.src,
-            }
-          }
-          onChange={handleChangeAvatar}
+          image={userState.User?.Avatar}
           onCropDone={handleAvatarCropDone}
         />
       </Box>

@@ -19,3 +19,8 @@ export interface IUserInfo {
 }
 
 export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Tags'>;
+
+type AvatarPostField = 'Image';
+export interface AvatarPostFormData extends FormData {
+  append(name: AvatarPostField, value: string | Blob, fileName?: string): void;
+}

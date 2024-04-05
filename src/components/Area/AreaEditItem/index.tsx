@@ -4,6 +4,7 @@ import ImageCrop from '@/components/ImageCrop';
 import RichTextEditor from '@/components/RichTextEditor';
 import { useGetAreaTypeByIdQuery } from '@/features/api/area/getAreaTypeById';
 import { useGetTagTypeByIdQuery } from '@/features/api/tag/getTagTypeById';
+import { useGetTagsQuery } from '@/features/api/tag/getTags';
 import {
   pushKeyValueListItem,
   pushListItem,
@@ -19,7 +20,7 @@ import {
 } from '@/features/layout/layoutSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
-import { IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
+import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
 import { EditorState, LexicalEditor } from 'lexical';
@@ -27,7 +28,6 @@ import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
-import { useGetTagsQuery } from '@/features/api/tag/getTags';
 
 type AreaEditItemProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;

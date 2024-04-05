@@ -28,6 +28,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import MessageModel from '../Message/MessageModel';
+import UserAvatar from '../UserAvatar';
 
 const env = import.meta.env.VITE_APP_ENV as string;
 
@@ -149,15 +150,9 @@ export default function Header() {
               <Button
                 variant="text"
                 startIcon={
-                  <img
-                    src={dummyUserImage}
-                    alt="userImage"
-                    style={{
-                      height: 32,
-                      borderRadius: '50%',
-                      objectFit: 'contain',
-                    }}
-                  />
+                  <Box sx={{ width: '1.5em' }}>
+                    <UserAvatar />
+                  </Box>
                 }
                 endIcon={<ArrowDropDownIcon />}
                 onClick={handleNavClick}
