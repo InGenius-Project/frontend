@@ -2,7 +2,7 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { Area } from '@/types/classes/Area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
-import { Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import { MouseEventHandler } from 'react';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
@@ -46,10 +46,14 @@ function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
         <RichTextEditor controllable={false} initialEditorState={a.TextLayout?.Content}></RichTextEditor>
       )}
       {a.isLayoutType(LayoutType.List) &&
-        area.ListLayout?.Items?.map((i) => <AreaListItem id={i.Id} key={i.Id} content={i.Name} />)}
-
+        area.ListLayout?.Items?.map((i, index, arr) => (
+          <>
+            <AreaListItem id={i.Id} key={i.Id} content={i.Name} />
+            {index !== arr.length - 1 && <Divider />}
+          </>
+        ))}
       {a.isLayoutType(LayoutType.KeyValueList) &&
-        area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} />)}
+        area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} key={i.Id} />)}
     </Stack>
   );
 }

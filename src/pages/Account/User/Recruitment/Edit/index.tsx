@@ -5,7 +5,6 @@ import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecrui
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
-import { IArea } from '@/types/interfaces/IArea';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { IconButton, Stack } from '@mui/material';
@@ -21,15 +20,6 @@ function RecruitmentEdit() {
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId, {
     skip: recruitmentId === '',
   });
-
-  const handlePostAreas = async (areas: Array<IArea>) => {
-    if (recruitmentData && recruitmentData.result)
-      await postRecruitment({
-        Id: recruitmentId,
-        Name: recruitmentData.result.Name,
-        Enable: recruitmentData.result.Enable,
-      });
-  };
 
   useEffect(() => {
     // set areas state after query subscription success
@@ -76,7 +66,7 @@ function RecruitmentEdit() {
               </Stack>
             }
           />
-          <AreaEditor onPost={handlePostAreas} />
+          <AreaEditor />
         </Stack>
       )}
     </>

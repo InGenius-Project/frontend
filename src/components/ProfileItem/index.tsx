@@ -54,7 +54,6 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
     (image: IImageInfo | undefined) => {
       postUser({
         Username: userState.User?.Username || '',
-        Avatar: image,
       });
     },
     [postUser, userState],
@@ -112,7 +111,6 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
           image={
             image || {
               Id: NIL,
-              ContentType: '',
               AltContent: '',
               Uri: avatarFallback.src,
             }

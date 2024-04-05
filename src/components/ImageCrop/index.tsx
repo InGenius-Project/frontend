@@ -131,7 +131,6 @@ export default function ImageCrop({
             Id: imageState?.Id || '',
             AltContent: imageState?.AltContent || '',
             Uri: URL.createObjectURL(dataURItoBlob(res)),
-            ContentType: res.split(',')[0].split(':')[1].split(';')[0],
           };
 
           onCropDone && onCropDone(newImageState);
@@ -176,7 +175,6 @@ export default function ImageCrop({
             value={imageState?.AltContent || ''}
             onChange={(e) => {
               setImageState((prev) => ({
-                ContentType: prev?.ContentType || '',
                 Uri: prev?.Uri || '',
                 Id: prev?.Id || '',
                 AltContent: (e.target as any).value,

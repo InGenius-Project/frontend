@@ -46,15 +46,6 @@ export default function ResumeEdit() {
       .unwrap()
       .then(() => navigate('..'));
   };
-  const handlePostAreas = async (areas: Array<IArea>) => {
-    if (resumeData && resumeData.result)
-      await postResume({
-        Title: resumeData.result.Title,
-        Id: resumeId,
-        Areas: areas,
-        Visibility: resumeData.result.Visibility,
-      });
-  };
 
   // If not provide id, redirect back
   if (!resumeId) {
@@ -71,7 +62,7 @@ export default function ResumeEdit() {
           onChangeTitle={handleChangeTitle}
           onDelete={handleDeleteResume}
         ></ResumeItem>
-        <AreaEditor onPost={handlePostAreas} />
+        <AreaEditor />
       </Stack>
     );
   }

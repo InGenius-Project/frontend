@@ -137,7 +137,6 @@ const layoutSlice = createSlice({
           parseArea.image = {
             Id: action.payload.ImageTextLayout?.Image?.Id || '',
             AltContent: action.payload.ImageTextLayout?.Image?.AltContent || '',
-            ContentType: action.payload.ImageTextLayout?.Image?.ContentType || '',
             Uri: action.payload.ImageTextLayout?.Image?.Uri || '',
           };
           break;
@@ -212,7 +211,6 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
             Image: {
               Id: NIL,
               AltContent: JSON.stringify(layoutState.image?.AltContent),
-              ContentType: layoutState.image?.ContentType || '',
               Uri: layoutState.image?.Uri || '',
             },
             TextContent: JSON.stringify(layoutState.content),
@@ -274,7 +272,6 @@ export const getUpdatedArea = (state: RootState) => {
             Image: {
               Id: NIL,
               AltContent: JSON.stringify(layoutState.image?.AltContent),
-              ContentType: layoutState.image?.ContentType || '',
               Uri: layoutState.image?.Uri || '',
             },
             TextContent: JSON.stringify(layoutState.content),

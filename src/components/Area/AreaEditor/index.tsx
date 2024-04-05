@@ -14,11 +14,10 @@ import { NIL } from 'uuid';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
 import AreaItem from '../AreaItem';
-type AreaContainerProps = {
-  onPost?: (areas: Array<IArea>) => Promise<void>;
-};
+import { usePostSequenceMutation } from '@/features/api/area/postSequence';
+import { CustomError } from '@/components/ErrorBoundary';
 
-function AreaEditor({ onPost }: AreaContainerProps) {
+function AreaEditor() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const areasState = useAppSelector((state) => state.areasState);
@@ -27,6 +26,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
   const [deleteArea] = useDeleteAreaMutation();
   const [postArea] = usePostAreaMutation();
+  const [postSequence] = usePostSequenceMutation();
 
   const handleDragEnd = async (items: string[], result?: DropResult) => {
     if (areasState.areas) {
@@ -35,11 +35,12 @@ function AreaEditor({ onPost }: AreaContainerProps) {
         if (findArea) {
           return { ...findArea, Sequence: index };
         } else {
-          throw new Error('移動區塊時發生問題');
+          throw new CustomError('移動區塊時發生問題', 403);
         }
       });
 
-      onPost && (await onPost(newAreas));
+      // post new sequence
+      postSequence(newAreas.map((a) => ({ Id: a.Id, Sequence: a.Sequence })));
 
       // set AreaControl top after drag end
       const dragItem = result
@@ -49,12 +50,12 @@ function AreaEditor({ onPost }: AreaContainerProps) {
     }
   };
 
-  const handleDragStart: OnDragStartResponder = ({ draggableId }) => {
-    if (areasState && areasState.areas) {
-      const findArea = areasState.areas.find((a) => a.Id === draggableId);
-      findArea && dispatch(setLayoutByArea(findArea));
-    }
-  };
+  // const handleDragStart: OnDragStartResponder = ({ draggableId }) => {
+  //   if (areasState && areasState.areas) {
+  //     const findArea = areasState.areas.find((a) => a.Id === draggableId);
+  //     findArea && dispatch(setLayoutByArea(findArea));
+  //   }
+  // };
 
   const handleAddClick = () => {
     dispatch(initializeState());
@@ -120,7 +121,7 @@ function AreaEditor({ onPost }: AreaContainerProps) {
             droppableId={areasState.id}
             items={areasState.areas.map((a) => a.Id)}
             onDragEnd={handleDragEnd}
-            onDragStart={handleDragStart}
+            // onDragStart={handleDragStart}
           >
             {areasState.areas.map((a) => (
               <AreaItem

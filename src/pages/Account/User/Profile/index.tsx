@@ -24,22 +24,6 @@ export default function Profile() {
     }
   }, [dispatch, userData]);
 
-  const [postUser] = usePostUserMutation();
-
-  const handlePostProfileArea = async (areas: Array<IArea>) => {
-    await postUser({
-      Username: userData?.result?.Username || '',
-      Areas: areas.map((area) => ({
-        Id: area.Id,
-        Sequence: area.Sequence,
-        IsDisplayed: area.IsDisplayed,
-        Title: area.Title,
-        LayoutType: area.LayoutType,
-        AreaTypeId: area.AreaTypeId,
-      })),
-    });
-  };
-
   return (
     <Stack spacing={1}>
       <ProfileItem editable />
@@ -51,7 +35,7 @@ export default function Profile() {
           gap: 1,
         }}
       >
-        <AreaEditor onPost={handlePostProfileArea}></AreaEditor>
+        <AreaEditor></AreaEditor>
       </Box>
     </Stack>
   );

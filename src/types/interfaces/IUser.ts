@@ -1,6 +1,7 @@
 import { UserRole } from '@/types/enums/UserRole';
-import { IArea, IAreaPost, IImageInfo } from './IArea';
+import { IArea, IImageInfo } from './IArea';
 import { IToken } from './IToken';
+import { ITag } from './ITag';
 
 export interface IUser {
   User?: IUserInfo;
@@ -12,10 +13,9 @@ export interface IUserInfo {
   Email: string;
   Username: string;
   Role: UserRole;
-  Avatar?: IImageInfo;
   Areas?: Array<IArea> | null;
+  Avatar?: IImageInfo;
+  Tags?: Array<ITag>;
 }
 
-export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Avatar'> & {
-  Areas?: Array<IAreaPost>;
-};
+export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Tags'>;

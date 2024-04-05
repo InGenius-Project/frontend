@@ -1,6 +1,7 @@
 import { ITag, ITagType } from '@/types/interfaces/ITag';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { UserRole } from '@/types/enums/UserRole';
+import { internalCreateRangeSelection } from 'lexical/LexicalSelection';
 
 export interface IArea {
   Id: string;
@@ -17,6 +18,8 @@ export interface IArea {
   RecruitmentId?: string;
   ResumeId?: string;
 }
+
+export interface IAreaSequencePost extends Pick<IArea, 'Id' | 'Sequence'> {}
 
 export interface IAreaType {
   Id: number;
@@ -71,7 +74,6 @@ export interface IImageTextLayoutPostDTO {
 export interface IImageInfo {
   Id: string;
   Uri: string;
-  ContentType: string;
   AltContent: string;
 }
 

@@ -1,5 +1,5 @@
 import { RootState } from '@/features/store';
-import { IArea } from '@/types/interfaces/IArea';
+import { IArea, IAreaPost, IAreaSequencePost } from '@/types/interfaces/IArea';
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 
@@ -53,6 +53,15 @@ const areasSlice = createSlice({
     setAreasId: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
+    setAreasSequence: (state, action: PayloadAction<Array<IAreaSequencePost>>) => {
+      action.payload.forEach((areaSequencePost) => {
+        const area = state.areas?.find((area) => area.Id === areaSequencePost.Id);
+        if (area) {
+          area.Sequence = areaSequencePost.Sequence;
+        }
+      });
+      state.areas = state.areas?.sort((a, b) => a.Sequence - b.Sequence);
+    },
   },
 });
 
@@ -61,6 +70,6 @@ export const selectIsEmptyAreas = createSelector(
   (a) => !!a.areas && a.areas.length === 0,
 );
 
-export const { setAreas, setAreasId } = areasSlice.actions;
+export const { setAreas, setAreasId, setAreasSequence } = areasSlice.actions;
 
 export default areasSlice.reducer;

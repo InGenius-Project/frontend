@@ -206,14 +206,15 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   );
 
   const handleDisplayItemClick = () => {
+    console.log('click');
     dispatch(setLayoutByArea(area));
     const state = store.getState().layoutState;
 
-    if (!!state.areaTypeId) {
+    if (state.areaTypeId !== undefined) {
       setActiveStep(AreaStep.Edit);
       setHisSteps(new Set<AreaStep>([AreaStep.New]));
       return;
-    } else if (!!state.layoutType) {
+    } else if (state.layoutType !== undefined) {
       setActiveStep(AreaStep.Edit);
       setHisSteps(new Set<AreaStep>([AreaStep.New, AreaStep.Layout]));
     } else {
