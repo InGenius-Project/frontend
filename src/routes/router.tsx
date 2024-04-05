@@ -18,6 +18,7 @@ import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
 import Message from '@/pages/Account/User/Message';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -28,7 +29,7 @@ declare module '@remix-run/router/dist/utils' {
 }
 
 export const routes = (
-  <Route element={<MainRoute />}>
+  <Route element={<MainRoute />} errorElement={<ErrorBoundary />}>
     <Route index element={<Root />} />
     <Route path="Account">
       <Route element={<UnAuthRoute />}>
