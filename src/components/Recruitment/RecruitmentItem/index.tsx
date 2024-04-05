@@ -1,27 +1,18 @@
-import { Box, Chip, IconButton, Link, Stack, useTheme } from '@mui/material';
+import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
+
 import TagIcon from '@mui/icons-material/Tag';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Box, Chip, Link, Stack, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useAppSelector } from '@/features/store';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
-import { UserRole } from '@/types/enums/UserRole';
 
 type RecruitmentItemProps = {
   id: string;
   title?: string;
+  onPost?: (recruitment: IRecruitmentPost) => void;
+  control?: React.ReactNode;
 };
 
-export default function RecruitmentItem({ id, title }: RecruitmentItemProps) {
+export default function RecruitmentItem({ id, title, onPost, control }: RecruitmentItemProps) {
   const theme = useTheme();
-  const userState = useAppSelector((state) => state.userState);
-  const [deleteRecruitment] = useDeleteRecruitmentMutation();
-
-  const handleClickDelete = () => {
-    deleteRecruitment(id);
-  };
 
   return (
     <Stack
@@ -44,38 +35,15 @@ export default function RecruitmentItem({ id, title }: RecruitmentItemProps) {
       <Stack spacing={1} direction={'row'}>
         <Chip label={'社群管理'} color="primary" icon={<TagIcon />} />
       </Stack>
-      {(!userState || userState?.User?.Role === UserRole.Intern) && (
-        <IconButton
-          sx={{
-            position: 'absolute',
-            top: theme.spacing(1),
-            right: theme.spacing(1),
-          }}
-        >
-          <FavoriteBorderIcon />
-        </IconButton>
-      )}
-      {userState.User?.Role === UserRole.Company && (
-        <Stack
-          direction="row"
-          sx={{
-            position: 'absolute',
-            top: theme.spacing(1),
-            right: theme.spacing(1),
-          }}
-          spacing={1}
-        >
-          <IconButton>
-            <CreateOutlinedIcon />
-          </IconButton>
-          <IconButton>
-            <AnalyticsOutlinedIcon />
-          </IconButton>
-          <IconButton onClick={handleClickDelete}>
-            <DeleteOutlinedIcon />
-          </IconButton>
-        </Stack>
-      )}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: theme.spacing(1),
+          right: theme.spacing(1),
+        }}
+      >
+        {control}
+      </Box>
     </Stack>
   );
 }

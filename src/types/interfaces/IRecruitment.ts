@@ -1,6 +1,6 @@
-import { IArea } from "./IArea";
-import { IResume } from "./IResume";
-import { IUser } from "./IUser";
+import { IArea } from './IArea';
+import { IResume } from './IResume';
+import { IUser } from './IUser';
 
 export interface IRecruitment {
   Id: string;
@@ -16,5 +16,4 @@ export interface IRecruitmentPost {
   Id: string;
   Name: string;
   Enable: boolean;
-  Areas: IArea[];
 }

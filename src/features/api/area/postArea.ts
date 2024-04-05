@@ -3,6 +3,7 @@ import { IArea, IAreaPost } from '@/types/interfaces/IArea';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
 import { store } from '@/features/store';
+import { AreasType } from '@/features/areas/areasSlice';
 
 export const postAreaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,12 +16,21 @@ export const postAreaApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: (res) => {
-        const userId = store.getState().userState.User?.Id;
+        const areasType = store.getState().areasState.type;
+        const areasTag =
+          areasType === AreasType.RECRUITMENT
+            ? {
+                type: 'Recruitment' as const,
+                id: res?.result?.RecruitmentId,
+              }
+            : areasType === AreasType.PROFILE
+              ? {
+                  type: 'User' as const,
+                  id: res?.result?.UserId,
+                }
+              : null;
 
-        return [
-          { type: 'Area', id: res?.result?.Id },
-          { type: 'User', id: userId },
-        ];
+        return [{ type: 'Area', id: res?.result?.Id }, ...(areasTag ? [areasTag] : [])];
       },
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         // set focused Area to new posted area

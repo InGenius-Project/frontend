@@ -13,6 +13,9 @@ export interface IArea {
   ImageTextLayout?: IImageTextLayout;
   ListLayout?: IListLayout;
   KeyValueListLayout?: IKeyValueListLayout;
+  UserId?: string;
+  RecruitmentId?: string;
+  ResumeId?: string;
 }
 
 export interface IAreaType {
@@ -36,6 +39,9 @@ export interface IAreaPost {
   Title: string;
   LayoutType?: LayoutType;
   AreaTypeId?: number;
+  RecruitmentId?: string;
+  UserId?: string;
+  ResumeId?: string;
 }
 
 export interface ILayout {

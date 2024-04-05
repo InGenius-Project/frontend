@@ -11,9 +11,13 @@ export const getRecruitmentByIdApi = baseApi.injectEndpoints({
           method: 'Get',
         };
       },
-      providesTags: (result) => {
-        return [{ type: 'Recruitment', id: result?.result?.Id }];
-      },
+      providesTags: (res) =>
+        res
+          ? [
+              ...(res.result?.Areas ?? []).map((a) => ({ type: 'Area' as const, id: a.Id })),
+              { type: 'Recruitment', id: res.result?.Id },
+            ]
+          : [],
       transformResponse: (response: IResponse<IRecruitment>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.result) {

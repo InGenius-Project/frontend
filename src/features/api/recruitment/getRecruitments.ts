@@ -11,9 +11,7 @@ export const getRecruitmentsApi = baseApi.injectEndpoints({
           method: 'Get',
         };
       },
-      providesTags: () => {
-        return ['Recruitment', 'RecruitmentLists'];
-      },
+      providesTags: ['Recruitment'],
     }),
   }),
 });

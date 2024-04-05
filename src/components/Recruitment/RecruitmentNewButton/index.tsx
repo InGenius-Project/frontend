@@ -1,16 +1,15 @@
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
-import { Box, ButtonBase, styled } from "@mui/material";
-import { usePostRecruitmentMutation } from "@/features/api/recruitment/postRecruitment";
-import { NIL } from "uuid";
-import React from "react";
-import { useAppSelector } from "@/features/store";
-import { useNavigate } from "react-router-dom";
+import { useAppSelector } from '@/features/store';
+import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { Box, ButtonBase, styled } from '@mui/material';
+import React from 'react';
+import { NIL } from 'uuid';
 
 const RecruitmentNewButtonBase = styled(ButtonBase)(({ theme }) => ({
   backgroundColor: theme.palette.primary.lighter,
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
   padding: theme.spacing(2),
   gap: theme.spacing(1),
   color: theme.palette.text.secondary,
@@ -18,21 +17,19 @@ const RecruitmentNewButtonBase = styled(ButtonBase)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }));
 
-const RecruitmentNewButton: React.FC = () => {
-  const [postRecruitment] = usePostRecruitmentMutation();
+type RecruitmentNewButtonProps = {
+  onPost?: (recruitment: IRecruitmentPost) => void;
+};
+
+const RecruitmentNewButton = ({ onPost }: RecruitmentNewButtonProps) => {
   const userState = useAppSelector((state) => state.userState);
-  const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    postRecruitment({
-      Id: NIL,
-      Name: `${userState.User?.Username}的職缺`,
-      Enable: false,
-      Areas: [],
-    })
-      .unwrap()
-      .then((r) => {
-        r && r.result && navigate(`Edit/${r.result.Id}`);
+    onPost &&
+      onPost({
+        Id: NIL,
+        Name: `${userState.User?.Username}的職缺`,
+        Enable: false,
       });
   };
 
@@ -40,8 +37,8 @@ const RecruitmentNewButton: React.FC = () => {
     <RecruitmentNewButtonBase onClick={handleButtonClick}>
       <Box
         sx={{
-          borderRadius: "50%",
-          backgroundColor: "white",
+          borderRadius: '50%',
+          backgroundColor: 'white',
           padding: 1,
         }}
       >

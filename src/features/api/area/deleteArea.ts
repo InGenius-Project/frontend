@@ -10,7 +10,7 @@ export const deleteAreaApi = baseApi.injectEndpoints({
           method: 'DELETE',
         };
       },
-      invalidatesTags: ['Resume', 'User'],
+      invalidatesTags: (res, error, areaId) => [{ type: 'Area', id: areaId }],
     }),
   }),
 });

@@ -1,10 +1,14 @@
 import AreaEditor from '@/components/Area/AreaEditor';
 import { RecruitmentItem } from '@/components/Recruitment';
+import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
+import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { IconButton, Stack, useTheme } from '@mui/material';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -12,15 +16,16 @@ function RecruitmentEdit() {
   const { recruitmentId = '' } = useParams();
   const dispatch = useAppDispatch();
   const [postRecruitment] = usePostRecruitmentMutation();
+  const [deleteRecruitment] = useDeleteRecruitmentMutation();
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId, {
     skip: recruitmentId === '',
   });
+  const theme = useTheme();
 
   const handlePostAreas = async (areas: Array<IArea>) => {
     if (recruitmentData && recruitmentData.result)
       await postRecruitment({
         Id: recruitmentId,
-        Areas: areas,
         Name: recruitmentData.result.Name,
         Enable: recruitmentData.result.Enable,
       });
@@ -28,7 +33,7 @@ function RecruitmentEdit() {
 
   useEffect(() => {
     // set areas state after query subscription success
-    if (recruitmentData?.result)
+    if (recruitmentData?.result) {
       dispatch(
         setAreas({
           id: recruitmentData.result.Id,
@@ -36,15 +41,33 @@ function RecruitmentEdit() {
           areas: recruitmentData.result.Areas,
         }),
       );
+    }
   }, [recruitmentData, dispatch]);
+
+  const handleClickDelete = () => {
+    deleteRecruitment(recruitmentId);
+  };
 
   return (
     <>
       {recruitmentData && recruitmentData.result && (
-        <>
-          <RecruitmentItem id={recruitmentId} title={recruitmentData.result.Name} />
+        <Stack spacing={1}>
+          <RecruitmentItem
+            id={recruitmentId}
+            title={recruitmentData.result.Name}
+            control={
+              <Stack spacing={1} direction={'row'}>
+                <IconButton>
+                  <AnalyticsOutlinedIcon />
+                </IconButton>
+                <IconButton onClick={handleClickDelete}>
+                  <DeleteOutlinedIcon />
+                </IconButton>
+              </Stack>
+            }
+          />
           <AreaEditor onPost={handlePostAreas} />
-        </>
+        </Stack>
       )}
     </>
   );

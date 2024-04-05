@@ -14,7 +14,6 @@ type AreaDisplayItemProps = {
 
 function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
   const a = new Area(area);
-
   return (
     <Stack spacing={1} onClick={onClick} sx={{ cursor: 'pointer' }}>
       <Typography variant="h4">{a.getAreaTitle() || 'Untitled'}</Typography>

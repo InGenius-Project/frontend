@@ -5,6 +5,7 @@ import { IInnerTag } from '@/types/interfaces/ITag';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { EditorState } from 'lexical';
 import { NIL, v4 as uuid } from 'uuid';
+import { AreasType } from '../areas/areasSlice';
 
 export enum AreaStep {
   New,
@@ -190,6 +191,8 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
 
   const newArea: IArea = {
     Id: NIL,
+    UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
+    RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
     Sequence: newAreaSequence,
     IsDisplayed: true,
     Title: layoutState.title,
@@ -247,8 +250,11 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
 
 export const getUpdatedArea = (state: RootState) => {
   const layoutState = state.layoutState;
+  const areasState = state.areasState;
   const updatedArea: IArea = {
     Id: layoutState.areaId || NIL,
+    UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
+    RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
     Sequence: layoutState.sequence,
     IsDisplayed: layoutState.isDisplayed,
     Title: layoutState.title,
@@ -300,6 +306,8 @@ export const getUpdateAreaPost = (state: RootState): IAreaPost => {
   const updatedArea = getUpdatedArea(state);
   return {
     Id: updatedArea.Id,
+    RecruitmentId: updatedArea.RecruitmentId,
+    UserId: updatedArea.UserId,
     Sequence: updatedArea.Sequence,
     IsDisplayed: updatedArea.IsDisplayed,
     Title: updatedArea.Title,

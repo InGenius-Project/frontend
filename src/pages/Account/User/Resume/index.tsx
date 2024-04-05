@@ -1,25 +1,24 @@
-import { Box, CssBaseline, Stack } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { ResumeItem } from "@/components/Resume";
-import { useAppSelector } from "@/features/store";
-import LoadingButton from "@mui/lab/LoadingButton";
-import FullScreenLoader from "@/components/FullScreenLoader";
-import { useNavigate } from "react-router-dom";
-import { useDeleteResumeMutation } from "@/features/api/resume/deleteResume";
-import { usePostResumeMutation } from "@/features/api/resume/postResume";
-import { useGetResumesQuery } from "@/features/api/resume/getResumes";
+import { Box, CssBaseline, Stack } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { ResumeItem } from '@/components/Resume';
+import { useAppSelector } from '@/features/store';
+import LoadingButton from '@mui/lab/LoadingButton';
+import FullScreenLoader from '@/components/FullScreenLoader';
+import { useNavigate } from 'react-router-dom';
+import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
+import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 
 export default function Resume() {
-  const [postResume, { isLoading: isAddingNewResume }] =
-    usePostResumeMutation();
-  const userStae = useAppSelector((state) => state.userState);
   const { data: resumes, isLoading } = useGetResumesQuery(null);
+  const { User } = useAppSelector((state) => state.userState);
   const navigate = useNavigate();
   const [deleteResume] = useDeleteResumeMutation();
+  const [postResume, { isLoading: isAddingNewResume }] = usePostResumeMutation();
 
-  const handelAddNewResumeClick = () => {
+  const handleAddNewResumeClick = () => {
     postResume({
-      Title: `${userStae.User?.Username}的履歷`,
+      Title: `${User?.Username}的履歷`,
       Visibility: false,
     })
       .unwrap()
@@ -36,15 +35,15 @@ export default function Resume() {
     <Stack spacing={1}>
       <Box
         sx={{
-          width: "100%",
-          justifyContent: "space-between",
+          width: '100%',
+          justifyContent: 'space-between',
         }}
       >
         <LoadingButton
           variant="text"
           loading={isAddingNewResume}
           startIcon={<AddIcon />}
-          onClick={handelAddNewResumeClick}
+          onClick={handleAddNewResumeClick}
         >
           新增履歷
         </LoadingButton>
@@ -52,8 +51,7 @@ export default function Resume() {
       <CssBaseline />
 
       <Stack spacing={1}>
-        {resumes &&
-          resumes.result &&
+        {resumes?.result?.length &&
           resumes.result.length > 0 &&
           resumes.result.map((r) => (
             <ResumeItem

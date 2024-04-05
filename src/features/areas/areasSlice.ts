@@ -50,6 +50,9 @@ const areasSlice = createSlice({
         areas: state.areas?.concat(action.payload),
       };
     },
+    setAreasId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
+    },
   },
 });
 
@@ -57,6 +60,7 @@ export const selectIsEmptyAreas = createSelector(
   [(state: RootState) => state.areasState],
   (a) => !!a.areas && a.areas.length === 0,
 );
-export const { setAreas } = areasSlice.actions;
+
+export const { setAreas, setAreasId } = areasSlice.actions;
 
 export default areasSlice.reducer;

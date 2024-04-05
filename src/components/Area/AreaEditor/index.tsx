@@ -1,7 +1,7 @@
 import DragDropContainer from '@/components/DragDropContainer';
 import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
-import { selectIsEmptyAreas } from '@/features/areas/areasSlice';
+import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
 import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
@@ -64,6 +64,8 @@ function AreaEditor({ onPost }: AreaContainerProps) {
       Sequence: layoutState.sequence,
       IsDisplayed: true,
       Title: 'New Area',
+      UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
+      RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
     });
   };
 
@@ -76,7 +78,6 @@ function AreaEditor({ onPost }: AreaContainerProps) {
       const updatedArea = getUpdateAreaPost(store.getState());
       postArea({
         ...updatedArea,
-        //TODO: PROFILE ID
         IsDisplayed: !checked,
       });
     }
