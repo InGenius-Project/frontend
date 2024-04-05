@@ -13,7 +13,10 @@ export const postRecruitment = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: (res) => {
-        return [{ type: 'RecruitmentLists' }, { type: 'Recruitment', id: res?.result?.Id }];
+        return [
+          { type: 'Recruitment', id: res?.result?.Id },
+          { type: 'Recruitment', id: 'List' },
+        ];
       },
     }),
   }),

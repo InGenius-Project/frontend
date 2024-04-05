@@ -16,7 +16,7 @@ function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
   const a = new Area(area);
   return (
     <Stack spacing={1} onClick={onClick} sx={{ cursor: 'pointer' }}>
-      <Typography variant="h4">{a.getAreaTitle() || 'Untitled'}</Typography>
+      <Typography variant="subtitle1">{a.getAreaTitle() || 'Untitled'}</Typography>
       {a.isLayoutType(LayoutType.ImageText) && (
         <Stack direction={'row'} spacing={1}>
           {a.ImageTextLayout?.Image ? (

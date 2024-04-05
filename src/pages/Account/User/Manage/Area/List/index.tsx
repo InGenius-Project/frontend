@@ -137,8 +137,8 @@ function ManageAreaList() {
               name="ListTagTypes"
               render={({ field: { onChange, value } }) => (
                 <Autocomplete
-                  multiple={areaTypeData?.result?.LayoutType === LayoutType.List ? false : true}
-                  options={allTagTypes?.result || []}
+                  multiple
+                  options={allTagTypes.result!}
                   getOptionLabel={(d) => (d ? `${d.Name} ( ${d.Value} )` : '')}
                   renderInput={(params) => <TextField {...params} label="可選標籤類型" />}
                   onChange={(e, data) => {

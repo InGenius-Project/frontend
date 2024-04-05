@@ -34,7 +34,6 @@ export default function Recruitment() {
             id={r.Id}
             key={r.Id}
             title={r.Name}
-            onPost={handlePostProfileArea}
             control={
               <Stack spacing={1} direction={'row'}>
                 <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>

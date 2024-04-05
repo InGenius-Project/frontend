@@ -1,18 +1,24 @@
-import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
-
 import TagIcon from '@mui/icons-material/Tag';
-import { Box, Chip, Link, Stack, useTheme } from '@mui/material';
+import { Box, Chip, Link, Stack, TextField, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useDebounce, useUpdateEffect } from 'ahooks';
+import { useEffect, useState } from 'react';
 
 type RecruitmentItemProps = {
   id: string;
   title?: string;
-  onPost?: (recruitment: IRecruitmentPost) => void;
   control?: React.ReactNode;
+  editable?: boolean;
+  onChangeTitle?: (title: string) => void;
 };
 
-export default function RecruitmentItem({ id, title, onPost, control }: RecruitmentItemProps) {
+export default function RecruitmentItem({ id, title, control, editable, onChangeTitle }: RecruitmentItemProps) {
   const theme = useTheme();
+  const [titleState, setTitleState] = useState(title || '');
+
+  useUpdateEffect(() => {
+    onChangeTitle && onChangeTitle(titleState);
+  }, [onChangeTitle, titleState]);
 
   return (
     <Stack
@@ -24,7 +30,23 @@ export default function RecruitmentItem({ id, title, onPost, control }: Recruitm
         padding: theme.spacing(2),
       }}
     >
-      <Typography variant="h4">{title || ''}</Typography>
+      <Stack direction={'row'} spacing={1}>
+        <Box sx={{ flex: '1 1 auto' }}>
+          {editable ? (
+            <TextField
+              label="職缺名稱"
+              fullWidth
+              value={titleState}
+              onChange={(e) => {
+                setTitleState(e.target.value);
+              }}
+            />
+          ) : (
+            <Typography variant="subtitle1">{title || ''}</Typography>
+          )}
+        </Box>
+        <Box sx={{}}>{control}</Box>
+      </Stack>
       <Box>
         <Link href="#" color={theme.palette.info.main}>
           網路股份有限公司
@@ -35,15 +57,6 @@ export default function RecruitmentItem({ id, title, onPost, control }: Recruitm
       <Stack spacing={1} direction={'row'}>
         <Chip label={'社群管理'} color="primary" icon={<TagIcon />} />
       </Stack>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: theme.spacing(1),
-          right: theme.spacing(1),
-        }}
-      >
-        {control}
-      </Box>
     </Stack>
   );
 }

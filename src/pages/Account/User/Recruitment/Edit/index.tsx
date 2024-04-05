@@ -8,7 +8,8 @@ import { useAppDispatch } from '@/features/store';
 import { IArea } from '@/types/interfaces/IArea';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { IconButton, Stack, useTheme } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
+import { useDebounceFn } from 'ahooks';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -20,7 +21,6 @@ function RecruitmentEdit() {
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId, {
     skip: recruitmentId === '',
   });
-  const theme = useTheme();
 
   const handlePostAreas = async (areas: Array<IArea>) => {
     if (recruitmentData && recruitmentData.result)
@@ -48,13 +48,23 @@ function RecruitmentEdit() {
     deleteRecruitment(recruitmentId);
   };
 
+  const { run: handleChangeTitle } = useDebounceFn((title: string) => {
+    if (recruitmentData && recruitmentData.result)
+      postRecruitment({
+        Id: recruitmentData.result.Id,
+        Name: title,
+        Enable: recruitmentData.result.Enable,
+      });
+  });
   return (
     <>
       {recruitmentData && recruitmentData.result && (
         <Stack spacing={1}>
           <RecruitmentItem
             id={recruitmentId}
+            editable
             title={recruitmentData.result.Name}
+            onChangeTitle={handleChangeTitle}
             control={
               <Stack spacing={1} direction={'row'}>
                 <IconButton>
