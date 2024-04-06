@@ -1,4 +1,4 @@
-import { IArea } from "./IArea";
+import { IArea } from './IArea';
 
 export interface IResume {
   Id: string;
@@ -11,7 +11,6 @@ export interface IResume {
 export interface IResumePost {
   Id?: string;
   Title?: string;
-  Areas?: Array<IArea>;
   Visibility: boolean;
 }
 

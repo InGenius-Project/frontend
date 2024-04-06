@@ -5,7 +5,6 @@ import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
-import { IArea } from '@/types/interfaces/IArea';
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
@@ -36,7 +35,6 @@ export default function ResumeEdit() {
       postResume({
         Title: title,
         Id: resumeId,
-        Areas: resumeData?.result.Areas,
         Visibility: resumeData.result.Visibility,
       });
   };

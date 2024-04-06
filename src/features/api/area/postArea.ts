@@ -28,7 +28,12 @@ export const postAreaApi = baseApi.injectEndpoints({
                   type: 'User' as const,
                   id: res?.result?.UserId,
                 }
-              : null;
+              : areasType === AreasType.RESUME
+                ? {
+                    type: 'Resume' as const,
+                    id: res?.result?.ResumeId,
+                  }
+                : null;
 
         return [{ type: 'Area', id: res?.result?.Id }, ...(areasTag ? [areasTag] : [])];
       },

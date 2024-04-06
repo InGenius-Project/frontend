@@ -192,6 +192,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
     Id: NIL,
     UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
     RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
+    ResumeId: areasState.type === AreasType.RESUME ? areasState.id : undefined,
     Sequence: newAreaSequence,
     IsDisplayed: true,
     Title: layoutState.title,
@@ -253,6 +254,7 @@ export const getUpdatedArea = (state: RootState) => {
     Id: layoutState.areaId || NIL,
     UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
     RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
+    ResumeId: areasState.type === AreasType.RESUME ? areasState.id : undefined,
     Sequence: layoutState.sequence,
     IsDisplayed: layoutState.isDisplayed,
     Title: layoutState.title,
@@ -304,6 +306,7 @@ export const getUpdateAreaPost = (state: RootState): IAreaPost => {
   return {
     Id: updatedArea.Id,
     RecruitmentId: updatedArea.RecruitmentId,
+    ResumeId: updatedArea.ResumeId,
     UserId: updatedArea.UserId,
     Sequence: updatedArea.Sequence,
     IsDisplayed: updatedArea.IsDisplayed,

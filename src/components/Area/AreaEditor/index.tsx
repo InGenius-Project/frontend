@@ -66,6 +66,7 @@ function AreaEditor() {
       Title: 'New Area',
       UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
       RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
+      ResumeId: areasState.type === AreasType.RESUME ? areasState.id : undefined,
     });
   };
 
