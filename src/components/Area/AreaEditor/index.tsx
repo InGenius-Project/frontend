@@ -1,21 +1,20 @@
 import DragDropContainer from '@/components/DragDropContainer';
+import { CustomError } from '@/components/ErrorBoundary';
 import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
+import { usePostSequenceMutation } from '@/features/api/area/postSequence';
 import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
-import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
+import { getUpdateAreaPost, initializeState } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
-import { IArea } from '@/types/interfaces/IArea';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Box, IconButton, Portal, Stack } from '@mui/material';
 import React from 'react';
-import { DropResult, OnDragStartResponder } from 'react-beautiful-dnd';
+import { DropResult } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
 import AreaItem from '../AreaItem';
-import { usePostSequenceMutation } from '@/features/api/area/postSequence';
-import { CustomError } from '@/components/ErrorBoundary';
 
 function AreaEditor() {
   const dispatch = useAppDispatch();
@@ -62,7 +61,7 @@ function AreaEditor() {
 
     postArea({
       Id: NIL,
-      Sequence: layoutState.sequence,
+      Sequence: layoutState.sequence + 1,
       IsDisplayed: true,
       Title: 'New Area',
       UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,

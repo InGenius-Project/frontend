@@ -1,7 +1,16 @@
-import { usePostAreaMutation } from '@/features/api/area/postArea';
-import { usePostKeyValueListLayoutMutation } from '@/features/api/area/postKeyValueListLayout';
-import { usePostListLayoutMutation } from '@/features/api/area/postListLayout';
-import { usePostTextLayoutMutation } from '@/features/api/area/postTextLayout';
+import { useConfirm } from 'material-ui-confirm';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+
+import {
+  usePostAreaMutation,
+  usePostKeyValueListLayoutMutation,
+  usePostListLayoutMutation,
+  usePostTextLayoutMutation,
+  usePostImageTextLayoutMutation,
+} from '@/features/api/area';
 import {
   AreaStep,
   getUpdateAreaPost,
@@ -14,16 +23,11 @@ import {
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
-import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
-import { useConfirm } from 'material-ui-confirm';
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+
 import AreaDisplayItem from '../AreaDisplayItem';
 import AreaEditItem from '../AreaEditItem';
 import AreaLayoutItem from '../AreaLayoutItem';
 import AreaNewItem from '../AreaNewItem';
-import { usePostImageTextLayoutMutation } from '@/features/api/area/postImageLayout';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
@@ -37,13 +41,13 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
 
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [isHover, setIsHover] = React.useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [isHover, setIsHover] = useState(false);
   const [focusedState, setFocusState] = useState(false);
 
   const [activeStep, setActiveStep] = useState(AreaStep.New);
   const [warning, setWarning] = useState('');
-  const [hisSteps, setHisSteps] = React.useState(new Set<AreaStep>());
+  const [hisSteps, setHisSteps] = useState(new Set<AreaStep>());
 
   const layoutState = useAppSelector((state) => state.layoutState);
   const layoutType = useAppSelector(selectLayoutType);
@@ -54,13 +58,16 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
   const [postKeyValueListLayout] = usePostKeyValueListLayoutMutation();
   const [postImageTextLayout] = usePostImageTextLayoutMutation();
 
-  const isStepDone = (step: number) => {
-    return hisSteps.has(step);
-  };
+  const isStepDone = useCallback(
+    (step: number) => {
+      return hisSteps.has(step);
+    },
+    [hisSteps],
+  );
 
-  const isStepOptional = (step: number) => {
+  const isStepOptional = useCallback((step: number) => {
     return step === 0;
-  };
+  }, []);
 
   const handleNext = useCallback(() => {
     let newHisSteps = new Set<AreaStep>(hisSteps);
@@ -97,7 +104,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
     dispatch(setAreaTypeId(null));
   }, [dispatch]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     const prevStep = Math.max(...hisSteps);
 
     if (prevStep >= 0) {
@@ -122,14 +129,14 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
     } else {
       dispatch(initializeState());
     }
-  };
+  }, [hisSteps, activeStep, confirm, dispatch]);
 
-  const handleItemClick = () => {
+  const handleItemClick = useCallback(() => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     onClick && onClick(ref.current as HTMLElement);
-  };
+  }, [onClick]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     const state = store.getState();
     const updateAreaPost = getUpdateAreaPost(state);
     const updateArea = getUpdatedArea(state);
@@ -182,45 +189,44 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
       .then(() => {
         dispatch(initializeState());
       });
-  };
+  }, [layoutType, postArea, postListLayout, postTextLayout, postKeyValueListLayout, postImageTextLayout, dispatch]);
 
   const steps = useMemo(
     () => [
       {
         step: AreaStep.New,
         label: '選擇預設類型',
-        item: <AreaNewItem onClickNext={handleNext} />,
+        item: <AreaNewItem onClickNext={handleNext} key="new" />,
       },
       {
         step: AreaStep.Layout,
         label: '選擇版面',
-        item: <AreaLayoutItem />,
+        item: <AreaLayoutItem key={'layout'} />,
       },
       {
         step: AreaStep.Edit,
         label: '編輯內容',
-        item: <AreaEditItem />,
+        item: <AreaEditItem key={'edit'} />,
       },
     ],
     [handleNext],
   );
 
-  const handleDisplayItemClick = () => {
-    console.log('click');
+  const handleDisplayItemClick = useCallback(() => {
     dispatch(setLayoutByArea(area));
     const state = store.getState().layoutState;
 
-    if (state.areaTypeId !== undefined) {
+    if (typeof state.areaTypeId === 'number') {
       setActiveStep(AreaStep.Edit);
       setHisSteps(new Set<AreaStep>([AreaStep.New]));
       return;
-    } else if (state.layoutType !== undefined) {
+    } else if (typeof state.layoutType === 'number') {
       setActiveStep(AreaStep.Edit);
       setHisSteps(new Set<AreaStep>([AreaStep.New, AreaStep.Layout]));
     } else {
       setActiveStep(AreaStep.New);
     }
-  };
+  }, [dispatch, area]);
 
   useEffect(() => {
     setFocusState(focused ? focused : false);
