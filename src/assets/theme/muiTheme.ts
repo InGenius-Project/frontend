@@ -72,22 +72,29 @@ let theme = extendTheme(
         desktop: 1200,
       },
     },
-    typography: {
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'Noto Sans TC',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
-    },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: `
+          @font-face {
+            font-family: ${[
+              '-apple-system',
+              'BlinkMacSystemFont',
+              '"Segoe UI"',
+              'Roboto',
+              '"Helvetica Neue"',
+              'Arial',
+              'Noto Sans TC',
+              'sans-serif',
+              '"Apple Color Emoji"',
+              '"Segoe UI Emoji"',
+              '"Segoe UI Symbol"',
+            ].join(',')};
+            font-style: normal;
+            font-display: swap;
+            font-weight: 400;
+          }
+        `,
+      },
       MuiContainer: {
         defaultProps: {
           maxWidth: 'laptop',
@@ -102,6 +109,7 @@ let theme = extendTheme(
         styleOverrides: {
           root: ({ theme: t }) => ({
             fontWeight: t.typography.fontWeightBold,
+            fontFamily: undefined,
           }),
         },
       },

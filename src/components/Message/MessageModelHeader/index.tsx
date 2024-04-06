@@ -25,7 +25,7 @@ function MessageModelHeader({ avatar, username, role }: MessageModelHeaderProps)
           flex: '1 1 auto',
         }}
       >
-        <Typography variant="subtitle1">{username}</Typography>
+        <Typography variant="body1">{username}</Typography>
         <Typography variant="caption">{role}</Typography>
       </Stack>
       <IconButton>

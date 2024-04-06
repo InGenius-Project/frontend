@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 import Footer from '@/components/Footer';
 import { getUserApi } from '@/features/api/user/getUser';
 import { AnimatePresence } from 'framer-motion';
@@ -25,6 +25,7 @@ export default function MainRoute() {
         cursor: loading ? 'wait' : undefined,
       }}
     >
+      <CssBaseline />
       <Header />
 
       <ToastContainer />

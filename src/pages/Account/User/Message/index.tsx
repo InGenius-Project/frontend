@@ -27,7 +27,6 @@ function Message() {
           </Stack>
         )}
         <MessageChannelItem />
-        <MessageChannelItem />
       </Stack>
       <Box
         sx={{
