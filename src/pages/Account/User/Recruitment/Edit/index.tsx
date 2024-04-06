@@ -5,6 +5,7 @@ import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecrui
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
+import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { IconButton, Stack } from '@mui/material';
@@ -28,7 +29,7 @@ function RecruitmentEdit() {
         setAreas({
           id: recruitmentData.result.Id,
           type: AreasType.RECRUITMENT,
-          areas: recruitmentData.result.Areas,
+          areas: recruitmentData.result.Areas || [],
         }),
       );
     }
@@ -38,12 +39,12 @@ function RecruitmentEdit() {
     deleteRecruitment(recruitmentId);
   };
 
-  const { run: handleChangeTitle } = useDebounceFn((title: string) => {
+  const { run: handleChange } = useDebounceFn((recruitment: IOwnerRecruitment) => {
     if (recruitmentData && recruitmentData.result)
       postRecruitment({
         Id: recruitmentData.result.Id,
-        Name: title,
-        Enable: recruitmentData.result.Enable,
+        Name: recruitment.Name,
+        Enable: recruitment.Enable,
       });
   });
   return (
@@ -51,10 +52,9 @@ function RecruitmentEdit() {
       {recruitmentData && recruitmentData.result && (
         <Stack spacing={1}>
           <RecruitmentItem
-            id={recruitmentId}
             editable
-            title={recruitmentData.result.Name}
-            onChangeTitle={handleChangeTitle}
+            recruitment={recruitmentData.result}
+            onChange={handleChange}
             control={
               <Stack spacing={1} direction={'row'}>
                 <IconButton>

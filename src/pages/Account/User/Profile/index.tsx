@@ -1,10 +1,8 @@
 import AreaEditor from '@/components/Area/AreaEditor';
 import ProfileItem from '@/components/ProfileItem';
 import { useGetUserQuery } from '@/features/api/user/getUser';
-import { usePostUserMutation } from '@/features/api/user/postUser';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
-import { IArea } from '@/types/interfaces/IArea';
 import { Box, Stack } from '@mui/material';
 import { useEffect } from 'react';
 

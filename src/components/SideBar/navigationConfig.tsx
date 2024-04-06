@@ -1,11 +1,10 @@
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import { UserRole } from '@/types/enums/UserRole';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
-import dummyUserImage from '@/assets/images/png/dummyUserImage.jpg';
-import { UserRole } from '@/types/enums/UserRole';
-import UserAvatar from '../UserAvatar';
+import { OwnerAvatar } from '../UserAvatar';
 
 const navigationConfig = [
   {
@@ -14,7 +13,7 @@ const navigationConfig = [
       {
         name: '個人首頁',
         value: 'Profile',
-        icon: <UserAvatar />,
+        icon: <OwnerAvatar />,
       },
       {
         name: '履歷管理',
@@ -39,18 +38,7 @@ const navigationConfig = [
       {
         name: '公司首頁',
         value: 'Profile',
-        icon: (
-          <img
-            src={dummyUserImage}
-            alt="userImage"
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              objectFit: 'contain',
-            }}
-          />
-        ),
+        icon: <OwnerAvatar />,
       },
       {
         name: '職缺管理',

@@ -2,12 +2,12 @@ import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
 import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
 
-export const getRecruitments = baseApi.injectEndpoints({
+export const getRecruitmentsByUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRecruitments: builder.query<IResponse<Array<IOwnerRecruitment>>, null>({
+    getRecruitmentsByUser: builder.query<IResponse<Array<IOwnerRecruitment>>, null>({
       query() {
         return {
-          url: 'Recruitment/All',
+          url: 'Recruitment',
           method: 'Get',
         };
       },
@@ -22,4 +22,4 @@ export const getRecruitments = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetRecruitmentsQuery } = getRecruitments;
+export const { useGetRecruitmentsByUserQuery } = getRecruitmentsByUserApi;

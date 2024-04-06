@@ -45,6 +45,7 @@ type ImageCropProps = {
   width?: string | number;
   height?: string | number;
   image?: IImageInfo;
+  altComponent?: React.ReactNode;
   onChange?: (image: IImageInfo | undefined) => void;
   onCropDone?: (image: IImageInfo | undefined) => void;
   onChangeFileName?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
@@ -55,6 +56,7 @@ export default function ImageCrop({
   height = 100,
   image,
   circularCrop,
+  altComponent,
   onChange,
   onCropDone,
   onChangeFileName,
@@ -238,8 +240,15 @@ export default function ImageCrop({
       <Stack direction="row" spacing={2}>
         {!imageState ? (
           <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
-            <ImageOutlinedIcon />
-            <Typography variant="body1">上傳圖片</Typography>
+            {altComponent ? (
+              altComponent
+            ) : (
+              <>
+                {' '}
+                <ImageOutlinedIcon />
+                <Typography variant="body1">上傳圖片</Typography>
+              </>
+            )}
 
             <VisuallyHiddenInput
               type="file"

@@ -1,5 +1,4 @@
 import Logo from '@/assets/images/logo/logo.svg?react';
-import dummyUserImage from '@/assets/images/png/dummyUserImage.jpg';
 import { getNavigationConfig } from '@/components/SideBar/navigationConfig';
 import { useLoginMutation } from '@/features/api/auth/login';
 import { baseApi } from '@/features/api/baseApi';
@@ -7,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { logout } from '@/features/user/userSlice';
 import { UserRole, UserRoleLoginData } from '@/types/enums/UserRole';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import {
   Container,
   FormControl,
@@ -26,9 +26,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import MessageModel from '../Message/MessageModel';
-import UserAvatar from '../UserAvatar';
+import { OwnerAvatar } from '../UserAvatar';
 
 const env = import.meta.env.VITE_APP_ENV as string;
 
@@ -36,7 +35,7 @@ export default function Header() {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userState.User);
+  const userState = useAppSelector((state) => state.userState.User);
   const [navAnchorEl, setNavAnchorEl] = React.useState<null | HTMLElement>(null);
   const [messageAnchorEl, setMessageAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(navAnchorEl);
@@ -53,7 +52,7 @@ export default function Header() {
     setMessageAnchorEl(null);
   };
   const [login] = useLoginMutation();
-  const [role, setRole] = useState(user?.Role);
+  const [role, setRole] = useState(userState?.Role);
   const handleChange = (e: SelectChangeEvent<UserRole>) => {
     setRole((e.target as any).value);
     const loginData = UserRoleLoginData.find((u) => u.Id === e.target.value);
@@ -102,7 +101,7 @@ export default function Header() {
 
         {/* Right Control */}
         <Box height="100%">
-          {user ? (
+          {userState ? (
             <Stack spacing={1} direction={'row'} alignItems={'center'}>
               {env === 'development' && (
                 <FormControl size="small">
@@ -150,18 +149,18 @@ export default function Header() {
               <Button
                 variant="text"
                 startIcon={
-                  <Box sx={{ width: '1.5em' }}>
-                    <UserAvatar />
+                  <Box sx={{ width: '1.5em', height: '1.5em' }}>
+                    <OwnerAvatar />
                   </Box>
                 }
                 endIcon={<ArrowDropDownIcon />}
                 onClick={handleNavClick}
               >
-                {user.Username}
+                {userState.Username}
               </Button>
 
               <Menu anchorEl={navAnchorEl} open={open} onClose={handleNavClose}>
-                {getNavigationConfig(user?.Role || 0)?.map((item) => {
+                {getNavigationConfig(userState?.Role || 0)?.map((item) => {
                   return (
                     <MenuItem
                       key={`header-menu-item-${item.value}`}

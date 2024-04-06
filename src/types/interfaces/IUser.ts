@@ -20,6 +20,8 @@ export interface IUserInfo {
 
 export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Tags'>;
 
+export interface IOwnerUser extends Pick<IUserInfo, 'Id' | 'Username' | 'Email' | 'Avatar'> {}
+
 type AvatarPostField = 'Image';
 export interface AvatarPostFormData extends FormData {
   append(name: AvatarPostField, value: string | Blob, fileName?: string): void;

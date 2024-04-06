@@ -21,7 +21,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { useDebounce, useUpdateEffect } from 'ahooks';
-import { useCallback, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import UserAvatar, { OwnerAvatar } from '../UserAvatar';
 
 type ProfileItemProps = {
   editable?: boolean;
@@ -110,6 +111,7 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
           circularCrop
           image={userState.User?.Avatar}
           onCropDone={handleAvatarCropDone}
+          altComponent={<OwnerAvatar />}
         />
       </Box>
 

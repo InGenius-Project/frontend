@@ -1,16 +1,16 @@
 import { RecruitmentItem, RecruitmentNewButton } from '@/components/Recruitment';
-import { IconButton, Stack } from '@mui/material';
-
-import { useGetRecruitmentsQuery } from '@/features/api/recruitment/getRecruitments';
+import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
+import { useGetRecruitmentsByUserQuery } from '@/features/api/recruitment/getRecruitmentsByUser';
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
-import EditIcon from '@mui/icons-material/Edit';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
+import EditIcon from '@mui/icons-material/Edit';
+import { IconButton, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 export default function Recruitment() {
-  const { data: recruitmentData } = useGetRecruitmentsQuery(null);
+  const { data: recruitmentData } = useGetRecruitmentsByUserQuery(null);
   const [postRecruitment] = usePostRecruitmentMutation();
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
   const navigate = useNavigate();
@@ -31,9 +31,8 @@ export default function Recruitment() {
         recruitmentData.result &&
         recruitmentData.result.map((r) => (
           <RecruitmentItem
-            id={r.Id}
             key={r.Id}
-            title={r.Name}
+            recruitment={r}
             control={
               <Stack spacing={1} direction={'row'}>
                 <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
