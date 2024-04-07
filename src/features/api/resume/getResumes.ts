@@ -11,9 +11,10 @@ export const getResumesApi = baseApi.injectEndpoints({
           method: 'Get',
         };
       },
-      providesTags: () => {
-        return ['Resume', 'ResumeLists'];
-      },
+      providesTags: (res) =>
+        res
+          ? [...(res.result || []).map((r) => ({ type: 'Resume' as const, id: r.Id })), { type: 'Resume', id: 'List' }]
+          : [],
     }),
   }),
 });

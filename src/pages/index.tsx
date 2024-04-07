@@ -1,22 +1,30 @@
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import WorkInProgress from '@/assets/images/svg/work-in-progress.svg?react';
-import Update from '@/assets/images/svg/update.svg?react';
 import HappyAnnnouncement from '@/assets/images/svg/happy-announcement.svg?react';
-import Searching from '@/assets/images/svg/searching.svg?react';
-import Working from '@/assets/images/svg/working.svg?react';
 import Questions from '@/assets/images/svg/questions.svg?react';
-import { v4 as uuid } from 'uuid';
-import Typography from '@mui/material/Typography';
-import { Box, Button, Link, Stack, useTheme, TextField, useMediaQuery } from '@mui/material';
-import { RecruitmentItem } from '@/components/Recruitment';
+import Searching from '@/assets/images/svg/searching.svg?react';
+import Update from '@/assets/images/svg/update.svg?react';
+import WorkInProgress from '@/assets/images/svg/work-in-progress.svg?react';
+import Working from '@/assets/images/svg/working.svg?react';
 import ActivityItem, { ActivityColumnItem } from '@/components/ActivityItem';
-import React from 'react';
+import { RecruitmentItem } from '@/components/Recruitment';
+import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
+import { useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
+import { SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { Box, Button, Link, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 export default function Root() {
   const theme = useTheme();
   const upLaptop = useMediaQuery(theme.breakpoints.up('laptop'));
+
+  const trendRecruitment = useSearchRecruitmentQuery({
+    Page: 1,
+    PageSize: 3,
+    SortBy: SearchSortBy.CreatedTime,
+    OrderBy: SearchOrderBy.Desc,
+  });
 
   return (
     <Box
@@ -102,9 +110,7 @@ export default function Root() {
             <Stack spacing={2}>
               <Typography variant="h3">熱門活動</Typography>
               <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
-                {/* <RecruitmentItem id={uuid()} />
-                <RecruitmentItem id={uuid()} />
-                <RecruitmentItem id={uuid()} /> */}
+                {trendRecruitment.data?.result?.result.map((r) => <InternRecruitmentItem recruitment={r} key={r.Id} />)}
               </Stack>
               <Link>查看更多</Link>
             </Stack>

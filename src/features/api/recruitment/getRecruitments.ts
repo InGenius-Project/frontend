@@ -1,10 +1,10 @@
 import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
-import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
+import { IRecruitment } from '@/types/interfaces/IRecruitment';
 
 export const getRecruitments = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRecruitments: builder.query<IResponse<Array<IOwnerRecruitment>>, null>({
+    getRecruitments: builder.query<IResponse<Array<IRecruitment>>, null>({
       query() {
         return {
           url: 'Recruitment/All',

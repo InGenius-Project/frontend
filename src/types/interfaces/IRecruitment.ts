@@ -2,7 +2,7 @@ import { IArea } from './IArea';
 import { IResume } from './IResume';
 import { IOwnerUser } from './IUser';
 
-export interface IOwnerRecruitment {
+export interface IRecruitment {
   Id: string;
   Name: string;
   Enable: boolean;
@@ -12,10 +12,38 @@ export interface IOwnerRecruitment {
   PublisherId?: string;
 }
 
-export interface IRecruitment extends Pick<IOwnerRecruitment, 'Id' | 'Name' | 'Areas'> {}
-
 export interface IRecruitmentPost {
   Id: string;
   Name: string;
   Enable: boolean;
+}
+
+export enum SearchSortBy {
+  CreatedTime = 'CreatedTime',
+}
+
+export enum SearchOrderBy {
+  Desc = 'desc',
+  Asc = 'asc',
+}
+
+export interface IRecruitmentSearchPost {
+  Query?: string;
+  TagIds?: string[];
+  Page: number;
+  PageSize: number;
+  SortBy: SearchSortBy;
+  OrderBy: SearchOrderBy;
+}
+
+export interface IRecruitmentSearchResult {
+  Query?: string;
+  TagIds?: string[];
+  Page: number;
+  PageSize: number;
+  MaxPage: number;
+  Total: number;
+  SortBy: string;
+  OrderBy: string;
+  result: IRecruitment[];
 }

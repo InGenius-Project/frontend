@@ -5,10 +5,10 @@ import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecrui
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
-import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
+import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { IconButton, Stack } from '@mui/material';
+import { IconButton, Stack, Switch } from '@mui/material';
 import { useDebounceFn } from 'ahooks';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -39,7 +39,7 @@ function RecruitmentEdit() {
     deleteRecruitment(recruitmentId);
   };
 
-  const { run: handleChange } = useDebounceFn((recruitment: IOwnerRecruitment) => {
+  const { run: handleChange } = useDebounceFn((recruitment: IRecruitment) => {
     if (recruitmentData && recruitmentData.result)
       postRecruitment({
         Id: recruitmentData.result.Id,

@@ -6,7 +6,7 @@ import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, Stack } from '@mui/material';
+import { IconButton, Stack, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export default function Recruitment() {
@@ -15,7 +15,7 @@ export default function Recruitment() {
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
   const navigate = useNavigate();
 
-  const handlePostProfileArea = (recruitment: IRecruitmentPost) => {
+  const handlePostRecruitmentArea = (recruitment: IRecruitmentPost) => {
     postRecruitment(recruitment);
   };
 
@@ -25,7 +25,7 @@ export default function Recruitment() {
 
   return (
     <Stack spacing={1}>
-      <RecruitmentNewButton onPost={handlePostProfileArea} />
+      <RecruitmentNewButton onPost={handlePostRecruitmentArea} />
 
       {recruitmentData &&
         recruitmentData.result &&
@@ -35,6 +35,15 @@ export default function Recruitment() {
             recruitment={r}
             control={
               <Stack spacing={1} direction={'row'}>
+                <Switch
+                  checked={r.Enable}
+                  onChange={(e) =>
+                    handlePostRecruitmentArea({
+                      ...r,
+                      Enable: e.target.checked,
+                    })
+                  }
+                />
                 <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
                   <EditIcon />
                 </IconButton>

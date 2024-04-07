@@ -230,7 +230,7 @@ theme.typography = {
       fontSize: '1.4rem',
     },
     [theme.breakpoints.up('desktop')]: {
-      fontSize: '1.6rem',
+      fontSize: '1.4rem',
     },
   },
 

@@ -1,16 +1,21 @@
 import UserAvatar from '@/components/UserAvatar';
-import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
+import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import TagIcon from '@mui/icons-material/Tag';
-import { Avatar, Box, Chip, Link, Stack, TextField, useTheme } from '@mui/material';
+import { Box, Chip, Link, Stack, TextField, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Checkbox from '@mui/material/Checkbox';
+import Favorite from '@mui/icons-material/Favorite';
 import { useUpdateEffect } from 'ahooks';
 import { useState } from 'react';
+import { useRemoveFavRecruitmentMutation } from '@/features/api/user/removeFavRecruitment';
+import { useAddFavRecruitmentMutation } from '@/features/api/user/addFavRecruitment';
 
 type RecruitmentItemProps = {
   control?: React.ReactNode;
   editable?: boolean;
-  recruitment: IOwnerRecruitment;
-  onChange?: (recruitment: IOwnerRecruitment) => void;
+  recruitment: IRecruitment;
+  onChange?: (recruitment: IRecruitment) => void;
 };
 
 export default function RecruitmentItem({ control, editable, recruitment, onChange }: RecruitmentItemProps) {
@@ -64,5 +69,29 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         <Chip label={'社群管理'} color="primary" icon={<TagIcon />} />
       </Stack>
     </Stack>
+  );
+}
+
+export function InternRecruitmentItem({ editable, recruitment }: Omit<RecruitmentItemProps, 'control' | 'onChange'>) {
+  // TODO :init checked
+  const [checked, setChecked] = useState(false);
+
+  const [removeFavRecruitment] = useRemoveFavRecruitmentMutation();
+  const [addFavRecruitment] = useAddFavRecruitmentMutation();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      addFavRecruitment([recruitment.Id]);
+    } else {
+      removeFavRecruitment([recruitment.Id]);
+    }
+  };
+
+  return (
+    <RecruitmentItem
+      recruitment={recruitment}
+      editable={editable}
+      control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleChange} />}
+    />
   );
 }

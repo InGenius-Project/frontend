@@ -1,10 +1,10 @@
-import { IOwnerRecruitment } from '@/types/interfaces/IRecruitment';
+import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
 
 export const getRecruitmentByIdApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRecruitmentById: builder.query<IResponse<IOwnerRecruitment>, string>({
+    getRecruitmentById: builder.query<IResponse<IRecruitment>, string>({
       query(id) {
         return {
           url: `Recruitment/${id}`,
@@ -18,7 +18,7 @@ export const getRecruitmentByIdApi = baseApi.injectEndpoints({
               { type: 'Recruitment', id: res.result?.Id },
             ]
           : [],
-      transformResponse: (response: IResponse<IOwnerRecruitment>) => {
+      transformResponse: (response: IResponse<IRecruitment>) => {
         // Reorder the areas by sequence
         if (response.result) {
           const orderedArea = (response.result.Areas || []).sort((a, b) => a.Sequence - b.Sequence);
