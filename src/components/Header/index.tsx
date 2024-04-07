@@ -94,11 +94,6 @@ export default function Header() {
           </Typography>
         </Box>
 
-        {/* Links */}
-        <Stack>
-          <Link href="#">搜尋</Link>
-        </Stack>
-
         {/* Right Control */}
         <Box height="100%">
           {userState ? (

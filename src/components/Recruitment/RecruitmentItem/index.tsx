@@ -1,7 +1,7 @@
 import UserAvatar from '@/components/UserAvatar';
 import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import TagIcon from '@mui/icons-material/Tag';
-import { Box, Chip, Link, Stack, TextField, useTheme } from '@mui/material';
+import { Box, Chip, Link, Skeleton, Stack, TextField, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Checkbox from '@mui/material/Checkbox';
@@ -74,12 +74,13 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
 
 export function InternRecruitmentItem({ editable, recruitment }: Omit<RecruitmentItemProps, 'control' | 'onChange'>) {
   // TODO :init checked
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(recruitment.IsUserFav || false);
 
   const [removeFavRecruitment] = useRemoveFavRecruitmentMutation();
   const [addFavRecruitment] = useAddFavRecruitmentMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(e.target.checked);
     if (e.target.checked) {
       addFavRecruitment([recruitment.Id]);
     } else {
@@ -91,7 +92,47 @@ export function InternRecruitmentItem({ editable, recruitment }: Omit<Recruitmen
     <RecruitmentItem
       recruitment={recruitment}
       editable={editable}
-      control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} onChange={handleChange} />}
+      control={
+        <Checkbox icon={<FavoriteBorder />} checked={checked} checkedIcon={<Favorite />} onChange={handleChange} />
+      }
     />
+  );
+}
+
+export function SkeletonRecruitmentItem() {
+  const theme = useTheme();
+  return (
+    <Stack
+      spacing={1}
+      sx={{
+        backgroundColor: theme.palette.common.white,
+        position: 'relative',
+        borderRadius: 'var(--ing-borderRadius-sm)',
+        padding: theme.spacing(2),
+      }}
+    >
+      <Stack direction={'row'} spacing={2} alignItems={'center'}>
+        <Box sx={{ width: '2em', height: '2em' }}>
+          <Skeleton variant="circular" width={40} height={40} />
+        </Box>
+
+        <Box sx={{ flex: '1 1 auto' }}>
+          <Skeleton variant="text" width={200} />
+        </Box>
+        <Box>
+          <Skeleton variant="rectangular" width={24} height={24} />
+        </Box>
+      </Stack>
+      <Stack spacing={1} direction={'row'} alignItems={'baseline'}>
+        <Skeleton variant="text" width={100} />
+        <Typography variant="caption"> | </Typography>
+        <Skeleton variant="text" width={100} />
+      </Stack>
+      <Stack spacing={1} direction={'row'}>
+        <Skeleton>
+          <Chip />
+        </Skeleton>
+      </Stack>
+    </Stack>
   );
 }

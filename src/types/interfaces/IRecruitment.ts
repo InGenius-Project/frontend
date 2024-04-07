@@ -10,6 +10,7 @@ export interface IRecruitment {
   Resumes?: IResume[];
   Publisher?: IOwnerUser;
   PublisherId?: string;
+  IsUserFav?: boolean;
 }
 
 export interface IRecruitmentPost {

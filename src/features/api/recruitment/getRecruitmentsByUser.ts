@@ -4,7 +4,7 @@ import { IRecruitment } from '@/types/interfaces/IRecruitment';
 
 export const getRecruitmentsByUserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRecruitmentsByUser: builder.query<IResponse<Array<IRecruitment>>, null>({
+    getRecruitments: builder.query<IResponse<Array<IRecruitment>>, null>({
       query() {
         return {
           url: 'Recruitment',
@@ -22,4 +22,4 @@ export const getRecruitmentsByUserApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetRecruitmentsByUserQuery } = getRecruitmentsByUserApi;
+export const { useGetRecruitmentsQuery } = getRecruitmentsByUserApi;

@@ -22,7 +22,7 @@ const navigationConfig = [
       },
       {
         name: '職缺管理',
-        value: 'Recruitment',
+        value: 'Intern/Recruitment',
         icon: <WorkOutlineOutlinedIcon />,
       },
       {

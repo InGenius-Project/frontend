@@ -23,4 +23,4 @@ export const searchRecruitmentApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useSearchRecruitmentQuery } = searchRecruitmentApi;
+export const { useSearchRecruitmentQuery, useLazySearchRecruitmentQuery } = searchRecruitmentApi;

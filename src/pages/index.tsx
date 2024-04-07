@@ -4,27 +4,45 @@ import Searching from '@/assets/images/svg/searching.svg?react';
 import Update from '@/assets/images/svg/update.svg?react';
 import WorkInProgress from '@/assets/images/svg/work-in-progress.svg?react';
 import Working from '@/assets/images/svg/working.svg?react';
+import SearchIcon from '@mui/icons-material/Search';
 import ActivityItem, { ActivityColumnItem } from '@/components/ActivityItem';
 import { RecruitmentItem } from '@/components/Recruitment';
-import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
-import { useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
+import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
+import { useLazySearchRecruitmentQuery, useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Box, Button, Link, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, IconButton, Link, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmptyItem';
 
 export default function Root() {
   const theme = useTheme();
   const upLaptop = useMediaQuery(theme.breakpoints.up('laptop'));
+  const navigate = useNavigate();
+  const [searchInputState, setSearchInputState] = useState('');
 
-  const trendRecruitment = useSearchRecruitmentQuery({
+  const { data: trendRecruitmentData, isLoading: isSearchingTrendRecruitment } = useSearchRecruitmentQuery({
     Page: 1,
     PageSize: 3,
-    SortBy: SearchSortBy.CreatedTime,
+    SortBy: SearchSortBy.CreatedTime, // TODO : Change SortBy
     OrderBy: SearchOrderBy.Desc,
   });
+
+  const handleSearch = (keyword: string) => {
+    navigate('/search', {
+      state: {
+        Page: 1,
+        PageSize: 10,
+        SortBy: SearchSortBy.CreatedTime,
+        OrderBy: SearchOrderBy.Desc,
+        Query: keyword,
+      },
+    });
+  };
 
   return (
     <Box
@@ -89,7 +107,31 @@ export default function Root() {
               <Typography variant="h2">Innovative Genius</Typography>
               <Typography variant="body1">幫助所有人，成為想成為的人</Typography>
               <Box sx={{ flexGrow: 2 }}>
-                <Button>開始探索</Button>
+                <TextField
+                  placeholder="Ask AI: 我想要找一個台北大南港區的暑期實習..."
+                  fullWidth
+                  id="root-search"
+                  value={searchInputState}
+                  InputProps={{
+                    startAdornment: (
+                      <IconButton
+                        onClick={() => {
+                          handleSearch(searchInputState);
+                        }}
+                      >
+                        <SearchIcon />
+                      </IconButton>
+                    ),
+                  }}
+                  onChange={(e) => {
+                    setSearchInputState(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(searchInputState);
+                    }
+                  }}
+                />
               </Box>
             </Box>
           </Grid>
@@ -110,7 +152,15 @@ export default function Root() {
             <Stack spacing={2}>
               <Typography variant="h3">熱門活動</Typography>
               <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
-                {trendRecruitment.data?.result?.result.map((r) => <InternRecruitmentItem recruitment={r} key={r.Id} />)}
+                {!isSearchingTrendRecruitment && trendRecruitmentData ? (
+                  trendRecruitmentData.result?.result.map((r) => <InternRecruitmentItem recruitment={r} key={r.Id} />)
+                ) : (
+                  <>
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <SkeletonRecruitmentItem />
+                    ))}
+                  </>
+                )}
               </Stack>
               <Link>查看更多</Link>
             </Stack>

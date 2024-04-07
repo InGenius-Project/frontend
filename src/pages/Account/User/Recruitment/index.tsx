@@ -1,6 +1,6 @@
 import { RecruitmentItem, RecruitmentNewButton } from '@/components/Recruitment';
 import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
-import { useGetRecruitmentsByUserQuery } from '@/features/api/recruitment/getRecruitmentsByUser';
+import { useGetRecruitmentsQuery } from '@/features/api/recruitment/getRecruitmentsByUser';
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
 import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
@@ -10,7 +10,7 @@ import { IconButton, Stack, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export default function Recruitment() {
-  const { data: recruitmentData } = useGetRecruitmentsByUserQuery(null);
+  const { data: recruitmentData } = useGetRecruitmentsQuery(null);
   const [postRecruitment] = usePostRecruitmentMutation();
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
   const navigate = useNavigate();
