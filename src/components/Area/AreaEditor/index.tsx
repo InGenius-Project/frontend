@@ -126,8 +126,8 @@ function AreaEditor() {
             {areasState.areas.map((a) => (
               <AreaItem
                 key={a.Id}
-                id={a.Id}
                 area={a}
+                id={a.Id}
                 focused={layoutState.areaId === a.Id}
                 onClick={handleClickItem}
               ></AreaItem>

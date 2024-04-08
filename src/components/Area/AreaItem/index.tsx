@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useS
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-
+import { v4 as uuid } from 'uuid';
 import {
   usePostAreaMutation,
   usePostKeyValueListLayoutMutation,
@@ -31,9 +31,9 @@ import AreaNewItem from '../AreaNewItem';
 
 export type AreaItemProps = {
   onClick?: (element: HTMLElement) => void;
-  id: string;
   area: IArea;
   focused?: boolean;
+  id: string; // for draggable id
 } & Partial<DraggableProvidedDragHandleProps>;
 
 const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChildren<AreaItemProps>) => {

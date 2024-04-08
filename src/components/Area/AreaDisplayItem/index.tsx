@@ -3,7 +3,7 @@ import { Area } from '@/types/classes/Area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
 import { Divider, Stack, Typography } from '@mui/material';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useEffect } from 'react';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
 
@@ -15,6 +15,7 @@ type AreaDisplayItemProps = {
 
 function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemProps) {
   const a = new Area(area);
+
   return (
     <Stack spacing={1} onClick={onClick} sx={{ cursor: editable ? 'pointer' : 'default' }}>
       <Typography variant="subtitle1">{a.getAreaTitle() || 'Untitled'}</Typography>
@@ -39,12 +40,12 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
               }}
             />
           )}
-          <RichTextEditor controllable={false} initialEditorState={a.ImageTextLayout?.TextContent}></RichTextEditor>
+          <RichTextEditor controllable={false} initJsonString={a.ImageTextLayout?.TextContent}></RichTextEditor>
         </Stack>
       )}
 
       {a.isLayoutType(LayoutType.Text) && (
-        <RichTextEditor controllable={false} initialEditorState={a.TextLayout?.Content}></RichTextEditor>
+        <RichTextEditor controllable={false} initJsonString={a.TextLayout?.Content}></RichTextEditor>
       )}
       {a.isLayoutType(LayoutType.List) &&
         area.ListLayout?.Items?.map((i, index, arr) => (

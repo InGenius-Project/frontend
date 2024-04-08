@@ -21,7 +21,7 @@ interface ILayout {
   layoutType?: LayoutType;
   areaTypeId?: number | null;
   title: string;
-  content?: EditorState | string;
+  content?: string;
   image?: IImageInfo;
   listItems?: Array<IInnerTag>;
   keyValueListItems: Array<IInnerKeyValueItem>;
@@ -52,7 +52,7 @@ const layoutSlice = createSlice({
     setLayoutType: (state, action: PayloadAction<LayoutType | undefined>) => {
       state.layoutType = action.payload;
     },
-    setContent: (state, action: PayloadAction<EditorState>) => {
+    setContent: (state, action: PayloadAction<string>) => {
       state.content = action.payload;
     },
     setAreaTypeId: (state, action: PayloadAction<number | null>) => {
@@ -202,7 +202,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.Text
         ? {
             Id: NIL,
-            Content: JSON.stringify(layoutState.content),
+            Content: layoutState.content || '',
           }
         : undefined,
     ImageTextLayout:
@@ -214,7 +214,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
               AltContent: JSON.stringify(layoutState.image?.AltContent),
               Uri: layoutState.image?.Uri || '',
             },
-            TextContent: JSON.stringify(layoutState.content),
+            TextContent: layoutState.content || '',
           }
         : undefined,
     ListLayout:
@@ -264,7 +264,7 @@ export const getUpdatedArea = (state: RootState) => {
       selectLayoutType(state) === LayoutType.Text
         ? {
             Id: layoutState.id,
-            Content: JSON.stringify(layoutState.content),
+            Content: layoutState.content || '',
           }
         : undefined,
     ImageTextLayout:
@@ -276,7 +276,7 @@ export const getUpdatedArea = (state: RootState) => {
               AltContent: JSON.stringify(layoutState.image?.AltContent),
               Uri: layoutState.image?.Uri || '',
             },
-            TextContent: JSON.stringify(layoutState.content),
+            TextContent: layoutState.content || '',
           }
         : undefined,
     ListLayout:

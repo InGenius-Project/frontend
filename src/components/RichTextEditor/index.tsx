@@ -1,40 +1,37 @@
-import {
-  InitialEditorStateType,
-  LexicalComposer,
-} from "@lexical/react/LexicalComposer";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { Box, useTheme } from "@mui/material";
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { Box, useTheme } from '@mui/material';
 
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import lexicalTheme from "@/assets/theme/lexicalTheme";
-import React from "react";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import ControlPlugin from "./ToolbarPlugin";
-import { ListItemNode, ListNode } from "@lexical/list";
-import { CodeHighlightNode, CodeNode } from "@lexical/code";
-import { MarkNode } from "@lexical/mark";
-import { TRANSFORMERS } from "@lexical/markdown";
-import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
-import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { AutoLinkNode, LinkNode } from "@lexical/link";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import ListMaxIndentLevelPlugin from "./ListMaxIndentLevelPlugin";
-import TabFocusPlugin from "./TabFocusPlugin";
-import { EditorState, LexicalEditor } from "lexical";
-import InitialPlugin from "./InitialPlugin";
+import lexicalTheme from '@/assets/theme/lexicalTheme';
+import { CodeHighlightNode, CodeNode } from '@lexical/code';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { ListItemNode, ListNode } from '@lexical/list';
+import { MarkNode } from '@lexical/mark';
+import { TRANSFORMERS } from '@lexical/markdown';
+import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
+
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import React, { useEffect, useState } from 'react';
+import ListMaxIndentLevelPlugin from './ListMaxIndentLevelPlugin';
+import TabFocusPlugin from './TabFocusPlugin';
+import ControlPlugin from './ToolbarPlugin';
+import OnChangePlugin from './OnChangePlugin';
+import InitialPlugin from './InitialPlugin';
 
 const editorConfig = {
   // The editor theme
-  namespace: "MyEditor",
+  namespace: 'MyEditor',
   theme: lexicalTheme,
   // Handling of errors during update
   onError(error: any) {
-    throw error;
+    console.error(error);
   },
   // Any custom nodes go here
   nodes: [
@@ -52,33 +49,24 @@ const editorConfig = {
 
 type RichTextEditorProps = {
   controllable?: boolean;
-  onChange?: (
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>
-  ) => void;
-  initialEditorState?: InitialEditorStateType;
+  onChange?: (updateString: string) => void;
+  initJsonString?: string;
 };
 
-function RichTextEditor({
-  controllable = true,
-  onChange,
-  initialEditorState,
-}: RichTextEditorProps) {
+function RichTextEditor({ controllable = true, onChange, initJsonString }: RichTextEditorProps) {
   const theme = useTheme();
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: 'relative' }}>
       <LexicalComposer
         initialConfig={{
           ...editorConfig,
           editable: controllable,
         }}
       >
-        <InitialPlugin initialEditorState={initialEditorState} />
-
         {controllable ? (
           <>
+            <OnChangePlugin initJsonString={initJsonString} onChange={onChange} />
             <ControlPlugin />
             <LinkPlugin />
             <HistoryPlugin />
@@ -87,29 +75,19 @@ function RichTextEditor({
             <AutoFocusPlugin />
             <TabFocusPlugin />
             <ListMaxIndentLevelPlugin maxDepth={3} />
-            {onChange ? (
-              <OnChangePlugin
-                onChange={onChange}
-                ignoreSelectionChange
-              ></OnChangePlugin>
-            ) : (
-              <React.Fragment />
-            )}
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </>
         ) : (
-          <React.Fragment />
+          <InitialPlugin initJsonString={initJsonString} />
         )}
         <RichTextPlugin
           contentEditable={
             <ContentEditable
               style={{
-                padding: "0 8px",
-                minHeight: controllable ? "300px" : "auto",
-                border: controllable
-                  ? `1px solid ${theme.palette.divider}`
-                  : "",
-                borderRadius: "0.3em",
+                padding: '0 8px',
+                minHeight: controllable ? '300px' : 'auto',
+                border: controllable ? `1px solid ${theme.palette.divider}` : '',
+                borderRadius: '0.3em',
                 fontFamily: theme.typography.fontFamily,
               }}
             />

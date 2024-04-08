@@ -1,37 +1,25 @@
-import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import React from "react";
-
-const HISTORY_MERGE_OPTIONS = { tag: "history-merge" };
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLayoutEffect } from 'react';
 
 type InitialPluginProps = {
-  initialEditorState?: InitialEditorStateType;
+  initJsonString?: string;
 };
 
-export default function InitialPlugin({
-  initialEditorState,
-}: InitialPluginProps) {
+export default function InitialPlugin({ initJsonString }: InitialPluginProps) {
   const [editor] = useLexicalComposerContext();
 
-  React.useLayoutEffect(() => {
-    if (initialEditorState !== null) {
-      try {
-        switch (typeof initialEditorState) {
-          case "string": {
-            const parsedEditorState =
-              editor.parseEditorState(initialEditorState);
-            editor.setEditorState(parsedEditorState, HISTORY_MERGE_OPTIONS);
-            break;
-          }
-          case "object": {
-            editor.setEditorState(initialEditorState, HISTORY_MERGE_OPTIONS);
-            break;
-          }
-        }
-      } catch (e) {
-        console.error(e);
+  useLayoutEffect(() => {
+    console.log(initJsonString);
+    try {
+      if (initJsonString) {
+        const initialEditorState = editor.parseEditorState(initJsonString);
+
+        editor.setEditorState(initialEditorState);
       }
+    } catch (e) {
+      console.error(e);
     }
-  }, [initialEditorState, editor]);
+  }, [editor, initJsonString]);
+
   return null;
 }

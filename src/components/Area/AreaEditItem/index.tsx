@@ -61,8 +61,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     }
   }, [areaTypeData?.result, dispatch]);
 
-  const handleEditorChange = (editorState: EditorState, editor: LexicalEditor) => {
-    dispatch(setContent(editorState));
+  const handleEditorChange = (updateJsonString: string) => {
+    dispatch(setContent(updateJsonString));
   };
 
   // #region KeyValueList event
@@ -180,7 +180,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
       {/* Text */}
       {(layoutTypeState === LayoutType.Text || layoutTypeState === LayoutType.ImageText) && (
-        <RichTextEditor controllable onChange={handleEditorChange} initialEditorState={layoutState.content} />
+        <RichTextEditor controllable onChange={handleEditorChange} initJsonString={layoutState.content} />
       )}
 
       {/* Key value list */}
