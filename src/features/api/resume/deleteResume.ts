@@ -1,5 +1,6 @@
 import { IResponse } from '@/types/interfaces/IResponse';
 import { baseApi } from '../baseApi';
+import { result } from 'lodash';
 
 export const deleteResumeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,7 +11,12 @@ export const deleteResumeApi = baseApi.injectEndpoints({
           method: 'DELETE',
         };
       },
-      invalidatesTags: ['ResumeLists'],
+      invalidatesTags: (result, error, arg) => [
+        {
+          type: 'Resume',
+          id: arg,
+        },
+      ],
     }),
   }),
 });

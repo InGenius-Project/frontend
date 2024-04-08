@@ -46,7 +46,7 @@ function Search() {
     <Container sx={{ py: 1 }}>
       <Stack spacing={1}>
         <TextField
-          placeholder="Ask AI: 我想要找一個台北大南港區的暑期實習..."
+          placeholder="Ask AI: 我想要找一個台北南港區的暑期實習..."
           fullWidth
           value={queryState}
           onChange={(e) => {
