@@ -4,9 +4,10 @@ import React from 'react';
 
 type AreaEmptyProps = {
   onClick?: () => void;
+  editable?: boolean;
 };
 
-function AreaEmpty({ onClick: handleClick }: AreaEmptyProps) {
+function AreaEmpty({ onClick: handleClick, editable = false }: AreaEmptyProps) {
   const theme = useTheme();
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -20,13 +21,14 @@ function AreaEmpty({ onClick: handleClick }: AreaEmptyProps) {
           padding: 3,
           position: 'relative',
           width: '100%',
+          cursor: editable ? 'pointer' : 'default',
         }}
         component={'button'}
         onClick={handleAddClick}
       >
         <WarningIcon sx={{ fontSize: '2em', color: theme.palette.primary.main, mr: 2 }} />
         <Typography variant="body1" sx={{ color: theme.palette.primary.main }} fontWeight={'bold'}>
-          喔歐，這裡似乎還沒有資料可以顯示呢，快去新增一些資料，讓個人首頁變得更豐富吧～
+          喔歐，這裡似乎還沒有資料可以顯示呢 {editable ? '，快去新增一些資料，讓個人首頁變得更豐富吧～' : ''}
         </Typography>
       </ButtonBase>
     </Stack>

@@ -21,6 +21,8 @@ import Message from '@/pages/Account/User/Message';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import Search from '@/pages/Search';
 import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
+import SearchRecruitment from '@/pages/Search/Recruitment';
+import InternApply from '@/pages/Account/User/Intern/Apply';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -45,7 +47,8 @@ export const routes = (
             <Route path="Department" element={<InitDepartment />}></Route>
           </Route>
           <Route path="Intern">
-            <Route path="Recruitment" element={<InternRecruitment />} />
+            <Route path="Recruitment" element={<InternRecruitment />} handle={{ crumb: '職缺管理' }} />
+            <Route path="Apply/:recruitmentId" element={<InternApply />} handle={{ crumb: '申請職缺' }} />
           </Route>
           <Route
             path="Profile?"
@@ -92,7 +95,10 @@ export const routes = (
         </Route>
       </Route>
     </Route>
-    <Route path="Search" element={<Search />} />
+    <Route path="Search">
+      <Route path="" element={<Search />} />
+      <Route path="Recruitment/:recruitmentId" element={<SearchRecruitment />} />
+    </Route>
   </Route>
 );
 

@@ -4,24 +4,23 @@ import Searching from '@/assets/images/svg/searching.svg?react';
 import Update from '@/assets/images/svg/update.svg?react';
 import WorkInProgress from '@/assets/images/svg/work-in-progress.svg?react';
 import Working from '@/assets/images/svg/working.svg?react';
-import SearchIcon from '@mui/icons-material/Search';
 import ActivityItem, { ActivityColumnItem } from '@/components/ActivityItem';
-import { RecruitmentItem } from '@/components/Recruitment';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
-import { useLazySearchRecruitmentQuery, useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
+import { useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Box, Button, IconButton, Link, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, IconButton, Link, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmptyItem';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Root() {
   const theme = useTheme();
   const upLaptop = useMediaQuery(theme.breakpoints.up('laptop'));
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchInputState, setSearchInputState] = useState('');
 
@@ -35,6 +34,7 @@ export default function Root() {
   const handleSearch = (keyword: string) => {
     navigate('/search', {
       state: {
+        ...location.state,
         Page: 1,
         PageSize: 10,
         SortBy: SearchSortBy.CreatedTime,
@@ -153,7 +153,13 @@ export default function Root() {
               <Typography variant="h3">熱門活動</Typography>
               <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
                 {!isSearchingTrendRecruitment && trendRecruitmentData ? (
-                  trendRecruitmentData.result?.result.map((r) => <InternRecruitmentItem recruitment={r} key={r.Id} />)
+                  trendRecruitmentData.result?.result.map((r) => (
+                    <InternRecruitmentItem
+                      recruitment={r}
+                      key={r.Id}
+                      onClick={() => navigate(`/Search/Recruitment/${r.Id}`)}
+                    />
+                  ))
                 ) : (
                   <>
                     {Array.from({ length: 3 }).map((_, index) => (

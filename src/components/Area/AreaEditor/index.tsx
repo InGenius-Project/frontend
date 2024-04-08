@@ -107,7 +107,7 @@ function AreaEditor() {
       >
         {isEmptyAreas && (
           <>
-            <AreaEmpty onClick={handleAddClick} />
+            <AreaEmpty onClick={handleAddClick} editable />
             <Portal container={() => document.getElementById('userHeader')}>
               <IconButton size="small" sx={{ ml: 1 }} onClick={() => navigate('New')}>
                 <CreateOutlinedIcon />

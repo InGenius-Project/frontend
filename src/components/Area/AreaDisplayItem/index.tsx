@@ -10,12 +10,13 @@ import AreaListItem from '../AreaListItem';
 type AreaDisplayItemProps = {
   area: IArea;
   onClick?: MouseEventHandler<HTMLDivElement>;
+  editable?: boolean;
 };
 
-function AreaDisplayItem({ area, onClick }: AreaDisplayItemProps) {
+function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemProps) {
   const a = new Area(area);
   return (
-    <Stack spacing={1} onClick={onClick} sx={{ cursor: 'pointer' }}>
+    <Stack spacing={1} onClick={onClick} sx={{ cursor: editable ? 'pointer' : 'default' }}>
       <Typography variant="subtitle1">{a.getAreaTitle() || 'Untitled'}</Typography>
       {a.isLayoutType(LayoutType.ImageText) && (
         <Stack direction={'row'} spacing={1}>

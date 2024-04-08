@@ -1,19 +1,9 @@
-import {
-  Box,
-  IconButton,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useNavigate } from "react-router-dom";
-import { useConfirm } from "material-ui-confirm";
-import React, { useState } from "react";
-import { useDebounce, useUpdateEffect } from "ahooks";
-import { addHours } from "date-fns";
+import { Box, Paper, Skeleton, Stack, TextField, Typography } from '@mui/material';
+
+import { IResume } from '@/types/interfaces/IResume';
+import { useDebounce, useUpdateEffect } from 'ahooks';
+import { addHours } from 'date-fns';
+import React, { useState } from 'react';
 
 function getLastModifiedTimeString(modifiedAt: Date): string {
   const now = new Date();
@@ -36,46 +26,18 @@ function getLastModifiedTimeString(modifiedAt: Date): string {
 }
 
 type ResumeItemProps = {
-  id: string;
-  children?: React.ReactNode;
-  isEditable?: boolean;
-  title: string;
-  modifiedAt: string;
-  onDelete?: (id: string) => void;
+  resume: IResume;
+  editable?: boolean;
+  control?: React.ReactNode;
   onChangeTitle?: (title: string) => void;
+  onClick?: () => void;
 };
 
-const ResumeItem = ({
-  id,
-  isEditable,
-  title,
-  modifiedAt,
-  onDelete,
-  onChangeTitle,
-}: ResumeItemProps) => {
-  const navigate = useNavigate();
-  const confirm = useConfirm();
-  const [currentTitle, setCurrentTitle] = useState<string>(title);
+const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick }: ResumeItemProps) => {
+  const [currentTitle, setCurrentTitle] = useState<string>(resume.Title);
   const debouncedCurrentTitle = useDebounce<string>(currentTitle);
 
-  const handleDeleteClick = () => {
-    confirm({
-      title: "確定要刪除此履歷?",
-      confirmationText: "確定刪除",
-      cancellationText: "取消",
-      cancellationButtonProps: {
-        variant: "outlined",
-      },
-    })
-      .then(() => {
-        onDelete && onDelete(id);
-      })
-      .catch(() => {});
-  };
-
-  const handleChangeTitle: React.ChangeEventHandler<
-    HTMLInputElement | HTMLTextAreaElement
-  > = (event) => {
+  const handleChangeTitle: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (event) => {
     setCurrentTitle(event.target.value);
   };
 
@@ -87,50 +49,67 @@ const ResumeItem = ({
     <Paper
       sx={{
         padding: 2,
+        cursor: onClick ? 'pointer' : 'default',
       }}
+      onClick={onClick}
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          height: "100%",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          height: '100%',
         }}
       >
         <Box>
           <Stack spacing={1}>
-            {isEditable ? (
-              <TextField defaultValue={title} onChange={handleChangeTitle} />
+            {editable ? (
+              <TextField defaultValue={resume.Title} onChange={handleChangeTitle} />
             ) : (
-              <Typography variant="h4">{title} </Typography>
+              <Typography variant="subtitle1">{resume.Title} </Typography>
             )}
             <Typography variant="caption">
-              上次編輯時間:{" "}
-              {getLastModifiedTimeString(addHours(new Date(modifiedAt), 8)) ||
-                "?"}
+              上次編輯時間: {getLastModifiedTimeString(addHours(new Date(resume.ModifiedAt), 8)) || '?'}
             </Typography>
           </Stack>
         </Box>
-        <Box alignSelf={"center"}>
-          <Stack direction={"row"} spacing={1}>
-            {!isEditable && (
-              <IconButton onClick={() => navigate(`Edit/${id}`)}>
-                <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
-              </IconButton>
-            )}
-            {!isEditable && (
-              <IconButton>
-                <ContentCopyOutlinedIcon></ContentCopyOutlinedIcon>
-              </IconButton>
-            )}
-            <IconButton onClick={handleDeleteClick}>
-              <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
-            </IconButton>
+        <Box alignSelf={'center'}>
+          <Stack direction={'row'} spacing={1}>
+            {control}
           </Stack>
         </Box>
       </Box>
     </Paper>
   );
 };
+
+export function SkeletonResumeItem() {
+  return (
+    <Paper
+      sx={{
+        padding: 2,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          height: '100%',
+        }}
+      >
+        <Box>
+          <Stack spacing={1}>
+            <Skeleton variant="text" width={200} height={24} />
+            <Skeleton variant="text" width={120} height={16} />
+          </Stack>
+        </Box>
+        <Box alignSelf={'center'}>
+          <Skeleton variant="rectangular" width={24} height={24} />
+        </Box>
+      </Box>
+    </Paper>
+  );
+}
 
 export default ResumeItem;

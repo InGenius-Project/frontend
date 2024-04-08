@@ -1,26 +1,34 @@
-import { RecruitmentItem } from '@/components/Recruitment';
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmptyItem';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useLazySearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
+import { IRecruitmentSearchPost, SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import SearchIcon from '@mui/icons-material/Search';
 import { Container, IconButton, Stack, TextField } from '@mui/material';
-import { useLayoutEffect } from 'react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLayoutEffect, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 function Search() {
   const [searchRecruitment, { data: searchRecruitmentsData }] = useLazySearchRecruitmentQuery();
   var location = useLocation();
-  var { Page, PageSize, SortBy, OrderBy, Query } = location.state;
+  var {
+    Page = 1,
+    PageSize = 10,
+    SortBy = SearchSortBy.CreatedTime,
+    OrderBy = SearchOrderBy.Desc,
+    Query,
+  } = (location.state as IRecruitmentSearchPost | undefined) || {};
+  const navigate = useNavigate();
 
   const [params] = useSearchParams();
+  const [queryState, setQueryState] = useState<string | undefined>(params.get('Query') || Query);
 
   useLayoutEffect(() => {
     searchRecruitment({
       Query: params.get('Query') || Query,
-      Page: params.get('Page') || Page,
-      PageSize: params.get('PageSize') || PageSize,
-      SortBy: params.get('SortBy') || SortBy,
-      OrderBy: params.get('OrderBy') || OrderBy,
+      Page: parseInt(params.get('Page') || String(Page)),
+      PageSize: parseInt(params.get('PageSize') || String(PageSize)),
+      SortBy: (params.get('SortBy') as SearchSortBy) || SortBy,
+      OrderBy: (params.get('OrderBy') as SearchOrderBy) || OrderBy,
     });
   }, [OrderBy, Page, PageSize, Query, SortBy, params, searchRecruitment]);
 
@@ -40,6 +48,10 @@ function Search() {
         <TextField
           placeholder="Ask AI: 我想要找一個台北大南港區的暑期實習..."
           fullWidth
+          value={queryState}
+          onChange={(e) => {
+            setQueryState(e.target.value);
+          }}
           InputProps={{
             startAdornment: (
               <IconButton>
@@ -55,7 +67,18 @@ function Search() {
         />
         <Stack spacing={1}>
           {searchRecruitmentsData?.result?.result && !!searchRecruitmentsData?.result?.result?.length ? (
-            searchRecruitmentsData?.result?.result.map((r) => <InternRecruitmentItem recruitment={r} />)
+            searchRecruitmentsData?.result?.result.map((r) => (
+              <InternRecruitmentItem
+                recruitment={r}
+                onClick={() =>
+                  navigate(`/Search/Recruitment/${r.Id}`, {
+                    state: {
+                      from: location,
+                    },
+                  })
+                }
+              />
+            ))
           ) : (
             <RecruitmentEmptyItem />
           )}

@@ -72,8 +72,11 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
   );
 }
 
-export function InternRecruitmentItem({ editable, recruitment }: Omit<RecruitmentItemProps, 'control' | 'onChange'>) {
-  // TODO :init checked
+type InternRecruitmentItemProps = {
+  onClick?: () => void;
+} & Omit<RecruitmentItemProps, 'onChange'>;
+
+export function InternRecruitmentItem({ editable, recruitment, onClick, control }: InternRecruitmentItemProps) {
   const [checked, setChecked] = useState(recruitment.IsUserFav || false);
 
   const [removeFavRecruitment] = useRemoveFavRecruitmentMutation();
@@ -89,13 +92,18 @@ export function InternRecruitmentItem({ editable, recruitment }: Omit<Recruitmen
   };
 
   return (
-    <RecruitmentItem
-      recruitment={recruitment}
-      editable={editable}
-      control={
-        <Checkbox icon={<FavoriteBorder />} checked={checked} checkedIcon={<Favorite />} onChange={handleChange} />
-      }
-    />
+    <Box onClick={onClick} sx={{ cursor: 'pointer' }}>
+      <RecruitmentItem
+        recruitment={recruitment}
+        editable={editable}
+        control={
+          <Stack spacing={1} direction={'row'}>
+            <Checkbox icon={<FavoriteBorder />} checked={checked} checkedIcon={<Favorite />} onChange={handleChange} />
+            {control}
+          </Stack>
+        }
+      />
+    </Box>
   );
 }
 

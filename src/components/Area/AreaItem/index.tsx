@@ -316,7 +316,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
           </Box>
         </>
       ) : (
-        <AreaDisplayItem area={area} onClick={handleDisplayItemClick} />
+        <AreaDisplayItem area={area} onClick={handleDisplayItemClick} editable />
       )}
     </Paper>
   );
