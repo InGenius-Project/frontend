@@ -33,6 +33,13 @@ function MessageModelInput({ onSend }: MessageModelInputProps) {
             </InputAdornment>
           ),
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            setMessage('');
+            onSend && onSend(message);
+          }
+        }}
         onChange={(e) => setMessage(e.target.value)}
       />
       <Stack direction={'row'} spacing={1}>

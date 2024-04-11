@@ -1,10 +1,13 @@
 import { MessageChannelItem } from '@/components/Message';
 import MessageModel from '@/components/Message/MessageModel';
 import { Box, Button, Paper, Stack, useMediaQuery, useTheme } from '@mui/material';
+import SmartToy from '@mui/icons-material/SmartToy';
+import { useState } from 'react';
 
 function Message() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+  const [lastMessage, setLastMessage] = useState('');
 
   return (
     <Paper
@@ -26,14 +29,14 @@ function Message() {
             <Button variant="outlined">所有</Button>
           </Stack>
         )}
-        <MessageChannelItem />
+        <MessageChannelItem userName="InG AI" message={lastMessage} avatar={<SmartToy />} />
       </Stack>
       <Box
         sx={{
           flex: '1 1 auto',
         }}
       >
-        <MessageModel />
+        <MessageModel onChangeMessage={(message) => setLastMessage(message)} />
       </Box>
     </Paper>
   );

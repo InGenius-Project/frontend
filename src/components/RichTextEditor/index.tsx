@@ -51,9 +51,10 @@ type RichTextEditorProps = {
   controllable?: boolean;
   onChange?: (updateString: string) => void;
   initJsonString?: string;
+  initMarkdownString?: string;
 };
 
-function RichTextEditor({ controllable = true, onChange, initJsonString }: RichTextEditorProps) {
+function RichTextEditor({ controllable = false, onChange, initJsonString, initMarkdownString }: RichTextEditorProps) {
   const theme = useTheme();
 
   return (
@@ -78,7 +79,7 @@ function RichTextEditor({ controllable = true, onChange, initJsonString }: RichT
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </>
         ) : (
-          <InitialPlugin initJsonString={initJsonString} />
+          <InitialPlugin initJsonString={initJsonString} initMarkdownString={initMarkdownString} />
         )}
         <RichTextPlugin
           contentEditable={

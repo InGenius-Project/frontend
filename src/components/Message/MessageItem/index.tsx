@@ -1,6 +1,8 @@
-import { Avatar, Box, Chip, Typography } from '@mui/material';
+import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import RichTextEditor from '@/components/RichTextEditor';
+import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
 
 interface MessageItemProps {
   align: 'left' | 'right';
@@ -8,6 +10,7 @@ interface MessageItemProps {
 }
 
 function MessageItem({ align, label }: MessageItemProps) {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -34,14 +37,27 @@ function MessageItem({ align, label }: MessageItemProps) {
         )}
       </Box>
       <Chip
-        label={label}
+        label={
+          align === 'left' ? (
+            <RichTextEditor initMarkdownString={label} />
+          ) : (
+            <Typography
+              variant={'body1'}
+              sx={{
+                color: theme.palette.common.white,
+                p: 1,
+              }}
+            >
+              {label}{' '}
+            </Typography>
+          )
+        }
         sx={{
           height: 'auto',
           '& .MuiChip-label': {
             display: 'block',
             whiteSpace: 'normal',
           },
-          p: 1,
         }}
         color={align === 'left' ? 'default' : 'primary'}
       />

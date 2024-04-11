@@ -1,55 +1,47 @@
-import {
-  Avatar,
-  Box,
-  ButtonBase,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Avatar, ButtonBase, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 
-function MessageChannelItem() {
+type MessageChannelItemProps = {
+  avatar: React.ReactNode;
+  userName: string;
+  message: string;
+};
+
+function MessageChannelItem({ avatar, userName, message }: MessageChannelItemProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("tablet"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   return (
     <ButtonBase
       sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         p: 1,
         gap: 2,
-        overflow: "hidden",
-        textAlign: "start",
-        width: isMobile ? "fit-content" : undefined,
+        overflow: 'hidden',
+        textAlign: 'start',
+        width: isMobile ? 'fit-content' : undefined,
       }}
     >
-      <Avatar></Avatar>
+      <Avatar>{avatar}</Avatar>
       {!isMobile && (
         <>
-          <Stack
-            spacing={1}
-            sx={{ flex: "1 1 auto", justifyContent: "flex-start" }}
-          >
-            <Typography variant={"body1"}>UserName</Typography>
+          <Stack spacing={1} sx={{ flex: '1 1 auto', justifyContent: 'flex-start' }}>
+            <Typography variant={'body1'}>{userName}</Typography>
             <Typography
               variant="caption"
               sx={{
-                width: "10em",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                width: '10em',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit at
-              soluta, ullam assumenda officia fugiat dolorum. Est, asperiores
-              ipsam quibusdam incidunt, cupiditate magnam cum aliquid dolorem
-              sint alias error doloribus?
+              {message}
             </Typography>
           </Stack>
-          <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
+          <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
             1 分鐘前
           </Typography>
         </>

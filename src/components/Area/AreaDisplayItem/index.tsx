@@ -40,13 +40,11 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
               }}
             />
           )}
-          <RichTextEditor controllable={false} initJsonString={a.ImageTextLayout?.TextContent}></RichTextEditor>
+          <RichTextEditor initJsonString={a.ImageTextLayout?.TextContent}></RichTextEditor>
         </Stack>
       )}
 
-      {a.isLayoutType(LayoutType.Text) && (
-        <RichTextEditor controllable={false} initJsonString={a.TextLayout?.Content}></RichTextEditor>
-      )}
+      {a.isLayoutType(LayoutType.Text) && <RichTextEditor initJsonString={a.TextLayout?.Content}></RichTextEditor>}
       {a.isLayoutType(LayoutType.List) &&
         area.ListLayout?.Items?.map((i, index, arr) => (
           <>
