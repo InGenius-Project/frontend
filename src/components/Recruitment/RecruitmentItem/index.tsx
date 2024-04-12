@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Favorite from '@mui/icons-material/Favorite';
 import { useUpdateEffect } from 'ahooks';
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { useRemoveFavRecruitmentMutation } from '@/features/api/user/removeFavRecruitment';
 import { useAddFavRecruitmentMutation } from '@/features/api/user/addFavRecruitment';
 
@@ -34,6 +35,9 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         position: 'relative',
         borderRadius: 'var(--ing-borderRadius-sm)',
         padding: theme.spacing(2),
+        '&:hover': {
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+        },
       }}
     >
       <Stack direction={'row'} spacing={1} alignItems={'center'}>
@@ -58,7 +62,11 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         <Box>{control}</Box>
       </Stack>
       <Stack spacing={1} direction={'row'} alignItems={'baseline'}>
-        <Link href="" color={theme.palette.info.main}>
+        <Link
+          component={RouterLink}
+          to={`/Search/Company/${recruitment.Publisher?.Id}`}
+          color={theme.palette.info.main}
+        >
           {recruitment.Publisher?.Username || '未知使用者'}
         </Link>
         <Typography variant="caption"> | </Typography>
@@ -90,9 +98,15 @@ export function InternRecruitmentItem({ editable, recruitment, onClick, control 
       removeFavRecruitment([recruitment.Id]);
     }
   };
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    console.log(e.currentTarget, e.target);
+    if (e.currentTarget === e.target) {
+      onClick && onClick();
+    }
+  };
 
   return (
-    <Box onClick={onClick} sx={{ cursor: 'pointer' }}>
+    <Box onClick={handleClick} sx={{ cursor: 'pointer' }}>
       <RecruitmentItem
         recruitment={recruitment}
         editable={editable}

@@ -3,11 +3,11 @@ import { IResponse } from '@/types/interfaces/IResponse';
 import { IUserInfo } from '@/types/interfaces/IUser';
 import { baseApi } from '../baseApi';
 
-export const getUserApi = baseApi.injectEndpoints({
+export const getUserProfile = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUser: builder.query<IResponse<IUserInfo>, null>({
-      query: () => ({
-        url: '/user',
+    getUserProfile: builder.query<IResponse<IUserInfo>, string>({
+      query: (userId) => ({
+        url: `/User/Profile/${userId}`,
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {
@@ -40,4 +40,4 @@ export const getUserApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetUserQuery, usePrefetch } = getUserApi;
+export const { useGetUserProfileQuery, usePrefetch } = getUserProfile;

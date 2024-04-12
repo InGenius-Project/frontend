@@ -1,31 +1,16 @@
 import dummyCover from '@/assets/images/png/dummyCover.jpg';
-import ImageCrop from '@/components/ImageCrop';
-import { usePostUserMutation } from '@/features/api/user/postUser';
-import { useUploadAvatarMutation } from '@/features/api/user/uploadAvatar';
-import { useAppSelector } from '@/features/store';
-import { IImageInfo } from '@/types/interfaces/IArea';
-import { AvatarPostFormData } from '@/types/interfaces/IUser';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { IUserInfo } from '@/types/interfaces/IUser';
+import Add from '@mui/icons-material/Add';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import {
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  InputAdornment,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  styled,
-  useTheme,
-} from '@mui/material';
-import { useDebounce, useUpdateEffect } from 'ahooks';
-import { useCallback, useLayoutEffect, useState } from 'react';
-import UserAvatar, { OwnerAvatar } from '../UserAvatar';
+import { Box, Button, Chip, Paper, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
+import { useState } from 'react';
 
 type ProfileItemProps = {
   editable?: boolean;
+  coverUri?: string;
+  avatar?: React.ReactNode;
+  user?: IUserInfo;
+  onChangeUserName?: (userName: string) => void;
 };
 
 const UserNameTextField = styled(TextField)(({ theme }) => ({
@@ -34,41 +19,14 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
     width: '10em',
   },
 }));
-function ProfileItem({ editable = false }: ProfileItemProps) {
+function ProfileItem({ editable = false, user, avatar, onChangeUserName }: ProfileItemProps) {
   const theme = useTheme();
-  const userState = useAppSelector((state) => state.userState);
-  const [userNameState, setUserNameState] = useState(userState.User?.Username);
-  const [uploadAvatar] = useUploadAvatarMutation();
-  const debouncedUserName = useDebounce(userNameState);
-
-  const [postUser, { isLoading: isPostingUser }] = usePostUserMutation();
+  const [userNameState, setUserNameState] = useState(user?.Username);
 
   const handleChangeUserName: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setUserNameState(event.target.value);
+    onChangeUserName?.(event.target.value);
   };
-
-  const handleAvatarCropDone = useCallback(
-    async (image: IImageInfo | undefined) => {
-      if (image !== undefined) {
-        const form: AvatarPostFormData = new FormData();
-        let blob = await fetch(image?.Uri || '').then((r) => r.blob());
-        form.append('Image', blob, image?.AltContent || 'Untitled');
-
-        uploadAvatar(form);
-      }
-    },
-    [uploadAvatar],
-  );
-
-  useUpdateEffect(() => {
-    postUser({
-      Username: debouncedUserName || '',
-    });
-  }, [debouncedUserName]);
-
-  useUpdateEffect(() => {
-    setUserNameState(userState.User?.Username);
-  }, [userState.User?.Username]);
 
   const handleDelete = () => {};
   return (
@@ -103,16 +61,11 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
           position: 'absolute',
           top: 'calc(var(--ing-height-profile-cover) - 50px)',
           left: theme.spacing(2),
+          width: 'var(--ing-height-profile-avatar)',
+          height: 'var(--ing-height-profile-avatar)',
         }}
       >
-        <ImageCrop
-          width="var(--ing-height-profile-avatar)"
-          height="var(--ing-height-profile-avatar)"
-          circularCrop
-          image={userState.User?.Avatar}
-          onCropDone={handleAvatarCropDone}
-          altComponent={<OwnerAvatar />}
-        />
+        {avatar}
       </Box>
 
       <Button
@@ -134,25 +87,14 @@ function ProfileItem({ editable = false }: ProfileItemProps) {
         }}
       >
         {editable ? (
-          <UserNameTextField
-            variant={'standard'}
-            value={userNameState}
-            onChange={handleChangeUserName}
-            InputProps={{
-              endAdornment: isPostingUser ? (
-                <InputAdornment position="start">
-                  <CircularProgress />
-                </InputAdornment>
-              ) : undefined,
-            }}
-          />
+          <UserNameTextField variant={'standard'} value={userNameState} onChange={handleChangeUserName} />
         ) : (
-          <Typography variant="h4">{userState.User?.Username}</Typography>
+          <Typography variant="h4">{user?.Username}</Typography>
         )}
         <Typography variant="caption">就讀於中正大學 資訊管理學系</Typography>
         <Stack direction={'row'} spacing={1}>
-          <Chip label="積極" onDelete={handleDelete} />
-          <Chip label="新增標籤" onDelete={handleDelete} deleteIcon={<AddCircleIcon />} />
+          {user?.Tags?.map((t) => <Chip label="積極" onDelete={editable ? handleDelete : undefined} />)}
+          {editable && <Chip label="新增標籤" deleteIcon={<Add />} onDelete={() => {}} />}
         </Stack>
       </Stack>
     </Paper>

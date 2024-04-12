@@ -52,8 +52,6 @@ type ImageCropProps = {
   circularCrop?: boolean;
 };
 export default function ImageCrop({
-  width = 100,
-  height = 100,
   image,
   circularCrop,
   altComponent,
@@ -159,7 +157,7 @@ export default function ImageCrop({
   };
 
   return (
-    <Box className="App">
+    <>
       <Dialog onClose={() => setOpen(false)} open={open} fullWidth maxWidth="laptop">
         <DialogTitle>裁切圖片</DialogTitle>
 
@@ -221,8 +219,6 @@ export default function ImageCrop({
                 style={{
                   display: 'none',
                   objectFit: 'contain',
-                  height,
-                  width,
                 }}
               />
             )}
@@ -237,9 +233,15 @@ export default function ImageCrop({
         </DialogActions>
       </Dialog>
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} width={'inherit'} height={'inherit'}>
         {!imageState ? (
-          <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
+          <UploadImageButton
+            color="white"
+            component="label"
+            width={'inherit'}
+            height={'inherit'}
+            circularCrop={circularCrop}
+          >
             {altComponent ? (
               altComponent
             ) : (
@@ -258,17 +260,21 @@ export default function ImageCrop({
             />
           </UploadImageButton>
         ) : (
-          <UploadImageButton color="white" component="label" width={width} height={height} circularCrop={circularCrop}>
+          <UploadImageButton
+            color="white"
+            component="label"
+            width={'inherit'}
+            height={'inherit'}
+            circularCrop={circularCrop}
+          >
             <img
-              width={256}
-              height={256}
               src={imageState.Uri}
               alt={imageState?.AltContent}
               style={{
                 overflow: 'hidden',
-                width,
-                height,
                 padding: 0,
+                width: 'inherit',
+                height: 'inherit',
               }}
             />
             <VisuallyHiddenInput
@@ -280,6 +286,6 @@ export default function ImageCrop({
           </UploadImageButton>
         )}
       </Stack>
-    </Box>
+    </>
   );
 }

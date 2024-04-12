@@ -163,7 +163,7 @@ export default function Root() {
                 ) : (
                   <>
                     {Array.from({ length: 3 }).map((_, index) => (
-                      <SkeletonRecruitmentItem />
+                      <SkeletonRecruitmentItem key={`recruitment-skeleton-${index}`} />
                     ))}
                   </>
                 )}

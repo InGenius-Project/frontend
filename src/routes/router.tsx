@@ -1,13 +1,20 @@
+import ErrorBoundary from '@/components/ErrorBoundary';
 import ForgetPassword from '@/pages/Account/ForgetPassword';
+import InitDepartment from '@/pages/Account/User/Init/Department';
+import InternApply from '@/pages/Account/User/Intern/Apply';
+import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
 import ManageArea from '@/pages/Account/User/Manage/Area';
 import ManageAreaList from '@/pages/Account/User/Manage/Area/List';
 import ManageTag from '@/pages/Account/User/Manage/Tag';
+import Message from '@/pages/Account/User/Message';
 import Profile from '@/pages/Account/User/Profile';
 import Recruitment from '@/pages/Account/User/Recruitment';
 import RecruitmentEdit from '@/pages/Account/User/Recruitment/Edit';
 import Resume from '@/pages/Account/User/Resume';
 import ResumeEdit from '@/pages/Account/User/Resume/Edit';
-import InitDepartment from '@/pages/Account/User/Init/Department';
+import Search from '@/pages/Search';
+import SearchCompany from '@/pages/Search/Company';
+import SearchRecruitment from '@/pages/Search/Recruitment';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Root from '../pages';
 import Login from '../pages/Account/Login';
@@ -17,12 +24,6 @@ import InternalUserRoute from './InternalUserRoute';
 import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
-import Message from '@/pages/Account/User/Message';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import Search from '@/pages/Search';
-import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
-import SearchRecruitment from '@/pages/Search/Recruitment';
-import InternApply from '@/pages/Account/User/Intern/Apply';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -98,6 +99,7 @@ export const routes = (
     <Route path="Search">
       <Route path="" element={<Search />} />
       <Route path="Recruitment/:recruitmentId" element={<SearchRecruitment />} />
+      <Route path="Company/:companyId" element={<SearchCompany />} />
     </Route>
   </Route>
 );
