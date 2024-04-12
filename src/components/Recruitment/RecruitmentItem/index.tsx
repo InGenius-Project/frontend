@@ -1,16 +1,16 @@
 import UserAvatar from '@/components/UserAvatar';
+import { useAddFavRecruitmentMutation } from '@/features/api/user/addFavRecruitment';
+import { useRemoveFavRecruitmentMutation } from '@/features/api/user/removeFavRecruitment';
 import { IRecruitment } from '@/types/interfaces/IRecruitment';
+import Favorite from '@mui/icons-material/Favorite';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import TagIcon from '@mui/icons-material/Tag';
 import { Box, Chip, Link, Skeleton, Stack, TextField, useTheme } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Checkbox from '@mui/material/Checkbox';
-import Favorite from '@mui/icons-material/Favorite';
+import Typography from '@mui/material/Typography';
 import { useUpdateEffect } from 'ahooks';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useRemoveFavRecruitmentMutation } from '@/features/api/user/removeFavRecruitment';
-import { useAddFavRecruitmentMutation } from '@/features/api/user/addFavRecruitment';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 type RecruitmentItemProps = {
   control?: React.ReactNode;
@@ -21,6 +21,7 @@ type RecruitmentItemProps = {
 
 export default function RecruitmentItem({ control, editable, recruitment, onChange }: RecruitmentItemProps) {
   const theme = useTheme();
+  const location = useLocation();
   const [titleState, setTitleState] = useState(recruitment.Name || '');
 
   useUpdateEffect(() => {
@@ -61,11 +62,20 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         </Box>
         <Box>{control}</Box>
       </Stack>
-      <Stack spacing={1} direction={'row'} alignItems={'baseline'}>
+      <Stack
+        spacing={1}
+        direction={'row'}
+        alignItems={'baseline'}
+        onClick={(e) => e.stopPropagation()}
+        width={'fit-content'}
+      >
         <Link
           component={RouterLink}
           to={`/Search/Company/${recruitment.Publisher?.Id}`}
           color={theme.palette.info.main}
+          state={{
+            from: location,
+          }}
         >
           {recruitment.Publisher?.Username || '未知使用者'}
         </Link>
@@ -99,10 +109,7 @@ export function InternRecruitmentItem({ editable, recruitment, onClick, control 
     }
   };
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    console.log(e.currentTarget, e.target);
-    if (e.currentTarget === e.target) {
-      onClick && onClick();
-    }
+    onClick && onClick();
   };
 
   return (
@@ -111,7 +118,7 @@ export function InternRecruitmentItem({ editable, recruitment, onClick, control 
         recruitment={recruitment}
         editable={editable}
         control={
-          <Stack spacing={1} direction={'row'}>
+          <Stack spacing={1} direction={'row'} onClick={(e) => e.stopPropagation()}>
             <Checkbox icon={<FavoriteBorder />} checked={checked} checkedIcon={<Favorite />} onChange={handleChange} />
             {control}
           </Stack>

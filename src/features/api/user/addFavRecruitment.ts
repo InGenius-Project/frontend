@@ -10,9 +10,7 @@ export const addFavRecruitmentApi = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: (res, error, arg) => {
-        return arg.map((id) => ({ type: 'Recruitment', id }));
-      },
+      invalidatesTags: ['Recruitment'],
     }),
   }),
 });

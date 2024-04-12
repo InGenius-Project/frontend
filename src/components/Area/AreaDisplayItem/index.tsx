@@ -3,7 +3,7 @@ import { Area } from '@/types/classes/Area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
 import { Divider, Stack, Typography } from '@mui/material';
-import { MouseEventHandler, useEffect } from 'react';
+import React, { MouseEventHandler } from 'react';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
 
@@ -47,10 +47,10 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
       {a.isLayoutType(LayoutType.Text) && <RichTextEditor initJsonString={a.TextLayout?.Content}></RichTextEditor>}
       {a.isLayoutType(LayoutType.List) &&
         area.ListLayout?.Items?.map((i, index, arr) => (
-          <>
+          <React.Fragment key={i.Id}>
             <AreaListItem id={i.Id} key={i.Id} content={i.Name} />
             {index !== arr.length - 1 && <Divider />}
-          </>
+          </React.Fragment>
         ))}
       {a.isLayoutType(LayoutType.KeyValueList) &&
         area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} key={i.Id} />)}

@@ -16,6 +16,7 @@ function InternRecruitment() {
         {recruitmentData && recruitmentData.result && recruitmentData.result.length > 0 ? (
           recruitmentData.result.map((r) => (
             <InternRecruitmentItem
+              key={r.Id}
               recruitment={r}
               onClick={() => {
                 navigate(`/Search/Recruitment/${r.Id}`, {

@@ -13,10 +13,13 @@ export const getFavRecruitmentApi = baseApi.injectEndpoints({
       },
       providesTags: (res) =>
         res && res.result
-          ? res.result.map((r) => ({
-              type: 'Recruitment',
-              id: r.Id,
-            }))
+          ? [
+              ...res.result.map((r) => ({
+                type: 'Recruitment' as const,
+                id: r.Id,
+              })),
+              'Recruitment',
+            ]
           : ['Recruitment'],
     }),
   }),
