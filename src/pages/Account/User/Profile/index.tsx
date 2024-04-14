@@ -1,6 +1,6 @@
 import AreaEditor from '@/components/Area/AreaEditor';
 import ImageCrop from '@/components/ImageCrop';
-import ProfileItem from '@/components/ProfileItem';
+import UserProfileItem from '@/components/ProfileItem/UserProfileItem';
 import { OwnerAvatar } from '@/components/UserAvatar';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { usePostUserMutation } from '@/features/api/user/postUser';
@@ -52,7 +52,7 @@ export default function Profile() {
 
   return (
     <Stack spacing={1}>
-      <ProfileItem
+      <UserProfileItem
         editable
         onChangeUserName={handleChangeUserName}
         user={userData?.result}

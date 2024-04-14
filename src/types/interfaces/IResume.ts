@@ -1,4 +1,5 @@
 import { IArea } from './IArea';
+import { IUserInfo } from './IUser';
 
 export interface IResume {
   Id: string;
@@ -6,6 +7,7 @@ export interface IResume {
   Areas: Array<IArea>;
   ModifiedAt: string;
   Visibility: boolean;
+  User: IUserInfo;
 }
 
 export interface IResumePost {

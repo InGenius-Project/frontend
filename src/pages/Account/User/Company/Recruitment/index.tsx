@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Stack, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-export default function Recruitment() {
+export default function CompanyRecruitment() {
   const { data: recruitmentData } = useGetRecruitmentsQuery(null);
   const [postRecruitment] = usePostRecruitmentMutation();
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
@@ -48,7 +48,7 @@ export default function Recruitment() {
                   <EditIcon />
                 </IconButton>
                 <IconButton>
-                  <AnalyticsOutlinedIcon />
+                  <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
                 </IconButton>
                 <IconButton onClick={() => handleClickDelete(r.Id)}>
                   <DeleteOutlineOutlinedIcon />

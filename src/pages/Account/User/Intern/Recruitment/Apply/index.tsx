@@ -1,10 +1,10 @@
 import { RecruitmentItem } from '@/components/Recruitment';
 import { SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import ResumeItem, { SkeletonResumeItem } from '@/components/Resume/ResumeItem';
-import RichTextEditor from '@/components/RichTextEditor';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
+import { useSendRecruitmentApplyMutation } from '@/features/api/recruitment/sendRecruitmentApply';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
-import { Box, Button, Checkbox, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,24 +13,45 @@ function InternApply() {
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || '', {
     skip: !recruitmentId,
   });
+  const [sendRecruitmentApply] = useSendRecruitmentApplyMutation();
   const { data: resumesData } = useGetResumesQuery(null);
   const [checkedResumeId, setCheckedResumeId] = useState<string>('');
 
   const handleSubmit = () => {
-    console.log('submit');
+    if (recruitmentId && checkedResumeId) {
+      sendRecruitmentApply({
+        RecruitmentId: recruitmentId,
+        ResumeId: checkedResumeId,
+      });
+    }
   };
 
   return (
     <Stack spacing={1}>
-      <Typography variant="body1">Step 1: 確認職缺</Typography>
-      {recruitmentData?.result ? (
-        <RecruitmentItem recruitment={recruitmentData?.result} />
-      ) : (
-        <SkeletonRecruitmentItem />
-      )}
+      <Paper
+        sx={{
+          p: 2,
+        }}
+      >
+        <Typography variant="subtitle1">Step 1: 確認職缺</Typography>
+        {recruitmentData?.result ? (
+          <RecruitmentItem recruitment={recruitmentData?.result} />
+        ) : (
+          <SkeletonRecruitmentItem />
+        )}
+      </Paper>
 
-      <Typography variant="body1">Step 2: 選擇履歷</Typography>
-      <Paper sx={{ p: 1 }}>
+      <Paper
+        sx={{
+          p: 2,
+        }}
+      >
+        <Typography variant="subtitle1">
+          Step 2: 選擇履歷
+          <Typography color={'red'} component={'span'} variant="subtitle1">
+            *
+          </Typography>
+        </Typography>
         <Stack
           spacing={1}
           sx={{
@@ -52,14 +73,32 @@ function InternApply() {
           )}
         </Stack>
       </Paper>
-      <Typography variant="body1">Step 3: 填寫訊息</Typography>
-      <Paper>
-        <RichTextEditor />
+      <Paper
+        sx={{
+          p: 2,
+        }}
+      >
+        <Typography variant="subtitle1">Step 3: 填寫訊息</Typography>
+        <TextField
+          multiline
+          fullWidth
+          label="訊息"
+          minRows={8}
+          sx={{
+            mt: 1,
+          }}
+        />
       </Paper>
-      <Typography variant="body1">Step 4: 送出</Typography>
-      <Box>
-        <Button onClick={handleSubmit}>送出</Button>
-      </Box>
+      <Paper
+        sx={{
+          p: 2,
+        }}
+      >
+        <Typography variant="subtitle1">Step 4: 送出</Typography>
+        <Box>
+          <Button onClick={handleSubmit}>送出</Button>
+        </Box>
+      </Paper>
     </Stack>
   );
 }

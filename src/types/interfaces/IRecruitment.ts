@@ -19,6 +19,11 @@ export interface IRecruitmentPost {
   Enable: boolean;
 }
 
+export interface IRecruitmentApplyPost {
+  RecruitmentId: string;
+  ResumeId: string;
+}
+
 export enum SearchSortBy {
   CreatedTime = 'CreatedTime',
 }

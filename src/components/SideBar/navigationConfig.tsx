@@ -17,7 +17,7 @@ const navigationConfig = [
       },
       {
         name: '履歷管理',
-        value: 'Resume',
+        value: 'Intern/Resume',
         icon: <InsertDriveFileOutlinedIcon />,
       },
       {
@@ -42,7 +42,7 @@ const navigationConfig = [
       },
       {
         name: '職缺管理',
-        value: 'Recruitment',
+        value: 'Company/Recruitment',
         icon: <WorkOutlineOutlinedIcon />,
       },
       {

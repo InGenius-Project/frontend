@@ -5,7 +5,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Box, Button, Chip, Paper, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
 import { useState } from 'react';
 
-type ProfileItemProps = {
+type UserProfileItemProps = {
   editable?: boolean;
   coverUri?: string;
   avatar?: React.ReactNode;
@@ -19,7 +19,7 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
     width: '10em',
   },
 }));
-function ProfileItem({ editable = false, user, avatar, onChangeUserName }: ProfileItemProps) {
+function UserProfileItem({ editable = false, user, avatar, onChangeUserName }: UserProfileItemProps) {
   const theme = useTheme();
   const [userNameState, setUserNameState] = useState(user?.Username);
 
@@ -68,17 +68,19 @@ function ProfileItem({ editable = false, user, avatar, onChangeUserName }: Profi
         {avatar}
       </Box>
 
-      <Button
-        color="primary"
-        sx={{
-          position: 'absolute',
-          right: theme.spacing(2),
-        }}
-        size="small"
-      >
-        <AddPhotoAlternateIcon />
-        上傳背景
-      </Button>
+      {editable && (
+        <Button
+          color="primary"
+          sx={{
+            position: 'absolute',
+            right: theme.spacing(2),
+          }}
+          size="small"
+        >
+          <AddPhotoAlternateIcon />
+          上傳背景
+        </Button>
+      )}
 
       <Stack
         spacing={1}
@@ -101,4 +103,4 @@ function ProfileItem({ editable = false, user, avatar, onChangeUserName }: Profi
   );
 }
 
-export default ProfileItem;
+export default UserProfileItem;

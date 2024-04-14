@@ -1,20 +1,18 @@
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ForgetPassword from '@/pages/Account/ForgetPassword';
 import InitDepartment from '@/pages/Account/User/Init/Department';
-import InternApply from '@/pages/Account/User/Intern/Apply';
+import InternApply from '@/pages/Account/User/Intern/Recruitment/Apply';
 import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
 import ManageArea from '@/pages/Account/User/Manage/Area';
 import ManageAreaList from '@/pages/Account/User/Manage/Area/List';
 import ManageTag from '@/pages/Account/User/Manage/Tag';
 import Message from '@/pages/Account/User/Message';
 import Profile from '@/pages/Account/User/Profile';
-import Recruitment from '@/pages/Account/User/Recruitment';
-import RecruitmentEdit from '@/pages/Account/User/Recruitment/Edit';
-import Resume from '@/pages/Account/User/Resume';
-import ResumeEdit from '@/pages/Account/User/Resume/Edit';
+import RecruitmentEdit from '@/pages/Account/User/Company/Recruitment/Edit';
+import Resume from '@/pages/Account/User/Intern/Resume';
+import ResumeEdit from '@/pages/Account/User/Intern/Resume/Edit';
 import Search from '@/pages/Search';
 import SearchCompany from '@/pages/Search/Company';
-import SearchRecruitment from '@/pages/Search/Recruitment';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Root from '../pages';
 import Login from '../pages/Account/Login';
@@ -24,6 +22,10 @@ import InternalUserRoute from './InternalUserRoute';
 import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
+import RecruitmentApply from '@/pages/Account/User/Company/Recruitment/Apply';
+import CompanyRecruitment from '@/pages/Account/User/Company/Recruitment';
+import SearchRecruitment from '@/pages/Search/Recruitment';
+import ApplyResume from '@/pages/Account/User/Company/Recruitment/Apply/Resume';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -47,10 +49,7 @@ export const routes = (
           <Route path="Init">
             <Route path="Department" element={<InitDepartment />}></Route>
           </Route>
-          <Route path="Intern">
-            <Route path="Recruitment" element={<InternRecruitment />} handle={{ crumb: '職缺管理' }} />
-            <Route path="Apply/:recruitmentId" element={<InternApply />} handle={{ crumb: '申請職缺' }} />
-          </Route>
+
           <Route
             path="Profile?"
             handle={{
@@ -58,33 +57,51 @@ export const routes = (
             }}
             element={<Profile />}
           ></Route>
-          <Route
-            path="Resume"
-            handle={{
-              crumb: '履歷管理',
-            }}
-          >
-            <Route path="" element={<Resume />} />
+
+          <Route path="Intern">
+            <Route path="Recruitment" handle={{ crumb: '職缺管理' }}>
+              <Route path="" element={<InternRecruitment />} />
+              <Route path="Apply/:recruitmentId" element={<InternApply />} handle={{ crumb: '申請職缺' }} />
+            </Route>
             <Route
-              path="Edit/:resumeId?"
+              path="Resume"
               handle={{
-                crumb: '履歷編輯',
+                crumb: '履歷管理',
               }}
             >
-              <Route element={<ResumeEdit />} path="" />
+              {' '}
+              <Route path="" element={<Resume />} />
+              <Route
+                path="Edit/:resumeId?"
+                handle={{
+                  crumb: '履歷編輯',
+                }}
+              >
+                <Route element={<ResumeEdit />} path="" />
+              </Route>
             </Route>
           </Route>
-          <Route
-            path="Recruitment"
-            handle={{
-              crumb: '職缺管理',
-            }}
-          >
-            <Route path="" element={<Recruitment />} />
-            <Route path="Edit/:recruitmentId?" handle={{ crumb: '編輯職缺' }}>
-              <Route path="" element={<RecruitmentEdit />} />
+
+          <Route path="Company">
+            <Route
+              path="Recruitment"
+              handle={{
+                crumb: '職缺管理',
+              }}
+            >
+              <Route path="" element={<CompanyRecruitment />} />
+              <Route path="Edit/:recruitmentId?" handle={{ crumb: '編輯職缺' }}>
+                <Route path="" element={<RecruitmentEdit />} />
+              </Route>
+              <Route path="Apply/:recruitmentId?" handle={{ crumb: '應徵資訊' }}>
+                <Route path="" element={<RecruitmentApply />} />
+                <Route path="Resume/:resumeId" element={<ApplyResume />} handle={{ crumb: '履歷資訊' }} />
+              </Route>
             </Route>
           </Route>
+
+          <Route element={<Message />} path="Message" handle={{ crumb: '訊息' }} />
+
           <Route element={<InternalUserRoute />} path="Manage">
             <Route path="Tag" element={<ManageTag />} handle={{ crumb: '標籤管理' }}></Route>
             <Route path="Area" handle={{ crumb: '區塊管理' }}>
@@ -92,7 +109,6 @@ export const routes = (
               <Route path="List/:areaTypeId" element={<ManageAreaList />} handle={{ crumb: '列表管理' }}></Route>
             </Route>
           </Route>
-          <Route element={<Message />} path="Message" handle={{ crumb: '訊息' }} />
         </Route>
       </Route>
     </Route>

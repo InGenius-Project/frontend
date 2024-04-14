@@ -1,7 +1,7 @@
 import AreaDisplayItem from '@/components/Area/AreaDisplayItem';
 import AreaEmpty from '@/components/Area/AreaEmpty';
 import BackButton from '@/components/Button/BackButton';
-import ProfileItem from '@/components/ProfileItem';
+import UserProfileItem from '@/components/ProfileItem/UserProfileItem';
 import UserAvatar from '@/components/UserAvatar';
 import { useGetUserProfileQuery } from '@/features/api/user/getUserProfile';
 import { Box, Container, Divider, Paper, Stack } from '@mui/material';
@@ -23,7 +23,7 @@ function SearchCompany() {
         <Divider />
         <Stack spacing={1}>
           {/* TODO: Profile Item */}
-          <ProfileItem
+          <UserProfileItem
             user={companyData?.result}
             avatar={<UserAvatar uri={companyData?.result?.Avatar?.Uri} alt={companyData?.result?.Username} />}
           />
