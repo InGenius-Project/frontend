@@ -1,4 +1,5 @@
 import LoginSvg from '@/assets/images/svg/login.svg?react';
+import { userAuthVariants } from '@/assets/motion/variants';
 import FormInput from '@/components/FormInput';
 import { useRegisterMutation } from '@/features/api/auth/register';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,23 +94,7 @@ export default function Register() {
             <LoginSvg width={'70%'} />
           </Grid>
           <Grid mobile={12} tablet={6}>
-            <motion.div
-              initial={{
-                x: -100,
-                opacity: 0,
-              }}
-              animate={{
-                x: 0,
-                opacity: 1,
-              }}
-              exit={{
-                x: 100,
-                opacity: 0,
-              }}
-              transition={{
-                type: 'linear',
-              }}
-            >
+            <motion.div variants={userAuthVariants} initial="initial" animate="animate">
               <FormProvider {...methods}>
                 <Box
                   sx={{

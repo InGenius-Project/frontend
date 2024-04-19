@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { TypeOf, object, string } from 'zod';
+import { userAuthVariants } from './../../../assets/motion/variants';
 
 const loginSchema = object({
   email: string().min(1, 'Email address is required').email('Email Address is invalid'),
@@ -79,23 +80,7 @@ export default function Login() {
             <LoginSvg width={'70%'} />
           </Grid>
           <Grid mobile={12} tablet={6}>
-            <motion.div
-              initial={{
-                x: -100,
-                opacity: 0,
-              }}
-              animate={{
-                x: 0,
-                opacity: 1,
-              }}
-              exit={{
-                x: 100,
-                opacity: 0,
-              }}
-              transition={{
-                type: 'linear',
-              }}
-            >
+            <motion.div variants={userAuthVariants} initial="initial" animate="animate">
               <FormProvider {...methods}>
                 <Box
                   sx={{
@@ -108,10 +93,6 @@ export default function Login() {
                   onSubmit={handleSubmit(onSubmitHandler)}
                 >
                   <Typography variant="h3">登入</Typography>
-                  <Stack spacing={2} direction="row">
-                    <Link>一般</Link>
-                    <Link>企業</Link>
-                  </Stack>
 
                   <FormInput
                     name="email"
