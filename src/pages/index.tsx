@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 export default function Root() {
   const theme = useTheme();
@@ -119,7 +120,7 @@ export default function Root() {
                           handleSearch(searchInputState);
                         }}
                       >
-                        <SearchIcon />
+                        <AutoAwesomeIcon />
                       </IconButton>
                     ),
                   }}

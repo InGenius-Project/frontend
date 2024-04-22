@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Container, IconButton, Stack, TextField } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 function Search() {
   const [searchRecruitment, { data: searchRecruitmentsData }] = useLazySearchRecruitmentQuery();
@@ -55,7 +56,7 @@ function Search() {
           InputProps={{
             startAdornment: (
               <IconButton>
-                <SearchIcon />
+                <AutoAwesomeIcon />
               </IconButton>
             ),
           }}
