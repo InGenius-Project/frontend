@@ -180,7 +180,12 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
       {/* Text */}
       {(layoutTypeState === LayoutType.Text || layoutTypeState === LayoutType.ImageText) && (
-        <RichTextEditor controllable onChange={handleEditorChange} initJsonString={layoutState.content} />
+        <RichTextEditor
+          controllable
+          onChange={handleEditorChange}
+          initJsonString={layoutState.content}
+          initMarkdownString={layoutState.content}
+        />
       )}
 
       {/* Key value list */}

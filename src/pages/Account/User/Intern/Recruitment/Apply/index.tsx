@@ -4,6 +4,7 @@ import ResumeItem, { SkeletonResumeItem } from '@/components/Resume/ResumeItem';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSendRecruitmentApplyMutation } from '@/features/api/recruitment/sendRecruitmentApply';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
+import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { Box, Button, Checkbox, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -16,13 +17,32 @@ function InternApply() {
   const [sendRecruitmentApply] = useSendRecruitmentApplyMutation();
   const { data: resumesData } = useGetResumesQuery(null);
   const [checkedResumeId, setCheckedResumeId] = useState<string>('');
+  const [messageState, setMessageState] = useState<string>();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (recruitmentId && checkedResumeId) {
       sendRecruitmentApply({
         RecruitmentId: recruitmentId,
         ResumeId: checkedResumeId,
-      });
+      })
+        .unwrap()
+        .then(async () => {
+          const c = new HubConnectionBuilder()
+            .withUrl('http://localhost:5230/Chat', {
+              skipNegotiation: true,
+              transport: HttpTransportType.WebSockets,
+              accessTokenFactory: () => localStorage.getItem('accessToken') || '',
+            })
+            .configureLogging(LogLevel.Information)
+            .build();
+
+          c.on('ReceiveMessage', (msg) => {
+            console.log(msg);
+          });
+
+          await c.start();
+          await c.invoke('AddGroup', messageState || '', recruitmentId); //TODO: GroupName unique
+        });
     }
   };
 
@@ -83,6 +103,8 @@ function InternApply() {
           multiline
           fullWidth
           label="訊息"
+          value={messageState}
+          onChange={(e) => setMessageState(e.target.value)}
           minRows={8}
           sx={{
             mt: 1,

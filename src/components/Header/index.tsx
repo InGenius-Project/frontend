@@ -29,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import MessageModel from '../Message/MessageModel';
 import { OwnerAvatar } from '../UserAvatar';
 
-const env = import.meta.env.VITE_APP_ENV as string;
+const env = import.meta.env.VITE_APP_NODE_ENV as string;
 
 export default function Header() {
   const theme = useTheme();

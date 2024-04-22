@@ -11,6 +11,7 @@
     "@lexical/react": "^0.12.5",
     "@lexical/selection": "^0.12.5",
     "@lexical/utils": "^0.12.5",
+    "@microsoft/signalr": "^8.0.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.17",
@@ -63,14 +64,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
-    "start:dev": "env-cmd -f .env.development vite start",
-    "start:test": "env-cmd -f .env.testing vite start",
-    "start:stg": "env-cmd -f .env.staging vite start",
-    "start:prod": "env-cmd -f .env.production vite start",
-    "build:dev": "env-cmd -f .env.development vite build",
-    "build:test": "env-cmd -f .env.testing vite build",
-    "build:stg": "env-cmd -f .env.staging vite build",
-    "build:prod": "env-cmd -f .env.production vite build"
+    "start:dev": "vite --mode development",
+    "start:test": "vite --mode testing",
+    "start:stg": "vite --mode staging",
+    "start:prod": "vite --mode production",
+    "build:dev": "vite build --mode development",
+    "build:test": "vite build --mode testing",
+    "build:stg": "vite build --mode staging",
+    "build:prod": "vite build --mode production"
   },
   "eslintConfig": {
     "extends": [
@@ -109,6 +110,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^24.0.0",
     "lodash": "^4.17.21",
+    "msw": "^2.2.14",
     "prettier-eslint": "^16.1.2",
     "vite-plugin-checker": "^0.6.4",
     "vite-plugin-eslint": "^1.8.1",
@@ -122,6 +124,11 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
   }
 }

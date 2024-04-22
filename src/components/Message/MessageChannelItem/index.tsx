@@ -1,12 +1,15 @@
+import { IConnection } from '@/types/interfaces/IUser';
 import { Avatar, ButtonBase, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 type MessageChannelItemProps = {
-  avatar: React.ReactNode;
+  avatar?: React.ReactNode;
   userName: string;
   message: string;
+  connection?: IConnection;
+  onClick?: (c: IConnection | undefined) => void;
 };
 
-function MessageChannelItem({ avatar, userName, message }: MessageChannelItemProps) {
+function MessageChannelItem({ avatar, userName, message, connection, onClick }: MessageChannelItemProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
@@ -23,6 +26,8 @@ function MessageChannelItem({ avatar, userName, message }: MessageChannelItemPro
         textAlign: 'start',
         width: isMobile ? 'fit-content' : undefined,
       }}
+      component="button"
+      onClick={() => onClick?.(connection)}
     >
       <Avatar>{avatar}</Avatar>
       {!isMobile && (

@@ -1,4 +1,4 @@
-import { Box, CssBaseline, IconButton, Stack } from '@mui/material';
+import { Box, Button, CssBaseline, IconButton, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { ResumeItem } from '@/components/Resume';
 import { useAppSelector } from '@/features/store';
@@ -12,6 +12,7 @@ import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 import { useConfirm } from 'material-ui-confirm';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 
 export default function Resume() {
   const { data: resumes, isLoading } = useGetResumesQuery(null);
@@ -52,22 +53,26 @@ export default function Resume() {
 
   return (
     <Stack spacing={1}>
-      <Box
-        sx={{
-          width: '100%',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Stack spacing={1} direction={'row'}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          endIcon={<AutoAwesomeOutlinedIcon />}
+          onClick={() => navigate('./Generate')}
+        >
+          新增履歷
+        </Button>
         <LoadingButton
-          variant="text"
+          variant="contained"
           loading={isAddingNewResume}
+          color="white"
           startIcon={<AddIcon />}
           onClick={handleAddNewResumeClick}
         >
-          新增履歷
+          新增空白履歷
         </LoadingButton>
-      </Box>
-      <CssBaseline />
+      </Stack>
 
       <Stack spacing={1}>
         {resumes?.result?.length &&

@@ -47,6 +47,23 @@ export interface IAreaPost {
   ResumeId?: string;
 }
 
+export enum GenerateAreaType {
+  'Resume' = 'resume',
+  'Recruitment' = 'recruitment',
+}
+
+export interface IGenerateAreaPost {
+  TitleOnly: boolean;
+  AreaNum: number;
+  Title: string;
+  Type: GenerateAreaType;
+}
+
+export interface IGenerateAreaByTitlePost {
+  ResumeTitle: string;
+  AreaTitles: Array<string>;
+}
+
 export interface ILayout {
   Id: string;
 }
