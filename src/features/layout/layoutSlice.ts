@@ -82,7 +82,14 @@ const layoutSlice = createSlice({
       if (index !== -1) {
         return {
           ...state,
-          listItems: state.listItems.map((item, i) => (i === index ? action.payload : item)),
+          listItems: state.listItems.map((item, i) =>
+            i === index
+              ? {
+                  ...action.payload,
+                  InnerId: uuid(),
+                }
+              : item,
+          ),
         };
       }
     },
@@ -107,7 +114,14 @@ const layoutSlice = createSlice({
       if (index !== -1) {
         return {
           ...state,
-          keyValueListItems: state.keyValueListItems.map((item, i) => (i === index ? action.payload : item)),
+          keyValueListItems: state.keyValueListItems.map((item, i) =>
+            i === index
+              ? {
+                  ...action.payload,
+                  InnerId: uuid(),
+                }
+              : item,
+          ),
         };
       }
     },

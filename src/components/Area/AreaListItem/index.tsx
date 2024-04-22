@@ -1,17 +1,7 @@
-import {
-  Avatar,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import React from 'react';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ClearIcon from '@mui/icons-material/Clear';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { Avatar, Divider, IconButton, ListItem, ListItemAvatar, Stack, Typography, useTheme } from '@mui/material';
+import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 type AreaListItemProps = {

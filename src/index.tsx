@@ -11,7 +11,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/features/store';
 
 async function enableMocking() {
-  if (import.meta.env.VITE_APP_NODE_ENV !== 'development') {
+  if (import.meta.env.VITE_APP_ENV !== 'development') {
     return;
   }
 
