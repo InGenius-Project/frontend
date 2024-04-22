@@ -114,11 +114,6 @@ let theme = extendTheme(
         },
       },
       MuiButton: {
-        styleOverrides: {
-          root: () => ({
-            borderRadius: 50,
-          }),
-        },
         defaultProps: {
           variant: 'contained',
         },

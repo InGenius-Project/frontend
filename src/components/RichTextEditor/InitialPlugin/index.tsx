@@ -12,26 +12,20 @@ export default function InitialPlugin({ initJsonString, initMarkdownString }: In
 
   useLayoutEffect(() => {
     editor.update(() => {
-      if (initJsonString) {
-        try {
-          // Check json pars
-          JSON.parse(initJsonString || '');
+      try {
+        // Check json pars
+        JSON.parse(initJsonString || '');
 
-          if (initJsonString) {
-            const initialEditorState = editor.parseEditorState(initJsonString);
+        if (initJsonString) {
+          const initialEditorState = editor.parseEditorState(initJsonString);
 
-            editor.setEditorState(initialEditorState);
-          }
-        } catch (e) {
-          console.error(e);
+          editor.setEditorState(initialEditorState);
         }
-      } else if (initMarkdownString) {
-        try {
-          $convertFromMarkdownString(initMarkdownString || '', TRANSFORMERS);
-        } catch (e) {
-          console.error(e);
-        }
-      }
+      } catch (e) {}
+
+      try {
+        $convertFromMarkdownString(initMarkdownString || '', TRANSFORMERS);
+      } catch (e) {}
     });
   }, [editor, initJsonString, initMarkdownString]);
 

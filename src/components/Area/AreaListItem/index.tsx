@@ -1,18 +1,27 @@
-import { Divider, IconButton, ListItem, Stack, TextField, Typography, useTheme } from '@mui/material';
-import React from 'react';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ClearIcon from '@mui/icons-material/Clear';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { Avatar, Divider, IconButton, ListItem, ListItemAvatar, Stack, Typography, useTheme } from '@mui/material';
+import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 type AreaListItemProps = {
   id: string;
+  index?: number;
   content?: string;
   editable?: boolean;
   renderInput?: React.ReactNode;
   onClickDelete?: (id: string) => void;
 } & Partial<DraggableProvidedDragHandleProps>;
 
-function AreaListItem({ id, content, editable = false, renderInput, onClickDelete, ...props }: AreaListItemProps) {
+function AreaListItem({
+  id,
+  index,
+  content,
+  editable = false,
+  renderInput,
+  onClickDelete,
+  ...props
+}: AreaListItemProps) {
   const theme = useTheme();
 
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -38,6 +47,11 @@ function AreaListItem({ id, content, editable = false, renderInput, onClickDelet
         padding: 2,
       }}
     >
+      {index && (
+        <ListItemAvatar>
+          <Avatar>{index}</Avatar>
+        </ListItemAvatar>
+      )}
       {editable ? renderInput : <Typography variant="body1">{content}</Typography>}
     </ListItem>
   );

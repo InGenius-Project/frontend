@@ -18,6 +18,12 @@ export interface IUserInfo {
   Tags?: Array<ITag>;
 }
 
+export interface IConnection {
+  ConnectionId: string;
+  GroupName: string;
+  Connected: boolean;
+}
+
 export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Tags'>;
 
 export interface IOwnerUser extends Pick<IUserInfo, 'Id' | 'Username' | 'Email' | 'Avatar'> {}

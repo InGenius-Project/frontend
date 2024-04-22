@@ -44,7 +44,12 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
         </Stack>
       )}
 
-      {a.isLayoutType(LayoutType.Text) && <RichTextEditor initJsonString={a.TextLayout?.Content}></RichTextEditor>}
+      {a.isLayoutType(LayoutType.Text) && (
+        <RichTextEditor
+          initJsonString={a.TextLayout?.Content}
+          initMarkdownString={a.TextLayout?.Content}
+        ></RichTextEditor>
+      )}
       {a.isLayoutType(LayoutType.List) &&
         area.ListLayout?.Items?.map((i, index, arr) => (
           <React.Fragment key={i.Id}>

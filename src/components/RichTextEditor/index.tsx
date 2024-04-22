@@ -67,7 +67,11 @@ function RichTextEditor({ controllable = false, onChange, initJsonString, initMa
       >
         {controllable ? (
           <>
-            <OnChangePlugin initJsonString={initJsonString} onChange={onChange} />
+            <OnChangePlugin
+              initJsonString={initJsonString}
+              initMarkdownString={initMarkdownString}
+              onChange={onChange}
+            />
             <ControlPlugin />
             <LinkPlugin />
             <HistoryPlugin />

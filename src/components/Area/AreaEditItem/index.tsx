@@ -23,7 +23,6 @@ import { LayoutType } from '@/types/enums/LayoutType';
 import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
-import { EditorState, LexicalEditor } from 'lexical';
 import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
@@ -180,7 +179,12 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
       {/* Text */}
       {(layoutTypeState === LayoutType.Text || layoutTypeState === LayoutType.ImageText) && (
-        <RichTextEditor controllable onChange={handleEditorChange} initJsonString={layoutState.content} />
+        <RichTextEditor
+          controllable
+          onChange={handleEditorChange}
+          initJsonString={layoutState.content}
+          initMarkdownString={layoutState.content}
+        />
       )}
 
       {/* Key value list */}
