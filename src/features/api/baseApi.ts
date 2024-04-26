@@ -37,6 +37,6 @@ export const baseApi = createApi({
     'RecruitmentLists',
     'TagType',
     'Tag',
-    'Connection',
+    'ChatGroup',
   ],
 });

@@ -26,7 +26,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MessageModel from '../Message/MessageModel';
+import MessageAIModel from '../Message/MessageAIModel';
 import { OwnerAvatar } from '../UserAvatar';
 
 const env = import.meta.env.VITE_APP_ENV as string;
@@ -137,7 +137,7 @@ export default function Header() {
                 open={Boolean(messageAnchorEl)}
                 onClose={handleMessageClose}
               >
-                <MessageModel />
+                <MessageAIModel />
               </Menu>
 
               {/* User Navigate */}

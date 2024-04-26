@@ -30,7 +30,7 @@ import { useGenerateAreaByTitleMutation } from '@/features/api/area/generateArea
 import { postResumeApi, usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
-import { usePostAreaMutation } from '@/features/api/area';
+import { usePostAreaMutation, usePostListLayoutMutation } from '@/features/api/area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { postTextLayoutApi, usePostTextLayoutMutation } from './../../../../../../features/api/area/postTextLayout';
 import { $convertFromMarkdownString } from '@lexical/markdown';
@@ -100,6 +100,7 @@ function ResumeGenerate() {
   const [postResume] = usePostResumeMutation();
 
   const [postTextLayout] = usePostTextLayoutMutation();
+  const [postListLayout] = usePostListLayoutMutation();
   const [postArea] = usePostAreaMutation();
 
   useEffect(() => {
@@ -167,6 +168,14 @@ function ResumeGenerate() {
                         areaRes.result?.Id &&
                         postTextLayout({
                           ...a.TextLayout,
+                          areaId: areaRes.result?.Id,
+                        });
+                      break;
+                    case LayoutType.List:
+                      a.ListLayout &&
+                        areaRes.result?.Id &&
+                        postListLayout({
+                          ...a.ListLayout,
                           areaId: areaRes.result?.Id,
                         });
                       break;
@@ -273,7 +282,7 @@ function ResumeGenerate() {
               +
             </Button>
             <LoadingButton
-              loading={isGeneratingAreaTitle}
+              loading={isGeneratingArea}
               fullWidth
               variant="contained"
               startIcon={<AutoAwesomeOutlinedIcon />}

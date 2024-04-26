@@ -33,9 +33,9 @@ function Search() {
     });
   }, [OrderBy, Page, PageSize, Query, SortBy, params, searchRecruitment]);
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = () => {
     searchRecruitment({
-      Query: keyword,
+      Query: queryState,
       Page: Page,
       PageSize: PageSize,
       SortBy: SortBy,
@@ -62,7 +62,7 @@ function Search() {
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              handleSearch((e.currentTarget as any).value);
+              handleSearch();
             }
           }}
         />

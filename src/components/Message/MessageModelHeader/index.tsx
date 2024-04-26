@@ -1,14 +1,17 @@
-import { Avatar, Box, IconButton, Stack, Typography } from '@mui/material';
+import UserAvatar from '@/components/UserAvatar';
+import { IOwnerUser } from '@/types/interfaces/IUser';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Avatar, AvatarGroup, Box, IconButton, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 type MessageModelHeaderProps = {
-  avatar: React.ReactNode;
-  username: string;
-  role: string;
+  groupName: string;
+  users?: IOwnerUser[] | React.ReactNode;
+  role?: string;
+  control?: React.ReactNode;
 };
 
-function MessageModelHeader({ avatar, username, role }: MessageModelHeaderProps) {
+function MessageModelHeader({ groupName, role, users, control }: MessageModelHeaderProps) {
   return (
     <Box
       sx={{
@@ -19,18 +22,24 @@ function MessageModelHeader({ avatar, username, role }: MessageModelHeaderProps)
         width: '100%',
       }}
     >
-      <Avatar>{avatar}</Avatar>
+      <AvatarGroup max={3}>
+        {users && React.isValidElement(users) ? (
+          <Avatar>{users}</Avatar>
+        ) : users && Array.isArray(users) ? (
+          users.map((user) => <UserAvatar key={user.Id} uri={user.Avatar?.Uri} alt={user.Username} size="2em" />)
+        ) : (
+          <Avatar />
+        )}
+      </AvatarGroup>
       <Stack
         sx={{
           flex: '1 1 auto',
         }}
       >
-        <Typography variant="body1">{username}</Typography>
+        <Typography variant="body1">{groupName}</Typography>
         <Typography variant="caption">{role}</Typography>
       </Stack>
-      <IconButton>
-        <MoreVertIcon />
-      </IconButton>
+      {control}
     </Box>
   );
 }

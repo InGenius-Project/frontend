@@ -59,7 +59,7 @@ export default function Profile() {
         avatar={
           <ImageCrop
             circularCrop
-            image={userData?.result?.Avatar}
+            image={userData?.result?.Avatar || undefined}
             onCropDone={handleAvatarCropDone}
             altComponent={<OwnerAvatar />}
           />

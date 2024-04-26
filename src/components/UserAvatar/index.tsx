@@ -27,16 +27,18 @@ function stringAvatar(name: string) {
 type UserAvatarProps = {
   uri?: string;
   alt?: string;
+  size?: string;
 };
 
-function UserAvatar({ uri, alt }: UserAvatarProps) {
+function UserAvatar({ uri, alt, size }: UserAvatarProps) {
   return (
     <Avatar
       src={uri}
       sx={{
-        width: '100%',
-        height: '100%',
+        width: size ? size : '100%',
+        height: size ? size : '100%',
         bgcolor: uri ? undefined : stringToColor(alt || ''),
+        fontSize: '1em',
       }}
     >
       {uri ? <></> : stringAvatar(alt || '')}

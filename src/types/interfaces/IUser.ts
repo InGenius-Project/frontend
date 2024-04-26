@@ -14,14 +14,8 @@ export interface IUserInfo {
   Username: string;
   Role: UserRole;
   Areas?: Array<IArea> | null;
-  Avatar?: IImageInfo;
+  Avatar?: IImageInfo | null;
   Tags?: Array<ITag>;
-}
-
-export interface IConnection {
-  ConnectionId: string;
-  GroupName: string;
-  Connected: boolean;
 }
 
 export type IUserInfoPost = Pick<IUserInfo, 'Username' | 'Tags'>;

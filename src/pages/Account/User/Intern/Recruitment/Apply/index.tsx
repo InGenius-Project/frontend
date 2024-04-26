@@ -1,3 +1,4 @@
+import { chatUrl } from '@/assets/utils/urls';
 import { RecruitmentItem } from '@/components/Recruitment';
 import { SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import ResumeItem, { SkeletonResumeItem } from '@/components/Resume/ResumeItem';
@@ -7,7 +8,14 @@ import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { Box, Button, Checkbox, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import { useParams } from 'react-router-dom';
+import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
+import { IChatGroupInfo } from '@/types/interfaces/IChat';
+import {
+  inviteUserToGroupApi,
+  useInviteUserToGroupMutation,
+} from './../../../../../../features/api/chat/inviteUserToGroup';
 
 function InternApply() {
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
@@ -18,6 +26,7 @@ function InternApply() {
   const { data: resumesData } = useGetResumesQuery(null);
   const [checkedResumeId, setCheckedResumeId] = useState<string>('');
   const [messageState, setMessageState] = useState<string>();
+  const [inviteUserToGroup] = useInviteUserToGroupMutation();
 
   const handleSubmit = async () => {
     if (recruitmentId && checkedResumeId) {
@@ -28,7 +37,7 @@ function InternApply() {
         .unwrap()
         .then(async () => {
           const c = new HubConnectionBuilder()
-            .withUrl('http://localhost:5230/Chat', {
+            .withUrl(chatUrl, {
               skipNegotiation: true,
               transport: HttpTransportType.WebSockets,
               accessTokenFactory: () => localStorage.getItem('accessToken') || '',
@@ -36,12 +45,16 @@ function InternApply() {
             .configureLogging(LogLevel.Information)
             .build();
 
-          c.on('ReceiveMessage', (msg) => {
-            console.log(msg);
+          c.on(ChatReceiveMethod.NewGroup, (msg: IChatGroupInfo) => {
+            recruitmentData?.result?.PublisherId &&
+              inviteUserToGroup({
+                groupId: msg.Id,
+                userId: recruitmentData?.result?.PublisherId,
+              });
           });
 
           await c.start();
-          await c.invoke('AddGroup', messageState || '', recruitmentId); //TODO: GroupName unique
+          await c.invoke('AddGroup', uuid(), true); //TODO: GroupName unique
         });
     }
   };

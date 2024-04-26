@@ -1,16 +1,20 @@
-import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
-import React from 'react';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import RichTextEditor from '@/components/RichTextEditor';
-import { $convertToMarkdownString, TRANSFORMERS } from '@lexical/markdown';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
+import React, { useEffect } from 'react';
 
 interface MessageItemProps {
-  align: 'left' | 'right';
+  align?: 'left' | 'right';
   label: string;
+  avatar?: React.ReactNode;
+  time?: Date;
 }
 
-function MessageItem({ align, label }: MessageItemProps) {
+const timeZone = import.meta.env.VITE_APP_TIMEZONE;
+
+function MessageItem({ align = 'left', label, avatar, time }: MessageItemProps) {
   const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -28,10 +32,8 @@ function MessageItem({ align, label }: MessageItemProps) {
           alignSelf: 'center',
         }}
       >
-        {align === 'left' ? (
-          <Avatar>
-            <SmartToyIcon />{' '}
-          </Avatar>
+        {avatar ? (
+          <Box sx={{ width: '1.5em', height: '1.5em' }}>{avatar}</Box>
         ) : (
           <Avatar sx={{ width: '1.5em', height: '1.5em' }}></Avatar>
         )}
@@ -61,7 +63,16 @@ function MessageItem({ align, label }: MessageItemProps) {
         }}
         color={align === 'left' ? 'default' : 'primary'}
       />
-      {/* <Typography variant={'caption'}>19:30</Typography> */}
+      <Typography variant={'caption'}>
+        {time
+          ? time.toLocaleString('zh-TW', {
+              timeZone: timeZone,
+              hourCycle: 'h24',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : ''}
+      </Typography>
     </Box>
   );
 }
