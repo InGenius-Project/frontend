@@ -14,7 +14,7 @@ export const handlers = [
   // http.get(baseUrl + '/api/Chat/Groups/', () => {
   //   return new Response(JSON.stringify(generateChatGroups));
   // }),
-  http.get(aiChatUrl + '/chat_history', () => {
-    return new Response(JSON.stringify([]));
-  }),
+  // http.get(aiChatUrl + '/chat_history', () => {
+  //   return new Response(JSON.stringify([]));
+  // }),
 ];

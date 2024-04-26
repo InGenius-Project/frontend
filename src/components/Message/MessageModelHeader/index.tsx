@@ -1,7 +1,6 @@
-import UserAvatar from '@/components/UserAvatar';
+import { UserAvatarGroup } from '@/components/UserAvatar';
 import { IOwnerUser } from '@/types/interfaces/IUser';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Avatar, AvatarGroup, Box, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 type MessageModelHeaderProps = {
@@ -22,15 +21,7 @@ function MessageModelHeader({ groupName, role, users, control }: MessageModelHea
         width: '100%',
       }}
     >
-      <AvatarGroup max={3}>
-        {users && React.isValidElement(users) ? (
-          <Avatar>{users}</Avatar>
-        ) : users && Array.isArray(users) ? (
-          users.map((user) => <UserAvatar key={user.Id} uri={user.Avatar?.Uri} alt={user.Username} size="2em" />)
-        ) : (
-          <Avatar />
-        )}
-      </AvatarGroup>
+      <UserAvatarGroup users={users} />
       <Stack
         sx={{
           flex: '1 1 auto',

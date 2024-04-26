@@ -1,61 +1,49 @@
+import UserAvatar from '@/components/UserAvatar';
+import { useGetUserQuery } from '@/features/api/user/getUser';
 import { MessageReceiveHandle } from '@/pages/Account/User/Message';
+import { ChatMessage } from '@/types/classes/ChatMessage';
 import { IChatGroupInfo, IChatMessage } from '@/types/interfaces/IChat';
-import { Avatar, ButtonBase, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { Avatar, Box, ButtonBase, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 type MessageChannelItemProps = {
-  avatar?: React.ReactNode;
-  message?: IChatMessage;
+  avatar?: JSX.Element;
   chatGroupInfo?: IChatGroupInfo;
   onClick?: (c: IChatGroupInfo | undefined) => void;
 };
 
 const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemProps>(
-  ({ avatar, message, chatGroupInfo, onClick }, ref) => {
+  ({ avatar, chatGroupInfo, onClick }, ref) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
-    const [lastMessage, setLastMessage] = useState(message);
+    const [lastMessage, setLastMessage] = useState<ChatMessage>();
     const [lastMessageTime, setLastMessageTime] = useState<string>('');
+    const { data: userData } = useGetUserQuery(null);
+
+    const ChannelAvatar = () => {
+      if (avatar) return <Avatar>{avatar}</Avatar>;
+      const firstUser = chatGroupInfo?.Users.filter((user) => user.Id === userData?.result?.Id)[0];
+      return <UserAvatar uri={firstUser?.Avatar?.Uri} alt={firstUser?.Username}></UserAvatar>;
+    };
 
     useImperativeHandle(ref, () => ({
       onReceiveMessage: (message: IChatMessage) => {
-        setLastMessage(message);
+        const chatMessage = new ChatMessage(message);
+        setLastMessage(chatMessage);
+        setLastMessageTime(chatMessage.getTimeDiffer());
       },
     }));
 
+    // Update Last Message Time
     useEffect(() => {
       const interval = setInterval(() => {
-        setLastMessageTime((prevMessage) => {
-          if (lastMessage) {
-            return getTimeDifference(new Date(lastMessage.SendTime));
-          }
-          return prevMessage;
-        });
-      }, 60000); // update every minute
+        setLastMessageTime(lastMessage?.getTimeDiffer() || '');
+      }, 60000); // 1 minute
 
       return () => {
         clearInterval(interval);
       };
     }, [lastMessage]);
-
-    const getTimeDifference = useCallback((time: Date): string => {
-      const now = new Date();
-      const diff = Math.floor((now.getTime() - time.getTime()) / 1000 / 60); // difference in minutes
-
-      if (diff < 1) {
-        return '1分鐘前';
-      } else if (diff < 60) {
-        return `${diff}分鐘前`;
-      } else if (diff < 1440) {
-        const hours = Math.floor(diff / 60);
-        return `${hours}小時前`;
-      } else {
-        const year = time.getFullYear();
-        const month = time.getMonth() + 1;
-        const day = time.getDate();
-        return `${year}/${month}/${day}`;
-      }
-    }, []);
 
     return (
       <ButtonBase
@@ -72,9 +60,11 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
         component="button"
         onClick={() => onClick?.(chatGroupInfo)}
       >
-        <Avatar>{avatar}</Avatar>
         {!isMobile && (
           <Stack spacing={1} direction={'row'} sx={{ flex: '1 1 auto', justifyContent: 'flex-start', width: '10em' }}>
+            <Box width="3em" height={'3em'}>
+              <ChannelAvatar />
+            </Box>
             <Stack sx={{ flex: '1 1 auto' }}>
               <Typography variant={'body1'} sx={{ width: '100%', overflow: 'hidden', height: '1.5em' }}>
                 {chatGroupInfo?.GroupName || '未命名聊天室'}
@@ -91,7 +81,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
               </Typography>
             </Stack>
             <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
-              {lastMessage && getTimeDifference(new Date(lastMessage.SendTime))}
+              {lastMessageTime}
             </Typography>
           </Stack>
         )}

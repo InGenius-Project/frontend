@@ -1,5 +1,6 @@
 import { useAppSelector } from '@/features/store';
-import { Avatar } from '@mui/material';
+import { IOwnerUser } from '@/types/interfaces/IUser';
+import { Avatar, AvatarGroup } from '@mui/material';
 import React from 'react';
 
 function stringToColor(string: string) {
@@ -49,6 +50,24 @@ function UserAvatar({ uri, alt, size }: UserAvatarProps) {
 export function OwnerAvatar() {
   const userState = useAppSelector((state) => state.userState);
   return <UserAvatar uri={userState.User?.Avatar?.Uri} alt={userState.User?.Username} />;
+}
+
+type UserAvatarGroupProps = {
+  users: IOwnerUser[] | React.ReactNode;
+};
+
+export function UserAvatarGroup({ users }: UserAvatarGroupProps) {
+  return (
+    <AvatarGroup max={3}>
+      {users && React.isValidElement(users) ? (
+        <Avatar>{users}</Avatar>
+      ) : users && Array.isArray(users) ? (
+        users.map((user) => <UserAvatar key={user.Id} uri={user.Avatar?.Uri} alt={user.Username} size="2em" />)
+      ) : (
+        <Avatar />
+      )}
+    </AvatarGroup>
+  );
 }
 
 export default UserAvatar;

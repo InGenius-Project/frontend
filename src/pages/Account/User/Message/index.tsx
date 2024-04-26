@@ -107,37 +107,47 @@ function Message() {
           }}
           spacing={1}
         >
-          {!isMobile && (
-            <Stack
-              direction={'row'}
-              sx={{
-                justifyContent: 'space-between',
-                px: 2,
-              }}
-            >
+          <Stack
+            direction={'row'}
+            sx={{
+              justifyContent: 'space-between',
+              px: 2,
+            }}
+          >
+            {!isMobile && (
               <Button
                 variant={pageState === MessagePage.ChatGroups ? 'contained' : 'outlined'}
                 onClick={() => setPageState(MessagePage.ChatGroups)}
               >
                 所有
               </Button>
-              <Badge badgeContent={invitedChatGroupsData?.result?.length} color="primary">
-                <IconButton onClick={() => setPageState(MessagePage.InvitedChatGroups)}>
-                  <MailIcon />
-                </IconButton>
-              </Badge>
-            </Stack>
-          )}
+            )}
+            <Badge badgeContent={invitedChatGroupsData?.result?.length} color="primary">
+              <IconButton onClick={() => setPageState(MessagePage.InvitedChatGroups)}>
+                <MailIcon />
+              </IconButton>
+            </Badge>
+          </Stack>
 
           <Divider />
 
           {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
             <>
-              <MessageChannelItem avatar={<SmartToy />} onClick={() => setPageState(MessagePage.AIChat)} />
+              <MessageChannelItem
+                avatar={<SmartToy />}
+                onClick={() => setPageState(MessagePage.AIChat)}
+                chatGroupInfo={{
+                  GroupName: 'AI聊天室',
+                  Id: 'AI',
+                  IsPrivate: false,
+                  Users: [],
+                  InvitedUsers: [],
+                  CreateTime: '',
+                }}
+              />
               {chatGroupsData?.result?.map((c, index) => {
                 return (
                   <MessageChannelItem
-                    // message={lastMessage}
                     onClick={() => handleClickChannelItem(c.Id)}
                     key={c.Id}
                     chatGroupInfo={c}

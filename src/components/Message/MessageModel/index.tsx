@@ -19,7 +19,7 @@ type MessageModelProps = {
 };
 
 const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ groupId, conn, control }, ref) => {
-  const listRef = useRef<HTMLHRElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const [joinGroup] = useLazyJoinGroupQuery();
   const [messageState, setMessages] = useState<IChatMessage[]>([]);
   const { data: chatGroupData } = useGetChatGroupQuery(

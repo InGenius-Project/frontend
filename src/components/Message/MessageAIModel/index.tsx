@@ -1,23 +1,39 @@
-import { usePostMessageMutation } from '@/features/api/chat/postMessage';
+import { aiChatUrl } from '@/assets/utils/urls';
+import { useGetAiChatHistoryQuery } from '@/features/api/chat/getAiChatHistory';
+import { useGetUserQuery } from '@/features/api/user/getUser';
+import { IChat } from '@/types/interfaces/IChat';
 import SmartToy from '@mui/icons-material/SmartToy';
 import { Divider, Stack } from '@mui/material';
-import { useDebounce, useDebounceFn, useWebSocket } from 'ahooks';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDebounce } from 'ahooks';
+import { useEffect, useRef, useState } from 'react';
+import { NIL } from 'uuid';
 import MessageItem from '../MessageItem';
 import MessageModelHeader from '../MessageModelHeader';
 import MessageModelInput from '../MessageModelInput';
-import { IChat } from '@/types/interfaces/IChat';
-import { useGetMessageQuery } from '@/features/api/chat/getMessage';
 
 type MessageModelProps = {
   onChangeMessage?: (message: string) => void;
 };
 
 function MessageAIModel({ onChangeMessage }: MessageModelProps) {
-  const { data: messageData } = useGetMessageQuery();
-  const listRef = useRef<HTMLHRElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<IChat[]>([]);
   const [receiveMessage, setreceiveMessage] = useState<string>('');
+  const { data: userData } = useGetUserQuery(null);
+  const { data: messageData } = useGetAiChatHistoryQuery(
+    {
+      userId: userData?.result?.Id || NIL,
+    },
+    {
+      skip: !userData?.result?.Id,
+    },
+  );
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     setMessages(messageData || []);
@@ -35,13 +51,12 @@ function MessageAIModel({ onChangeMessage }: MessageModelProps) {
     onChangeMessage && onChangeMessage(messages[messages.length - 1]?.content || '');
   }, [messages, onChangeMessage]);
 
-  // 发送消息到 WebSocket 服务器
   const handleSend = (text: string) => {
     setMessages((prevMessages) => [...prevMessages, { role: 'user', content: text }]);
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://danny10132024-atlas.nord:8000/chat', {
+        const response = await fetch(aiChatUrl + `/chat?user_id=${userData?.result?.Id}`, {
           method: 'POST',
           body: JSON.stringify({ content: text }),
           headers: {
@@ -63,7 +78,6 @@ function MessageAIModel({ onChangeMessage }: MessageModelProps) {
 
           const decodedChunk = decoder.decode(value, { stream: true });
           setreceiveMessage((state) => (state += decodedChunk));
-          listRef?.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
       } catch (error) {}
     };

@@ -11,7 +11,7 @@ export interface IChatGroupInfo {
   IsPrivate: boolean;
   CreateTime: string;
   Users: Array<IOwnerUser>;
-  Owner: IOwnerUser;
+  Owner?: IOwnerUser;
   Description?: string | null;
   InvitedUsers: Array<IOwnerUser>;
 }
