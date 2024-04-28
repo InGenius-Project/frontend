@@ -8,6 +8,7 @@ import { useGetTagsQuery } from '@/features/api/tag/getTags';
 import {
   pushKeyValueListItem,
   pushListItem,
+  selectLayoutImage,
   selectLayoutTitle,
   selectLayoutType,
   setContent,
@@ -22,11 +23,25 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
-import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Modal,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+  createFilterOptions,
+  useTheme,
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import AreaUnsplashImageModal from '../AreaUnsplashImageModal';
+import UnsplashIcon from '@/assets/images/svg/unsplash.svg?react';
 
 type AreaEditItemProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -38,6 +53,7 @@ const filter = createFilterOptions<IInnerTag>();
 export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps) {
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
+  const layoutImage = useAppSelector(selectLayoutImage);
   const layoutTypeState = useAppSelector(selectLayoutType);
   const layoutTitle = useAppSelector(selectLayoutTitle);
   const { data: areaTypeData } = useGetAreaTypeByIdQuery(layoutState.areaTypeId!, {
@@ -53,6 +69,10 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const theme = useTheme();
+
+  const [upsplashModalOpen, setUpsplashModalOpen] = React.useState(false);
+  const handleUpsplashModalOpen = () => setUpsplashModalOpen(true);
+  const handleUpsplashClose = () => setUpsplashModalOpen(false);
 
   useEffect(() => {
     if (areaTypeData?.result) {
@@ -169,12 +189,17 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
       {/* Image */}
       {layoutTypeState === LayoutType.ImageText && (
-        <ImageCrop
-          height={150}
-          width={150}
-          image={layoutState.image}
-          onCropDone={(image) => dispatch(setImage(image))}
-        />
+        <Stack direction="row" spacing={1} alignItems={'flex-end'}>
+          <Box width={150} height={150}>
+            <ImageCrop image={layoutImage} onCropDone={(image) => dispatch(setImage(image))} />
+          </Box>
+          <Box>
+            <Button onClick={handleUpsplashModalOpen} startIcon={<UnsplashIcon />} variant="outlined">
+              Upsplash
+            </Button>
+          </Box>
+          <AreaUnsplashImageModal open={upsplashModalOpen} onClose={handleUpsplashClose} />
+        </Stack>
       )}
 
       {/* Text */}

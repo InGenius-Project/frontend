@@ -81,11 +81,20 @@ export interface IImageTextLayout extends ILayout {
   Image?: IImageInfo;
 }
 
-export interface IImageTextLayoutPostDTO {
+/**
+ * Represents the interface for an image text layout post.
+ */
+export interface IImageTextLayoutPost {
   AreaId: string;
-  TextContent: string;
-  AltContent: string;
-  Image: FormData;
+
+  /**
+   * Represents the form data for the image text layout post.
+   * @property {string} AltContent - The alternative content for the image.
+   * @property {string} TextContent - The text content for the image.
+   * @property {FormFile} Image - The image data.
+   * @property {string} ImageUri - The URI of the image.
+   */
+  FormData: FormData;
 }
 
 export interface IImageInfo {

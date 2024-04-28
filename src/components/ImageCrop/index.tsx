@@ -42,8 +42,6 @@ function base64ToBytes(base64: string): number {
 }
 
 type ImageCropProps = {
-  width?: string | number;
-  height?: string | number;
   image?: IImageInfo;
   altComponent?: React.ReactNode;
   onChange?: (image: IImageInfo | undefined) => void;
@@ -51,14 +49,7 @@ type ImageCropProps = {
   onChangeFileName?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   circularCrop?: boolean;
 };
-export default function ImageCrop({
-  image,
-  circularCrop,
-  altComponent,
-  onChange,
-  onCropDone,
-  onChangeFileName,
-}: ImageCropProps) {
+export default function ImageCrop({ image, circularCrop, altComponent, onCropDone, onChangeFileName }: ImageCropProps) {
   const [imageState, setImageState] = useState<IImageInfo | undefined>(image);
   const [imgSrc, setImgSrc] = useState('');
 
@@ -69,8 +60,8 @@ export default function ImageCrop({
   const [open, setOpen] = React.useState(false);
 
   useUpdateEffect(() => {
-    onChange && onChange(imageState);
-  }, [imageState, onChange]);
+    setImageState && setImageState(imageState);
+  }, [image]);
 
   const handleSelectFile = (e?: React.ChangeEvent<HTMLInputElement>) => {
     if (e && e.target.files && e.target.files.length > 0) {

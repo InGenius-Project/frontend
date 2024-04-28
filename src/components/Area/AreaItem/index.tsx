@@ -176,6 +176,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
               form.append('Image', blob, updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
               form.append('TextContent', updateArea.ImageTextLayout?.TextContent || '');
               form.append('AltContent', updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
+              form.append('ImageUri', updateArea.ImageTextLayout?.Image?.Uri || '');
 
               postImageTextLayout({
                 AreaId: res.data.result.Id,

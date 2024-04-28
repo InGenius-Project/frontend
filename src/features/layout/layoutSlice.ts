@@ -59,7 +59,10 @@ const layoutSlice = createSlice({
       state.areaTypeId = action.payload;
     },
     setImage: (state, action: PayloadAction<ILayout['image']>) => {
-      state.image = action.payload;
+      return {
+        ...state,
+        image: action.payload,
+      };
     },
     setListItem: (state, action: PayloadAction<Array<IInnerTag>>) => {
       state.listItems = action.payload;
@@ -194,6 +197,8 @@ export const {
 export const selectLayoutType = (state: RootState) => state.layoutState.layoutType;
 
 export const selectLayoutTitle = (state: RootState) => state.layoutState.title;
+
+export const selectLayoutImage = (state: RootState) => state.layoutState.image;
 
 export const generateImageBase64Src = (contentType: string, content: string) => `data:${contentType};base64,${content}`;
 

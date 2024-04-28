@@ -6,14 +6,6 @@ const baseUrl = import.meta.env.VITE_APP_CHAT_ENDPOINT as string;
 const chatQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/`,
   prepareHeaders: (headers, { getState }) => {
-    // var token = (getState() as RootState).userState.Token?.AccessToken;
-    // if (!token) {
-    //   token = localStorage.getItem('accessToken') || undefined;
-    // }
-    // if (token) {
-    //
-    // }
-    // return headers;
     headers.set('Content-Type', 'application/json');
     return headers;
   },

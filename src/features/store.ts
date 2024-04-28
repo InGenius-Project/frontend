@@ -6,11 +6,13 @@ import areasReducer from '@/features/areas/areasSlice';
 import { baseApi } from './api/baseApi';
 import errorToastMiddleware from './middleware/errorToastMiddleware';
 import { chatBaseApi } from './api/chatBaseApi';
+import { unsplashtApi } from './api/unsplashApi';
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     [chatBaseApi.reducerPath]: chatBaseApi.reducer,
+    [unsplashtApi.reducerPath]: unsplashtApi.reducer,
     userState: userReducer,
     layoutState: layoutReducer,
     areasState: areasReducer,
@@ -23,7 +25,7 @@ export const store = configureStore({
         ignoredPaths: ['layoutState.content', 'layout.setLayoutByArea'],
         ignoredActions: ['layout/setContent', 'layout/setLayoutByArea'],
       },
-    }).concat([baseApi.middleware, chatBaseApi.middleware, errorToastMiddleware]),
+    }).concat([baseApi.middleware, chatBaseApi.middleware, unsplashtApi.middleware, errorToastMiddleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

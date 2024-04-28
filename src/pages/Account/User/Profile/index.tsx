@@ -2,6 +2,7 @@ import AreaEditor from '@/components/Area/AreaEditor';
 import ImageCrop from '@/components/ImageCrop';
 import UserProfileItem from '@/components/ProfileItem/UserProfileItem';
 import { OwnerAvatar } from '@/components/UserAvatar';
+import { useGetRandomPhotoQuery } from '@/features/api/unsplash/getRandomPhoto';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { usePostUserMutation } from '@/features/api/user/postUser';
 import { useUploadAvatarMutation } from '@/features/api/user/uploadAvatar';
