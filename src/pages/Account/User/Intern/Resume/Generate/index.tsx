@@ -1,39 +1,25 @@
-import {
-  Box,
-  Button,
-  ButtonBase,
-  IconButton,
-  ListItem,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-  styled,
-  useTheme,
-} from '@mui/material';
-import { v4 as uuid } from 'uuid';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import AddIcon from '@mui/icons-material/Add';
-import { useEffect, useMemo, useState } from 'react';
-import { useGenerateAreaMutation } from '@/features/api/area/generateArea';
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { GenerateAreaType } from '@/types/interfaces/IArea';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { useNavigate } from 'react-router-dom';
-import DragDropContainer from '@/components/DragDropContainer';
-import { DropResult } from 'react-beautiful-dnd';
-import Delete from '@mui/icons-material/Delete';
 import AreaListItem from '@/components/Area/AreaListItem';
-import { useGenerateAreaByTitleMutation } from '@/features/api/area/generateAreaByTitle';
-import { postResumeApi, usePostResumeMutation } from '@/features/api/resume/postResume';
-import { useAppDispatch, useAppSelector } from '@/features/store';
-import { AreasType, setAreas } from '@/features/areas/areasSlice';
+import DragDropContainer from '@/components/DragDropContainer';
 import { usePostAreaMutation, usePostListLayoutMutation } from '@/features/api/area';
+import { useGenerateAreaMutation } from '@/features/api/area/generateArea';
+import { useGenerateAreaByTitleMutation } from '@/features/api/area/generateAreaByTitle';
+import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
-import { postTextLayoutApi, usePostTextLayoutMutation } from './../../../../../../features/api/area/postTextLayout';
-import { $convertFromMarkdownString } from '@lexical/markdown';
+import { GenerateAreaType } from '@/types/interfaces/IArea';
+import AddIcon from '@mui/icons-material/Add';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Button, MenuItem, Paper, Select, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+import { usePostTextLayoutMutation } from './../../../../../../features/api/area/postTextLayout';
+import {
+  postImageTextLayoutApi,
+  usePostImageTextLayoutMutation,
+} from './../../../../../../features/api/area/postImageLayout';
 
 const PromptButtonBase = styled(Button)(({ theme }) => ({
   width: '100%',
@@ -86,8 +72,7 @@ function ResumeGenerate() {
   const [promptState, setPromptState] = useState<string>('');
   const [areaCountState, setAreaCountState] = useState<number>(8);
   const [generateArea, { data: generateAreaTitles, isLoading: isGeneratingAreaTitle }] = useGenerateAreaMutation();
-  const [generateAreaByTitle, { data: generateAreaData, isLoading: isGeneratingArea }] =
-    useGenerateAreaByTitleMutation();
+  const [generateAreaByTitle, { isLoading: isGeneratingArea }] = useGenerateAreaByTitleMutation();
   const [titlestate, setTitlesState] = useState<Title[]>([]);
 
   const theme = useTheme();
@@ -101,6 +86,7 @@ function ResumeGenerate() {
 
   const [postTextLayout] = usePostTextLayoutMutation();
   const [postListLayout] = usePostListLayoutMutation();
+  const [postImageTextLayout] = usePostImageTextLayoutMutation();
   const [postArea] = usePostAreaMutation();
 
   useEffect(() => {
@@ -161,14 +147,14 @@ function ResumeGenerate() {
                 ResumeId: res.result?.Id,
               })
                 .unwrap()
-                .then((areaRes) => {
+                .then(async (areaRes) => {
                   switch (a.LayoutType) {
                     case LayoutType.Text:
                       a.TextLayout &&
                         areaRes.result?.Id &&
                         postTextLayout({
                           ...a.TextLayout,
-                          areaId: areaRes.result?.Id,
+                          AreaId: areaRes.result?.Id,
                         });
                       break;
                     case LayoutType.List:
@@ -176,10 +162,22 @@ function ResumeGenerate() {
                         areaRes.result?.Id &&
                         postListLayout({
                           ...a.ListLayout,
-                          areaId: areaRes.result?.Id,
+                          AreaId: areaRes.result?.Id,
                         });
                       break;
+                    case LayoutType.ImageText:
+                      let blob = await fetch(a.ImageTextLayout?.Image?.Uri || '').then((r) => r.blob());
 
+                      a.ImageTextLayout &&
+                        areaRes.result?.Id &&
+                        postImageTextLayout({
+                          AltContent: a.ImageTextLayout.Image?.AltContent || 'Untitled',
+                          TextContent: a.ImageTextLayout.TextContent,
+                          Image: blob,
+                          Uri: a.ImageTextLayout.Image?.Uri,
+                          AreaId: areaRes.result?.Id,
+                        });
+                      break;
                     default:
                       break;
                   }
@@ -208,7 +206,12 @@ function ResumeGenerate() {
             backgroundColor: theme.palette.common.white,
           }}
         >
-          <Select size="small" fullWidth value={areaCountState}>
+          <Select
+            size="small"
+            fullWidth
+            value={areaCountState}
+            onChange={(e) => setAreaCountState(e.target.value as number)}
+          >
             {Array.from({ length: 10 }, (_, index) => (
               <MenuItem key={index} value={index + 1}>
                 {index + 1} 個區塊

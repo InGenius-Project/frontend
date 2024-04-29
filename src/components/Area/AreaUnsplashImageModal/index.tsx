@@ -11,7 +11,6 @@ import {
   InputAdornment,
   Modal,
   Paper,
-  Skeleton,
   TextField,
 } from '@mui/material';
 import { useDebounce } from 'ahooks';
@@ -19,14 +18,14 @@ import React, { useEffect, useState } from 'react';
 
 type AreaUnsplashImageModalProps = {
   onClose: () => void;
+  onChange?: (image: IUnsplashPhoto) => void;
   open: boolean;
 };
 
-function AreaUnsplashImageModal({ onClose, open }: AreaUnsplashImageModalProps) {
+function AreaUnsplashImageModal({ onClose, open, onChange }: AreaUnsplashImageModalProps) {
   const [searchInputState, setSearchInputState] = useState<string>('');
   const debounceSearchInput = useDebounce(searchInputState, { wait: 1000 });
-  const [pageState, setPageState] = useState<number>(0);
-  const dispatch = useAppDispatch();
+  const [pageState, setPageState] = useState<number>(1);
   const imagelistref = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,11 +33,11 @@ function AreaUnsplashImageModal({ onClose, open }: AreaUnsplashImageModalProps) 
     setSearchInputState(state.layoutState.title);
   }, []);
 
-  const { data: searchPhotoData, isFetching } = useSearchPhotoQuery(
+  const { data: searchPhotoData, isFetching: isFetchingPhoto } = useSearchPhotoQuery(
     {
       query: debounceSearchInput,
       page: pageState,
-      per_page: 10,
+      per_page: 24,
     },
     {
       skip: !debounceSearchInput || debounceSearchInput === '',
@@ -52,7 +51,7 @@ function AreaUnsplashImageModal({ onClose, open }: AreaUnsplashImageModalProps) 
 
       const scrolledToBottom =
         imagelistref.current.scrollHeight - imagelistref.current.scrollTop - 20 < imagelistref.current.clientHeight;
-      if (scrolledToBottom && !isFetching) {
+      if (scrolledToBottom && !isFetchingPhoto) {
         setPageState(pageState + 1);
       }
     };
@@ -65,20 +64,14 @@ function AreaUnsplashImageModal({ onClose, open }: AreaUnsplashImageModalProps) 
         currentRef.removeEventListener('scroll', onScroll);
       };
     }
-  }, [isFetching, pageState]);
+  }, [isFetchingPhoto, pageState]);
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInputState(e.target.value);
   };
 
   const handleClickImageListItem = (item: IUnsplashPhoto) => {
-    dispatch(
-      setImage({
-        Id: item.id,
-        Uri: item.urls.small,
-        AltContent: item.description,
-      }),
-    );
+    onChange && onChange(item);
   };
 
   return (
@@ -113,30 +106,37 @@ function AreaUnsplashImageModal({ onClose, open }: AreaUnsplashImageModalProps) 
           }}
           ref={imagelistref}
         >
-          <ImageList cols={3} gap={8}>
-            {!isFetching
-              ? photos.map((item) => (
-                  <ImageListItem key={item.id}>
-                    <img src={item.urls.small} alt={item.description} loading="lazy" />
-                    <ImageListItemBar
-                      onClick={() => handleClickImageListItem(item)}
-                      sx={{
-                        cursor: 'pointer',
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'transparent',
-                      }}
-                    ></ImageListItemBar>
-                  </ImageListItem>
-                ))
-              : Array(5)
-                  .fill(0)
-                  .map((_, index) => (
-                    <ImageListItem key={`image-skeleton-${index}`}>
-                      <Skeleton variant="rectangular" width="100%" height="100%" />
-                    </ImageListItem>
-                  ))}
+          <ImageList cols={3} gap={8} rowHeight={150}>
+            {photos.map((item) => (
+              <ImageListItem
+                key={item.id}
+                sx={{
+                  overflow: 'hidden',
+                }}
+              >
+                <img
+                  srcSet={item.urls.small + `?w=150&h=150&fit=crop&auto=format&dpr=2 2x`}
+                  src={item.urls.small + `?w=150&h=150&fit=crop&auto=format`}
+                  alt={item.alt_description}
+                  loading="lazy"
+                />
+                <ImageListItemBar
+                  onClick={() => handleClickImageListItem(item)}
+                  sx={{
+                    content: '"選擇此圖"',
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      coloer: 'white',
+                    },
+                  }}
+                ></ImageListItemBar>
+              </ImageListItem>
+            ))}
           </ImageList>
         </Box>
       </Paper>

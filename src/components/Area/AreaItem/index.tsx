@@ -147,40 +147,35 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
           switch (layoutType) {
             case LayoutType.List:
               postListLayout({
-                areaId: res.data.result.Id,
+                AreaId: res.data.result.Id,
                 Items: updateArea.ListLayout?.Items,
               });
               break;
             case LayoutType.Text:
               postTextLayout({
-                areaId: res.data.result.Id,
+                AreaId: res.data.result.Id,
                 Content: updateArea.TextLayout?.Content || '',
               });
               break;
             case LayoutType.KeyValueList:
-              const a = {
-                areaId: res.data.result.Id,
+              postKeyValueListLayout({
+                AreaId: res.data.result.Id,
                 Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
                   Id: i.Id,
                   TagId: i.Key?.Id,
                   Value: i.Value,
                 })),
-              };
-              postKeyValueListLayout(a);
+              });
               break;
             case LayoutType.ImageText:
-              const form = new FormData();
-
               let blob = await fetch(updateArea.ImageTextLayout?.Image?.Uri || '').then((r) => r.blob());
-
-              form.append('Image', blob, updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
-              form.append('TextContent', updateArea.ImageTextLayout?.TextContent || '');
-              form.append('AltContent', updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled');
-              form.append('ImageUri', updateArea.ImageTextLayout?.Image?.Uri || '');
 
               postImageTextLayout({
                 AreaId: res.data.result.Id,
-                FormData: form,
+                Uri: updateArea.ImageTextLayout?.Image?.Uri,
+                Image: blob,
+                AltContent: updateArea.ImageTextLayout?.Image?.AltContent || 'Untitled',
+                TextContent: updateArea.ImageTextLayout?.TextContent || '',
               });
 
               break;

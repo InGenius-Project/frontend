@@ -5,7 +5,7 @@ import { IListLayoutPost } from '@/types/interfaces/IArea';
 export const postListLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postListLayout: builder.mutation<IResponse<void>, IListLayoutPost>({
-      query: ({ areaId, ...body }) => ({
+      query: ({ AreaId: areaId, ...body }) => ({
         url: `/area/ListLayout`,
         method: 'POST',
         body,
@@ -14,7 +14,7 @@ export const postListLayoutApi = baseApi.injectEndpoints({
         },
       }),
       invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Area', id: arg.areaId }];
+        return [{ type: 'Area', id: arg.AreaId }];
       },
     }),
   }),

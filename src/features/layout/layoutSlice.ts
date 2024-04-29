@@ -3,7 +3,6 @@ import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea, IAreaPost, IImageInfo, IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { EditorState } from 'lexical';
 import { NIL, v4 as uuid } from 'uuid';
 import { AreasType } from '../areas/areasSlice';
 
@@ -23,6 +22,7 @@ interface ILayout {
   title: string;
   content?: string;
   image?: IImageInfo;
+  imageType: 'uri' | 'blob';
   listItems?: Array<IInnerTag>;
   keyValueListItems: Array<IInnerKeyValueItem>;
 }
@@ -34,6 +34,7 @@ const initialState: ILayout = {
   id: '',
   title: '',
   content: undefined,
+  imageType: 'uri',
   image: undefined,
   listItems: undefined,
   keyValueListItems: [],
@@ -66,6 +67,9 @@ const layoutSlice = createSlice({
     },
     setListItem: (state, action: PayloadAction<Array<IInnerTag>>) => {
       state.listItems = action.payload;
+    },
+    setImageType: (state, action: PayloadAction<ILayout['imageType']>) => {
+      state.imageType = action.payload;
     },
     pushListItem: (state, action: PayloadAction<IInnerTag>) => {
       state.listItems ??= [];
@@ -151,6 +155,7 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.ImageText:
           parseArea.id = action.payload.ImageTextLayout?.Id!;
+          parseArea.content = action.payload.ImageTextLayout?.TextContent;
           parseArea.image = {
             Id: action.payload.ImageTextLayout?.Image?.Id || '',
             AltContent: action.payload.ImageTextLayout?.Image?.AltContent || '',
@@ -185,6 +190,7 @@ export const {
   setAreaTypeId,
   setLayoutType,
   setListItem,
+  setImageType,
   pushListItem,
   updateListItem,
   setLayoutByArea,

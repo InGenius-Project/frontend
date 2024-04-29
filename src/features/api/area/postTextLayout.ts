@@ -5,7 +5,7 @@ import { baseApi } from '../baseApi';
 export const postTextLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postTextLayout: builder.mutation<IResponse<void>, ITextLayoutPost>({
-      query: ({ areaId, ...body }) => ({
+      query: ({ AreaId: areaId, ...body }) => ({
         url: `/area/TextLayout`,
         method: 'POST',
         body,
@@ -14,7 +14,7 @@ export const postTextLayoutApi = baseApi.injectEndpoints({
         },
       }),
       invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Area', id: arg.areaId }];
+        return [{ type: 'Area', id: arg.AreaId }];
       },
     }),
   }),

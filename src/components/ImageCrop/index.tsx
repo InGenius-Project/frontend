@@ -60,7 +60,7 @@ export default function ImageCrop({ image, circularCrop, altComponent, onCropDon
   const [open, setOpen] = React.useState(false);
 
   useUpdateEffect(() => {
-    setImageState && setImageState(imageState);
+    setImageState && setImageState(image);
   }, [image]);
 
   const handleSelectFile = (e?: React.ChangeEvent<HTMLInputElement>) => {

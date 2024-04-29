@@ -8,9 +8,9 @@ export const handlers = [
   http.post(baseUrl + '/api/Area/Generation', () => {
     return new Response(JSON.stringify(generateAreaTitles));
   }),
-  http.post(baseUrl + '/api/Area/Generation/Title', () => {
-    return new Response(JSON.stringify(generateArea));
-  }),
+  // http.post(baseUrl + '/api/Area/Generation/Title', () => {
+  //   return new Response(JSON.stringify(generateArea));
+  // }),
   // http.get(baseUrl + '/api/Chat/Groups/', () => {
   //   return new Response(JSON.stringify(generateChatGroups));
   // }),

@@ -2,6 +2,7 @@ import { ITag, ITagType } from '@/types/interfaces/ITag';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { UserRole } from '@/types/enums/UserRole';
 import { internalCreateRangeSelection } from 'lexical/LexicalSelection';
+import { AvatarPostFormData } from './IUser';
 
 export interface IArea {
   Id: string;
@@ -73,7 +74,7 @@ export interface ITextLayout extends ILayout {
 }
 
 export interface ITextLayoutPost extends Omit<ITextLayout, 'Id'> {
-  areaId: string;
+  AreaId: string;
 }
 
 export interface IImageTextLayout extends ILayout {
@@ -86,21 +87,28 @@ export interface IImageTextLayout extends ILayout {
  */
 export interface IImageTextLayoutPost {
   AreaId: string;
+  AltContent: string;
+  TextContent: string;
+  Image?: Blob;
+  Uri?: string;
+}
 
-  /**
-   * Represents the form data for the image text layout post.
-   * @property {string} AltContent - The alternative content for the image.
-   * @property {string} TextContent - The text content for the image.
-   * @property {FormFile} Image - The image data.
-   * @property {string} ImageUri - The URI of the image.
-   */
-  FormData: FormData;
+export interface IImageSource {
+  Raw: string;
+  Full: string;
+  Regular: string;
+  Small: string;
+  Thumb: string;
+  Download: string;
 }
 
 export interface IImageInfo {
   Id: string;
-  Uri: string;
-  AltContent: string;
+  Uri?: string;
+  Urls?: IImageSource;
+  DownloadUri?: string;
+  AltContent?: string;
+  ContentType?: string;
 }
 
 export interface IListLayout extends ILayout {
@@ -108,7 +116,7 @@ export interface IListLayout extends ILayout {
 }
 
 export interface IListLayoutPost {
-  areaId: string;
+  AreaId: string;
   Items?: Array<ITag>;
 }
 
@@ -117,7 +125,7 @@ export interface IKeyValueListLayout extends ILayout {
 }
 
 export interface IKeyValueListLayoutPost {
-  areaId: string;
+  AreaId: string;
   Items?: Array<IKeyValueItemPostDTO>;
 }
 

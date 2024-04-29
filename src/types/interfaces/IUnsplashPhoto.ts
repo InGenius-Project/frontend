@@ -9,7 +9,7 @@ export interface IUnsplashPhoto {
   downloads: number;
   likes: number;
   liked_by_user: boolean;
-  description: string;
+  alt_description: string;
   exif: {
     make: string;
     model: string;

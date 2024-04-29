@@ -1,5 +1,6 @@
 import { IUnsplashSearchOptions, IUnsplashSearchResult } from '@/types/interfaces/IUnsplashPhoto';
 import { unsplashtApi } from '../unsplashApi';
+import { defaultSerializeQueryArgs } from '@reduxjs/toolkit/query';
 
 export const searchPhotoApi = unsplashtApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,17 +10,21 @@ export const searchPhotoApi = unsplashtApi.injectEndpoints({
         method: 'GET',
         params,
       }),
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
+      serializeQueryArgs: ({ endpointName, endpointDefinition, queryArgs }) => {
+        const { query } = queryArgs;
+        return defaultSerializeQueryArgs({
+          endpointName,
+          queryArgs: {
+            query,
+          },
+          endpointDefinition,
+        });
       },
       merge: (currentCache, newSearchResult, { arg }) => {
-        if (arg.page === 0) {
-          return newSearchResult;
-        }
         currentCache.results.push(...newSearchResult.results);
       },
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
+        return currentArg?.page !== previousArg?.page;
       },
     }),
   }),

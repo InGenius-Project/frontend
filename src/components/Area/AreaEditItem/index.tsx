@@ -1,3 +1,4 @@
+import UnsplashIcon from '@/assets/images/svg/unsplash.svg?react';
 import isNotNullOrUndefined from '@/assets/utils/isNotNullorUndefined';
 import DragDropContainer from '@/components/DragDropContainer';
 import ImageCrop from '@/components/ImageCrop';
@@ -13,6 +14,7 @@ import {
   selectLayoutType,
   setContent,
   setImage,
+  setImageType,
   setKetValueListItems,
   setListItem,
   setTitle,
@@ -23,25 +25,12 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Modal,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  createFilterOptions,
-  useTheme,
-} from '@mui/material';
+import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import AreaUnsplashImageModal from '../AreaUnsplashImageModal';
-import UnsplashIcon from '@/assets/images/svg/unsplash.svg?react';
 
 type AreaEditItemProps = {
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -191,14 +180,34 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
       {layoutTypeState === LayoutType.ImageText && (
         <Stack direction="row" spacing={1} alignItems={'flex-end'}>
           <Box width={150} height={150}>
-            <ImageCrop image={layoutImage} onCropDone={(image) => dispatch(setImage(image))} />
+            <ImageCrop
+              image={layoutImage}
+              onCropDone={(image) => {
+                dispatch(setImage(image));
+                dispatch(setImageType('blob'));
+              }}
+            />
           </Box>
           <Box>
             <Button onClick={handleUpsplashModalOpen} startIcon={<UnsplashIcon />} variant="outlined">
               Upsplash
             </Button>
           </Box>
-          <AreaUnsplashImageModal open={upsplashModalOpen} onClose={handleUpsplashClose} />
+          <AreaUnsplashImageModal
+            open={upsplashModalOpen}
+            onClose={handleUpsplashClose}
+            onChange={(image) => {
+              dispatch(
+                setImage({
+                  Id: image.id,
+                  Uri: image.urls.small,
+                  AltContent: image.alt_description,
+                }),
+              );
+              dispatch(setImageType('uri'));
+              handleUpsplashClose();
+            }}
+          />
         </Stack>
       )}
 

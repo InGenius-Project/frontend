@@ -28,7 +28,7 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
       Id: '00000000-0000-0000-0000-000000000000',
       Sequence: 1,
       IsDisplayed: false,
-      Title: '工作經驗',
+      Title: '經驗',
       LayoutType: undefined,
       AreaTypeId: undefined,
       TextLayout: {

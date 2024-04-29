@@ -5,7 +5,7 @@ import { baseApi } from '../baseApi';
 export const postKeyValueListLayoutApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     postKeyValueListLayout: builder.mutation<IResponse<void>, IKeyValueListLayoutPost>({
-      query: ({ areaId, ...body }) => ({
+      query: ({ AreaId: areaId, ...body }) => ({
         url: `/area/KeyValueListLayout`,
         method: 'POST',
         body,
@@ -14,7 +14,7 @@ export const postKeyValueListLayoutApi = baseApi.injectEndpoints({
         },
       }),
       invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Area', id: arg.areaId }];
+        return [{ type: 'Area', id: arg.AreaId }];
       },
     }),
   }),
