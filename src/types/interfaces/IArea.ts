@@ -131,7 +131,7 @@ export interface IKeyValueListLayoutPost {
 
 export interface IKeyValueItem {
   Id: string;
-  Key?: ITag;
+  Key?: ITag[];
   Value: string;
 }
 
@@ -141,6 +141,6 @@ export interface IInnerKeyValueItem extends IKeyValueItem {
 
 export interface IKeyValueItemPostDTO {
   Id?: string;
-  TagId?: string;
+  TagIds?: string[];
   Value: string;
 }

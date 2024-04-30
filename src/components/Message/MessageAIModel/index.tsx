@@ -19,7 +19,7 @@ function MessageAIModel({ onChangeMessage }: MessageModelProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<IChat[]>([]);
   const [receiveMessage, setreceiveMessage] = useState<string>('');
-  const { data: userData } = useGetUserQuery(null);
+  const { data: userData } = useGetUserQuery();
   const { data: messageData } = useGetAiChatHistoryQuery(
     {
       userId: userData?.result?.Id || NIL,

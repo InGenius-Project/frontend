@@ -1,13 +1,15 @@
+import { baseUrl } from '@/assets/utils/urls';
 import { http } from 'msw';
 import { generateAreaTitles } from './mocks/generateAreaTitles';
-import { generateArea } from './mocks/generateArea';
-import { aiChatUrl, baseUrl } from '@/assets/utils/urls';
-import { generateChatGroups } from './mocks/generateChatGroups';
+import { generateTags } from './mocks/generateTags';
 
 export const handlers = [
   http.post(baseUrl + '/api/Area/Generation', () => {
     return new Response(JSON.stringify(generateAreaTitles));
   }),
+  // http.get(baseUrl + '/api/Tag?typeId=4', () => {
+  //   return new Response(JSON.stringify(generateTags));
+  // }),
   // http.post(baseUrl + '/api/Area/Generation/Title', () => {
   //   return new Response(JSON.stringify(generateArea));
   // }),

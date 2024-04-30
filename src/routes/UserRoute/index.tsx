@@ -1,9 +1,9 @@
-import { Box, Container } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import Sidebar from "@/components/SideBar";
-import UserHeader from "@/components/UserHeader";
+import { Box, Container } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import Sidebar from '@/components/SideBar';
+import UserHeader from '@/components/UserHeader';
 
-import { AnimatePresence, useCycle } from "framer-motion";
+import { AnimatePresence, useCycle } from 'framer-motion';
 
 export default function UserRoute() {
   const [open, setOpen] = useCycle(false, true);
@@ -11,8 +11,8 @@ export default function UserRoute() {
   return (
     <Container
       sx={{
-        display: "flex",
-        flexFlow: "row",
+        display: 'flex',
+        flexFlow: 'row',
         flexGrow: 1,
       }}
     >
@@ -20,13 +20,13 @@ export default function UserRoute() {
 
       <Box
         sx={{
-          minHeight: "var(--ing-height-user-route)",
-          width: "100%",
+          minHeight: 'var(--ing-height-user-route)',
+          width: '100%',
           flexGrow: 1,
         }}
       >
         <UserHeader toggle={open} onToggle={setOpen} />
-        <Box sx={{ my: 1 }}>
+        <Box sx={{ my: 1, minHeight: 'calc(var(--ing-height-user-route) - var(--ing-height-user-header))' }}>
           <Outlet />
         </Box>
       </Box>

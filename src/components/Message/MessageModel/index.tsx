@@ -29,7 +29,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ grou
       refetchOnReconnect: true,
     },
   );
-  const { data: userData } = useGetUserQuery(null);
+  const { data: userData } = useGetUserQuery();
 
   useEffect(() => {
     setMessages(chatGroupData?.result?.Messages || []);

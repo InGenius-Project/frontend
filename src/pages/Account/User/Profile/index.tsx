@@ -15,7 +15,7 @@ import { useDebounceFn } from 'ahooks';
 import { useCallback, useEffect } from 'react';
 
 export default function Profile() {
-  const { data: userData } = useGetUserQuery(null);
+  const { data: userData } = useGetUserQuery();
   const dispatch = useAppDispatch();
   const [uploadAvatar] = useUploadAvatarMutation();
   const [postUser] = usePostUserMutation();

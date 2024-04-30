@@ -2,9 +2,8 @@ import { IKeyValueItem } from '@/types/interfaces/IArea';
 import { ITag } from '@/types/interfaces/ITag';
 import ClearIcon from '@mui/icons-material/Clear';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Autocomplete, Divider, IconButton, ListItem, Stack, TextField, Typography, useTheme } from '@mui/material';
-import { useDebounce } from 'ahooks';
-import React, { useEffect } from 'react';
+import { Autocomplete, Divider, IconButton, ListItem, Stack, TextField, Typography } from '@mui/material';
+import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 type AreaKeyValueListItemProps = {
@@ -24,13 +23,11 @@ function AreaKeyValueListItem({
   onChange,
   ...props
 }: AreaKeyValueListItemProps) {
-  const theme = useTheme();
-
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     onClickDelete && onClickDelete(item.Id);
   };
 
-  const handleKeyChange = (event: React.ChangeEvent<{}>, value: ITag | null) => {
+  const handleKeyChange = (event: React.ChangeEvent<{}>, value: ITag[] | null) => {
     onChange &&
       onChange({
         ...item,
@@ -56,6 +53,7 @@ function AreaKeyValueListItem({
         <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
           <Autocomplete
             options={keyOptions || []}
+            multiple
             onChange={handleKeyChange}
             getOptionLabel={(o) => o.Name}
             renderInput={(params) => <TextField {...params} variant="standard" />}
@@ -90,7 +88,7 @@ function AreaKeyValueListItem({
               minWidth: '5em',
             }}
           >
-            {item.Key?.Name}
+            {item.Key?.map((k) => k.Name).join(', ')}
           </Typography>
           <Divider orientation="vertical" flexItem />
           <Typography variant="body1">{item.Value}</Typography>

@@ -9,7 +9,6 @@ import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Rec
 import { useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, IconButton, Link, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';

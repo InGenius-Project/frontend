@@ -1,6 +1,6 @@
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ForgetPassword from '@/pages/Account/ForgetPassword';
-import InitDepartment from '@/pages/Account/User/Init/Department';
+import InitSchool from '@/pages/Account/User/Init/School';
 import InternApply from '@/pages/Account/User/Intern/Recruitment/Apply';
 import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
 import ManageArea from '@/pages/Account/User/Manage/Area';
@@ -27,6 +27,7 @@ import CompanyRecruitment from '@/pages/Account/User/Company/Recruitment';
 import SearchRecruitment from '@/pages/Search/Recruitment';
 import ApplyResume from '@/pages/Account/User/Company/Recruitment/Apply/Resume';
 import ResumeGenerate from '@/pages/Account/User/Intern/Resume/Generate';
+import Init from '@/pages/Account/User/Init';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -48,7 +49,8 @@ export const routes = (
       <Route element={<AuthRoute />}>
         <Route element={<UserRoute />} path="User">
           <Route path="Init">
-            <Route path="Department" element={<InitDepartment />}></Route>
+            <Route path="" element={<Init />}></Route>
+            <Route path="School" element={<InitSchool />}></Route>
           </Route>
 
           <Route

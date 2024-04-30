@@ -3,7 +3,7 @@ import { useAppSelector } from '@/features/store';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 export default function AuthRoute() {
-  const user = getUserApi.endpoints.getUser.useQueryState(null);
+  const user = getUserApi.endpoints.getUser.useQueryState();
   const userState = useAppSelector((state) => state.userState.User);
   const location = useLocation();
 

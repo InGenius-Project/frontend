@@ -25,7 +25,7 @@ export const registerApi = baseApi.injectEndpoints({
           }
 
           dispatch(
-            getUserApi.endpoints.getUser.initiate(null, {
+            getUserApi.endpoints.getUser.initiate(undefined, {
               forceRefetch: true,
             }),
           );

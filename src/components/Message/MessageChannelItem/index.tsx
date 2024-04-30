@@ -18,7 +18,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
     const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
     const [lastMessage, setLastMessage] = useState<ChatMessage>();
     const [lastMessageTime, setLastMessageTime] = useState<string>('');
-    const { data: userData } = useGetUserQuery(null);
+    const { data: userData } = useGetUserQuery();
 
     const ChannelAvatar = () => {
       if (avatar) return <Avatar>{avatar}</Avatar>;

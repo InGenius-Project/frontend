@@ -44,6 +44,9 @@ const areasSlice = createSlice({
         };
       return initialState;
     },
+    setAreaType: (state, action: PayloadAction<AreasType>) => {
+      state.type = action.payload;
+    },
     pushArea: (state, action: PayloadAction<IArea>) => {
       return {
         ...state,
@@ -70,6 +73,6 @@ export const selectIsEmptyAreas = createSelector(
   (a) => !!a.areas && a.areas.length === 0,
 );
 
-export const { setAreas, setAreasId, setAreasSequence } = areasSlice.actions;
+export const { setAreas, setAreasId, setAreasSequence, setAreaType } = areasSlice.actions;
 
 export default areasSlice.reducer;

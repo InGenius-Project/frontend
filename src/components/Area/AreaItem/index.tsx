@@ -162,7 +162,7 @@ const AreaItem = ({ onClick, area, children, focused, ...props }: PropsWithChild
                 AreaId: res.data.result.Id,
                 Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
                   Id: i.Id,
-                  TagId: i.Key?.Id,
+                  TagId: i.Key?.map((k) => k.Id) || [],
                   Value: i.Value,
                 })),
               });

@@ -22,7 +22,7 @@ export const loginApi = baseApi.injectEndpoints({
           data.result && localStorage.setItem('accessToken', data.result.AccessToken);
 
           dispatch(
-            getUserApi.endpoints.getUser.initiate(null, {
+            getUserApi.endpoints.getUser.initiate(undefined, {
               forceRefetch: true,
             }),
           );

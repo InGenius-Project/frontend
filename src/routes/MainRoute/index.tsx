@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../components/Header';
 
 export default function MainRoute() {
-  const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(null, {
+  const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(undefined, {
     skip: false,
   });
 

@@ -8,7 +8,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import SearchIcon from '@mui/icons-material/Search';
 import { Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { useConfirm } from 'material-ui-confirm';
 import React, { useState } from 'react';
 
 type AreaNewItemProps = {
@@ -16,8 +15,7 @@ type AreaNewItemProps = {
 };
 
 export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
-  const confirm = useConfirm();
-  const { data: userData, isSuccess: isGettingUserSuccess } = useGetUserQuery(null);
+  const { data: userData, isSuccess: isGettingUserSuccess } = useGetUserQuery();
   const { data: areaTypesData } = useGetAreaTypesQuery(
     {
       roles: userData?.result?.Role !== undefined ? [userData.result.Role] : undefined,
