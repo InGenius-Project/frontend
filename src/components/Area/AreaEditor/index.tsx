@@ -4,11 +4,11 @@ import { useDeleteAreaMutation } from '@/features/api/area/deleteArea';
 import { usePostAreaMutation } from '@/features/api/area/postArea';
 import { usePostSequenceMutation } from '@/features/api/area/postSequence';
 import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
-import { getUpdateAreaPost, initializeState } from '@/features/layout/layoutSlice';
+import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Box, IconButton, Portal, Stack } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
@@ -26,6 +26,13 @@ function AreaEditor() {
   const [deleteArea] = useDeleteAreaMutation();
   const [postArea] = usePostAreaMutation();
   const [postSequence] = usePostSequenceMutation();
+  const areaItemsRef = useRef<Array<HTMLDivElement | null>>([]);
+
+  const areasLength = useMemo(() => (areasState.areas || []).length, [areasState.areas]);
+
+  useEffect(() => {
+    areaItemsRef.current = areaItemsRef.current.slice(0, areasLength);
+  }, [areasLength]);
 
   const handleDragEnd = async (items: string[], result?: DropResult) => {
     if (areasState.areas) {
@@ -70,8 +77,25 @@ function AreaEditor() {
     });
   };
 
+  useEffect(() => {
+    if (areasState.areas) {
+      const index = areasState.areas.findIndex((a) => a.Id === layoutState.areaId);
+      if (index) {
+        setControlTop(areaItemsRef.current[index]?.offsetTop);
+        areaItemsRef.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [areasState.areas, layoutState.areaId]);
+
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    layoutState.areaId && deleteArea(layoutState.areaId);
+    if (layoutState.areaId) {
+      const areaIndex = areasState.areas?.findIndex((a) => a.Id === layoutState.areaId) || 0;
+      deleteArea(layoutState.areaId)
+        .unwrap()
+        .then(() => {
+          areasState.areas && dispatch(setLayoutByArea(areasState.areas[areaIndex - 1]));
+        });
+    }
   };
 
   const handleVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -82,10 +106,6 @@ function AreaEditor() {
         IsDisplayed: !checked,
       });
     }
-  };
-
-  const handleClickItem = (element: HTMLElement) => {
-    setControlTop(element.offsetTop);
   };
 
   return (
@@ -123,13 +143,13 @@ function AreaEditor() {
             onDragEnd={handleDragEnd}
             // onDragStart={handleDragStart}
           >
-            {areasState.areas.map((a) => (
+            {areasState.areas.map((a, i) => (
               <AreaItem
                 key={a.Id}
                 area={a}
                 id={a.Id}
+                ref={(el) => (areaItemsRef.current[i] = el)}
                 focused={layoutState.areaId === a.Id}
-                onClick={handleClickItem}
               ></AreaItem>
             ))}
           </DragDropContainer>
