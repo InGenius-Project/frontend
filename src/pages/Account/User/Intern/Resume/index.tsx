@@ -1,18 +1,19 @@
-import { Box, Button, CssBaseline, IconButton, Stack } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { ResumeItem } from '@/components/Resume';
-import { useAppSelector } from '@/features/store';
-import LoadingButton from '@mui/lab/LoadingButton';
 import FullScreenLoader from '@/components/FullScreenLoader';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { ResumeItem } from '@/components/Resume';
+import ResumeEmpty from '@/components/Resume/ResumeEmpty';
+import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
+import { useGetResumesQuery } from '@/features/api/resume/getResumes';
+import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { useAppSelector } from '@/features/store';
+import AddIcon from '@mui/icons-material/Add';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { useNavigate } from 'react-router-dom';
-import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
-import { usePostResumeMutation } from '@/features/api/resume/postResume';
-import { useGetResumesQuery } from '@/features/api/resume/getResumes';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, IconButton, Stack } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import { useNavigate } from 'react-router-dom';
 
 export default function Resume() {
   const { data: resumes, isLoading } = useGetResumesQuery(null);
@@ -75,8 +76,7 @@ export default function Resume() {
       </Stack>
 
       <Stack spacing={1}>
-        {resumes?.result?.length &&
-          resumes.result.length > 0 &&
+        {resumes?.result &&
           resumes.result.map((r) => (
             <ResumeItem
               key={r.Id}
@@ -96,6 +96,7 @@ export default function Resume() {
               }
             />
           ))}
+        {resumes?.result?.length === 0 && <ResumeEmpty />}
       </Stack>
     </Stack>
   );

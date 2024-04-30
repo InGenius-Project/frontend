@@ -2,23 +2,35 @@ import AreaEditor from '@/components/Area/AreaEditor';
 import ImageCrop from '@/components/ImageCrop';
 import UserProfileItem from '@/components/ProfileItem/UserProfileItem';
 import { OwnerAvatar } from '@/components/UserAvatar';
-import { useGetRandomPhotoQuery } from '@/features/api/unsplash/getRandomPhoto';
+import { useGetUserAreaByAreaTypeQuery } from '@/features/api/area/getUserAreaByAreaTpe';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { usePostUserMutation } from '@/features/api/user/postUser';
 import { useUploadAvatarMutation } from '@/features/api/user/uploadAvatar';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
+import { AreaType } from '@/types/enums/AreaType';
 import { IImageInfo } from '@/types/interfaces/IArea';
 import { AvatarPostFormData } from '@/types/interfaces/IUser';
 import { Box, Stack } from '@mui/material';
 import { useDebounceFn } from 'ahooks';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 export default function Profile() {
   const { data: userData } = useGetUserQuery();
   const dispatch = useAppDispatch();
   const [uploadAvatar] = useUploadAvatarMutation();
   const [postUser] = usePostUserMutation();
+  const { data: schoolAreaData } = useGetUserAreaByAreaTypeQuery(AreaType.Education);
+
+  const schoolLabel = useMemo(() => {
+    return schoolAreaData?.result
+      ? schoolAreaData?.result
+          ?.at(0)
+          ?.KeyValueListLayout?.Items?.at(0)
+          ?.Key?.map((a) => a.Name)
+          .join(', ')
+      : '';
+  }, [schoolAreaData?.result]);
 
   useEffect(() => {
     if (userData && userData.result) {
@@ -57,6 +69,7 @@ export default function Profile() {
         editable
         onChangeUserName={handleChangeUserName}
         user={userData?.result}
+        education={`曾就讀於: ${schoolLabel}`}
         avatar={
           <ImageCrop
             circularCrop

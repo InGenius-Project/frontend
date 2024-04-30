@@ -9,6 +9,7 @@ type UserProfileItemProps = {
   editable?: boolean;
   coverUri?: string;
   avatar?: React.ReactNode;
+  education?: string;
   user?: IUserInfo;
   onChangeUserName?: (userName: string) => void;
 };
@@ -19,7 +20,7 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
     width: '10em',
   },
 }));
-function UserProfileItem({ editable = false, user, avatar, onChangeUserName }: UserProfileItemProps) {
+function UserProfileItem({ editable = false, user, avatar, onChangeUserName, education }: UserProfileItemProps) {
   const theme = useTheme();
   const [userNameState, setUserNameState] = useState(user?.Username);
 
@@ -93,10 +94,11 @@ function UserProfileItem({ editable = false, user, avatar, onChangeUserName }: U
         ) : (
           <Typography variant="h4">{user?.Username}</Typography>
         )}
-        <Typography variant="caption">就讀於中正大學 資訊管理學系</Typography>
+        {education && <Typography variant="caption">{education}</Typography>}
         <Stack direction={'row'} spacing={1}>
           {user?.Tags?.map((t) => <Chip label="積極" onDelete={editable ? handleDelete : undefined} />)}
-          {editable && <Chip label="新增標籤" deleteIcon={<Add />} onDelete={() => {}} />}
+          {/* TODO: add Tag crud */}
+          {/* {editable && <Chip label="新增標籤" deleteIcon={<Add />} onDelete={() => {}} />} */}
         </Stack>
       </Stack>
     </Paper>

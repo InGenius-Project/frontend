@@ -1,4 +1,4 @@
-import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmptyItem';
+import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useLazySearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { IRecruitmentSearchPost, SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';

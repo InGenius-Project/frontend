@@ -1,5 +1,5 @@
 import ApplyButton from '@/components/Button/ApplyButton';
-import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmptyItem';
+import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetFavRecruitmentQuery } from '@/features/api/user/getFavRecruitments';
 import { Stack } from '@mui/material';
