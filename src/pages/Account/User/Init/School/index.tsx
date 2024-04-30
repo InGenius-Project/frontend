@@ -1,5 +1,6 @@
 import AnalyzeSvg from '@/assets/images/svg/analyze.svg?react';
-import { postKeyValueListLayoutApi, usePostAreaMutation, usePostKeyValueListLayoutMutation } from '@/features/api/area';
+import { usePostAreaMutation, usePostKeyValueListLayoutMutation } from '@/features/api/area';
+import { useGetUserAreaByAreaTypeQuery } from '@/features/api/area/getUserAreaByAreaTpe';
 import { useGetTagsQuery } from '@/features/api/tag/getTags';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { AreasType, setAreaType } from '@/features/areas/areasSlice';
@@ -12,11 +13,9 @@ import {
   Autocomplete,
   Box,
   Button,
-  Container,
   FormControl,
   InputAdornment,
   InputLabel,
-  Menu,
   MenuItem,
   Select,
   Stack,
@@ -25,7 +24,8 @@ import {
   createFilterOptions,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 
 const filter = createFilterOptions<ITag>();
@@ -36,18 +36,28 @@ enum SchoolStep {
 }
 
 function InitSchool() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [stepState, setStepState] = useState<SchoolStep>(SchoolStep.University);
-  const { data: departmentData } = useGetTagsQuery([TagType.Department]);
-  const { data: universityData } = useGetTagsQuery([TagType.University]);
   const [schoolState, setSchoolState] = useState<ITag | null>(null);
   const [departmentState, setDepartmentState] = useState<ITag | null>(null);
   const [yearState, setYearState] = useState<string | null>(null);
-  const [postKeyValueListLayout] = usePostKeyValueListLayoutMutation();
   const [error, setError] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+
+  const [postKeyValueListLayout] = usePostKeyValueListLayoutMutation();
   const { data: userData } = useGetUserQuery();
   const [postArea] = usePostAreaMutation();
-  const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
+  const { data: departmentData } = useGetTagsQuery([TagType.Department]);
+  const { data: universityData } = useGetTagsQuery([TagType.University]);
+  const { data: educationData } = useGetUserAreaByAreaTypeQuery(AreaType.Education);
+
+  useEffect(() => {
+    if ((educationData?.result || []).length > 0) {
+      navigate('/Account/User/Init/Skill');
+    }
+  }, [educationData?.result, educationData?.result?.length, navigate]);
 
   const handleClose = () => {
     setOpen(false);
@@ -57,7 +67,7 @@ function InitSchool() {
     setOpen(true);
   };
   const handleClickNext = () => {
-    if (!departmentState || !yearState || !schoolState) {
+    if (!departmentState || !yearState || !schoolState || error) {
       setError(true);
       return;
     }

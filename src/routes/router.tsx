@@ -28,6 +28,7 @@ import SearchRecruitment from '@/pages/Search/Recruitment';
 import ApplyResume from '@/pages/Account/User/Company/Recruitment/Apply/Resume';
 import ResumeGenerate from '@/pages/Account/User/Intern/Resume/Generate';
 import Init from '@/pages/Account/User/Init';
+import InitSkill from '@/pages/Account/User/Init/Skill';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -51,6 +52,7 @@ export const routes = (
           <Route path="Init">
             <Route path="" element={<Init />}></Route>
             <Route path="School" element={<InitSchool />}></Route>
+            <Route path="Skill" element={<InitSkill />}></Route>
           </Route>
 
           <Route
