@@ -1,6 +1,6 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Avatar, Divider, IconButton, ListItem, ListItemAvatar, Stack, Typography, useTheme } from '@mui/material';
+import { Avatar, Divider, IconButton, ListItem, ListItemAvatar, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
@@ -22,8 +22,6 @@ function AreaListItem({
   onClickDelete,
   ...props
 }: AreaListItemProps) {
-  const theme = useTheme();
-
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     onClickDelete && onClickDelete(id);
   };

@@ -167,7 +167,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
                   AreaId: res.data.result.Id,
                   Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
                     Id: i.Id,
-                    TagId: i.Key?.map((k) => k.Id) || [],
+                    TagIds: i.Key?.map((k) => k.Id) || [],
                     Value: i.Value,
                   })),
                 });

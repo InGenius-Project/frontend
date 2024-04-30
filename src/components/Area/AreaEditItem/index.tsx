@@ -25,7 +25,17 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
-import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions, useTheme } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Divider,
+  Stack,
+  TextField,
+  Typography,
+  createFilterOptions,
+  useTheme,
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
@@ -95,6 +105,10 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
         Value: '',
       }),
     );
+  };
+
+  const handleKeyValueLitRemove = (id: string) => {
+    dispatch(setKetValueListItems((layoutState.keyValueListItems || []).filter((i) => i.InnerId !== id)));
   };
   // #endregion
 
@@ -234,14 +248,64 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
             spacing={0}
             onDragEnd={handleKeyValueListItemDragEnd}
           >
-            {layoutState.keyValueListItems.map(({ InnerId, ...item }) => (
+            {layoutState.keyValueListItems.map((item) => (
               <AreaKeyValueListItem
-                id={InnerId}
-                key={InnerId}
+                id={item.InnerId}
+                key={item.InnerId}
                 item={item}
-                keyOptions={tagsData && tagsData.result ? tagsData.result : []}
                 editable
-                onChange={(i) => handleKeyValueListItemChange({ InnerId, ...i })}
+                onClickDelete={handleKeyValueLitRemove}
+                control={
+                  <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
+                    <Autocomplete<IInnerTag, true>
+                      options={
+                        tagsData?.result
+                          ? tagsData.result.map((t) => ({
+                              ...t,
+                              InnerId: item.InnerId,
+                            }))
+                          : []
+                      }
+                      multiple
+                      value={(item.Key || []).map((i) => ({
+                        ...i,
+                        InnerId: uuid(),
+                      }))}
+                      onChange={(_, i) =>
+                        handleKeyValueListItemChange({
+                          ...item,
+                          Key: i,
+                        })
+                      }
+                      selectOnFocus
+                      handleHomeEndKeys
+                      getOptionLabel={(o) => o.Name}
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+                        return filtered;
+                      }}
+                      renderInput={(params) => <TextField {...params} variant="standard" />}
+                      sx={{
+                        flex: '1 1 5em',
+                      }}
+                    />
+
+                    <Divider orientation="vertical" flexItem />
+                    <TextField
+                      variant="standard"
+                      value={item.Value}
+                      onChange={(e) => {
+                        e.preventDefault();
+                        handleKeyValueListItemChange({
+                          ...item,
+                          Value: e.target.value,
+                        });
+                      }}
+                      autoFocus
+                      sx={{ flex: '1 1 auto' }}
+                    />
+                  </Stack>
+                }
               />
             ))}
           </DragDropContainer>

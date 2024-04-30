@@ -1,84 +1,52 @@
 import { IKeyValueItem } from '@/types/interfaces/IArea';
-import { ITag } from '@/types/interfaces/ITag';
 import ClearIcon from '@mui/icons-material/Clear';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Autocomplete, Divider, IconButton, ListItem, Stack, TextField, Typography } from '@mui/material';
+import { Divider, IconButton, ListItem, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 type AreaKeyValueListItemProps = {
   id: string;
   item: IKeyValueItem;
-  keyOptions?: Array<ITag>;
   editable?: boolean;
   onClickDelete?: (id: string) => void;
-  onChange?: (item: IKeyValueItem) => void;
+  control?: React.ReactNode;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 function AreaKeyValueListItem({
+  id,
   item,
-  keyOptions,
   editable = false,
   onClickDelete,
-  onChange,
+  control,
   ...props
 }: AreaKeyValueListItemProps) {
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    onClickDelete && onClickDelete(item.Id);
-  };
-
-  const handleKeyChange = (event: React.ChangeEvent<{}>, value: ITag[] | null) => {
-    onChange &&
-      onChange({
-        ...item,
-        Key: value || undefined,
-      });
-  };
-
-  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange &&
-      onChange({
-        ...item,
-        Value: event.target.value,
-      });
+    onClickDelete && onClickDelete(id);
   };
 
   return (
     <ListItem
       sx={{
         padding: 2,
+        alignItems: 'flex-end',
       }}
-    >
-      {editable ? (
-        <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
-          <Autocomplete
-            options={keyOptions || []}
-            multiple
-            onChange={handleKeyChange}
-            getOptionLabel={(o) => o.Name}
-            renderInput={(params) => <TextField {...params} variant="standard" />}
-            sx={{
-              flex: '1 1 5em',
-            }}
-          />
-
-          <Divider orientation="vertical" flexItem />
-          <TextField
-            variant="standard"
-            defaultValue={item.Value}
-            onChange={handleValueChange}
-            sx={{ flex: '1 1 auto' }}
-          />
+      secondaryAction={
+        editable ? (
           <Stack direction={'row'} spacing={1}>
             <Divider orientation="vertical" flexItem />
             <IconButton onClick={handleDeleteClick}>
               <ClearIcon />
             </IconButton>
-            <IconButton {...props} tabIndex={-1}>
+            <IconButton {...props}>
               <DragIndicatorIcon />
             </IconButton>
           </Stack>
-        </Stack>
+        ) : undefined
+      }
+    >
+      {editable ? (
+        control
       ) : (
         <Stack spacing={1} direction={'row'}>
           <Typography
