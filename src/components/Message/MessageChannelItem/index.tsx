@@ -1,5 +1,7 @@
 import UserAvatar from '@/components/UserAvatar';
 import { useGetUserQuery } from '@/features/api/user/getUser';
+import { selectGroupId } from '@/features/message/messageSlice';
+import { useAppSelector } from '@/features/store';
 import { MessageReceiveHandle } from '@/pages/Account/User/Message';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { IChatGroupInfo, IChatMessage } from '@/types/interfaces/IChat';
@@ -18,6 +20,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
     const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
     const [lastMessage, setLastMessage] = useState<ChatMessage>();
     const [lastMessageTime, setLastMessageTime] = useState<string>('');
+    const groupIdState = useAppSelector(selectGroupId);
     const { data: userData } = useGetUserQuery();
 
     const ChannelAvatar = () => {
@@ -56,6 +59,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
           gap: 2,
           overflow: 'hidden',
           textAlign: 'start',
+          backgroundColor: groupIdState === chatGroupInfo?.Id ? theme.palette.action.selected : 'inherit',
         }}
         component="button"
         onClick={() => onClick?.(chatGroupInfo)}
