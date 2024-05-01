@@ -53,3 +53,12 @@ export interface IRecruitmentSearchResult {
   OrderBy: string;
   result: IRecruitment[];
 }
+
+export interface ISaftyReport {
+  Id: string;
+  IsCompanyExist: boolean;
+  AverageSalary?: string;
+  Content: string;
+  Recruitment?: IRecruitment;
+  RecruitmentId: string;
+}

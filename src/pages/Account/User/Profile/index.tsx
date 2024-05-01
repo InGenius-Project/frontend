@@ -29,7 +29,7 @@ export default function Profile() {
           ?.KeyValueListLayout?.Items?.at(0)
           ?.Key?.map((a) => a.Name)
           .join(', ')
-      : '';
+      : undefined;
   }, [schoolAreaData?.result]);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function Profile() {
         editable
         onChangeUserName={handleChangeUserName}
         user={userData?.result}
-        education={`曾就讀於: ${schoolLabel}`}
+        education={schoolLabel ? `曾就讀於: ${schoolLabel}` : undefined}
         avatar={
           <ImageCrop
             circularCrop

@@ -4,11 +4,15 @@ import ApplyButton from '@/components/Button/ApplyButton';
 import BackButton from '@/components/Button/BackButton';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
-import { Box, Container, Divider, Paper, Stack } from '@mui/material';
+import { useGetSaftyReportQuery } from '@/features/api/recruitment/getSaftyReport';
+import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 function SearchRecruitment() {
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
+  const { data: saftyReportData } = useGetSaftyReportQuery(recruitmentId || '', {
+    skip: !recruitmentId,
+  });
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || '', {
     skip: !recruitmentId,
   });
@@ -26,6 +30,18 @@ function SearchRecruitment() {
               recruitment={recruitmentData?.result}
               control={<ApplyButton recruitmentId={recruitmentId || ''} />}
             />
+          )}
+          {saftyReportData?.result && (
+            <Paper sx={{ padding: 3 }}>
+              <Box>
+                <Typography variant="subtitle1">安全報告</Typography>
+                <Typography variant="body1">{saftyReportData.result.Content}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle1">平均薪資</Typography>
+                <Typography variant="body1">{saftyReportData.result.AverageSalary}</Typography>
+              </Box>
+            </Paper>
           )}
           {recruitmentData &&
           recruitmentData.result &&

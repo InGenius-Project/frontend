@@ -29,7 +29,6 @@ function UserProfileItem({ editable = false, user, avatar, onChangeUserName, edu
     onChangeUserName?.(event.target.value);
   };
 
-  const handleDelete = () => {};
   return (
     <Paper
       sx={{
@@ -95,11 +94,11 @@ function UserProfileItem({ editable = false, user, avatar, onChangeUserName, edu
           <Typography variant="h4">{user?.Username}</Typography>
         )}
         {education && <Typography variant="caption">{education}</Typography>}
-        <Stack direction={'row'} spacing={1}>
-          {user?.Tags?.map((t) => <Chip label="積極" onDelete={editable ? handleDelete : undefined} />)}
-          {/* TODO: add Tag crud */}
-          {/* {editable && <Chip label="新增標籤" deleteIcon={<Add />} onDelete={() => {}} />} */}
-        </Stack>
+        {/* <Stack direction={'row'} spacing={1}> */}
+        {/* {user?.Tags?.map((t) => <Chip label="積極" onDelete={editable ? handleDelete : undefined} />)} */}
+        {/* TODO: add Tag crud */}
+        {/* {editable && <Chip label="新增標籤" deleteIcon={<Add />} onDelete={() => {}} />} */}
+        {/* </Stack> */}
       </Stack>
     </Paper>
   );
