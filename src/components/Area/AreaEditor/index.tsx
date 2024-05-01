@@ -30,9 +30,9 @@ function AreaEditor() {
 
   const areasLength = useMemo(() => (areasState.areas || []).length, [areasState.areas]);
 
-  useEffect(() => {
-    areaItemsRef.current = areaItemsRef.current.slice(0, areasLength);
-  }, [areasLength]);
+  // useEffect(() => {
+  //   areaItemsRef.current = areaItemsRef.current.slice(0, areasLength);
+  // }, [areasLength]);
 
   const handleDragEnd = async (items: string[], result?: DropResult) => {
     if (areasState.areas) {

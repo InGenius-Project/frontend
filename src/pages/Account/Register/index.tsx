@@ -2,6 +2,9 @@ import LoginSvg from '@/assets/images/svg/login.svg?react';
 import { userAuthVariants } from '@/assets/motion/variants';
 import FormInput from '@/components/FormInput';
 import { useRegisterMutation } from '@/features/api/auth/register';
+import { useLazyGetUserQuery } from '@/features/api/user/getUser';
+import { store } from '@/features/store';
+import { UserRole } from '@/types/enums/UserRole';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock';
@@ -43,12 +46,6 @@ export default function Register() {
   } = methods;
 
   useEffect(() => {
-    if (isSuccess) {
-      navigate('/Account/User/Init');
-    }
-  }, [isSuccess, navigate]);
-
-  useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
@@ -60,7 +57,22 @@ export default function Register() {
       Email: values.Email,
       Password: values.Password,
       Role: role,
-    });
+    })
+      .unwrap()
+      .then((r) => {
+        const state = store.getState();
+        switch (state.userState.User?.Role) {
+          case UserRole.Intern:
+            navigate('/Account/User/Intern/Init');
+            break;
+          case UserRole.Company:
+            navigate('/Account/User/Company/Init');
+            break;
+          default:
+            navigate('/Account/User');
+            break;
+        }
+      });
   };
 
   const [role, setRole] = React.useState(0);

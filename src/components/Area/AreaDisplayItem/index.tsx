@@ -6,6 +6,7 @@ import { Divider, Stack, Typography } from '@mui/material';
 import React, { MouseEventHandler } from 'react';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
+import { v4 as uuid } from 'uuid';
 
 type AreaDisplayItemProps = {
   area: IArea;
@@ -58,7 +59,16 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
           </React.Fragment>
         ))}
       {a.isLayoutType(LayoutType.KeyValueList) &&
-        area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} key={i.Id} />)}
+        area.KeyValueListLayout?.Items?.map((i) => (
+          <AreaKeyValueListItem
+            item={{
+              ...i,
+              InnerId: uuid(),
+            }}
+            id={i.Id}
+            key={i.Id}
+          />
+        ))}
     </Stack>
   );
 }
