@@ -256,7 +256,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                 editable
                 onClickDelete={handleKeyValueLitRemove}
                 control={
-                  <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
+                  <Stack direction="row" spacing={1} sx={{ flex: 1, alignItem: 'flex-end' }}>
                     <Autocomplete<IInnerTag, true>
                       options={
                         tagsData?.result

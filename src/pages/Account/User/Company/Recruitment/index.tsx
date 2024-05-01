@@ -1,22 +1,39 @@
-import { RecruitmentItem, RecruitmentNewButton } from '@/components/Recruitment';
+import { RecruitmentItem } from '@/components/Recruitment';
+import RecruitmentEmpty from '@/components/Recruitment/RecruitmentEmpty';
 import { useDeleteRecruitmentMutation } from '@/features/api/recruitment/deleteRecruitment';
 import { useGetRecruitmentsQuery } from '@/features/api/recruitment/getRecruitmentsByUser';
 import { usePostRecruitmentMutation } from '@/features/api/recruitment/postRecruitment';
+import { useAppSelector } from '@/features/store';
 import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
+import Add from '@mui/icons-material/Add';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, Stack, Switch } from '@mui/material';
+import { Button, IconButton, Stack, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { NIL } from 'uuid';
 
 export default function CompanyRecruitment() {
   const { data: recruitmentData } = useGetRecruitmentsQuery(null);
   const [postRecruitment] = usePostRecruitmentMutation();
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
   const navigate = useNavigate();
+  const userState = useAppSelector((state) => state.userState);
 
   const handlePostRecruitmentArea = (recruitment: IRecruitmentPost) => {
     postRecruitment(recruitment);
+  };
+
+  const handlePostEmptyRecruitment = () => {
+    postRecruitment({
+      Id: NIL,
+      Name: `${userState.User?.Username}的職缺`,
+      Enable: false,
+    })
+      .unwrap()
+      .then((r) => {
+        if (r.result) navigate(`Edit/${r?.result?.Id}`);
+      });
   };
 
   const handleClickDelete = (id: string) => {
@@ -25,7 +42,11 @@ export default function CompanyRecruitment() {
 
   return (
     <Stack spacing={1}>
-      <RecruitmentNewButton onPost={handlePostRecruitmentArea} />
+      <Stack direction={'row'}>
+        <Button onClick={handlePostEmptyRecruitment} startIcon={<Add />} variant="outlined">
+          新增空白職缺
+        </Button>
+      </Stack>
 
       {recruitmentData &&
         recruitmentData.result &&
@@ -57,6 +78,8 @@ export default function CompanyRecruitment() {
             }
           />
         ))}
+
+      {(!recruitmentData || !recruitmentData.result || recruitmentData.result.length === 0) && <RecruitmentEmpty />}
     </Stack>
   );
 }

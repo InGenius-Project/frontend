@@ -1,5 +1,5 @@
-import WarningIcon from '@mui/icons-material/Warning';
-import { ButtonBase, Stack, Typography, useTheme } from '@mui/material';
+import NoData from '@/assets/images/svg/noData.svg?react';
+import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
 import React from 'react';
 
 type AreaEmptyProps = {
@@ -15,23 +15,28 @@ function AreaEmpty({ onClick: handleClick, editable = false }: AreaEmptyProps) {
   };
 
   return (
-    <Stack spacing={1} direction={'row'}>
-      <ButtonBase
-        sx={{
-          padding: 3,
-          position: 'relative',
-          width: '100%',
-          cursor: editable ? 'pointer' : 'default',
-        }}
-        component={'button'}
-        onClick={handleAddClick}
-      >
-        <WarningIcon sx={{ fontSize: '2em', color: theme.palette.primary.main, mr: 2 }} />
+    <Paper
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        p: 2,
+        gap: 2,
+      }}
+    >
+      <NoData style={{ width: '8em', height: 'auto' }} />
+      <Stack spacing={1}>
         <Typography variant="body1" sx={{ color: theme.palette.primary.main }} fontWeight={'bold'}>
-          喔歐，這裡似乎還沒有資料可以顯示呢 {editable ? '，快去新增一些資料，讓個人首頁變得更豐富吧～' : ''}
+          Oh! 這個地方沒有任何區塊
         </Typography>
-      </ButtonBase>
-    </Stack>
+        {editable && (
+          <Box>
+            <Button variant="text" onClick={handleAddClick}>
+              點擊此處新增區塊
+            </Button>
+          </Box>
+        )}
+      </Stack>
+    </Paper>
   );
 }
 

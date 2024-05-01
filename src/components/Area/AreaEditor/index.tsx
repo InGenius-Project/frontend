@@ -93,7 +93,9 @@ function AreaEditor() {
       deleteArea(layoutState.areaId)
         .unwrap()
         .then(() => {
-          areasState.areas && dispatch(setLayoutByArea(areasState.areas[areaIndex - 1]));
+          areasState.areas &&
+            areasState.areas[areaIndex - 1] &&
+            dispatch(setLayoutByArea(areasState.areas[areaIndex - 1]));
         });
     }
   };
