@@ -195,6 +195,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
         <Stack direction="row" spacing={1} alignItems={'flex-end'}>
           <Box width={150} height={150}>
             <ImageCrop
+              width={150}
+              height={150}
               image={layoutImage}
               onCropDone={(image) => {
                 dispatch(setImage(image));

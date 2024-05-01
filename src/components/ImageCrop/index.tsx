@@ -13,7 +13,7 @@ import {
   styled,
 } from '@mui/material';
 import { useUpdateEffect } from 'ahooks';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import ReactCrop, { Crop, centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import UploadImageButton from './UploadImageButton';
@@ -34,7 +34,7 @@ const VisuallyHiddenInput = styled('input')({
 const MAX_KB_SIZE = 100;
 const MAX_CANVAS_SIZE = MAX_KB_SIZE * 1024; // 64KB
 const MIN_DIMENSION = 150;
-const ASPECT_RATIO = 1;
+
 function base64ToBytes(base64: string): number {
   const binaryString = atob(base64);
   const bytes = binaryString.length;
@@ -42,6 +42,8 @@ function base64ToBytes(base64: string): number {
 }
 
 type ImageCropProps = {
+  width: number;
+  height: number;
   image?: IImageInfo;
   altComponent?: React.ReactNode;
   onChange?: (image: IImageInfo | undefined) => void;
@@ -49,7 +51,15 @@ type ImageCropProps = {
   onChangeFileName?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   circularCrop?: boolean;
 };
-export default function ImageCrop({ image, circularCrop, altComponent, onCropDone, onChangeFileName }: ImageCropProps) {
+export default function ImageCrop({
+  image,
+  circularCrop,
+  altComponent,
+  onCropDone,
+  onChangeFileName,
+  width,
+  height,
+}: ImageCropProps) {
   const [imageState, setImageState] = useState<IImageInfo | undefined>(image);
   const [imgSrc, setImgSrc] = useState('');
 
@@ -58,6 +68,10 @@ export default function ImageCrop({ image, circularCrop, altComponent, onCropDon
   const [expectSizeState, setExpectSizeState] = useState<number>(0);
   const [crop, setCrop] = useState<Crop>();
   const [open, setOpen] = React.useState(false);
+
+  const ASPECT_RATIO = useMemo(() => {
+    return width && height ? width / height : 1;
+  }, [width, height]);
 
   useUpdateEffect(() => {
     setImageState && setImageState(image);

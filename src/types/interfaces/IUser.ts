@@ -15,6 +15,7 @@ export interface IUserInfo {
   Role: UserRole;
   Areas?: Array<IArea> | null;
   Avatar?: IImageInfo | null;
+  BackgroundImage?: IImageInfo | null;
   Tags?: Array<ITag>;
 }
 
@@ -25,4 +26,9 @@ export interface IOwnerUser extends Pick<IUserInfo, 'Id' | 'Username' | 'Email' 
 type AvatarPostField = 'Image';
 export interface AvatarPostFormData extends FormData {
   append(name: AvatarPostField, value: string | Blob, fileName?: string): void;
+}
+
+export interface IImagePost {
+  Image?: Blob;
+  Uri?: string;
 }
