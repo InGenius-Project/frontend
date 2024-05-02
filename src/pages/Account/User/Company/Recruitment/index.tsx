@@ -7,6 +7,7 @@ import { useAppSelector } from '@/features/store';
 import { IRecruitmentPost } from '@/types/interfaces/IRecruitment';
 import Add from '@mui/icons-material/Add';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, IconButton, Stack, Switch } from '@mui/material';
@@ -42,7 +43,10 @@ export default function CompanyRecruitment() {
 
   return (
     <Stack spacing={1}>
-      <Stack direction={'row'}>
+      <Stack direction={'row'} spacing={1}>
+        <Button onClick={() => navigate('')} startIcon={<Add />} endIcon={<AutoAwesome />}>
+          新增職缺
+        </Button>
         <Button onClick={handlePostEmptyRecruitment} startIcon={<Add />} variant="outlined">
           新增空白職缺
         </Button>

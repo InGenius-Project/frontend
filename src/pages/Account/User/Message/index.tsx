@@ -2,6 +2,7 @@ import Logo from '@/assets/images/logo/logoNoStyle.svg?react';
 import { chatUrl } from '@/assets/utils/urls';
 import { MessageChannelItem } from '@/components/Message';
 import MessageAIModel from '@/components/Message/MessageAIModel';
+import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyItem';
 import MessageModel from '@/components/Message/MessageModel';
 import { useGetChatGroupsQuery } from '@/features/api/chat/getChatGroups';
 import { useGetInvitedChatGroupsQuery } from '@/features/api/chat/getInvitedChatGroups';
@@ -30,13 +31,17 @@ function Message() {
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const { data: chatGroupsData } = useGetChatGroupsQuery(null);
   const { data: invitedChatGroupsData } = useGetInvitedChatGroupsQuery();
-  const [pageState, setPageState] = useState<MessagePage>(MessagePage.ChatGroups);
+  const [pageState, setPageState] = useState<MessagePage>(MessagePage.AIChat);
   const [conn, setConn] = useState<HubConnection>();
 
   const firstRender = useRef(true);
   const dispatch = useAppDispatch();
   const messageModelRef = useRef<MessageReceiveHandle>(null);
   const messageChannelItemRefs = useRef(new Map());
+
+  useEffect(() => {
+    dispatch(setGroupId('ai'));
+  }, [dispatch]);
 
   // connect to chat server
   useEffect(() => {
@@ -143,20 +148,24 @@ function Message() {
                   CreateTime: '',
                 }}
               />
-              {chatGroupsData?.result?.map((c, index) => {
-                return (
-                  <MessageChannelItem
-                    onClick={() => handleClickChannelItem(c.Id)}
-                    key={c.Id}
-                    chatGroupInfo={c}
-                    ref={(el) => {
-                      if (el) {
-                        messageChannelItemRefs.current.set(c.Id, el);
-                      }
-                    }}
-                  />
-                );
-              })}
+              {(chatGroupsData?.result || []).length > 0 ? (
+                chatGroupsData?.result?.map((c, index) => {
+                  return (
+                    <MessageChannelItem
+                      onClick={() => handleClickChannelItem(c.Id)}
+                      key={c.Id}
+                      chatGroupInfo={c}
+                      ref={(el) => {
+                        if (el) {
+                          messageChannelItemRefs.current.set(c.Id, el);
+                        }
+                      }}
+                    />
+                  );
+                })
+              ) : (
+                <MessageChannelEmptyItem />
+              )}
             </>
           )}
 

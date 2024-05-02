@@ -4,6 +4,11 @@ import { UserRole } from '@/types/enums/UserRole';
 import { internalCreateRangeSelection } from 'lexical/LexicalSelection';
 import { AvatarPostFormData } from './IUser';
 
+export interface IWithAreas {
+  Id: string;
+  Areas?: IArea[];
+}
+
 export interface IArea {
   Id: string;
   Sequence: number;
@@ -48,7 +53,7 @@ export interface IAreaPost {
   ResumeId?: string;
 }
 
-export enum GenerateAreaType {
+export enum AreaGenType {
   'Resume' = 'resume',
   'Recruitment' = 'recruitment',
 }
@@ -57,12 +62,13 @@ export interface IGenerateAreaPost {
   TitleOnly: boolean;
   AreaNum: number;
   Title: string;
-  Type: GenerateAreaType;
+  Type: AreaGenType;
 }
 
 export interface IGenerateAreaByTitlePost {
-  ResumeTitle: string;
+  Title: string;
   AreaTitles: Array<string>;
+  Type: AreaGenType;
 }
 
 export interface ILayout {

@@ -1,8 +1,6 @@
-import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
-import React, { useState } from 'react';
-import ImageIcon from '@mui/icons-material/Image';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import SendIcon from '@mui/icons-material/Send';
+import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 type MessageModelInputProps = {
@@ -42,14 +40,14 @@ function MessageModelInput({ onSend }: MessageModelInputProps) {
         }}
         onChange={(e) => setMessage(e.target.value)}
       />
-      <Stack direction={'row'} spacing={1}>
+      {/* <Stack direction={'row'} spacing={1}>
         <IconButton>
           <ImageIcon />
         </IconButton>
         <IconButton>
           <AttachFileIcon />
         </IconButton>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 }

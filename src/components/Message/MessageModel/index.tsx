@@ -14,6 +14,8 @@ import { useLazyJoinGroupQuery } from '@/features/api/chat/joinGroup';
 import { useAppSelector } from '@/features/store';
 import { selectGroupId } from '@/features/message/messageSlice';
 import { NIL } from 'uuid';
+import MessageEmpty from '../MessageEmpty';
+import { result } from 'lodash';
 
 type MessageModelProps = {
   conn?: HubConnection;
@@ -94,15 +96,19 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ conn
           }}
           ref={listRef}
         >
-          {messageState?.map((message, index) => (
-            <MessageItem
-              key={index}
-              label={message.Message}
-              avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
-              align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
-              time={new Date(new ChatMessage(message).SendTime)}
-            />
-          ))}
+          {messageState && messageState.length > 0 ? (
+            messageState.map((message, index) => (
+              <MessageItem
+                key={index}
+                label={message.Message}
+                avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
+                align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
+                time={new Date(new ChatMessage(message).SendTime)}
+              />
+            ))
+          ) : (
+            <MessageEmpty label={chatGroupData?.result?.GroupName} />
+          )}
         </Stack>
       ) : (
         <Box

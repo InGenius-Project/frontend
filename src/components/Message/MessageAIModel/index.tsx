@@ -10,6 +10,7 @@ import { NIL } from 'uuid';
 import MessageItem from '../MessageItem';
 import MessageModelHeader from '../MessageModelHeader';
 import MessageModelInput from '../MessageModelInput';
+import MessageEmpty from '../MessageEmpty';
 
 type MessageModelProps = {
   onChangeMessage?: (message: string) => void;
@@ -104,9 +105,17 @@ function MessageAIModel({ onChangeMessage }: MessageModelProps) {
         }}
         ref={listRef}
       >
-        {messages?.map((message, index) => (
-          <MessageItem key={index} align={message.role === 'user' ? 'right' : 'left'} label={message?.content || ''} />
-        ))}
+        {messages && messages.length > 0 ? (
+          messages?.map((message, index) => (
+            <MessageItem
+              key={index}
+              align={message.role === 'user' ? 'right' : 'left'}
+              label={message?.content || ''}
+            />
+          ))
+        ) : (
+          <MessageEmpty label="歡迎來到InGeniusAI聊天室! 您可以在此詢問AI有關實習的任何問題。" />
+        )}
         {receiveMessage.length > 0 && <MessageItem align="left" label={receiveMessage} />}
       </Stack>
       <MessageModelInput onSend={handleSend} />

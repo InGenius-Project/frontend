@@ -6,11 +6,9 @@ import { usePostSequenceMutation } from '@/features/api/area/postSequence';
 import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
 import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import { Box, IconButton, Portal, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
-import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
@@ -18,7 +16,6 @@ import AreaItem from '../AreaItem';
 
 function AreaEditor() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const areasState = useAppSelector((state) => state.areasState);
   const layoutState = useAppSelector((state) => state.layoutState);
   const isEmptyAreas = useAppSelector(selectIsEmptyAreas);
@@ -117,11 +114,6 @@ function AreaEditor() {
         {isEmptyAreas && (
           <>
             <AreaEmpty onClick={handleAddClick} editable />
-            <Portal container={() => document.getElementById('userHeader')}>
-              <IconButton size="small" sx={{ ml: 1 }} onClick={() => navigate('New')}>
-                <CreateOutlinedIcon />
-              </IconButton>
-            </Portal>
           </>
         )}
 

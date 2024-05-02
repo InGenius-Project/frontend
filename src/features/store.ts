@@ -5,6 +5,7 @@ import userReducer from '@/features/user/userSlice';
 import messageReducer from '@/features/message/messageSlice';
 import areasReducer from '@/features/areas/areasSlice';
 import { baseApi } from './api/baseApi';
+import generateReducer from '@/features/generate/generateSlice';
 import errorToastMiddleware from './middleware/errorToastMiddleware';
 import { chatBaseApi } from './api/chatBaseApi';
 import { unsplashtApi } from './api/unsplashApi';
@@ -18,6 +19,7 @@ export const store = configureStore({
     userState: userReducer,
     layoutState: layoutReducer,
     areasState: areasReducer,
+    generateState: generateReducer,
     messageState: messageReducer,
   },
   devTools: env === 'development' || env === 'testing',
