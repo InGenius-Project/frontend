@@ -1,10 +1,8 @@
-import { IArea } from './IArea';
+import { IWithAreas } from './IArea';
 import { IUserInfo } from './IUser';
 
-export interface IResume {
-  Id: string;
+export interface IResume extends IWithAreas {
   Title: string;
-  Areas: Array<IArea>;
   ModifiedAt: string;
   Visibility: boolean;
   User: IUserInfo;

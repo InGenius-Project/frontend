@@ -25,6 +25,7 @@ export default function Root() {
   const [searchInputState, setSearchInputState] = useState('');
 
   const { data: trendRecruitmentData, isLoading: isSearchingTrendRecruitment } = useSearchRecruitmentQuery({
+    Query: '',
     Page: 1,
     PageSize: 3,
     SortBy: SearchSortBy.CreatedTime, // TODO : Change SortBy

@@ -6,11 +6,9 @@ import { usePostSequenceMutation } from '@/features/api/area/postSequence';
 import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
 import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import { Box, IconButton, Portal, Stack } from '@mui/material';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Box, Stack } from '@mui/material';
+import React, { useEffect, useRef } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
-import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
@@ -18,21 +16,24 @@ import AreaItem from '../AreaItem';
 
 function AreaEditor() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const areasState = useAppSelector((state) => state.areasState);
   const layoutState = useAppSelector((state) => state.layoutState);
   const isEmptyAreas = useAppSelector(selectIsEmptyAreas);
   const [controlTop, setControlTop] = React.useState<number | undefined>(0);
-  const [deleteArea] = useDeleteAreaMutation();
-  const [postArea] = usePostAreaMutation();
-  const [postSequence] = usePostSequenceMutation();
+  const [deleteArea, { isLoading: isDeletingArea }] = useDeleteAreaMutation();
+  const [postArea, { isLoading: isPostingArea }] = usePostAreaMutation();
+  const [postSequence, { isLoading: isPostingSequence }] = usePostSequenceMutation();
   const areaItemsRef = useRef<Array<HTMLDivElement | null>>([]);
 
-  const areasLength = useMemo(() => (areasState.areas || []).length, [areasState.areas]);
-
   useEffect(() => {
-    areaItemsRef.current = areaItemsRef.current.slice(0, areasLength);
-  }, [areasLength]);
+    if (areasState.areas) {
+      const index = areasState.areas.findIndex((a) => a.Id === layoutState.areaId);
+      if (index) {
+        setControlTop(areaItemsRef.current[index]?.offsetTop);
+        areaItemsRef.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [areasState.areas, layoutState.areaId]);
 
   const handleDragEnd = async (items: string[], result?: DropResult) => {
     if (areasState.areas) {
@@ -56,13 +57,6 @@ function AreaEditor() {
     }
   };
 
-  // const handleDragStart: OnDragStartResponder = ({ draggableId }) => {
-  //   if (areasState && areasState.areas) {
-  //     const findArea = areasState.areas.find((a) => a.Id === draggableId);
-  //     findArea && dispatch(setLayoutByArea(findArea));
-  //   }
-  // };
-
   const handleAddClick = () => {
     dispatch(initializeState());
 
@@ -77,23 +71,15 @@ function AreaEditor() {
     });
   };
 
-  useEffect(() => {
-    if (areasState.areas) {
-      const index = areasState.areas.findIndex((a) => a.Id === layoutState.areaId);
-      if (index) {
-        setControlTop(areaItemsRef.current[index]?.offsetTop);
-        areaItemsRef.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  }, [areasState.areas, layoutState.areaId]);
-
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (layoutState.areaId) {
       const areaIndex = areasState.areas?.findIndex((a) => a.Id === layoutState.areaId) || 0;
       deleteArea(layoutState.areaId)
         .unwrap()
         .then(() => {
-          areasState.areas && dispatch(setLayoutByArea(areasState.areas[areaIndex - 1]));
+          areasState.areas &&
+            areasState.areas[areaIndex - 1] &&
+            dispatch(setLayoutByArea(areasState.areas[areaIndex - 1]));
         });
     }
   };
@@ -128,11 +114,6 @@ function AreaEditor() {
         {isEmptyAreas && (
           <>
             <AreaEmpty onClick={handleAddClick} editable />
-            <Portal container={() => document.getElementById('userHeader')}>
-              <IconButton size="small" sx={{ ml: 1 }} onClick={() => navigate('New')}>
-                <CreateOutlinedIcon />
-              </IconButton>
-            </Portal>
           </>
         )}
 
@@ -150,6 +131,7 @@ function AreaEditor() {
                 id={a.Id}
                 ref={(el) => (areaItemsRef.current[i] = el)}
                 focused={layoutState.areaId === a.Id}
+                isLoadingSequence={isPostingSequence}
               ></AreaItem>
             ))}
           </DragDropContainer>
@@ -168,6 +150,9 @@ function AreaEditor() {
             top={controlTop}
             disabled={!layoutState.areaId}
             visibled={layoutState.isDisplayed}
+            isLoadingAdd={isPostingArea}
+            isLoadingDelete={isDeletingArea}
+            isLoadingVisibility={isPostingArea}
             onAddClick={handleAddClick}
             onDeleteClick={handleDeleteClick}
             onVisibilityChange={handleVisibilityChange}

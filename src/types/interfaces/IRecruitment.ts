@@ -1,12 +1,10 @@
-import { IArea } from './IArea';
+import { IArea, IWithAreas } from './IArea';
 import { IResume } from './IResume';
 import { IOwnerUser } from './IUser';
 
-export interface IRecruitment {
-  Id: string;
+export interface IRecruitment extends IWithAreas {
   Name: string;
   Enable: boolean;
-  Areas?: IArea[];
   Resumes?: IResume[];
   Publisher?: IOwnerUser;
   PublisherId?: string;
@@ -52,4 +50,13 @@ export interface IRecruitmentSearchResult {
   SortBy: string;
   OrderBy: string;
   result: IRecruitment[];
+}
+
+export interface ISaftyReport {
+  Id: string;
+  IsCompanyExist: boolean;
+  AverageSalary?: string;
+  Content: string;
+  Recruitment?: IRecruitment;
+  RecruitmentId: string;
 }

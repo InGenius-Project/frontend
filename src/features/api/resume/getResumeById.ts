@@ -21,7 +21,7 @@ export const getResumeByIdApi = baseApi.injectEndpoints({
       transformResponse: (response: IResponse<IResume>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.result) {
-          const orderedArea = response.result.Areas.sort((a, b) => a.Sequence - b.Sequence);
+          const orderedArea = response.result.Areas?.sort((a, b) => a.Sequence - b.Sequence);
           return {
             ...response,
             result: {

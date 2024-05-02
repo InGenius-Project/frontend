@@ -48,7 +48,7 @@ export default function ResumeEdit() {
         setAreas({
           id: resumeData.result.Id,
           type: AreasType.RESUME,
-          areas: resumeData.result.Areas,
+          areas: resumeData.result.Areas || [],
         }),
       );
   }, [resumeData, dispatch]);

@@ -11,20 +11,26 @@ import MessageModelInput from '../MessageModelInput';
 import { MessageReceiveHandle } from '@/pages/Account/User/Message';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { useLazyJoinGroupQuery } from '@/features/api/chat/joinGroup';
+import { useAppSelector } from '@/features/store';
+import { selectGroupId } from '@/features/message/messageSlice';
+import { NIL } from 'uuid';
+import MessageEmpty from '../MessageEmpty';
+import { result } from 'lodash';
 
 type MessageModelProps = {
-  groupId: string;
   conn?: HubConnection;
   control?: React.ReactNode;
 };
 
-const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ groupId, conn, control }, ref) => {
+const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ conn, control }, ref) => {
   const listRef = useRef<HTMLDivElement>(null);
   const [joinGroup] = useLazyJoinGroupQuery();
+  const groupId = useAppSelector(selectGroupId);
   const [messageState, setMessages] = useState<IChatMessage[]>([]);
   const { data: chatGroupData } = useGetChatGroupQuery(
-    { groupId },
+    { groupId: groupId || NIL },
     {
+      skip: !groupId,
       refetchOnMountOrArgChange: true,
       refetchOnReconnect: true,
     },
@@ -90,15 +96,19 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ grou
           }}
           ref={listRef}
         >
-          {messageState?.map((message, index) => (
-            <MessageItem
-              key={index}
-              label={message.Message}
-              avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
-              align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
-              time={new Date(new ChatMessage(message).SendTime)}
-            />
-          ))}
+          {messageState && messageState.length > 0 ? (
+            messageState.map((message, index) => (
+              <MessageItem
+                key={index}
+                label={message.Message}
+                avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
+                align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
+                time={new Date(new ChatMessage(message).SendTime)}
+              />
+            ))
+          ) : (
+            <MessageEmpty label={chatGroupData?.result?.GroupName} />
+          )}
         </Stack>
       ) : (
         <Box

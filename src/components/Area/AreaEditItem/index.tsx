@@ -195,6 +195,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
         <Stack direction="row" spacing={1} alignItems={'flex-end'}>
           <Box width={150} height={150}>
             <ImageCrop
+              width={150}
+              height={150}
               image={layoutImage}
               onCropDone={(image) => {
                 dispatch(setImage(image));
@@ -253,59 +255,17 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                 id={item.InnerId}
                 key={item.InnerId}
                 item={item}
+                options={
+                  tagsData?.result
+                    ? tagsData.result.map((t) => ({
+                        ...t,
+                        InnerId: uuid(),
+                      }))
+                    : []
+                }
                 editable
                 onClickDelete={handleKeyValueLitRemove}
-                control={
-                  <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
-                    <Autocomplete<IInnerTag, true>
-                      options={
-                        tagsData?.result
-                          ? tagsData.result.map((t) => ({
-                              ...t,
-                              InnerId: item.InnerId,
-                            }))
-                          : []
-                      }
-                      multiple
-                      value={(item.Key || []).map((i) => ({
-                        ...i,
-                        InnerId: uuid(),
-                      }))}
-                      onChange={(_, i) =>
-                        handleKeyValueListItemChange({
-                          ...item,
-                          Key: i,
-                        })
-                      }
-                      selectOnFocus
-                      handleHomeEndKeys
-                      getOptionLabel={(o) => o.Name}
-                      filterOptions={(options, params) => {
-                        const filtered = filter(options, params);
-                        return filtered;
-                      }}
-                      renderInput={(params) => <TextField {...params} variant="standard" />}
-                      sx={{
-                        flex: '1 1 5em',
-                      }}
-                    />
-
-                    <Divider orientation="vertical" flexItem />
-                    <TextField
-                      variant="standard"
-                      value={item.Value}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        handleKeyValueListItemChange({
-                          ...item,
-                          Value: e.target.value,
-                        });
-                      }}
-                      autoFocus
-                      sx={{ flex: '1 1 auto' }}
-                    />
-                  </Stack>
-                }
+                onChange={handleKeyValueListItemChange}
               />
             ))}
           </DragDropContainer>

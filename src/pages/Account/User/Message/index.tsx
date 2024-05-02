@@ -1,17 +1,18 @@
-import env from '@/assets/utils/env';
+import Logo from '@/assets/images/logo/logoNoStyle.svg?react';
 import { chatUrl } from '@/assets/utils/urls';
 import { MessageChannelItem } from '@/components/Message';
 import MessageAIModel from '@/components/Message/MessageAIModel';
+import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyItem';
 import MessageModel from '@/components/Message/MessageModel';
 import { useGetChatGroupsQuery } from '@/features/api/chat/getChatGroups';
 import { useGetInvitedChatGroupsQuery } from '@/features/api/chat/getInvitedChatGroups';
-import { useInviteUserToGroupMutation } from '@/features/api/chat/inviteUserToGroup';
+import { setGroupId } from '@/features/message/messageSlice';
+import { useAppDispatch } from '@/features/store';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
 import { IChatMessage } from '@/types/interfaces/IChat';
 import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import MailIcon from '@mui/icons-material/Mail';
-import SmartToy from '@mui/icons-material/SmartToy';
 import { Badge, Box, Button, Divider, IconButton, Paper, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
@@ -30,14 +31,17 @@ function Message() {
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const { data: chatGroupsData } = useGetChatGroupsQuery(null);
   const { data: invitedChatGroupsData } = useGetInvitedChatGroupsQuery();
-  const [pageState, setPageState] = useState<MessagePage>(MessagePage.ChatGroups);
-  const [currentGroupId, setCurrentGroupId] = useState<string>('');
+  const [pageState, setPageState] = useState<MessagePage>(MessagePage.AIChat);
   const [conn, setConn] = useState<HubConnection>();
 
   const firstRender = useRef(true);
-  const [inviteUserToGroup] = useInviteUserToGroupMutation();
+  const dispatch = useAppDispatch();
   const messageModelRef = useRef<MessageReceiveHandle>(null);
   const messageChannelItemRefs = useRef(new Map());
+
+  useEffect(() => {
+    dispatch(setGroupId('ai'));
+  }, [dispatch]);
 
   // connect to chat server
   useEffect(() => {
@@ -71,22 +75,11 @@ function Message() {
 
   const handleClickChannelItem = async (groupId: string) => {
     setPageState(MessagePage.ChatGroups);
-    setCurrentGroupId(groupId);
+    dispatch(setGroupId(groupId));
   };
 
   const handleClickInvitedChannelItem = async (groupId: string) => {
-    setCurrentGroupId(groupId);
-  };
-
-  const handleAddChat = () => {
-    conn?.invoke('AddGroup', 'TEST', true);
-  };
-
-  const handleInvite = () => {
-    inviteUserToGroup({
-      groupId: currentGroupId,
-      userId: '3203fbed-b73c-4af0-92ca-b155ca6ddd6d',
-    });
+    dispatch(setGroupId(groupId));
   };
 
   return (
@@ -134,31 +127,45 @@ function Message() {
           {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
             <>
               <MessageChannelItem
-                avatar={<SmartToy />}
-                onClick={() => setPageState(MessagePage.AIChat)}
+                avatar={
+                  <Logo
+                    style={{
+                      width: '1em',
+                      fill: theme.palette.text.primary,
+                    }}
+                  />
+                }
+                onClick={() => {
+                  setPageState(MessagePage.AIChat);
+                  dispatch(setGroupId('ai'));
+                }}
                 chatGroupInfo={{
-                  GroupName: 'AI聊天室',
-                  Id: 'AI',
+                  GroupName: 'InGenius AI',
+                  Id: 'ai',
                   IsPrivate: false,
                   Users: [],
                   InvitedUsers: [],
                   CreateTime: '',
                 }}
               />
-              {chatGroupsData?.result?.map((c, index) => {
-                return (
-                  <MessageChannelItem
-                    onClick={() => handleClickChannelItem(c.Id)}
-                    key={c.Id}
-                    chatGroupInfo={c}
-                    ref={(el) => {
-                      if (el) {
-                        messageChannelItemRefs.current.set(c.Id, el);
-                      }
-                    }}
-                  />
-                );
-              })}
+              {(chatGroupsData?.result || []).length > 0 ? (
+                chatGroupsData?.result?.map((c, index) => {
+                  return (
+                    <MessageChannelItem
+                      onClick={() => handleClickChannelItem(c.Id)}
+                      key={c.Id}
+                      chatGroupInfo={c}
+                      ref={(el) => {
+                        if (el) {
+                          messageChannelItemRefs.current.set(c.Id, el);
+                        }
+                      }}
+                    />
+                  );
+                })
+              ) : (
+                <MessageChannelEmptyItem />
+              )}
             </>
           )}
 
@@ -183,19 +190,9 @@ function Message() {
             flex: '1 1 auto',
           }}
         >
-          {pageState === MessagePage.AIChat ? (
-            <MessageAIModel />
-          ) : (
-            <MessageModel groupId={currentGroupId} conn={conn} ref={messageModelRef} />
-          )}
+          {pageState === MessagePage.AIChat ? <MessageAIModel /> : <MessageModel conn={conn} ref={messageModelRef} />}
         </Box>
       </Paper>
-      {env === 'development' && (
-        <Stack>
-          <Button onClick={handleAddChat}>AddChat</Button>
-          <Button onClick={handleInvite}>Invite</Button>
-        </Stack>
-      )}
     </>
   );
 }

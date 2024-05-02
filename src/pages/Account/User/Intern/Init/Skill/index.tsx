@@ -1,4 +1,5 @@
 import Certificate from '@/assets/images/svg/certificate.svg?react';
+import InitContainer from '@/components/InitContainer';
 import { usePostAreaMutation, usePostListLayoutMutation } from '@/features/api/area';
 import { useGetUserAreaByAreaTypeQuery } from '@/features/api/area/getUserAreaByAreaTpe';
 import { useGetTagsQuery } from '@/features/api/tag/getTags';
@@ -65,14 +66,8 @@ function InitSkill() {
   };
 
   return (
-    <Grid
-      container
-      spacing={4}
-      sx={{
-        py: '2em',
-      }}
-    >
-      <Grid mobile={12} tablet={6}>
+    <InitContainer
+      leftComponent={
         <Stack spacing={1}>
           <Typography variant="h2">你的技能</Typography>
           <Typography variant="caption">選擇你的技能，讓我們提供更精確的實習給你</Typography>
@@ -102,24 +97,15 @@ function InitSkill() {
             <Button onClick={handleClickFinish}>完成</Button>
           </Box>
         </Stack>
-      </Grid>
-      <Grid
-        mobile={12}
-        tablet={6}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      }
+      rightComponent={
         <Certificate
           style={{
-            width: '40%',
-            height: 'auto',
+            width: '100%',
           }}
         />
-      </Grid>
-    </Grid>
+      }
+    />
   );
 }
 

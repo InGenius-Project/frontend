@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Box, Checkbox, IconButton, Stack, useTheme } from '@mui/material';
+import { Box, Checkbox, CircularProgress, IconButton, Stack, useTheme } from '@mui/material';
 import { motion, useAnimate } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
@@ -10,12 +10,25 @@ type AreaControlProps = {
   top: number | undefined;
   disabled?: boolean;
   visibled?: boolean;
+  isLoadingAdd?: boolean;
+  isLoadingDelete?: boolean;
+  isLoadingVisibility?: boolean;
   onAddClick?: React.MouseEventHandler<HTMLButtonElement>;
   onDeleteClick?: React.MouseEventHandler<HTMLButtonElement>;
   onVisibilityChange?: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 };
 
-const AreaControl = ({ top, disabled, visibled, onAddClick, onDeleteClick, onVisibilityChange }: AreaControlProps) => {
+const AreaControl = ({
+  top,
+  disabled,
+  visibled,
+  isLoadingAdd,
+  isLoadingDelete,
+  isLoadingVisibility,
+  onAddClick,
+  onDeleteClick,
+  onVisibilityChange,
+}: AreaControlProps) => {
   const theme = useTheme();
   const [motionRef, animate] = useAnimate();
   const [visibledCheckState, setVisibledCheckState] = useState(visibled);
@@ -53,24 +66,32 @@ const AreaControl = ({ top, disabled, visibled, onAddClick, onDeleteClick, onVis
           alignItems: 'center',
         }}
       >
+        {/* Adding Button */}
         <Box>
           <IconButton disabled={disabled} size="small" onClick={onAddClick} onMouseDown={(e) => e.preventDefault()}>
-            <AddIcon />
+            {isLoadingAdd ? <CircularProgress size={20} /> : <AddIcon />}
           </IconButton>
         </Box>
-        <Checkbox
-          icon={<VisibilityIcon />}
-          disabled={disabled}
-          checkedIcon={<VisibilityOffIcon />}
-          size="small"
-          checked={!visibledCheckState}
-          onChange={onVisibilityChange}
-          onMouseDown={(e) => e.preventDefault()}
-        />
 
+        {/* Visibility Button */}
+        {isLoadingVisibility ? (
+          <CircularProgress size={20} />
+        ) : (
+          <Checkbox
+            icon={<VisibilityIcon />}
+            disabled={disabled}
+            checkedIcon={<VisibilityOffIcon />}
+            size="small"
+            checked={!visibledCheckState}
+            onChange={onVisibilityChange}
+            onMouseDown={(e) => e.preventDefault()}
+          />
+        )}
+
+        {/* Delete Button */}
         <Box>
           <IconButton size="small" disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onDeleteClick}>
-            <DeleteIcon />
+            {isLoadingDelete ? <CircularProgress size={20} /> : <DeleteIcon />}
           </IconButton>
         </Box>
       </Stack>

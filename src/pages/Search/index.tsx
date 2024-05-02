@@ -2,11 +2,10 @@ import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useLazySearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { IRecruitmentSearchPost, SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
-import SearchIcon from '@mui/icons-material/Search';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Container, IconButton, Stack, TextField } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 function Search() {
   const [searchRecruitment, { data: searchRecruitmentsData }] = useLazySearchRecruitmentQuery();

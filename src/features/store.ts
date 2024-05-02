@@ -2,11 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import layoutReducer from '@/features/layout/layoutSlice';
 import userReducer from '@/features/user/userSlice';
+import messageReducer from '@/features/message/messageSlice';
 import areasReducer from '@/features/areas/areasSlice';
 import { baseApi } from './api/baseApi';
+import generateReducer from '@/features/generate/generateSlice';
 import errorToastMiddleware from './middleware/errorToastMiddleware';
 import { chatBaseApi } from './api/chatBaseApi';
 import { unsplashtApi } from './api/unsplashApi';
+import env from '@/assets/utils/env';
 
 export const store = configureStore({
   reducer: {
@@ -16,8 +19,10 @@ export const store = configureStore({
     userState: userReducer,
     layoutState: layoutReducer,
     areasState: areasReducer,
+    generateState: generateReducer,
+    messageState: messageReducer,
   },
-  devTools: import.meta.env.VITE_APP_ENV === 'development',
+  devTools: env === 'development' || env === 'testing',
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
-import { Box, Button, Paper, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
+import { Box, Button, Paper, Stack, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { v4 as uuid } from 'uuid';
 import {
@@ -41,10 +41,11 @@ export type AreaItemProps = {
   area: IArea;
   focused?: boolean;
   id: string; // for draggable id
+  isLoadingSequence?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProps>>(
-  ({ area, children, focused, ...props }, forwardRef) => {
+  ({ area, children, focused, isLoadingSequence, ...props }, forwardRef) => {
     const theme = useTheme();
     const dispatch = useAppDispatch();
     const confirm = useConfirm();
@@ -263,7 +264,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
             top: 0,
             right: 0,
             justifyContent: 'center',
-            cursor: 'move',
+            cursor: isLoadingSequence ? 'wait' : 'move',
             display: isHover ? 'flex' : 'none',
           }}
           {...props}
@@ -298,9 +299,11 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
               {steps[activeStep].item}
 
               <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
-                  {activeStep === AreaStep.New ? '取消' : '上一步'}
-                </Button>
+                <Stack spacing={1}>
+                  <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                    {activeStep === AreaStep.New ? '取消' : '上一步'}
+                  </Button>
+                </Stack>
                 <Box sx={{ flex: '1 1 auto' }} />
                 {isStepOptional(activeStep) && (
                   <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>

@@ -12,7 +12,7 @@ function ApplyResume() {
 
   return (
     <Stack spacing={1}>
-      {resumeData?.result?.Areas.map((area) => {
+      {resumeData?.result?.Areas?.map((area) => {
         return (
           <Paper sx={{ padding: 3 }} key={area.Id}>
             <AreaDisplayItem area={area} />
