@@ -1,5 +1,5 @@
 import { IUserInfo } from '@/types/interfaces/IUser';
-import { Box, Paper, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
+import { Box, Paper, Skeleton, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
 import { forwardRef, useState } from 'react';
 
 type UserProfileItemProps = {
@@ -9,6 +9,7 @@ type UserProfileItemProps = {
   education?: string;
   user?: IUserInfo;
   cover?: React.ReactNode;
+  isLoading?: boolean;
   onChangeUserName?: (userName: string) => void;
 };
 
@@ -19,7 +20,7 @@ const UserNameTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 const UserProfileItem = forwardRef<HTMLDivElement, UserProfileItemProps>(
-  ({ editable = false, user, avatar, onChangeUserName, education, cover }, ref) => {
+  ({ editable = false, user, avatar, onChangeUserName, education, cover, isLoading = false }, ref) => {
     const theme = useTheme();
     const [userNameState, setUserNameState] = useState(user?.Username);
 
@@ -46,7 +47,17 @@ const UserProfileItem = forwardRef<HTMLDivElement, UserProfileItemProps>(
             zIndex: 1,
           }}
         >
-          {cover}
+          {isLoading ? (
+            <Skeleton
+              sx={{
+                height: 'var(--ing-height-profile-cover)',
+                width: '100%',
+              }}
+              variant="rectangular"
+            />
+          ) : (
+            cover
+          )}
         </Box>
 
         <Box
@@ -59,7 +70,17 @@ const UserProfileItem = forwardRef<HTMLDivElement, UserProfileItemProps>(
             zIndex: 2,
           }}
         >
-          {avatar}
+          {isLoading ? (
+            <Skeleton
+              variant="circular"
+              sx={{
+                width: 'var(--ing-height-profile-avatar)',
+                height: 'var(--ing-height-profile-avatar)',
+              }}
+            />
+          ) : (
+            avatar
+          )}
         </Box>
 
         <Stack
@@ -69,7 +90,11 @@ const UserProfileItem = forwardRef<HTMLDivElement, UserProfileItemProps>(
           }}
         >
           {editable ? (
-            <UserNameTextField variant={'standard'} value={userNameState} onChange={handleChangeUserName} />
+            isLoading ? (
+              <Skeleton width="10em" height="2em" />
+            ) : (
+              <UserNameTextField variant={'standard'} value={userNameState} onChange={handleChangeUserName} />
+            )
           ) : (
             <Typography variant="h4">{user?.Username}</Typography>
           )}

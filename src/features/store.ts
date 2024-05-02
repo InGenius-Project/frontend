@@ -8,6 +8,7 @@ import { baseApi } from './api/baseApi';
 import errorToastMiddleware from './middleware/errorToastMiddleware';
 import { chatBaseApi } from './api/chatBaseApi';
 import { unsplashtApi } from './api/unsplashApi';
+import env from '@/assets/utils/env';
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +20,7 @@ export const store = configureStore({
     areasState: areasReducer,
     messageState: messageReducer,
   },
-  devTools: import.meta.env.VITE_APP_ENV === 'development',
+  devTools: env === 'development' || env === 'testing',
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

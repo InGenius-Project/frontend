@@ -17,14 +17,17 @@ import { useDebounceFn } from 'ahooks';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 export default function Profile() {
-  const { data: userData } = useGetUserQuery();
-  const theme = useTheme();
   const dispatch = useAppDispatch();
-  const [uploadAvatar] = useUploadAvatarMutation();
-  const [postUser] = usePostUserMutation();
-  const { data: schoolAreaData } = useGetUserAreaByAreaTypeQuery(AreaType.Education);
-  const [postBackground] = usePostBackgroundMutation();
+  const theme = useTheme();
   const profileItemRef = useRef<HTMLDivElement>(null);
+
+  const { data: userData, isLoading: isFetchingUserData } = useGetUserQuery();
+  const [uploadAvatar, { isLoading: isUploadingAvatar }] = useUploadAvatarMutation();
+  const [postUser] = usePostUserMutation();
+  const { data: schoolAreaData, isLoading: isFetchingEducationData } = useGetUserAreaByAreaTypeQuery(
+    AreaType.Education,
+  );
+  const [postBackground, { isLoading: isPostingBackground }] = usePostBackgroundMutation();
 
   const schoolLabel = useMemo(() => {
     return schoolAreaData?.result
@@ -84,6 +87,7 @@ export default function Profile() {
         onChangeUserName={handleChangeUserName}
         user={userData?.result}
         education={schoolLabel ? `曾就讀於: ${schoolLabel}` : undefined}
+        isLoading={isFetchingUserData || isUploadingAvatar || isFetchingEducationData || isPostingBackground}
         avatar={
           <ImageCrop
             width={150}
@@ -102,7 +106,11 @@ export default function Profile() {
             onCropDone={handleBackgroundCropDone}
             altComponent={
               <Box
-                sx={{ width: '100%', height: 'var(--ing-height-profile-cover)', color: theme.palette.primary.lighter }}
+                sx={{
+                  width: '100%',
+                  height: 'var(--ing-height-profile-cover)',
+                  backgroundColor: theme.palette.primary.lighter,
+                }}
               />
             }
           />

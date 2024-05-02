@@ -240,13 +240,7 @@ export default function ImageCrop({
 
       <Stack direction="row" spacing={2} width={'inherit'} height={'inherit'}>
         {!imageState ? (
-          <UploadImageButton
-            color="white"
-            component="label"
-            width={'inherit'}
-            height={'inherit'}
-            circularCrop={circularCrop}
-          >
+          <UploadImageButton component="label" width={'inherit'} height={'inherit'} circularCrop={circularCrop}>
             {altComponent ? (
               altComponent
             ) : (
@@ -266,8 +260,8 @@ export default function ImageCrop({
           </UploadImageButton>
         ) : (
           <UploadImageButton
-            color="white"
             component="label"
+            color="white"
             width={'inherit'}
             height={'inherit'}
             circularCrop={circularCrop}

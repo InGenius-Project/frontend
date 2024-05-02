@@ -41,10 +41,11 @@ export type AreaItemProps = {
   area: IArea;
   focused?: boolean;
   id: string; // for draggable id
+  isLoadingSequence?: boolean;
 } & Partial<DraggableProvidedDragHandleProps>;
 
 const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProps>>(
-  ({ area, children, focused, ...props }, forwardRef) => {
+  ({ area, children, focused, isLoadingSequence, ...props }, forwardRef) => {
     const theme = useTheme();
     const dispatch = useAppDispatch();
     const confirm = useConfirm();
@@ -263,7 +264,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
             top: 0,
             right: 0,
             justifyContent: 'center',
-            cursor: 'move',
+            cursor: isLoadingSequence ? 'wait' : 'move',
             display: isHover ? 'flex' : 'none',
           }}
           {...props}
