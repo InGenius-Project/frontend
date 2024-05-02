@@ -54,8 +54,8 @@ export interface IAreaPost {
 }
 
 export enum AreaGenType {
-  'Resume' = 'resume',
-  'Recruitment' = 'recruitment',
+  Resume,
+  Recruitment,
 }
 
 export interface IGenerateAreaPost {

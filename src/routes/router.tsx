@@ -30,6 +30,7 @@ import InternRoute from './InternRoute';
 import Init from '@/pages/Account/User/Intern/Init';
 import InitSkill from '@/pages/Account/User/Intern/Init/Skill';
 import InitSchool from '@/pages/Account/User/Intern/Init/School';
+import CompanyRecruitmentGenerat from '@/pages/Account/User/Company/Recruitment/Generate';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -98,6 +99,7 @@ export const routes = (
               <Route path="Edit/:recruitmentId?" handle={{ crumb: '編輯職缺' }}>
                 <Route path="" element={<RecruitmentEdit />} />
               </Route>
+              <Route path="Generate" handle={{ crumb: '建立職缺' }} element={<CompanyRecruitmentGenerat />}></Route>
               <Route path="Apply/:recruitmentId?" handle={{ crumb: '應徵資訊' }}>
                 <Route path="" element={<RecruitmentApply />} />
                 <Route path="Resume/:resumeId" element={<ApplyResume />} handle={{ crumb: '履歷資訊' }} />

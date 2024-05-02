@@ -44,7 +44,7 @@ export default function CompanyRecruitment() {
   return (
     <Stack spacing={1}>
       <Stack direction={'row'} spacing={1}>
-        <Button onClick={() => navigate('')} startIcon={<Add />} endIcon={<AutoAwesome />}>
+        <Button onClick={() => navigate('Generate')} startIcon={<Add />} endIcon={<AutoAwesome />}>
           新增職缺
         </Button>
         <Button onClick={handlePostEmptyRecruitment} startIcon={<Add />} variant="outlined">

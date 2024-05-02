@@ -2,7 +2,6 @@ import LoginSvg from '@/assets/images/svg/login.svg?react';
 import { userAuthVariants } from '@/assets/motion/variants';
 import FormInput from '@/components/FormInput';
 import { useRegisterMutation } from '@/features/api/auth/register';
-import { useLazyGetUserQuery } from '@/features/api/user/getUser';
 import { store } from '@/features/store';
 import { UserRole } from '@/types/enums/UserRole';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,8 +35,9 @@ export default function Register() {
   const methods = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
   });
+  const [error, setError] = React.useState<string>('');
 
-  const [registerUser, { isLoading, isSuccess }] = useRegisterMutation();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
   const {
     reset,
@@ -72,6 +72,9 @@ export default function Register() {
             navigate('/Account/User');
             break;
         }
+      })
+      .catch((e) => {
+        setError(e.data.responseException?.exceptionMessage || '');
       });
   };
 
@@ -180,6 +183,9 @@ export default function Register() {
                     }}
                   />
 
+                  <Typography variant="body2" color="error">
+                    {error}
+                  </Typography>
                   <Stack direction="row" spacing={2} alignItems={'flex-end'}>
                     <LoadingButton variant="contained" loading={isLoading} type="submit">
                       註冊

@@ -8,11 +8,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, Container, InputAdornment, Link, Stack, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { TypeOf, object, string } from 'zod';
 import { userAuthVariants } from './../../../assets/motion/variants';
+import { IResponse } from '@/types/interfaces/IResponse';
 
 const loginSchema = object({
   email: string().min(1, 'Email address is required').email('Email Address is invalid'),
@@ -25,7 +26,8 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  const [loginUser, { isLoading, isSuccess }] = useLoginMutation();
+  const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [error, setError] = useState<string>('');
 
   // Previous page
   const from = ((location.state as any)?.from.pathname as string) || '/Account/User';
@@ -52,7 +54,11 @@ export default function Login() {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-    loginUser(values);
+    login(values)
+      .unwrap()
+      .catch((e) => {
+        setError(e.data.responseException?.exceptionMessage || '');
+      });
   };
 
   return (
@@ -120,6 +126,9 @@ export default function Login() {
                       ),
                     }}
                   />
+                  <Typography variant="body2" color="error">
+                    {error}
+                  </Typography>
                   <Stack direction="row" spacing={2} alignItems={'flex-end'}>
                     <LoadingButton type="submit" variant="contained" loading={isLoading}>
                       登入
