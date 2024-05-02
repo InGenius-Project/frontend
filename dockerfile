@@ -17,7 +17,7 @@ COPY . .
 ARG VITE_APP_ENV=production
 
 # Copy the environment-specific file
-COPY .env.${VITE_APP_ENV} .env
+COPY  .env
 
 # Build the application
 RUN yarn build
