@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --production
 
 # Copy the rest of the application code
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 ARG VITE_APP_ENV=production
 
 # Copy the environment-specific file
-COPY  .env
+COPY .env .env
 
 # Build the application
 RUN yarn build
