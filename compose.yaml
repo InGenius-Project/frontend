@@ -1,26 +1,11 @@
 version: '3'
 
 services:
-  react-app-dev:
-    build:
-      context: .
-      args:
-        - VITE_APP_ENV=development
-
-  react-app-test:
-    build:
-      context: .
-      args:
-        - VITE_APP_ENV=testing
-
-  react-app-staging:
-    build:
-      context: .
-      args:
-        - VITE_APP_ENV=staging
-
-  react-app-prod:
-    build:
-      context: .
-      args:
-        - VITE_APP_ENV=production
+  app:
+    container_name: ing-frontend
+    image: ing-frontend
+    build: .
+    ports:
+      - 34004:80
+    env_file:
+      - '.env.production'
