@@ -1,12 +1,8 @@
 import CommunityEmpty from '@/components/Community/CommunityEmpty';
 import CommunityItem from '@/components/Community/CommunityItem';
 import { useGetPublicChatGroupQuery } from '@/features/api/chat/getPublicChatGroups';
-import { selectConn } from '@/features/message/messageSlice';
-import { useAppDispatch, useAppSelector } from '@/features/store';
-import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
-import { IChatMessage } from '@/types/interfaces/IChat';
 import { Box, Button, Divider, Paper, Stack, Tab, Tabs } from '@mui/material';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface TabPanelProps {
@@ -59,10 +55,10 @@ function Community() {
       <Paper sx={{}}>
         <TabPanel value={value} index={0}>
           {publicChatGroupsData?.result?.map((group) => (
-            <>
+            <Box key={group.Id}>
               <CommunityItem key={group.Id} owner={group.Owner} chatGroup={group} />
               <Divider />
-            </>
+            </Box>
           ))}
           <CommunityEmpty />
         </TabPanel>

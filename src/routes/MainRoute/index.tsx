@@ -1,17 +1,16 @@
-import { Box, CssBaseline } from '@mui/material';
 import Footer from '@/components/Footer';
 import { getUserApi } from '@/features/api/user/getUser';
+import { selectConn, setGroupId } from '@/features/message/messageSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store';
+import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
+import { IChatGroupInfo } from '@/types/interfaces/IChat';
+import { Box, CssBaseline } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../components/Header';
-import { useAppDispatch, useAppSelector } from '@/features/store';
-import { selectConn, setGroupId } from '@/features/message/messageSlice';
-import { useEffect, useRef } from 'react';
-import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
-import { group } from 'console';
-import { IChatGroupInfo } from '@/types/interfaces/IChat';
 
 export default function MainRoute() {
   const firstRender = useRef(true);

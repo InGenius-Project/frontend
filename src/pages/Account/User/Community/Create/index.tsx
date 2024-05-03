@@ -1,7 +1,7 @@
 import { selectConn } from '@/features/message/messageSlice';
 import { store, useAppSelector } from '@/features/store';
 import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function CommunityCreate() {
