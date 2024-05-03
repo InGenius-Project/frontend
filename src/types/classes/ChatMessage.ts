@@ -38,4 +38,8 @@ export class ChatMessage implements IChatMessage {
       return `${year}/${month}/${day}`;
     }
   }
+
+  public compareSendTime(other: ChatMessage): number {
+    return this.SendTimeDate.getTime() - other.SendTimeDate.getTime();
+  }
 }

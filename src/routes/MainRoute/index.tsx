@@ -6,8 +6,32 @@ import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../components/Header';
+import { useAppDispatch, useAppSelector } from '@/features/store';
+import { selectConn, setGroupId } from '@/features/message/messageSlice';
+import { useEffect, useRef } from 'react';
+import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
+import { group } from 'console';
+import { IChatGroupInfo } from '@/types/interfaces/IChat';
 
 export default function MainRoute() {
+  const firstRender = useRef(true);
+  const conn = useAppSelector(selectConn);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (!firstRender.current) return;
+    const connect = async () => {
+      await conn.stop();
+
+      conn.on(ChatReceiveMethod.NewGroup, (groupInfo: IChatGroupInfo) => {
+        dispatch(setGroupId(groupInfo.Id));
+      });
+
+      await conn.start();
+    };
+    connect();
+    firstRender.current = false;
+  }, [conn, dispatch]);
+
   const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(undefined, {
     skip: false,
   });

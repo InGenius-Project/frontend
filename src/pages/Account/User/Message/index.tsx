@@ -1,17 +1,15 @@
 import Logo from '@/assets/images/logo/logoNoStyle.svg?react';
-import { chatUrl } from '@/assets/utils/urls';
 import { MessageChannelItem } from '@/components/Message';
 import MessageAIModel from '@/components/Message/MessageAIModel';
 import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyItem';
 import MessageModel from '@/components/Message/MessageModel';
 import { useGetChatGroupsQuery } from '@/features/api/chat/getChatGroups';
 import { useGetInvitedChatGroupsQuery } from '@/features/api/chat/getInvitedChatGroups';
-import { setGroupId } from '@/features/message/messageSlice';
-import { useAppDispatch } from '@/features/store';
+import { selectConn, setGroupId } from '@/features/message/messageSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
 import { IChatMessage } from '@/types/interfaces/IChat';
-import { HttpTransportType, HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import MailIcon from '@mui/icons-material/Mail';
 import { Badge, Box, Button, Divider, IconButton, Paper, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
@@ -32,7 +30,7 @@ function Message() {
   const { data: chatGroupsData } = useGetChatGroupsQuery(null);
   const { data: invitedChatGroupsData } = useGetInvitedChatGroupsQuery();
   const [pageState, setPageState] = useState<MessagePage>(MessagePage.AIChat);
-  const [conn, setConn] = useState<HubConnection>();
+  const conn = useAppSelector(selectConn);
 
   const firstRender = useRef(true);
   const dispatch = useAppDispatch();
@@ -50,28 +48,17 @@ function Message() {
       return;
     }
     const connect = async () => {
-      const c = new HubConnectionBuilder()
-        .withUrl(chatUrl, {
-          skipNegotiation: true,
-          transport: HttpTransportType.WebSockets,
-          accessTokenFactory: () => localStorage.getItem('accessToken') || '',
-        })
-        .build();
-
-      c.on(ChatReceiveMethod.Message, (c: IChatMessage) => {
+      conn.on(ChatReceiveMethod.Message, (c: IChatMessage) => {
         messageModelRef.current?.onReceiveMessage(c);
         messageChannelItemRefs.current.get(c.GroupId)?.onReceiveMessage(new ChatMessage(c));
       });
 
-      c.on(ChatReceiveMethod.LastMessage, (c: IChatMessage) => {
+      conn.on(ChatReceiveMethod.LastMessage, (c: IChatMessage) => {
         messageChannelItemRefs.current.get(c.GroupId)?.onReceiveMessage(new ChatMessage(c));
       });
-
-      await c.start();
-      setConn(c);
     };
     connect();
-  }, []);
+  }, [conn, dispatch]);
 
   const handleClickChannelItem = async (groupId: string) => {
     setPageState(MessagePage.ChatGroups);
@@ -190,7 +177,7 @@ function Message() {
             flex: '1 1 auto',
           }}
         >
-          {pageState === MessagePage.AIChat ? <MessageAIModel /> : <MessageModel conn={conn} ref={messageModelRef} />}
+          {pageState === MessagePage.AIChat ? <MessageAIModel /> : <MessageModel ref={messageModelRef} />}
         </Box>
       </Paper>
     </>

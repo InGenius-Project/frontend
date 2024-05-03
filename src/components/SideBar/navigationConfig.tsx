@@ -1,9 +1,10 @@
 import { UserRole } from '@/types/enums/UserRole';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import MessageIcon from '@mui/icons-material/Message';
+import WorkIcon from '@mui/icons-material/Work';
+import PeopleIcon from '@mui/icons-material/People';
 import { OwnerAvatar } from '../UserAvatar';
 
 const navigationConfig = [
@@ -18,17 +19,22 @@ const navigationConfig = [
       {
         name: '履歷管理',
         value: 'Intern/Resume',
-        icon: <InsertDriveFileOutlinedIcon />,
+        icon: <InsertDriveFileIcon />,
       },
       {
         name: '職缺管理',
         value: 'Intern/Recruitment',
-        icon: <WorkOutlineOutlinedIcon />,
+        icon: <WorkIcon />,
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: <PeopleIcon />,
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: <MessageIcon />,
       },
     ],
   },
@@ -43,12 +49,17 @@ const navigationConfig = [
       {
         name: '職缺管理',
         value: 'Company/Recruitment',
-        icon: <WorkOutlineOutlinedIcon />,
+        icon: <WorkIcon />,
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: <PeopleIcon />,
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: <MessageIcon />,
       },
     ],
   },
@@ -62,17 +73,22 @@ const navigationConfig = [
       {
         name: '標籤管理',
         value: 'Manage/Tag',
-        icon: <LocalOfferOutlinedIcon />,
+        icon: <LocalOfferIcon />,
       },
       {
         name: '區塊管理',
         value: 'Manage/Area',
-        icon: <DashboardOutlinedIcon />,
+        icon: <DashboardIcon />,
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: <MessageIcon />,
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: <PeopleIcon />,
       },
     ],
   },

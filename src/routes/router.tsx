@@ -31,6 +31,9 @@ import Init from '@/pages/Account/User/Intern/Init';
 import InitSkill from '@/pages/Account/User/Intern/Init/Skill';
 import InitSchool from '@/pages/Account/User/Intern/Init/School';
 import CompanyRecruitmentGenerat from '@/pages/Account/User/Company/Recruitment/Generate';
+import Community from '@/pages/Account/User/Community';
+import CommunityDetail from '@/pages/Account/User/Community/Detail';
+import CommunityCreate from '@/pages/Account/User/Community/Create';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -107,6 +110,11 @@ export const routes = (
             </Route>
           </Route>
 
+          <Route path="Community" handle={{ crumb: '社群' }}>
+            <Route element={<Community />} path="" />
+            <Route element={<CommunityDetail />} path="Detail" />
+            <Route element={<CommunityCreate />} path="Create" />
+          </Route>
           <Route element={<Message />} path="Message" handle={{ crumb: '訊息' }} />
 
           <Route element={<InternalUserRoute />} path="Manage">

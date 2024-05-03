@@ -27,7 +27,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // ignore layout.content serialization problem
-        ignoredPaths: ['layoutState.content', 'layout.setLayoutByArea'],
+        ignoredPaths: ['layoutState.content', 'layout.setLayoutByArea', 'messageState.conn'],
         ignoredActions: ['layout/setContent', 'layout/setLayoutByArea'],
       },
     }).concat([baseApi.middleware, chatBaseApi.middleware, unsplashtApi.middleware, errorToastMiddleware]),
