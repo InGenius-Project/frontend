@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY . .
 # Install dependencies
-# RUN yarn install --production && yarn build:prod
+RUN yarn install --production && yarn build:prod
 
 # Run nginx
 FROM nginx:1.25.5-alpine as release
