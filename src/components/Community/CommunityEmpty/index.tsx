@@ -16,7 +16,7 @@ function CommunityEmpty() {
       </Box>
       <Stack spacing={1}>
         <Typography variant="body1">已經沒有任何貼文了</Typography>
-        <Link component={RouterLink} to="#">
+        <Link component={RouterLink} to="/Account/User/Community/Create">
           按此新增一個貼文
         </Link>
       </Stack>

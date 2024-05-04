@@ -1,6 +1,8 @@
 import UserAvatar from '@/components/UserAvatar';
+import { useGetRecruitmentAreaByAreaTypeQuery } from '@/features/api/area/getRecruimentAreaByAreaType';
 import { useAddFavRecruitmentMutation } from '@/features/api/user/addFavRecruitment';
 import { useRemoveFavRecruitmentMutation } from '@/features/api/user/removeFavRecruitment';
+import { AreaType } from '@/types/enums/AreaType';
 import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -23,6 +25,10 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
   const theme = useTheme();
   const location = useLocation();
   const [titleState, setTitleState] = useState(recruitment.Name || '');
+  const { data: companyLocationData } = useGetRecruitmentAreaByAreaTypeQuery({
+    areaTypeId: AreaType.CompanyLocation,
+    recruitmentId: recruitment.Id,
+  });
 
   useUpdateEffect(() => {
     onChange && onChange({ ...recruitment, Name: titleState });
@@ -79,12 +85,23 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         >
           {recruitment.Publisher?.Username || '未知使用者'}
         </Link>
-        <Typography variant="caption"> | </Typography>
         {/* TODO: Location  */}
-        <Typography variant="caption">台北市</Typography>
+
+        {companyLocationData?.result &&
+          (companyLocationData?.result || []).length > 0 &&
+          companyLocationData?.result[0].KeyValueListLayout?.Items && (
+            <>
+              <Typography variant="caption"> | </Typography>
+              {companyLocationData?.result[0].KeyValueListLayout?.Items[0].Key?.map((k) => (
+                <Typography variant="caption">{k.Name}</Typography>
+              ))}
+            </>
+          )}
       </Stack>
       <Stack spacing={1} direction={'row'}>
-        <Chip label={'社群管理'} color="primary" icon={<TagIcon />} />
+        {recruitment.Keywords.map((keyword, index) => (
+          <Chip key={`recruitment-keword-${index}`} label={keyword.Id} icon={<TagIcon />} />
+        ))}
       </Stack>
     </Stack>
   );

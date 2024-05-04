@@ -1,8 +1,8 @@
+import ManageProfileEmptyItem from '@/components/ProfileItem/ManageProfileEmptyItem';
 import ManageProfileItem from '@/components/ProfileItem/ManageProfileItem';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
-import { useGetRecruitmentsQuery } from '@/features/api/recruitment/getRecruitmentsByUser';
 import { Button, Stack } from '@mui/material';
-import { skip } from 'node:test';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { NIL } from 'uuid';
 
@@ -11,6 +11,10 @@ function RecruitmentApply() {
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || NIL, {
     skip: !recruitmentId,
   });
+
+  const resumes = useMemo(() => {
+    return recruitmentData?.result?.Resumes || [];
+  }, [recruitmentData]);
 
   return (
     <Stack spacing={1}>
@@ -25,9 +29,13 @@ function RecruitmentApply() {
           width: '100%',
         }}
       >
-        {recruitmentData?.result?.Resumes?.map((r) => {
-          return <ManageProfileItem resume={r} />;
-        })}
+        {resumes.length > 0 ? (
+          resumes.map((r) => {
+            return <ManageProfileItem resume={r} />;
+          })
+        ) : (
+          <ManageProfileEmptyItem />
+        )}
       </Stack>
     </Stack>
   );

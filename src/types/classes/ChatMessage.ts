@@ -1,3 +1,4 @@
+import getTimeDiffer from '@/assets/utils/getTimeDiffer';
 import { IChatMessage } from '../interfaces/IChat';
 import { IOwnerUser } from '../interfaces/IUser';
 
@@ -16,27 +17,12 @@ export class ChatMessage implements IChatMessage {
     this.GroupId = chatMessage.GroupId;
     this.SenderId = chatMessage.SenderId;
     this.Sender = chatMessage.Sender;
-    this.SendTime = chatMessage.SendTime.endsWith('Z') ? chatMessage.SendTime : chatMessage.SendTime + 'Z';
-    this.SendTimeDate = new Date(this.SendTime);
+    this.SendTime = chatMessage.SendTime;
+    this.SendTimeDate = new Date(chatMessage.SendTime);
   }
 
   public getTimeDiffer(): string {
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - this.SendTimeDate.getTime()) / 1000 / 60); // difference in minutes
-
-    if (diff < 1) {
-      return '1分鐘前';
-    } else if (diff < 60) {
-      return `${diff}分鐘前`;
-    } else if (diff < 1440) {
-      const hours = Math.floor(diff / 60);
-      return `${hours}小時前`;
-    } else {
-      const year = this.SendTimeDate.getFullYear();
-      const month = this.SendTimeDate.getMonth() + 1;
-      const day = this.SendTimeDate.getDate();
-      return `${year}/${month}/${day}`;
-    }
+    return getTimeDiffer(this.SendTime);
   }
 
   public compareSendTime(other: ChatMessage): number {

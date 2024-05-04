@@ -3,4 +3,5 @@ export enum TagType {
   Skill = '2',
   University = '3',
   Department = '4',
+  Area = '5',
 }
