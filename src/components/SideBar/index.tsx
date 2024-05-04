@@ -1,7 +1,8 @@
+import { useAppSelector } from '@/features/store';
+import { useMediaQuery } from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { styled } from '@mui/material/styles';
-import { useAppSelector } from '@/features/store';
+import { styled, useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,19 +21,14 @@ const SideBarButton = styled(ToggleButton)(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
   whiteSpace: 'nowrap',
-}));
-
-const SideBarLeftIcon = styled('span')(({ theme }) => ({
-  display: 'flex',
-  width: 24,
-  height: 24,
-  marginRight: theme.spacing(1),
-  alignItems: 'center',
+  gap: theme.spacing(1),
 }));
 
 const SideBar = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.User);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const [currentTab, setCurrentTab] = React.useState('profile');
 
@@ -41,11 +37,11 @@ const SideBar = () => {
     navigate(newTab ? `/Account/User/${newTab}` : '/Account/User');
   };
 
-  return (
+  return !isMobile ? (
     <motion.aside
       style={{ flexShrink: 0 }}
       initial={{ x: -100, width: 0, opacity: 0 }}
-      animate={{ x: 0, width: 'var(--ing-width-sidebar)', opacity: 1 }}
+      animate={{ x: 0, width: isMobile ? '4em' : 'var(--ing-width-sidebar)', opacity: 1 }}
       exit={{
         x: -100,
         width: 0,
@@ -64,14 +60,14 @@ const SideBar = () => {
         sx={{ width: '100%', position: 'sticky', top: 0 }}
       >
         {(getNavigationConfig(user?.Role || 0) || []).map((item) => (
-          <SideBarButton key={item.name} value={item.value} sx={{ justifyContent: 'flex-start' }}>
-            <SideBarLeftIcon>{item.icon}</SideBarLeftIcon>
+          <SideBarButton key={item.name} value={item.value}>
+            {item.icon}
             {item.name}
           </SideBarButton>
         ))}
       </SideBarToggleButtonGroup>
     </motion.aside>
-  );
+  ) : null;
 };
 
 export default SideBar;

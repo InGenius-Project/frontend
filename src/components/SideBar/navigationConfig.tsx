@@ -6,6 +6,15 @@ import MessageIcon from '@mui/icons-material/Message';
 import WorkIcon from '@mui/icons-material/Work';
 import PeopleIcon from '@mui/icons-material/People';
 import { OwnerAvatar } from '../UserAvatar';
+import { Box, styled } from '@mui/material';
+
+const LeftIcon = styled('span')(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  display: 'flex',
+  width: '24px',
+  height: '24px',
+  alignItems: 'center',
+}));
 
 const navigationConfig = [
   {
@@ -14,27 +23,47 @@ const navigationConfig = [
       {
         name: '個人首頁',
         value: 'Profile',
-        icon: <OwnerAvatar />,
+        icon: (
+          <LeftIcon>
+            <OwnerAvatar />
+          </LeftIcon>
+        ),
       },
       {
         name: '履歷管理',
         value: 'Intern/Resume',
-        icon: <InsertDriveFileIcon />,
+        icon: (
+          <LeftIcon>
+            <InsertDriveFileIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '職缺管理',
         value: 'Intern/Recruitment',
-        icon: <WorkIcon />,
+        icon: (
+          <LeftIcon>
+            <WorkIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '社群',
         value: 'Community',
-        icon: <PeopleIcon />,
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },
@@ -44,22 +73,40 @@ const navigationConfig = [
       {
         name: '公司首頁',
         value: 'Profile',
-        icon: <OwnerAvatar />,
+        icon: (
+          <LeftIcon>
+            <Box width="24px" height="24px">
+              <OwnerAvatar />
+            </Box>
+          </LeftIcon>
+        ),
       },
       {
         name: '職缺管理',
         value: 'Company/Recruitment',
-        icon: <WorkIcon />,
+        icon: (
+          <LeftIcon>
+            <WorkIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '社群',
         value: 'Community',
-        icon: <PeopleIcon />,
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },
@@ -73,22 +120,38 @@ const navigationConfig = [
       {
         name: '標籤管理',
         value: 'Manage/Tag',
-        icon: <LocalOfferIcon />,
+        icon: (
+          <LeftIcon>
+            <LocalOfferIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '區塊管理',
         value: 'Manage/Area',
-        icon: <DashboardIcon />,
+        icon: (
+          <LeftIcon>
+            <DashboardIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '社群',
         value: 'Community',
-        icon: <PeopleIcon />,
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },

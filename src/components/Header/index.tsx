@@ -6,18 +6,20 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { logout } from '@/features/user/userSlice';
 import { UserRole, UserRoleLoginData } from '@/types/enums/UserRole';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import MessageIcon from '@mui/icons-material/Message';
+import PeopleIcon from '@mui/icons-material/People';
 import {
   Container,
+  Drawer,
   FormControl,
   IconButton,
   InputLabel,
-  Link,
   Menu,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -35,6 +37,7 @@ export default function Header() {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const userState = useAppSelector((state) => state.userState.User);
   const [navAnchorEl, setNavAnchorEl] = React.useState<null | HTMLElement>(null);
   const [messageAnchorEl, setMessageAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -89,9 +92,11 @@ export default function Header() {
           onClick={() => navigate('/')}
         >
           <Logo width={48} height={48} />
-          <Typography variant="h5" component={'span'} fontWeight={theme.typography.fontWeightBold}>
-            優創
-          </Typography>
+          {!isMobile && (
+            <Typography variant="h5" component={'span'} fontWeight={theme.typography.fontWeightBold}>
+              優創
+            </Typography>
+          )}
         </Box>
 
         {/* Right Control */}
@@ -121,7 +126,10 @@ export default function Header() {
 
               {/* Message Model */}
               <IconButton onClick={handleMessageClick}>
-                <MessageOutlinedIcon />
+                <MessageIcon />
+              </IconButton>
+              <IconButton onClick={() => navigate('/Account/User/Community')}>
+                <PeopleIcon />
               </IconButton>
 
               <Menu
@@ -154,20 +162,47 @@ export default function Header() {
                 {userState.Username}
               </Button>
 
-              <Menu anchorEl={navAnchorEl} open={open} onClose={handleNavClose}>
-                {getNavigationConfig(userState?.Role || 0)?.map((item) => {
-                  return (
-                    <MenuItem
-                      key={`header-menu-item-${item.value}`}
-                      onClick={() => navigate(`/Account/User/${item.value}`)}
-                    >
-                      {item.name}
-                    </MenuItem>
-                  );
-                })}
+              {isMobile ? (
+                <Drawer open={open} onClose={handleNavClose} anchor="right">
+                  {getNavigationConfig(userState?.Role || 0)?.map((item) => {
+                    return (
+                      <MenuItem
+                        key={`header-menu-item-${item.value}`}
+                        onClick={() => navigate(`/Account/User/${item.value}`)}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          gap: theme.spacing(1),
+                        }}
+                      >
+                        {item.icon}
+                        {item.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Drawer>
+              ) : (
+                <Menu anchorEl={navAnchorEl} open={open} onClose={handleNavClose}>
+                  {getNavigationConfig(userState?.Role || 0)?.map((item) => {
+                    return (
+                      <MenuItem
+                        key={`header-menu-item-${item.value}`}
+                        onClick={() => navigate(`/Account/User/${item.value}`)}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          gap: theme.spacing(1),
+                        }}
+                      >
+                        {item.icon}
+                        {item.name}
+                      </MenuItem>
+                    );
+                  })}
 
-                <MenuItem onClick={handleLogout}>登出</MenuItem>
-              </Menu>
+                  <MenuItem onClick={handleLogout}>登出</MenuItem>
+                </Menu>
+              )}
             </Stack>
           ) : (
             <Button variant="contained" onClick={() => navigate('/Account/Login')}>
