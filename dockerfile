@@ -1,35 +1,20 @@
 # Use the official Node image as the base image
-FROM node:lts as builder
+FROM node:22-alpine3.18 as build 
 
 # Set the working directory
 WORKDIR /app
-
 # Copy package.json and package-lock.json
 COPY . .
-
 # Install dependencies
-RUN yarn install --production
-
-# Copy the rest of the application code
-COPY . .
-
-# Copy the environment-specific file
-COPY .env .env
-
-# Build the application
-RUN yarn build:prod
-
-# Expose the application port
-EXPOSE 3000
-
-# Run the application
-CMD ["yarn", "start:prod"]
+# RUN yarn install --production && yarn build:prod
 
 # Run nginx
-# FROM nginx:latest as release
-# WORKDIR /usr/share/nginx/html
-# COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-# RUN rm -rf ./*
-# COPY --from=builder /app/build .
-# EXPOSE 80
-# ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+FROM nginx:1.25.5-alpine as release
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+# Config & build file
+COPY --from=build /app/certs/* /etc/nginx/
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/build .
+EXPOSE 443 
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
