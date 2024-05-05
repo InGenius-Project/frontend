@@ -45,6 +45,7 @@ export default function MainRoute() {
         display: 'flex',
         flexFlow: 'column',
         flexGrow: 1,
+        py: 2,
         cursor: loading ? 'wait' : undefined,
       }}
     >

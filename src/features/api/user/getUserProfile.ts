@@ -9,12 +9,6 @@ export const getUserProfile = baseApi.injectEndpoints({
       query: (userId) => ({
         url: `/User/Profile/${userId}`,
       }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
-        try {
-          const { data } = await queryFulfilled;
-          data.result && dispatch(setUserInfo(data.result));
-        } catch (error) {}
-      },
       transformResponse: (response: IResponse<IUserInfo>, meta, arg) => {
         // Reorder the areas by sequence
         if (response.result && response.result.Areas) {
