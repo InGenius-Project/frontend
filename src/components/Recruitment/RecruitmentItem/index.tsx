@@ -108,7 +108,15 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
             </>
           )}
       </Stack>
-      <Stack spacing={1} direction={'row'}>
+      <Stack
+        spacing={1}
+        direction={'row'}
+        sx={{
+          width: '20em',
+          maxWidth: '100%',
+          overflow: 'hidden',
+        }}
+      >
         {recruitment.Keywords.map((keyword, index) => (
           <Chip key={`recruitment-keword-${index}`} label={keyword.Id} icon={<TagIcon />} />
         ))}
