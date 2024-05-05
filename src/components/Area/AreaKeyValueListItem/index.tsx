@@ -92,7 +92,7 @@ function AreaKeyValueListItem({
             getOptionLabel={(o) => o.Name}
             renderInput={(params) => <TextField {...params} variant="standard" />}
             sx={{
-              flex: '1 1 10em',
+              flex: '0 0 15em',
             }}
           />
 

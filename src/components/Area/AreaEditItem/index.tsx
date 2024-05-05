@@ -314,8 +314,8 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                   onClickDelete={handleListRemoveClick}
                   renderInput={
                     <Autocomplete
-                      sx={{ width: '20em' }}
                       freeSolo
+                      sx={{ width: '20em' }}
                       options={
                         tagsData && tagsData.result
                           ? tagsData.result.map((t: any) => ({
@@ -349,13 +349,17 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
                       handleHomeEndKeys
                       onChange={handleListItemChange}
                       filterOptions={(options, params) => {
-                        const filtered = filter(options, params);
+                        const filtered = filter(
+                          options.filter((i) => !layoutState.listItems?.some((item) => item.Id === i.Id)),
+                          params,
+                        );
+
                         const { inputValue } = params;
                         // Suggest the creation of a new value
                         const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
                         if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
                           filtered.push({
-                            InnerId: uuid(),
+                            InnerId: NIL,
                             Id: NIL,
                             Name: inputValue,
                             Type: customTagTypeData?.result,
