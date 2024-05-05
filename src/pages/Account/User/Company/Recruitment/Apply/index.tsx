@@ -4,8 +4,10 @@ import { useLazyAnalyzeApplyedResumeQuery } from '@/features/api/recruitment/ana
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/searchRelativeResume';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import FilterList from '@mui/icons-material/FilterList';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Stack } from '@mui/material';
+import { useConfirm } from 'material-ui-confirm';
 import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NIL } from 'uuid';
@@ -13,6 +15,7 @@ import { NIL } from 'uuid';
 function RecruitmentApply() {
   const navigate = useNavigate();
   const location = useLocation();
+  const confirm = useConfirm();
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || NIL, {
     skip: !recruitmentId,
@@ -33,17 +36,19 @@ function RecruitmentApply() {
   }, [searchRelativResume?.result]);
 
   const handleAnalyze = () => {
-    if (recruitmentId && relativeResumes.length === 0)
-      analyzeApplyedResume({
-        recruitmentId: recruitmentId || NIL,
-      })
-        .unwrap()
-        .then(() => {
-          handleNavigateRelative();
-        });
-    else {
-      handleNavigateRelative();
-    }
+    confirm({ description: '確定要一鍵分析履歷嗎？' }).then(() => {
+      if (recruitmentId && relativeResumes.length === 0)
+        analyzeApplyedResume({
+          recruitmentId: recruitmentId || NIL,
+        })
+          .unwrap()
+          .then(() => {
+            handleNavigateRelative();
+          });
+      else {
+        handleNavigateRelative();
+      }
+    });
   };
 
   const handleNavigateRelative = () => {
@@ -61,8 +66,9 @@ function RecruitmentApply() {
           一鍵分析履歷
         </LoadingButton>
 
-        <Button>已接收</Button>
-        <Button variant={'outlined'}>待審核</Button>
+        <Button variant="outlined" startIcon={<FilterList />} onClick={handleNavigateRelative}>
+          查詢分析報表
+        </Button>
       </Stack>
 
       <Stack

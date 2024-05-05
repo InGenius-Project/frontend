@@ -135,7 +135,7 @@ function AreaGenerateaModal() {
     generateArea(generateAreaPost);
   };
 
-  const handleClickGenerateResume = () => {
+  const handleClickGenerate = () => {
     generateAreaByTitle(generateAreaByTitlePost)
       .unwrap()
       .then((genRes) => {
@@ -299,7 +299,7 @@ function AreaGenerateaModal() {
               fullWidth
               variant="contained"
               startIcon={<AutoAwesomeOutlinedIcon />}
-              onClick={handleClickGenerateResume}
+              onClick={handleClickGenerate}
             >
               生成{typeLabel}
             </LoadingButton>

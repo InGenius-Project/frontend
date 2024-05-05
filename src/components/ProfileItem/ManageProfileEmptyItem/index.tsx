@@ -21,7 +21,6 @@ function ManageProfileEmptyItem() {
       />
 
       <Typography variant="body1">找不到任何的應徵履歷</Typography>
-      <Button>按此查詢適合此份職缺的實習生</Button>
     </Stack>
   );
 }

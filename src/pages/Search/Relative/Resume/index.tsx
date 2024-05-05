@@ -4,7 +4,8 @@ import { ResumeItem } from '@/components/Resume';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/searchRelativeResume';
 import { Box, Chip, Container, Divider, Stack, Typography, useTheme } from '@mui/material';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import StarIcon from '@mui/icons-material/Star';
 import { NIL } from 'uuid';
 
 function SearchResumeRelative() {
@@ -19,7 +20,17 @@ function SearchResumeRelative() {
   const { data: relativeResumesData } = useSearchRelativeResumesQuery(
     {
       recruitmentId: recruitmentId || NIL,
-      searchAll: params.get('searchAll') === 'true',
+      searchAll: false,
+    },
+    {
+      skip: !recruitmentId,
+    },
+  );
+
+  const { data: allRelativeResumesData } = useSearchRelativeResumesQuery(
+    {
+      recruitmentId: recruitmentId || NIL,
+      searchAll: true,
     },
     {
       skip: !recruitmentId,
@@ -54,7 +65,15 @@ function SearchResumeRelative() {
           )}
         </Stack>
 
-        <Typography variant="h5">查詢更多未應徵此職缺的相關履歷</Typography>
+        <Stack direction="row" spacing={1}>
+          <Typography variant="h5">與這份職缺相似的履歷</Typography>
+          <Chip label="Pro" avatar={<StarIcon />} />
+        </Stack>
+        {allRelativeResumesData?.result && allRelativeResumesData.result.length > 0 ? (
+          <>{allRelativeResumesData?.result.map((r) => <ResumeItem key={r.Id} resume={r} />)}</>
+        ) : (
+          <RecruitmentEmpty />
+        )}
       </Stack>
     </Container>
   );
