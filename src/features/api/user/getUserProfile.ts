@@ -1,4 +1,3 @@
-import { setUserInfo } from '@/features/user/userSlice';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { IUserInfo } from '@/types/interfaces/IUser';
 import { baseApi } from '../baseApi';

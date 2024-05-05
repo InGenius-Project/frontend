@@ -45,7 +45,6 @@ export default function MainRoute() {
         display: 'flex',
         flexFlow: 'column',
         flexGrow: 1,
-        py: 2,
         cursor: loading ? 'wait' : undefined,
       }}
     >
@@ -61,6 +60,7 @@ export default function MainRoute() {
             flexGrow: 1,
             minHeight: 'calc(100vh - var(--ing-height-navbar))',
             justifyContent: 'center',
+            py: 2,
           }}
         >
           <Outlet />

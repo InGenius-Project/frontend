@@ -1,5 +1,6 @@
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
+import RecruitmentSearchingItem from '@/components/Recruitment/RecruitmentSearchingItem';
 import { useLazySearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { IRecruitmentSearchPost, SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -8,7 +9,8 @@ import { useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 function Search() {
-  const [searchRecruitment, { data: searchRecruitmentsData }] = useLazySearchRecruitmentQuery();
+  const [searchRecruitment, { data: searchRecruitmentsData, isLoading: isSearchRecruitment }] =
+    useLazySearchRecruitmentQuery();
   var location = useLocation();
   var {
     Page = 1,
@@ -65,25 +67,30 @@ function Search() {
             }
           }}
         />
-        <Stack spacing={1}>
-          {searchRecruitmentsData?.result?.result && !!searchRecruitmentsData?.result?.result?.length ? (
-            searchRecruitmentsData?.result?.result.map((r) => (
-              <InternRecruitmentItem
-                key={r.Id}
-                recruitment={r}
-                onClick={() =>
-                  navigate(`/Search/Recruitment/${r.Id}`, {
-                    state: {
-                      from: location,
-                    },
-                  })
-                }
-              />
-            ))
-          ) : (
-            <RecruitmentEmptyItem />
-          )}
-        </Stack>
+
+        {isSearchRecruitment ? (
+          <RecruitmentSearchingItem />
+        ) : (
+          <Stack spacing={1}>
+            {searchRecruitmentsData?.result?.result && !!searchRecruitmentsData?.result?.result?.length ? (
+              searchRecruitmentsData?.result?.result.map((r) => (
+                <InternRecruitmentItem
+                  key={r.Id}
+                  recruitment={r}
+                  onClick={() =>
+                    navigate(`/Search/Recruitment/${r.Id}`, {
+                      state: {
+                        from: location,
+                      },
+                    })
+                  }
+                />
+              ))
+            ) : (
+              <RecruitmentEmptyItem />
+            )}
+          </Stack>
+        )}
       </Stack>
     </Container>
   );
