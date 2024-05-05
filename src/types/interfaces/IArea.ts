@@ -3,6 +3,7 @@ import { LayoutType } from '@/types/enums/LayoutType';
 import { UserRole } from '@/types/enums/UserRole';
 import { internalCreateRangeSelection } from 'lexical/LexicalSelection';
 import { AvatarPostFormData } from './IUser';
+import { TagType } from '@/types/enums/TagType';
 
 export interface IWithAreas {
   Id: string;
@@ -123,7 +124,13 @@ export interface IListLayout extends ILayout {
 
 export interface IListLayoutPost {
   AreaId: string;
-  Items?: Array<ITag>;
+  Items?: Array<IListItemPost>;
+}
+
+export interface IListItemPost {
+  Id: string;
+  Name: string;
+  TagTypeId: number;
 }
 
 export interface IKeyValueListLayout extends ILayout {
@@ -146,7 +153,7 @@ export interface IInnerKeyValueItem extends IKeyValueItem {
 }
 
 export interface IKeyValueItemPostDTO {
-  Id?: string;
+  // Id?: string;
   TagIds?: string[];
   Value: string;
 }

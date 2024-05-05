@@ -167,7 +167,11 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
               case LayoutType.List:
                 postListLayout({
                   AreaId: res.data.result.Id,
-                  Items: updateArea.ListLayout?.Items,
+                  Items: updateArea.ListLayout?.Items?.map((i) => ({
+                    Id: i.Id,
+                    Name: i.Name,
+                    TagTypeId: i.Type.Id,
+                  })),
                 });
                 break;
               case LayoutType.Text:

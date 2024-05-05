@@ -89,7 +89,7 @@ function InitSchool() {
             AreaId: res.result?.Id || NIL,
             Items: [
               {
-                Id: NIL,
+                // Id: NIL,
                 TagIds: [schoolState.Id, departmentState.Id],
                 Value: yearState || '',
               },

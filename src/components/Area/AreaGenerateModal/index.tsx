@@ -162,7 +162,11 @@ function AreaGenerateaModal() {
                       a.ListLayout &&
                         areaRes.result?.Id &&
                         postListLayout({
-                          ...a.ListLayout,
+                          ...a.ListLayout?.Items?.map((i) => ({
+                            Id: i.Id,
+                            Name: i.Name,
+                            TaTypeId: i.Type.Id,
+                          })),
                           AreaId: areaRes.result?.Id,
                         });
                       break;

@@ -55,7 +55,11 @@ function InitSkill() {
         if (res.result?.Id) {
           postListLayout({
             AreaId: res.result?.Id || NIL,
-            Items: selectSkillState,
+            Items: selectSkillState.map((i) => ({
+              Id: i.Id,
+              Name: i.Name,
+              TagTypeId: i.Type.Id,
+            })),
           })
             .unwrap()
             .then(() => {

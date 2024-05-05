@@ -248,7 +248,7 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
             Id: NIL,
             Items: layoutState.keyValueListItems
               .filter((l) => !!l.Key && l.Value !== '')
-              .map(({ InnerId, ...i }) => i) as IKeyValueItem[],
+              .map(({ InnerId, Id, ...i }) => i) as IKeyValueItem[], // WARN: Id is not providded
           }
         : undefined,
   };
@@ -311,7 +311,7 @@ export const getUpdatedArea = (state: RootState) => {
             Id: layoutState.id,
             Items: layoutState.keyValueListItems
               .filter((l) => !!l.Key && l.Value !== '')
-              .map(({ InnerId, ...i }) => i) as IKeyValueItem[],
+              .map(({ InnerId, Id, ...i }) => i) as IKeyValueItem[], // WARN: Id is not providded
           }
         : undefined,
   };
