@@ -34,6 +34,7 @@ import {
   TextField,
   Typography,
   createFilterOptions,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -68,6 +69,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   const { data: customTagTypeData } = useGetTagTypeByIdQuery('1');
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const [upsplashModalOpen, setUpsplashModalOpen] = React.useState(false);
   const handleUpsplashModalOpen = () => setUpsplashModalOpen(true);
@@ -159,6 +161,12 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   return (
     <Stack spacing={2}>
+      {isMobile && (
+        <>
+          <Typography variant="h5">編輯內容</Typography>
+        </>
+      )}
+
       <Box
         sx={{
           display: 'flex',

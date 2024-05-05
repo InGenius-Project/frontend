@@ -7,15 +7,16 @@ import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useAppSelector } from '@/features/store';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Button, IconButton, Stack } from '@mui/material';
+import { Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useNavigate } from 'react-router-dom';
 
 export default function Resume() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const { data: resumes, isLoading } = useGetResumesQuery(null);
   const { User } = useAppSelector((state) => state.userState);
   const [deleteResume] = useDeleteResumeMutation();
@@ -82,17 +83,22 @@ export default function Resume() {
               key={r.Id}
               resume={r}
               control={
-                <Stack direction={'row'} spacing={1}>
-                  <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
-                    <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
-                  </IconButton>
-                  <IconButton>
-                    <ContentCopyOutlinedIcon></ContentCopyOutlinedIcon>
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteClick(r.Id)}>
-                    <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
-                  </IconButton>
-                </Stack>
+                isMobile ? (
+                  <Stack>
+                    <MenuItem onClick={() => navigate(`Edit/${r.Id}`)}>編輯</MenuItem>
+                    <MenuItem onClick={() => handleDeleteClick}>刪除</MenuItem>
+                  </Stack>
+                ) : (
+                  <Stack direction={'row'} spacing={1}>
+                    <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
+                      <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
+                    </IconButton>
+
+                    <IconButton onClick={() => handleDeleteClick(r.Id)}>
+                      <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
+                    </IconButton>
+                  </Stack>
+                )
               }
             />
           ))}

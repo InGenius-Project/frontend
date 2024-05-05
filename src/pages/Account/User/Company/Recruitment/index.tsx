@@ -10,11 +10,24 @@ import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, IconButton, Stack, Switch } from '@mui/material';
+import {
+  Button,
+  FormControlLabel,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Switch,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 
 export default function CompanyRecruitment() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   const { data: recruitmentData } = useGetRecruitmentsQuery(null);
   const [postRecruitment] = usePostRecruitmentMutation();
   const [deleteRecruitment] = useDeleteRecruitmentMutation();
@@ -59,26 +72,44 @@ export default function CompanyRecruitment() {
             key={r.Id}
             recruitment={r}
             control={
-              <Stack spacing={1} direction={'row'}>
-                <Switch
-                  checked={r.Enable}
-                  onChange={(e) =>
-                    handlePostRecruitmentArea({
-                      ...r,
-                      Enable: e.target.checked,
-                    })
-                  }
-                />
-                <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton>
-                  <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
-                </IconButton>
-                <IconButton onClick={() => handleClickDelete(r.Id)}>
-                  <DeleteOutlineOutlinedIcon />
-                </IconButton>
-              </Stack>
+              isMobile ? (
+                <Stack>
+                  <MenuItem
+                    onClick={() => {
+                      handlePostRecruitmentArea({
+                        ...r,
+                        Enable: !r.Enable,
+                      });
+                    }}
+                  >
+                    {r.Enable ? '停用' : '啟用'}
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate(`Edit/${r.Id}`)}>編輯</MenuItem>
+                  <MenuItem onClick={() => navigate(`Apply/${r.Id}`)}>應徵</MenuItem>
+                  <MenuItem onClick={() => handleClickDelete(r.Id)}>刪除</MenuItem>
+                </Stack>
+              ) : (
+                <Stack spacing={1} direction={'row'}>
+                  <Switch
+                    checked={r.Enable}
+                    onChange={(e) =>
+                      handlePostRecruitmentArea({
+                        ...r,
+                        Enable: e.target.checked,
+                      })
+                    }
+                  />
+                  <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton>
+                    <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
+                  </IconButton>
+                  <IconButton onClick={() => handleClickDelete(r.Id)}>
+                    <DeleteOutlineOutlinedIcon />
+                  </IconButton>
+                </Stack>
+              )
             }
           />
         ))}

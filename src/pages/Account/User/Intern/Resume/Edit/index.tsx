@@ -5,14 +5,16 @@ import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { IconButton, Stack } from '@mui/material';
+import { IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 export default function ResumeEdit() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   const { resumeId = '' } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -62,6 +64,10 @@ export default function ResumeEdit() {
       });
   };
 
+  const handleClickDelete = () => {
+    resumeData?.result?.Id && handleDeleteClick(resumeData.result?.Id);
+  };
+
   // If not provide id, redirect back
   if (!resumeId) {
     return <Navigate to=".." />;
@@ -74,18 +80,15 @@ export default function ResumeEdit() {
           onChangeTitle={handleChangeTitle}
           resume={resumeData.result}
           control={
-            <Stack>
-              <IconButton>
-                <ContentCopyOutlinedIcon></ContentCopyOutlinedIcon>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  resumeData.result?.Id && handleDeleteClick(resumeData.result?.Id);
-                }}
-              >
-                <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
-              </IconButton>
-            </Stack>
+            isMobile ? (
+              <MenuItem onClick={handleClickDelete}>刪除</MenuItem>
+            ) : (
+              <Stack>
+                <IconButton onClick={handleClickDelete}>
+                  <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
+                </IconButton>
+              </Stack>
+            )
           }
         ></ResumeItem>
         <AreaEditor />

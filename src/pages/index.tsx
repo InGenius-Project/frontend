@@ -1,31 +1,28 @@
 import HappyAnnnouncement from '@/assets/images/svg/happy-announcement.svg?react';
-import Questions from '@/assets/images/svg/questions.svg?react';
 import Searching from '@/assets/images/svg/searching.svg?react';
 import Update from '@/assets/images/svg/update.svg?react';
 import WorkInProgress from '@/assets/images/svg/work-in-progress.svg?react';
 import Working from '@/assets/images/svg/working.svg?react';
-import ActivityItem, { ActivityColumnItem } from '@/components/ActivityItem';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useSearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Box, Button, IconButton, Link, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, IconButton, Link, Stack, TextField, useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Root() {
   const theme = useTheme();
-  const upLaptop = useMediaQuery(theme.breakpoints.up('laptop'));
   const location = useLocation();
   const navigate = useNavigate();
   const [searchInputState, setSearchInputState] = useState('');
 
   const { data: trendRecruitmentData, isLoading: isSearchingTrendRecruitment } = useSearchRecruitmentQuery({
-    Query: '',
+    Query: '實習',
     Page: 1,
     PageSize: 3,
     SortBy: SearchSortBy.CreatedTime, // TODO : Change SortBy
@@ -151,7 +148,7 @@ export default function Root() {
         >
           <Grid tablet={7} mobile={12}>
             <Stack spacing={2}>
-              <Typography variant="h3">熱門活動</Typography>
+              <Typography variant="h3">近期實習</Typography>
               <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
                 {!isSearchingTrendRecruitment && trendRecruitmentData ? (
                   trendRecruitmentData.result?.result.map((r) => (
@@ -169,7 +166,9 @@ export default function Root() {
                   </>
                 )}
               </Stack>
-              <Link>查看更多</Link>
+              <Link component={RouterLink} to="Search">
+                查看更多
+              </Link>
             </Stack>
           </Grid>
           <Grid
@@ -185,7 +184,7 @@ export default function Root() {
         </Grid>
       </Container>
 
-      {/* Recommend */}
+      {/* Resume */}
       <Container
         sx={{
           display: 'flex',
@@ -195,18 +194,18 @@ export default function Root() {
         }}
       >
         <Stack direction={'row'} justifyContent={'flex-end'} spacing={2}>
-          <Typography variant="h3">推薦實習</Typography>
-          <Button>開始探索</Button>
+          <Typography variant="h3">AI生成式實習履歷</Typography>
+          <Button onClick={() => navigate('/Account/User/Intern/Resume/Generate')}>馬上開始</Button>
         </Stack>
         <Typography variant="body1" color="inherit" textAlign={'end'}>
-          根據您的興趣、專業、學科推薦適合的實習
+          根據您的興趣、專業、學科產生一份完美的履歷
         </Typography>
         <Grid container alignItems={'center'}>
           <Grid mobile={3} alignSelf={'flex-end'}>
             <HappyAnnnouncement width="100%" />
             <Typography variant="body1" textAlign={'center'}>
               {' '}
-              填寫線上問卷
+              註冊帳號，並輸入資料
             </Typography>
           </Grid>
 
@@ -216,8 +215,8 @@ export default function Root() {
 
           <Grid mobile={4} alignSelf={'flex-end'}>
             <Searching width="100%" />
-            <Typography variant="body1" textAlign={'center'} sx={{ whiteSpace: 'nowrap' }}>
-              透過演算法推薦適合你的實習
+            <Typography variant="body1" textAlign={'center'}>
+              透過演算法產生履歷模板
             </Typography>
           </Grid>
 
@@ -227,15 +226,15 @@ export default function Root() {
 
           <Grid mobile={3} alignSelf={'flex-end'}>
             <Working width="100%" />
-            <Typography variant="body1" textAlign={'center'} sx={{ whiteSpace: 'nowrap' }}>
-              在實習中得到滿滿的經驗!
+            <Typography variant="body1" textAlign={'center'}>
+              針對履歷產生關鍵字，並曝光給相關的實習!
             </Typography>
           </Grid>
         </Grid>
       </Container>
 
       {/* Information */}
-      <Container>
+      {/* <Container>
         <Stack spacing={2}>
           <Typography variant="h3">活動資訊</Typography>
           <Stack direction={'row'} spacing={2}>
@@ -258,10 +257,10 @@ export default function Root() {
             )}
           </Grid>
         </Stack>
-      </Container>
+      </Container> */}
 
       {/* Contact */}
-      <Container>
+      {/* <Container>
         <Typography variant="h3" mb={2}>
           聯絡資訊
         </Typography>
@@ -286,7 +285,7 @@ export default function Root() {
             </Grid>
           )}
         </Grid>
-      </Container>
+      </Container> */}
     </Box>
   );
 }

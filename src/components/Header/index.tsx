@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { logout } from '@/features/user/userSlice';
 import { UserRole, UserRoleLoginData } from '@/types/enums/UserRole';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import MessageIcon from '@mui/icons-material/Message';
+import MenuIcon from '@mui/icons-material/Menu';
 import PeopleIcon from '@mui/icons-material/People';
 import {
   Container,
@@ -28,7 +28,6 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MessageAIModel from '../Message/MessageAIModel';
 import { OwnerAvatar } from '../UserAvatar';
 
 const env = import.meta.env.VITE_APP_ENV as string;
@@ -40,20 +39,15 @@ export default function Header() {
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const userState = useAppSelector((state) => state.userState.User);
   const [navAnchorEl, setNavAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [messageAnchorEl, setMessageAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(navAnchorEl);
   const handleNavClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setNavAnchorEl(event.currentTarget);
   };
-  const handleMessageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setMessageAnchorEl(event.currentTarget);
-  };
+
   const handleNavClose = () => {
     setNavAnchorEl(null);
   };
-  const handleMessageClose = () => {
-    setMessageAnchorEl(null);
-  };
+
   const [login] = useLoginMutation();
   const [role, setRole] = useState(userState?.Role);
   const handleChange = (e: SelectChangeEvent<UserRole>) => {
@@ -68,6 +62,11 @@ export default function Header() {
   const handleLogout = () => {
     dispatch(logout()); // initial state
     baseApi.util.resetApiState(); // reset cache
+  };
+
+  const handleNavigate = (value: string) => {
+    handleNavClose();
+    navigate(`/Account/User/${value}`);
   };
 
   return (
@@ -124,51 +123,32 @@ export default function Header() {
                 </FormControl>
               )}
 
-              {/* Message Model */}
-              <IconButton onClick={handleMessageClick}>
-                <MessageIcon />
-              </IconButton>
-              <IconButton onClick={() => navigate('/Account/User/Community')}>
-                <PeopleIcon />
-              </IconButton>
-
-              <Menu
-                anchorEl={messageAnchorEl}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(messageAnchorEl)}
-                onClose={handleMessageClose}
-              >
-                <MessageAIModel />
-              </Menu>
-
               {/* User Navigate */}
-              <Button
-                variant="text"
-                startIcon={
-                  <Box sx={{ width: '1.5em', height: '1.5em' }}>
-                    <OwnerAvatar />
-                  </Box>
-                }
-                endIcon={<ArrowDropDownIcon />}
-                onClick={handleNavClick}
-              >
-                {userState.Username}
-              </Button>
-
+              {isMobile ? (
+                <IconButton onClick={handleNavClick}>
+                  <MenuIcon />
+                </IconButton>
+              ) : (
+                <Button
+                  variant="text"
+                  startIcon={
+                    <Box sx={{ width: '1.5em', height: '1.5em' }}>
+                      <OwnerAvatar />
+                    </Box>
+                  }
+                  endIcon={<ArrowDropDownIcon />}
+                  onClick={handleNavClick}
+                >
+                  {userState.Username}
+                </Button>
+              )}
               {isMobile ? (
                 <Drawer open={open} onClose={handleNavClose} anchor="right">
                   {getNavigationConfig(userState?.Role || 0)?.map((item) => {
                     return (
                       <MenuItem
                         key={`header-menu-item-${item.value}`}
-                        onClick={() => navigate(`/Account/User/${item.value}`)}
+                        onClick={() => handleNavigate(item.value)}
                         sx={{
                           display: 'flex',
                           justifyContent: 'flex-start',
@@ -187,7 +167,7 @@ export default function Header() {
                     return (
                       <MenuItem
                         key={`header-menu-item-${item.value}`}
-                        onClick={() => navigate(`/Account/User/${item.value}`)}
+                        onClick={() => handleNavigate(item.value)}
                         sx={{
                           display: 'flex',
                           justifyContent: 'flex-start',

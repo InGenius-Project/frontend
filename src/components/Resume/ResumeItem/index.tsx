@@ -1,9 +1,22 @@
-import { Box, Paper, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Menu,
+  Paper,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 import getTimeDiffer from '@/assets/utils/getTimeDiffer';
 import { IResume } from '@/types/interfaces/IResume';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { useDebounce, useUpdateEffect } from 'ahooks';
 import React, { useState } from 'react';
+import MoreControlMenu from '@/components/MoreControlMenu';
 
 type ResumeItemProps = {
   resume: IResume;
@@ -14,6 +27,9 @@ type ResumeItemProps = {
 };
 
 const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick }: ResumeItemProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   const [currentTitle, setCurrentTitle] = useState<string>(resume.Title);
   const debouncedCurrentTitle = useDebounce<string>(currentTitle);
 
@@ -53,7 +69,7 @@ const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick 
         </Box>
         <Box alignSelf={'center'}>
           <Stack direction={'row'} spacing={1}>
-            {control}
+            {isMobile ? <MoreControlMenu>{control}</MoreControlMenu> : control}
           </Stack>
         </Box>
       </Box>
