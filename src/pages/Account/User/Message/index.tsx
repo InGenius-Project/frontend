@@ -1,4 +1,4 @@
-import Logo from '@/assets/images/logo/logoNoStyle.svg?react';
+import Logo from '@/assets/images/logo/logo.svg?react';
 import { MessageChannelItem } from '@/components/Message';
 import MessageAIModel from '@/components/Message/MessageAIModel';
 import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyItem';
@@ -83,7 +83,8 @@ function Message() {
         <Stack
           sx={{
             py: !isMobile ? 2 : 1,
-            width: isMobile ? 'fit-content' : '20em',
+            width: isMobile ? 'fit-content' : '15em',
+            flex: '0 0 auto',
           }}
           spacing={1}
         >
@@ -113,12 +114,12 @@ function Message() {
 
           {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
             <>
+              {/* AI Channer */}
               <MessageChannelItem
                 avatar={
                   <Logo
                     style={{
-                      width: '1em',
-                      fill: theme.palette.text.primary,
+                      width: '3em',
                     }}
                   />
                 }

@@ -7,7 +7,6 @@ import { logout } from '@/features/user/userSlice';
 import { UserRole, UserRoleLoginData } from '@/types/enums/UserRole';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
-import PeopleIcon from '@mui/icons-material/People';
 import {
   Container,
   Drawer,
