@@ -4,7 +4,7 @@ import RecruitmentSearchingItem from '@/components/Recruitment/RecruitmentSearch
 import { useLazySearchRecruitmentQuery } from '@/features/api/recruitment/searchRecruitment';
 import { IRecruitmentSearchPost, SearchOrderBy, SearchSortBy } from '@/types/interfaces/IRecruitment';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { Container, IconButton, Stack, TextField } from '@mui/material';
+import { Box, Container, IconButton, Pagination, Stack, TextField } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function Search() {
   } = (location.state as IRecruitmentSearchPost | undefined) || {};
   const navigate = useNavigate();
 
-  const [params] = useSearchParams();
+  const [params, setParam] = useSearchParams();
   const [queryState, setQueryState] = useState<string | undefined>(params.get('Query') || Query);
 
   useLayoutEffect(() => {
@@ -35,6 +35,14 @@ function Search() {
   }, [OrderBy, Page, PageSize, Query, SortBy, params, searchRecruitment]);
 
   const handleSearch = () => {
+    setParam({
+      Query: queryState || '',
+      Page: Page.toString(),
+      PageSize: PageSize.toString(),
+      SortBy: SortBy.toString(),
+      OrderBy: OrderBy.toString(),
+    });
+
     searchRecruitment({
       Query: queryState,
       Page: Page,
@@ -42,6 +50,10 @@ function Search() {
       SortBy: SortBy,
       OrderBy: OrderBy,
     });
+  };
+
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setParam({ Page: value.toString() });
   };
 
   return (
@@ -92,6 +104,15 @@ function Search() {
           </Stack>
         )}
       </Stack>
+      <Box
+        sx={{
+          p: 1,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Pagination count={searchRecruitmentsData?.result?.MaxPage} page={Page} onChange={handleChangePage} />
+      </Box>
     </Container>
   );
 }

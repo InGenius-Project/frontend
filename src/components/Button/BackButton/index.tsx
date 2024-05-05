@@ -6,7 +6,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 function BackButton() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = ((location.state as any)?.from.pathname as string) || '/';
+  const from =
+    ((location.state as any)?.from.pathname as string) + ((location.state as any)?.from.search as string) || '/';
+
   return (
     <Button onClick={() => navigate(from)} variant="text" startIcon={<ArrowBackIcon />}>
       返回
