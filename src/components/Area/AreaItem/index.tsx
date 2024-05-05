@@ -1,23 +1,9 @@
-import { useConfirm } from 'material-ui-confirm';
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
-import { Box, Button, Paper, Stack, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
-import { v4 as uuid } from 'uuid';
 import {
   usePostAreaMutation,
+  usePostImageTextLayoutMutation,
   usePostKeyValueListLayoutMutation,
   usePostListLayoutMutation,
   usePostTextLayoutMutation,
-  usePostImageTextLayoutMutation,
 } from '@/features/api/area';
 import {
   AreaStep,
@@ -31,6 +17,31 @@ import {
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import {
+  Box,
+  Button,
+  Drawer,
+  Paper,
+  Stack,
+  Step,
+  StepLabel,
+  Stepper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useConfirm } from 'material-ui-confirm';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 import AreaDisplayItem from '../AreaDisplayItem';
 import AreaEditItem from '../AreaEditItem';
@@ -47,6 +58,7 @@ export type AreaItemProps = {
 const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProps>>(
   ({ area, children, focused, isLoadingSequence, ...props }, forwardRef) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
     const dispatch = useAppDispatch();
     const confirm = useConfirm();
     const ref = useRef<HTMLInputElement>(null);
@@ -62,6 +74,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
 
     const layoutState = useAppSelector((state) => state.layoutState);
     const layoutType = useAppSelector(selectLayoutType);
+    const [openDrawer, setOpenDrawer] = useState(false);
 
     const [postArea] = usePostAreaMutation();
     const [postListLayout] = usePostListLayoutMutation();
@@ -215,6 +228,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
     );
 
     const handleDisplayItemClick = useCallback(() => {
+      setOpenDrawer(true);
       dispatch(setLayoutByArea(area));
       const state = store.getState().layoutState;
 
@@ -272,7 +286,8 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
           <DragHandleIcon color="primary" />
         </Box>
 
-        {layoutState.areaId === area.Id ? (
+        {/* Desktop view */}
+        {layoutState.areaId === area.Id && !isMobile ? (
           <>
             <Stepper activeStep={activeStep}>
               {steps.map(({ label }, index) => {
@@ -321,6 +336,42 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
         ) : (
           <AreaDisplayItem area={area} onClick={handleDisplayItemClick} editable />
         )}
+
+        {/* Mobile view */}
+
+        <Drawer
+          anchor="bottom"
+          open={isMobile && layoutState.areaId === area.Id && openDrawer}
+          onClose={() => setOpenDrawer(false)}
+        >
+          <Box
+            sx={{
+              p: 2,
+              maxHeight: '90vh',
+              overflow: 'scroll',
+            }}
+          >
+            {steps[activeStep].item}
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Stack spacing={1}>
+                <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                  {activeStep === AreaStep.New ? '取消' : '上一步'}
+                </Button>
+              </Stack>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {isStepOptional(activeStep) && (
+                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                  跳過
+                </Button>
+              )}
+              {activeStep === steps.length - 1 ? (
+                <Button onClick={handleSave}>儲存</Button>
+              ) : (
+                <Button onClick={handleNext}>下一步</Button>
+              )}
+            </Box>
+          </Box>
+        </Drawer>
       </Paper>
     );
   },

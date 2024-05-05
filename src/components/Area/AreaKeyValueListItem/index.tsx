@@ -12,7 +12,6 @@ import {
   Typography,
   createFilterOptions,
 } from '@mui/material';
-import { current } from '@reduxjs/toolkit';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
@@ -100,6 +99,7 @@ function AreaKeyValueListItem({
           <Divider orientation="vertical" flexItem />
           <TextField
             variant="standard"
+            key={`value-${item.InnerId}`}
             value={item.Value}
             onChange={(e) => {
               e.preventDefault();
@@ -109,7 +109,6 @@ function AreaKeyValueListItem({
                   Value: e.target.value,
                 });
             }}
-            autoFocus
             fullWidth
             sx={{ flex: '1 1 auto', height: '100%' }}
           />

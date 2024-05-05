@@ -1,5 +1,5 @@
 import NoData from '@/assets/images/svg/noData.svg?react';
-import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
 type AreaEmptyProps = {
@@ -9,6 +9,7 @@ type AreaEmptyProps = {
 
 function AreaEmpty({ onClick: handleClick, editable = false }: AreaEmptyProps) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     handleClick && handleClick();
@@ -23,7 +24,7 @@ function AreaEmpty({ onClick: handleClick, editable = false }: AreaEmptyProps) {
         gap: 2,
       }}
     >
-      <NoData style={{ width: '8em', height: 'auto' }} />
+      <NoData style={{ width: isMobile ? '6em' : '8em', height: isMobile ? '80%' : 'auto' }} />
       <Stack spacing={1}>
         <Typography variant="body1" sx={{ color: theme.palette.primary.main }} fontWeight={'bold'}>
           Oh! 這個地方沒有任何區塊

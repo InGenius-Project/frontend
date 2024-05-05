@@ -8,6 +8,7 @@ export const getChatGroupApi = baseApi.injectEndpoints({
       query: ({ groupId }) => ({
         url: `Chat/Groups/${groupId}`,
       }),
+      providesTags: (res) => [{ type: 'ChatGroup', id: res?.result?.Id }],
     }),
   }),
 });

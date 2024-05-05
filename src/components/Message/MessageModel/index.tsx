@@ -12,21 +12,18 @@ import { MessageReceiveHandle } from '@/pages/Account/User/Message';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { useLazyJoinGroupQuery } from '@/features/api/chat/joinGroup';
 import { useAppSelector } from '@/features/store';
-import { selectGroupId } from '@/features/message/messageSlice';
+import { selectConn, selectGroupId } from '@/features/message/messageSlice';
 import { NIL } from 'uuid';
 import MessageEmpty from '../MessageEmpty';
-import { result } from 'lodash';
 
-type MessageModelProps = {
-  conn?: HubConnection;
-  control?: React.ReactNode;
-};
+type MessageModelProps = {};
 
-const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({ conn, control }, ref) => {
+const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, ref) => {
   const listRef = useRef<HTMLDivElement>(null);
   const [joinGroup] = useLazyJoinGroupQuery();
   const groupId = useAppSelector(selectGroupId);
   const [messageState, setMessages] = useState<IChatMessage[]>([]);
+  const conn = useAppSelector(selectConn);
   const { data: chatGroupData } = useGetChatGroupQuery(
     { groupId: groupId || NIL },
     {

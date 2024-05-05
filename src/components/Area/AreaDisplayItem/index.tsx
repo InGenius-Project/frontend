@@ -2,11 +2,12 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { Area } from '@/types/classes/Area';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IArea } from '@/types/interfaces/IArea';
-import { Divider, Stack, Typography } from '@mui/material';
+import Edit from '@mui/icons-material/Edit';
+import { Button, Divider, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { MouseEventHandler } from 'react';
+import { v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
-import { v4 as uuid } from 'uuid';
 
 type AreaDisplayItemProps = {
   area: IArea;
@@ -15,11 +16,27 @@ type AreaDisplayItemProps = {
 };
 
 function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const a = new Area(area);
 
   return (
-    <Stack spacing={1} onClick={onClick} sx={{ cursor: editable ? 'pointer' : 'default' }}>
-      <Typography variant="subtitle1">{a.getAreaTitle() || 'Untitled'}</Typography>
+    <Stack spacing={1} onClick={!isMobile ? onClick : undefined} sx={{ cursor: editable ? 'pointer' : 'default' }}>
+      <Stack direction={'row'}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            flex: '1 1 auto',
+          }}
+        >
+          {a.getAreaTitle() || 'Untitled'}
+        </Typography>
+        {isMobile && (
+          <Button onClick={onClick} component="div" variant="text" startIcon={<Edit />}>
+            編輯
+          </Button>
+        )}
+      </Stack>
       {a.isLayoutType(LayoutType.ImageText) && (
         <Stack direction={'row'} spacing={1}>
           {a.ImageTextLayout?.Image ? (

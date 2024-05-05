@@ -1,4 +1,4 @@
-import { IArea, IWithAreas } from './IArea';
+import { IWithAreas } from './IArea';
 import { IResume } from './IResume';
 import { IOwnerUser } from './IUser';
 
@@ -9,6 +9,11 @@ export interface IRecruitment extends IWithAreas {
   Publisher?: IOwnerUser;
   PublisherId?: string;
   IsUserFav?: boolean;
+  Keywords: IKeywordRecord[];
+}
+
+export interface IKeywordRecord {
+  Id: string;
 }
 
 export interface IRecruitmentPost {

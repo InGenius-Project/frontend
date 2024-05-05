@@ -1,10 +1,20 @@
 import { UserRole } from '@/types/enums/UserRole';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import MessageIcon from '@mui/icons-material/Message';
+import WorkIcon from '@mui/icons-material/Work';
+import PeopleIcon from '@mui/icons-material/People';
 import { OwnerAvatar } from '../UserAvatar';
+import { Box, styled } from '@mui/material';
+
+const LeftIcon = styled('span')(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  display: 'flex',
+  width: '24px',
+  height: '24px',
+  alignItems: 'center',
+}));
 
 const navigationConfig = [
   {
@@ -13,22 +23,47 @@ const navigationConfig = [
       {
         name: '個人首頁',
         value: 'Profile',
-        icon: <OwnerAvatar />,
+        icon: (
+          <LeftIcon>
+            <OwnerAvatar />
+          </LeftIcon>
+        ),
       },
       {
         name: '履歷管理',
         value: 'Intern/Resume',
-        icon: <InsertDriveFileOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <InsertDriveFileIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '職缺管理',
         value: 'Intern/Recruitment',
-        icon: <WorkOutlineOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <WorkIcon />
+          </LeftIcon>
+        ),
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },
@@ -38,17 +73,40 @@ const navigationConfig = [
       {
         name: '公司首頁',
         value: 'Profile',
-        icon: <OwnerAvatar />,
+        icon: (
+          <LeftIcon>
+            <Box width="24px" height="24px">
+              <OwnerAvatar />
+            </Box>
+          </LeftIcon>
+        ),
       },
       {
         name: '職缺管理',
         value: 'Company/Recruitment',
-        icon: <WorkOutlineOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <WorkIcon />
+          </LeftIcon>
+        ),
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },
@@ -62,17 +120,38 @@ const navigationConfig = [
       {
         name: '標籤管理',
         value: 'Manage/Tag',
-        icon: <LocalOfferOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <LocalOfferIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '區塊管理',
         value: 'Manage/Area',
-        icon: <DashboardOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <DashboardIcon />
+          </LeftIcon>
+        ),
       },
       {
         name: '訊息',
         value: 'Message',
-        icon: <MessageOutlinedIcon />,
+        icon: (
+          <LeftIcon>
+            <MessageIcon />
+          </LeftIcon>
+        ),
+      },
+      {
+        name: '社群',
+        value: 'Community',
+        icon: (
+          <LeftIcon>
+            <PeopleIcon />
+          </LeftIcon>
+        ),
       },
     ],
   },

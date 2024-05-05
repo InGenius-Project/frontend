@@ -1,12 +1,14 @@
 import React from 'react';
 import Taken from '@/assets/images/svg/taken.svg?react';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { useAppSelector } from '@/features/store';
 import { UserRole } from '@/types/enums/UserRole';
 
 function RecruitmentEmpty() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const userState = useAppSelector((state) => state.userState);
 
   return (
@@ -24,7 +26,7 @@ function RecruitmentEmpty() {
     >
       <Taken
         style={{
-          width: '15em',
+          width: isMobile ? '8em' : '15em',
           height: 'auto',
         }}
       />

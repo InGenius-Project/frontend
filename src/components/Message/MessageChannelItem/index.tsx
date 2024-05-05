@@ -24,7 +24,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
     const { data: userData } = useGetUserQuery();
 
     const ChannelAvatar = () => {
-      if (avatar) return <Avatar>{avatar}</Avatar>;
+      if (avatar) return avatar;
       const firstUser = chatGroupInfo?.Users.filter((user) => user.Id === userData?.result?.Id)[0];
       return <UserAvatar uri={firstUser?.Avatar?.Uri} alt={firstUser?.Username}></UserAvatar>;
     };
@@ -64,31 +64,47 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
         component="button"
         onClick={() => onClick?.(chatGroupInfo)}
       >
-        {!isMobile && (
-          <Stack spacing={1} direction={'row'} sx={{ flex: '1 1 auto', justifyContent: 'flex-start', width: '10em' }}>
-            <Box width="3em" height={'3em'}>
-              <ChannelAvatar />
-            </Box>
-            <Stack sx={{ flex: '1 1 auto' }}>
-              <Typography variant={'body1'} sx={{ width: '100%', overflow: 'hidden', height: '1.5em' }}>
-                {chatGroupInfo?.GroupName || '未命名聊天室'}
+        <Stack
+          spacing={1}
+          direction={'row'}
+          sx={{
+            flex: '1 1 auto',
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            width: isMobile ? 'fit-content' : '10em',
+          }}
+        >
+          <Box
+            sx={{
+              width: '3em',
+              height: '3em',
+            }}
+          >
+            <ChannelAvatar />
+          </Box>
+          {!isMobile && (
+            <>
+              <Stack sx={{ flex: '1 1 auto' }}>
+                <Typography variant={'body1'} sx={{ width: '100%', overflow: 'hidden', height: '1.5em' }}>
+                  {chatGroupInfo?.GroupName || '未命名聊天室'}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {lastMessage?.Message}
+                </Typography>
+              </Stack>
+
+              <Typography variant="caption" sx={{ whiteSpace: 'nowrap' }}>
+                {lastMessageTime}
               </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {lastMessage?.Message}
-              </Typography>
-            </Stack>
-            <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
-              {lastMessageTime}
-            </Typography>
-          </Stack>
-        )}
+            </>
+          )}
+        </Stack>
       </ButtonBase>
     );
   },

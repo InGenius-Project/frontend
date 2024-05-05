@@ -6,7 +6,7 @@ import { IAreaType } from '@/types/interfaces/IArea';
 import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import SearchIcon from '@mui/icons-material/Search';
-import { Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Chip, InputAdornment, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import React, { useState } from 'react';
 
@@ -15,6 +15,8 @@ type AreaNewItemProps = {
 };
 
 export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const { data: userData, isSuccess: isGettingUserSuccess } = useGetUserQuery();
   const { data: areaTypesData } = useGetAreaTypesQuery(
     {
@@ -44,6 +46,13 @@ export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
 
   return (
     <Stack spacing={2}>
+      {isMobile && (
+        <>
+          <Typography variant="h5">新增區塊</Typography>
+          <Typography variant="caption">選擇預設的類型，或點擊"跳過"自定義區塊</Typography>
+        </>
+      )}
+
       <Stack direction={'row'} spacing={1} alignItems={'flex-end'}>
         {areaTypesData?.result && (
           <Autocomplete
@@ -75,19 +84,21 @@ export default function AreaNewItem({ onClickNext }: AreaNewItemProps) {
         )}
       </Stack>
 
-      <Stack direction="row" spacing={2} alignItems={'center'}>
+      <Stack direction={isMobile ? 'column' : 'row'} spacing={2} alignItems={'flex-start'}>
         <Typography variant="body1">預設類型</Typography>
-        {areaTypesData?.result &&
-          areaTypesData.result.map((o: any, i: any) => (
-            <Chip
-              key={i}
-              icon={areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />}
-              label={o.Name}
-              onClick={(e) => {
-                handleChange(e, o);
-              }}
-            />
-          ))}
+        <Stack direction={'row'} spacing={1} useFlexGap flexWrap="wrap">
+          {areaTypesData?.result &&
+            areaTypesData.result.map((o: any, i: any) => (
+              <Chip
+                key={i}
+                icon={areaType && o.Id === areaType ? <CheckIcon /> : <AddIcon />}
+                label={o.Name}
+                onClick={(e) => {
+                  handleChange(e, o);
+                }}
+              />
+            ))}
+        </Stack>
       </Stack>
     </Stack>
   );

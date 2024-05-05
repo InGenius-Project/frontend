@@ -16,7 +16,21 @@ function MessageEmpty({ label }: MessageEmptyProps) {
         width: '100%',
       }}
     >
-      {label ? <Chip label={label} /> : <Chip label="這裡是此聊天室的開頭" />}
+      {label ? (
+        <Chip
+          label={label}
+          sx={{
+            height: 'fit-content',
+            p: 1,
+            '& .MuiChip-label': {
+              display: 'block',
+              whiteSpace: 'normal',
+            },
+          }}
+        />
+      ) : (
+        <Chip label="這裡是此聊天室的開頭" />
+      )}
     </Box>
   );
 }

@@ -6,7 +6,11 @@ import { usePostSequenceMutation } from '@/features/api/area/postSequence';
 import { AreasType, selectIsEmptyAreas } from '@/features/areas/areasSlice';
 import { getUpdateAreaPost, initializeState, setLayoutByArea } from '@/features/layout/layoutSlice';
 import { store, useAppDispatch, useAppSelector } from '@/features/store';
-import { Box, Stack } from '@mui/material';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { AppBar, Box, Checkbox, Fab, IconButton, Stack, Toolbar, styled, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import { DropResult } from 'react-beautiful-dnd';
 import { NIL } from 'uuid';
@@ -14,7 +18,18 @@ import AreaControl from '../AreaControl';
 import AreaEmpty from '../AreaEmpty';
 import AreaItem from '../AreaItem';
 
+const StyledFab = styled(Fab)({
+  position: 'absolute',
+  zIndex: 1,
+  top: -30,
+  left: 0,
+  right: 0,
+  margin: '0 auto',
+});
+
 function AreaEditor() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const dispatch = useAppDispatch();
   const areasState = useAppSelector((state) => state.areasState);
   const layoutState = useAppSelector((state) => state.layoutState);
@@ -28,7 +43,7 @@ function AreaEditor() {
   useEffect(() => {
     if (areasState.areas) {
       const index = areasState.areas.findIndex((a) => a.Id === layoutState.areaId);
-      if (index) {
+      if (index !== null) {
         setControlTop(areaItemsRef.current[index]?.offsetTop);
         areaItemsRef.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
@@ -64,7 +79,7 @@ function AreaEditor() {
       Id: NIL,
       Sequence: layoutState.sequence + 1,
       IsDisplayed: true,
-      Title: 'New Area',
+      Title: '新區塊',
       UserId: areasState.type === AreasType.PROFILE ? areasState.id : undefined,
       RecruitmentId: areasState.type === AreasType.RECRUITMENT ? areasState.id : undefined,
       ResumeId: areasState.type === AreasType.RESUME ? areasState.id : undefined,
@@ -138,7 +153,7 @@ function AreaEditor() {
         )}
       </Stack>
 
-      {!isEmptyAreas && (
+      {!isEmptyAreas && !isMobile && (
         <Box
           sx={{
             flexShrink: 0,
@@ -158,6 +173,31 @@ function AreaEditor() {
             onVisibilityChange={handleVisibilityChange}
           />
         </Box>
+      )}
+
+      {!isEmptyAreas && isMobile && (
+        <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, backgroundColor: theme.palette.primary.lighter }}>
+          <Toolbar>
+            <Checkbox
+              icon={<Visibility />}
+              checkedIcon={<VisibilityOff />}
+              size="small"
+              checked={layoutState.isDisplayed}
+              onChange={handleVisibilityChange}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+
+            {/* Absolute middle add */}
+            <StyledFab color="primary" onClick={handleAddClick}>
+              <Add />
+            </StyledFab>
+
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton onClick={handleDeleteClick}>
+              <Delete />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
       )}
     </Box>
   );
