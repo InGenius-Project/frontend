@@ -1,7 +1,7 @@
 import { IChatGroup } from '@/types/interfaces/IChat';
 import { IResponse } from '@/types/interfaces/IResponse';
 
-export const generateChatGroups: IResponse<Array<IChatGroup>> = {
+export const mockChatGroups: IResponse<Array<IChatGroup>> = {
   statusCode: 200,
   message: 'GET Request successful.',
   isError: false,

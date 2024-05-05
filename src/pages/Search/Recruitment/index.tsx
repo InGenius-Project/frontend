@@ -27,6 +27,7 @@ function SearchRecruitment() {
         <Stack spacing={1}>
           {recruitmentData?.result && (
             <InternRecruitmentItem
+              key={recruitmentData?.result.Id}
               recruitment={recruitmentData?.result}
               control={<ApplyButton recruitmentId={recruitmentId || ''} />}
             />

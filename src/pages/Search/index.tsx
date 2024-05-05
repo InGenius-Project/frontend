@@ -69,6 +69,7 @@ function Search() {
           {searchRecruitmentsData?.result?.result && !!searchRecruitmentsData?.result?.result?.length ? (
             searchRecruitmentsData?.result?.result.map((r) => (
               <InternRecruitmentItem
+                key={r.Id}
                 recruitment={r}
                 onClick={() =>
                   navigate(`/Search/Recruitment/${r.Id}`, {

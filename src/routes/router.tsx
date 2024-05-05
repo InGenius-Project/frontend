@@ -34,6 +34,8 @@ import CompanyRecruitmentGenerat from '@/pages/Account/User/Company/Recruitment/
 import Community from '@/pages/Account/User/Community';
 import CommunityDetail from '@/pages/Account/User/Community/Detail';
 import CommunityCreate from '@/pages/Account/User/Community/Create';
+import SearchRecruitmentRelative from '@/pages/Search/Relative/Recruitment';
+import SearchResumeRelative from '@/pages/Search/Relative/Resume';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -131,6 +133,10 @@ export const routes = (
       <Route path="" element={<Search />} />
       <Route path="Recruitment/:recruitmentId" element={<SearchRecruitment />} />
       <Route path="Company/:companyId" element={<SearchCompany />} />
+      <Route path="Relative">
+        <Route path="Resume/:recruitmentId" element={<SearchResumeRelative />}></Route>
+        <Route path="Recruitment/:resumeId" element={<SearchRecruitmentRelative />}></Route>
+      </Route>
     </Route>
   </Route>
 );

@@ -1,15 +1,20 @@
 import AreaEditor from '@/components/Area/AreaEditor';
 import { ResumeItem } from '@/components/Resume';
+import { useLazyAnalyzeResumeQuery } from '@/features/api/resume/analyzeResume';
 import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
 import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
+import { useSearchRelativeRecruitmentQuery } from '@/features/api/resume/searchRelativeRecruitment';
 import { AreasType, setAreas } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Chip, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { NIL } from 'uuid';
 
 export default function ResumeEdit() {
   const theme = useTheme();
@@ -17,12 +22,26 @@ export default function ResumeEdit() {
 
   const { resumeId = '' } = useParams();
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const { data: resumeData } = useGetResumeByIdQuery(resumeId);
   const [postResume] = usePostResumeMutation();
   const [deleteResume] = useDeleteResumeMutation();
   const confirm = useConfirm();
+  const [anaylzeResume, { isLoading: isAnalyzingResume }] = useLazyAnalyzeResumeQuery();
+  const { data: relativeRecruitmentData } = useSearchRelativeRecruitmentQuery(
+    { resumeId: resumeId || NIL },
+    { skip: !resumeId },
+  );
+
+  const handleAnalyze = () => {
+    anaylzeResume({ resumeId })
+      .unwrap()
+      .then(() => {
+        handleNavigateRelative();
+      });
+  };
 
   const handleDeleteClick = (id: string) => {
     confirm({
@@ -68,6 +87,11 @@ export default function ResumeEdit() {
     resumeData?.result?.Id && handleDeleteClick(resumeData.result?.Id);
   };
 
+  const handleNavigateRelative = () =>
+    navigate(`/Search/Relative/Recruitment/${resumeId}`, {
+      state: { from: location },
+    });
+
   // If not provide id, redirect back
   if (!resumeId) {
     return <Navigate to=".." />;
@@ -81,9 +105,55 @@ export default function ResumeEdit() {
           resume={resumeData.result}
           control={
             isMobile ? (
-              <MenuItem onClick={handleClickDelete}>刪除</MenuItem>
+              <>
+                <MenuItem>
+                  {relativeRecruitmentData?.result && relativeRecruitmentData.result.length > 0 ? (
+                    <Button onClick={handleNavigateRelative} variant="text">
+                      共有
+                      <Chip
+                        label={relativeRecruitmentData.result.length}
+                        sx={{
+                          mx: 1,
+                        }}
+                      />
+                      相關職缺
+                    </Button>
+                  ) : (
+                    <LoadingButton
+                      variant="contained"
+                      loading={isAnalyzingResume}
+                      onClick={handleAnalyze}
+                      startIcon={<AutoAwesome />}
+                    >
+                      履歷曝光
+                    </LoadingButton>
+                  )}
+                </MenuItem>
+                <MenuItem onClick={handleClickDelete}>刪除</MenuItem>
+              </>
             ) : (
-              <Stack>
+              <Stack direction={'row'}>
+                {relativeRecruitmentData?.result && relativeRecruitmentData.result.length > 0 ? (
+                  <Button onClick={handleNavigateRelative} variant="text">
+                    共有
+                    <Chip
+                      label={relativeRecruitmentData.result.length}
+                      sx={{
+                        mx: 1,
+                      }}
+                    />
+                    相關職缺
+                  </Button>
+                ) : (
+                  <LoadingButton
+                    variant="contained"
+                    loading={isAnalyzingResume}
+                    onClick={handleAnalyze}
+                    startIcon={<AutoAwesome />}
+                  >
+                    履歷曝光
+                  </LoadingButton>
+                )}
                 <IconButton onClick={handleClickDelete}>
                   <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
                 </IconButton>

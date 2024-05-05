@@ -1,7 +1,7 @@
 import { IArea } from '@/types/interfaces/IArea';
 import { IResponse } from '@/types/interfaces/IResponse';
 
-export const generateAreaTitles: IResponse<Array<IArea>> = {
+export const mockArea: IResponse<Array<IArea>> = {
   statusCode: 200,
   message: 'POST Request successful.',
   isError: false,
@@ -11,11 +11,12 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
       Sequence: 0,
       IsDisplayed: false,
       Title: '自我簡介',
-      LayoutType: undefined,
+      LayoutType: 0,
       AreaTypeId: undefined,
+
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生自我簡介的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,
@@ -26,14 +27,15 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
     },
     {
       Id: '00000000-0000-0000-0000-000000000000',
-      Sequence: 1,
+      Sequence: 0,
       IsDisplayed: false,
-      Title: '經驗',
-      LayoutType: undefined,
+      Title: '工作經驗',
+      LayoutType: 0,
       AreaTypeId: undefined,
+
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生工作經驗的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,
@@ -44,14 +46,15 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
     },
     {
       Id: '00000000-0000-0000-0000-000000000000',
-      Sequence: 2,
+      Sequence: 0,
       IsDisplayed: false,
       Title: '專案經歷',
-      LayoutType: undefined,
+      LayoutType: 0,
       AreaTypeId: undefined,
+
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生專案經歷的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,
@@ -62,15 +65,15 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
     },
     {
       Id: '00000000-0000-0000-0000-000000000000',
-      Sequence: 3,
+      Sequence: 0,
       IsDisplayed: false,
       Title: '證照與認證',
-      LayoutType: undefined,
+      LayoutType: 0,
       AreaTypeId: undefined,
 
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生證照與認證的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,
@@ -81,15 +84,15 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
     },
     {
       Id: '00000000-0000-0000-0000-000000000000',
-      Sequence: 4,
+      Sequence: 0,
       IsDisplayed: false,
       Title: '社群貢獻',
-      LayoutType: undefined,
+      LayoutType: 0,
       AreaTypeId: undefined,
 
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生社群貢獻的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,
@@ -100,15 +103,15 @@ export const generateAreaTitles: IResponse<Array<IArea>> = {
     },
     {
       Id: '00000000-0000-0000-0000-000000000000',
-      Sequence: 5,
+      Sequence: 0,
       IsDisplayed: false,
       Title: '興趣與愛好',
-      LayoutType: undefined,
+      LayoutType: 0,
       AreaTypeId: undefined,
 
       TextLayout: {
         Id: '00000000-0000-0000-0000-000000000000',
-        Content: '',
+        Content: '根據使用者的資料產生興趣與愛好的描述 ',
       },
       ImageTextLayout: undefined,
       ListLayout: undefined,

@@ -10,17 +10,7 @@ import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  Button,
-  FormControlLabel,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Switch,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Badge, Button, IconButton, MenuItem, Stack, Switch, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
 
@@ -102,9 +92,11 @@ export default function CompanyRecruitment() {
                   <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton>
-                    <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
-                  </IconButton>
+                  <Badge badgeContent={(r.Resumes || [])?.length} color="primary">
+                    <IconButton>
+                      <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
+                    </IconButton>
+                  </Badge>
                   <IconButton onClick={() => handleClickDelete(r.Id)}>
                     <DeleteOutlineOutlinedIcon />
                   </IconButton>

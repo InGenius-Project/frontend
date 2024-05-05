@@ -2,7 +2,7 @@ import { TagType } from '@/types/enums/TagType';
 import { IResponse } from '@/types/interfaces/IResponse';
 import { ITag } from '@/types/interfaces/ITag';
 
-export const generateTags: IResponse<ITag[]> = {
+export const mockTags: IResponse<ITag[]> = {
   statusCode: 200,
   message: '',
   isError: false,
