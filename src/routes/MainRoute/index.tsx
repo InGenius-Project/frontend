@@ -4,7 +4,7 @@ import { selectConn, setGroupId } from '@/features/message/messageSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
 import { IChatGroupInfo } from '@/types/interfaces/IChat';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CircularProgress, CssBaseline, Typography, useTheme } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../components/Header';
 
 export default function MainRoute() {
+  const theme = useTheme();
   const firstRender = useRef(true);
   const conn = useAppSelector(selectConn);
   const dispatch = useAppDispatch();
@@ -66,6 +67,30 @@ export default function MainRoute() {
           <Outlet />
         </Box>
       </AnimatePresence>
+
+      {loading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            width: '100%',
+            height: '100%',
+            zIndex: 9999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: theme.spacing(2),
+          }}
+        >
+          <CircularProgress />
+          <Typography color={'white'} variant="h6">
+            載入中...
+          </Typography>
+        </Box>
+      )}
 
       <Footer />
     </Box>

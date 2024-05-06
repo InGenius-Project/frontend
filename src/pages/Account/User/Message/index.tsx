@@ -75,8 +75,8 @@ function Message() {
         sx={{
           display: 'flex',
           direction: 'row',
-          height: '100%',
           gap: 2,
+          height: 'var(--ing-height-user-inner)',
         }}
       >
         {/* leftside panel */}
@@ -112,64 +112,71 @@ function Message() {
 
           <Divider />
 
-          {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
-            <>
-              {/* AI Channer */}
-              <MessageChannelItem
-                avatar={
-                  <Logo
-                    style={{
-                      width: '3em',
-                    }}
-                  />
-                }
-                onClick={() => {
-                  setPageState(MessagePage.AIChat);
-                  dispatch(setGroupId('ai'));
-                }}
-                chatGroupInfo={{
-                  GroupName: 'InGenius AI',
-                  Id: 'ai',
-                  IsPrivate: false,
-                  Users: [],
-                  InvitedUsers: [],
-                  CreateTime: '',
-                }}
-              />
-              {(chatGroupsData?.result || []).length > 0 ? (
-                chatGroupsData?.result?.map((c, index) => {
-                  return (
-                    <MessageChannelItem
-                      onClick={() => handleClickChannelItem(c.Id)}
-                      key={c.Id}
-                      chatGroupInfo={c}
-                      ref={(el) => {
-                        if (el) {
-                          messageChannelItemRefs.current.set(c.Id, el);
-                        }
+          <Stack
+            sx={{
+              overflowY: 'scroll',
+            }}
+          >
+            {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
+              <>
+                {/* AI Channer */}
+                <MessageChannelItem
+                  avatar={
+                    <Logo
+                      style={{
+                        width: '3em',
                       }}
                     />
-                  );
-                })
-              ) : (
-                <MessageChannelEmptyItem />
-              )}
-            </>
-          )}
+                  }
+                  onClick={() => {
+                    setPageState(MessagePage.AIChat);
+                    dispatch(setGroupId('ai'));
+                  }}
+                  chatGroupInfo={{
+                    GroupName: 'InGenius AI',
+                    Id: 'ai',
+                    IsPrivate: false,
+                    Users: [],
+                    InvitedUsers: [],
+                    CreateTime: '',
+                  }}
+                />
+                {(chatGroupsData?.result || []).length > 0 ? (
+                  chatGroupsData?.result?.map((c, index) => {
+                    return (
+                      <MessageChannelItem
+                        onClick={() => handleClickChannelItem(c.Id)}
+                        key={c.Id}
+                        chatGroupInfo={c}
+                        ref={(el) => {
+                          if (el) {
+                            messageChannelItemRefs.current.set(c.Id, el);
+                          }
+                        }}
+                      />
+                    );
+                  })
+                ) : (
+                  <MessageChannelEmptyItem />
+                )}
+              </>
+            )}
 
-          {pageState === MessagePage.InvitedChatGroups && (
-            <>
-              {invitedChatGroupsData?.result?.map((c) => {
-                return (
-                  <MessageChannelItem
-                    onClick={() => handleClickInvitedChannelItem(c.Id)}
-                    key={c.Id}
-                    chatGroupInfo={c}
-                  />
-                );
-              })}
-            </>
-          )}
+            {pageState === MessagePage.InvitedChatGroups && (
+              <>
+                {invitedChatGroupsData?.result?.map((c) => {
+                  return (
+                    <MessageChannelItem
+                      type="invited"
+                      onClick={() => handleClickInvitedChannelItem(c.Id)}
+                      key={c.Id}
+                      chatGroupInfo={c}
+                    />
+                  );
+                })}
+              </>
+            )}
+          </Stack>
         </Stack>
 
         {/* Right panel */}

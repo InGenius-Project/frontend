@@ -9,8 +9,7 @@ import { useAppDispatch } from '@/features/store';
 import { AreaType } from '@/types/enums/AreaType';
 import { TagType } from '@/types/enums/TagType';
 import { ITag } from '@/types/interfaces/ITag';
-import { Autocomplete, Box, Button, Stack, TextField, Typography, createFilterOptions } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Autocomplete, Box, Button, Skeleton, Stack, TextField, Typography, createFilterOptions } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NIL } from 'uuid';
@@ -21,7 +20,7 @@ function InitSkill() {
   const dispatch = useAppDispatch();
 
   const { data: userData } = useGetUserQuery();
-  const { data: skillTagsData } = useGetTagsQuery([TagType.Skill]);
+  const { data: skillTagsData, isLoading: isFetchingSkillTag } = useGetTagsQuery([TagType.Skill]);
   const [selectSkillState, setSelectSkillState] = useState<ITag[]>([]);
   const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -75,6 +74,8 @@ function InitSkill() {
         <Stack spacing={1}>
           <Typography variant="h2">你的技能</Typography>
           <Typography variant="caption">選擇你的技能，讓我們提供更精確的實習給你</Typography>
+          {isFetchingSkillTag && <Skeleton width="100%" height="5em" />}
+
           {skillTagsData?.result && (
             <Autocomplete
               multiple
@@ -96,7 +97,7 @@ function InitSkill() {
               }}
             />
           )}
-          <Typography color="error">請至少選擇一項技能</Typography>
+          {error && <Typography color="error">請至少選擇一項技能</Typography>}
           <Box>
             <Button onClick={handleClickFinish}>完成</Button>
           </Box>

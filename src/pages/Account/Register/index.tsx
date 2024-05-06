@@ -2,6 +2,7 @@ import LoginSvg from '@/assets/images/svg/login.svg?react';
 import { userAuthVariants } from '@/assets/motion/variants';
 import FormInput from '@/components/FormInput';
 import { useRegisterMutation } from '@/features/api/auth/register';
+import { useLazyGetUserQuery } from '@/features/api/user/getUser';
 import { store } from '@/features/store';
 import { UserRole } from '@/types/enums/UserRole';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,6 +39,7 @@ export default function Register() {
   const [error, setError] = React.useState<string>('');
 
   const [registerUser, { isLoading }] = useRegisterMutation();
+  const [getUser] = useLazyGetUserQuery();
 
   const {
     reset,
@@ -60,18 +62,21 @@ export default function Register() {
     })
       .unwrap()
       .then((r) => {
-        const state = store.getState();
-        switch (state.userState.User?.Role) {
-          case UserRole.Intern:
-            navigate('/Account/User/Intern/Init');
-            break;
-          case UserRole.Company:
-            navigate('/Account/User/Company/Init');
-            break;
-          default:
-            navigate('/Account/User');
-            break;
-        }
+        getUser()
+          .unwrap()
+          .then((ur) => {
+            switch (ur.result?.Role) {
+              case UserRole.Intern:
+                navigate('/Account/User/Intern/Init');
+                break;
+              case UserRole.Company:
+                navigate('/Account/User/Company/Init');
+                break;
+              default:
+                navigate('/Account/User');
+                break;
+            }
+          });
       })
       .catch((e) => {
         setError(e.data.responseException?.exceptionMessage || '');
@@ -133,7 +138,7 @@ export default function Register() {
                   </Box>
 
                   <FormInput
-                    label="帳號"
+                    label="信箱"
                     required
                     name="Email"
                     InputProps={{

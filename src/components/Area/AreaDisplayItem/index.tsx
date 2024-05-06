@@ -8,6 +8,8 @@ import React, { MouseEventHandler } from 'react';
 import { v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
+import { useDispatch } from 'react-redux';
+import { setLayoutByArea } from '@/features/layout/layoutSlice';
 
 type AreaDisplayItemProps = {
   area: IArea;
@@ -17,11 +19,23 @@ type AreaDisplayItemProps = {
 
 function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemProps) {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const a = new Area(area);
 
   return (
-    <Stack spacing={1} onClick={!isMobile ? onClick : undefined} sx={{ cursor: editable ? 'pointer' : 'default' }}>
+    <Stack
+      spacing={1}
+      onClick={
+        !isMobile
+          ? onClick
+          : () => {
+              dispatch(setLayoutByArea(area));
+            }
+      }
+      sx={{ cursor: editable ? 'pointer' : 'default' }}
+    >
       <Stack direction={'row'}>
         <Typography
           variant="subtitle1"

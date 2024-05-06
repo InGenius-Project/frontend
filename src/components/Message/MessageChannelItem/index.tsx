@@ -1,21 +1,26 @@
 import UserAvatar from '@/components/UserAvatar';
+import { useCancelInvitationMutation } from '@/features/api/chat/cancelInvitation';
+import { useJoinGroupMutation } from '@/features/api/chat/joinGroup';
 import { useGetUserQuery } from '@/features/api/user/getUser';
 import { selectGroupId } from '@/features/message/messageSlice';
 import { useAppSelector } from '@/features/store';
 import { MessageReceiveHandle } from '@/pages/Account/User/Message';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { IChatGroupInfo, IChatMessage } from '@/types/interfaces/IChat';
-import { Avatar, Box, ButtonBase, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import Check from '@mui/icons-material/Check';
+import Clear from '@mui/icons-material/Clear';
+import { Box, ButtonBase, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 type MessageChannelItemProps = {
   avatar?: JSX.Element;
   chatGroupInfo?: IChatGroupInfo;
+  type?: 'chat' | 'invited';
   onClick?: (c: IChatGroupInfo | undefined) => void;
 };
 
 const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemProps>(
-  ({ avatar, chatGroupInfo, onClick }, ref) => {
+  ({ avatar, chatGroupInfo, onClick, type = 'chat' }, ref) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
     const [lastMessage, setLastMessage] = useState<ChatMessage>();
@@ -23,10 +28,36 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
     const groupIdState = useAppSelector(selectGroupId);
     const { data: userData } = useGetUserQuery();
 
+    const [cancelInvitation] = useCancelInvitationMutation();
+    const [joinGroup] = useJoinGroupMutation();
+
     const ChannelAvatar = () => {
       if (avatar) return avatar;
+
+      if (type === 'invited') {
+        return (
+          <Box
+            sx={{
+              width: '3em',
+              height: '3em',
+            }}
+          >
+            <UserAvatar uri={chatGroupInfo?.Owner?.Avatar?.Uri} alt={chatGroupInfo?.Owner?.Username}></UserAvatar>
+          </Box>
+        );
+      }
+
       const firstUser = chatGroupInfo?.Users.filter((user) => user.Id === userData?.result?.Id)[0];
-      return <UserAvatar uri={firstUser?.Avatar?.Uri} alt={firstUser?.Username}></UserAvatar>;
+      return (
+        <Box
+          sx={{
+            width: '3em',
+            height: '3em',
+          }}
+        >
+          <UserAvatar uri={firstUser?.Avatar?.Uri} alt={firstUser?.Username}></UserAvatar>
+        </Box>
+      );
     };
 
     useImperativeHandle(ref, () => ({
@@ -48,6 +79,18 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
       };
     }, [lastMessage]);
 
+    const handleAcceptInvitation = async () => {
+      if (chatGroupInfo) {
+        joinGroup({ groupId: chatGroupInfo?.Id });
+      }
+    };
+
+    const handleCancelInvitation = async () => {
+      if (chatGroupInfo && userData?.result?.Id) {
+        cancelInvitation({ groupId: chatGroupInfo?.Id, userId: userData?.result?.Id });
+      }
+    };
+
     return (
       <ButtonBase
         sx={{
@@ -58,6 +101,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
           p: 1,
           gap: 2,
           overflow: 'hidden',
+          flex: '0 0 auto',
           textAlign: 'start',
           backgroundColor: groupIdState === chatGroupInfo?.Id ? theme.palette.action.selected : 'inherit',
         }}
@@ -97,6 +141,23 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
                 >
                   {lastMessage?.Message}
                 </Typography>
+                {type === 'invited' && (
+                  <Stack
+                    spacing={1}
+                    direction="row"
+                    sx={{
+                      widht: '100%',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <IconButton onClick={handleAcceptInvitation}>
+                      <Check />
+                    </IconButton>
+                    <IconButton onClick={handleCancelInvitation}>
+                      <Clear />
+                    </IconButton>
+                  </Stack>
+                )}
               </Stack>
 
               <Typography variant="caption" sx={{ whiteSpace: 'nowrap' }}>

@@ -14,6 +14,7 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { TypeOf, object, string } from 'zod';
 import { userAuthVariants } from './../../../assets/motion/variants';
 import { IResponse } from '@/types/interfaces/IResponse';
+import { useGetUserQuery } from '@/features/api/user/getUser';
 
 const loginSchema = object({
   email: string().min(1, 'Email address is required').email('Email Address is invalid'),
@@ -26,7 +27,8 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [login, { isLoading: isLogining, isSuccess }] = useLoginMutation();
+  const { isLoading: isGetingUser } = useGetUserQuery();
   const [error, setError] = useState<string>('');
 
   // Previous page
@@ -45,7 +47,7 @@ export default function Login() {
     if (isSuccess) {
       navigate(from);
     }
-  }, [isLoading, navigate, from, isSuccess]);
+  }, [navigate, from, isSuccess]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -103,7 +105,7 @@ export default function Login() {
                   <FormInput
                     name="email"
                     type="email"
-                    label="帳號"
+                    label="信箱"
                     required
                     InputProps={{
                       startAdornment: (
@@ -130,7 +132,7 @@ export default function Login() {
                     {error}
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems={'flex-end'}>
-                    <LoadingButton type="submit" variant="contained" loading={isLoading}>
+                    <LoadingButton type="submit" variant="contained" loading={isLogining || isGetingUser}>
                       登入
                     </LoadingButton>
                     <Button variant="outlined" onClick={() => navigate('/Account/Register')}>

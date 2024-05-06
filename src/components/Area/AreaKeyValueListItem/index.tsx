@@ -11,6 +11,8 @@ import {
   TextField,
   Typography,
   createFilterOptions,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
@@ -38,6 +40,9 @@ function AreaKeyValueListItem({
   control,
   ...props
 }: AreaKeyValueListItemProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     onClickDelete && onClickDelete(id);
   };
@@ -50,7 +55,7 @@ function AreaKeyValueListItem({
       }}
       secondaryAction={
         editable ? (
-          <Stack direction={'row'} spacing={1}>
+          <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
             <IconButton onClick={handleDeleteClick}>
               <ClearIcon />
             </IconButton>
@@ -63,11 +68,11 @@ function AreaKeyValueListItem({
     >
       {editable ? (
         <Stack
-          direction="row"
+          direction={isMobile ? 'column' : 'row'}
           spacing={1}
           sx={{
             flex: '1 1 auto',
-            alignItems: 'flex-end',
+            alignItems: isMobile ? 'flex-start' : 'flex-end',
             widht: '100%',
             pr: '88px',
           }}
@@ -79,6 +84,7 @@ function AreaKeyValueListItem({
               ...i,
               InnerId: uuid(),
             }))}
+            fullWidth={isMobile}
             filterSelectedOptions
             onChange={(_, i) => {
               onChange &&
@@ -87,12 +93,13 @@ function AreaKeyValueListItem({
                   Key: i,
                 });
             }}
+            isOptionEqualToValue={(option, value) => option.Id === value.Id}
             selectOnFocus
             handleHomeEndKeys
             getOptionLabel={(o) => o.Name}
             renderInput={(params) => <TextField {...params} variant="standard" />}
             sx={{
-              flex: '0 0 15em',
+              flex: isMobile ? '1 0 auto' : '0 0 15em',
             }}
           />
 

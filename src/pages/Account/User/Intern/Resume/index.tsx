@@ -8,16 +8,17 @@ import { useAppSelector } from '@/features/store';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import Mail from '@mui/icons-material/Mail';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Badge, Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useNavigate } from 'react-router-dom';
 
 export default function Resume() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
-  const { data: resumes, isLoading } = useGetResumesQuery(null);
+  const { data: resumeData, isLoading } = useGetResumesQuery(null);
   const { User } = useAppSelector((state) => state.userState);
   const [deleteResume] = useDeleteResumeMutation();
   const [postResume, { isLoading: isAddingNewResume }] = usePostResumeMutation();
@@ -77,8 +78,8 @@ export default function Resume() {
       </Stack>
 
       <Stack spacing={1}>
-        {resumes?.result &&
-          resumes.result.map((r) => (
+        {resumeData?.result &&
+          resumeData.result.map((r) => (
             <ResumeItem
               key={r.Id}
               resume={r}
@@ -97,12 +98,18 @@ export default function Resume() {
                     <IconButton onClick={() => handleDeleteClick(r.Id)}>
                       <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
                     </IconButton>
+
+                    <Badge color="primary" badgeContent={(r.Recruitments || []).length}>
+                      <IconButton onClick={() => navigate('/Account/User/Intern/Recruitment')}>
+                        <Mail />
+                      </IconButton>
+                    </Badge>
                   </Stack>
                 )
               }
             />
           ))}
-        {resumes?.result?.length === 0 && <ResumeEmpty />}
+        {resumeData?.result?.length === 0 && <ResumeEmpty />}
       </Stack>
     </Stack>
   );
