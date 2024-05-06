@@ -12,11 +12,8 @@ export const searchRelativeResumesApi = baseApi.injectEndpoints({
       }
     >({
       query: ({ recruitmentId, searchAll }) => ({
-        url: `Recruitment/${recruitmentId}/relative`,
+        url: `Recruitment/${recruitmentId}/relative?searchAll=${searchAll}`,
         method: 'Get',
-        param: {
-          searchAll,
-        },
       }),
     }),
   }),
