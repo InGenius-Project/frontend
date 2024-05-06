@@ -1,22 +1,11 @@
-import {
-  Box,
-  IconButton,
-  Menu,
-  Paper,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Chip, Paper, Skeleton, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import getTimeDiffer from '@/assets/utils/getTimeDiffer';
+import MoreControlMenu from '@/components/MoreControlMenu';
 import { IResume } from '@/types/interfaces/IResume';
-import MoreVert from '@mui/icons-material/MoreVert';
 import { useDebounce, useUpdateEffect } from 'ahooks';
 import React, { useState } from 'react';
-import MoreControlMenu from '@/components/MoreControlMenu';
+import Tag from '@mui/icons-material/Tag';
 
 type ResumeItemProps = {
   resume: IResume;
@@ -64,7 +53,13 @@ const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick 
             ) : (
               <Typography variant="subtitle1">{resume.Title} </Typography>
             )}
-            <Typography variant="caption">上次編輯時間: {getTimeDiffer(resume.ModifiedAt) || '?'}</Typography>
+            <Stack direction={'row'} spacing={1} flexWrap={'wrap'} gap={1}>
+              <Typography variant="caption" component={'span'}>
+                相關標籤:
+              </Typography>
+              {resume.Keywords?.map((k) => <Chip label={k.Id} icon={<Tag />} />)}
+            </Stack>
+            {/* <Typography variant="caption">上次編輯時間: {getTimeDiffer(resume.ModifiedAt) || '?'}</Typography> */}
           </Stack>
         </Box>
         <Box alignSelf={'center'}>

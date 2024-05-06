@@ -8,6 +8,11 @@ export interface IResume extends IWithAreas {
   Visibility: boolean;
   User: IUserInfo;
   Recruitments?: IRecruitment[];
+  Keywords?: [
+    {
+      Id: string;
+    },
+  ];
 }
 
 export interface IResumePost {
