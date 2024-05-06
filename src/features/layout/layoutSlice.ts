@@ -24,6 +24,7 @@ interface ILayout {
   image?: IImageInfo;
   imageType: 'uri' | 'blob';
   listItems?: Array<IInnerTag>;
+  listIndex: number;
   keyValueListItems: Array<IInnerKeyValueItem>;
 }
 
@@ -37,6 +38,7 @@ const initialState: ILayout = {
   imageType: 'uri',
   image: undefined,
   listItems: undefined,
+  listIndex: 0,
   keyValueListItems: [],
 };
 
@@ -74,31 +76,28 @@ const layoutSlice = createSlice({
     pushListItem: (state, action: PayloadAction<IInnerTag>) => {
       state.listItems ??= [];
 
-      state.listItems.push(action.payload);
+      if (typeof action.payload.Id === 'number') {
+        state.listIndex += 1;
+        state.listItems.push({
+          ...action.payload,
+          Id: state.listIndex,
+        });
+      } else {
+        state.listItems.push(action.payload);
+      }
     },
     updateListItem: (state, action: PayloadAction<IInnerTag>) => {
       state.listItems ??= [];
 
-      var index = state.listItems.findIndex((item) => item.InnerId === action.payload.InnerId);
+      var index = state.listItems.findIndex((item) => item.Id === action.payload.Id);
 
-      // Find the empty Items if not exist
-      if (index === -1) {
-        index = state.listItems?.findIndex((item) => item.InnerId === NIL);
-      }
-
-      if (index !== -1) {
-        return {
-          ...state,
-          listItems: state.listItems.map((item, i) =>
-            i === index
-              ? {
-                  ...action.payload,
-                  InnerId: uuid(),
-                }
-              : item,
-          ),
-        };
-      }
+      return {
+        ...state,
+        listItems: state.listItems.map((item, i) => (i === index ? action.payload : item)),
+      };
+    },
+    setListIndex: (state, action: PayloadAction<number>) => {
+      state.listIndex = action.payload;
     },
     setKetValueListItems: (state, action: PayloadAction<Array<IInnerKeyValueItem>>) => {
       state.keyValueListItems = action.payload;
@@ -158,10 +157,7 @@ const layoutSlice = createSlice({
           break;
         case LayoutType.List:
           parseArea.id = action.payload.ListLayout?.Id!;
-          parseArea.listItems = action.payload.ListLayout?.Items?.map((i) => ({
-            InnerId: uuid(),
-            ...i,
-          }));
+          parseArea.listItems = action.payload.ListLayout?.Items;
           break;
         case LayoutType.KeyValueList:
           parseArea.id = action.payload.KeyValueListLayout?.Id!;
@@ -192,6 +188,7 @@ export const {
   pushKeyValueListItem,
   updateKeyValueListItem,
   setImage,
+  setListIndex,
 } = layoutSlice.actions;
 
 export const selectLayoutType = (state: RootState) => state.layoutState.layoutType;
@@ -240,7 +237,12 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.List
         ? {
             Id: NIL,
-            Items: layoutState.listItems?.filter((l) => l.Name !== ''),
+            Items: layoutState.listItems
+              ?.filter((l) => l.Name !== '')
+              .map((i) => ({
+                ...i,
+                Id: typeof i.Id === 'number' ? NIL : i.Id,
+              })),
           }
         : undefined,
     KeyValueListLayout:
@@ -301,7 +303,12 @@ export const getUpdatedArea = (state: RootState) => {
         ? {
             Id: layoutState.id,
             // sort item
-            Items: layoutState.listItems?.filter((l) => l.Name !== ''),
+            Items: layoutState.listItems
+              ?.filter((l) => l.Name !== '')
+              .map((i) => ({
+                ...i,
+                Id: typeof i.Id === 'number' ? NIL : i.Id,
+              })),
           }
         : undefined,
     KeyValueListLayout:

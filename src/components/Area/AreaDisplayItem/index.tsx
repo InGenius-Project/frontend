@@ -85,7 +85,7 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
       {a.isLayoutType(LayoutType.List) &&
         area.ListLayout?.Items?.map((i, index, arr) => (
           <React.Fragment key={i.Id}>
-            <AreaListItem id={i.Id} key={i.Id} content={i.Name} />
+            <AreaListItem id={i.Id} key={i.Id} content={i.Name} index={index} />
             {index !== arr.length - 1 && <Divider />}
           </React.Fragment>
         ))}

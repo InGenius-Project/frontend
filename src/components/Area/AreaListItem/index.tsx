@@ -1,4 +1,6 @@
 import { useGetTagTypeByIdQuery } from '@/features/api/tag/getTagTypeById';
+import { setListIndex } from '@/features/layout/layoutSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store';
 import { TagType } from '@/types/enums/TagType';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -18,7 +20,6 @@ import {
 import React from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { NIL } from 'uuid';
-import { RenderOptions } from '@testing-library/react';
 
 const filter = createFilterOptions<IInnerTag>();
 
@@ -27,12 +28,13 @@ type AreaListItemProps = {
   options?: IInnerTag[];
   selectOptions?: IInnerTag[];
   title?: string;
-  index?: number;
+  index: number;
   content?: string;
   editable?: boolean;
   value?: IInnerTag;
   renderInput?: React.ReactNode;
-  onChange?: (event: React.SyntheticEvent<Element, Event>, value: string | IInnerTag | null) => void;
+  displayIndex?: boolean;
+  onChange?: (value: IInnerTag, newValue: IInnerTag) => void;
   onClickDelete?: (id: string) => void;
 } & Partial<DraggableProvidedDragHandleProps>;
 
@@ -42,6 +44,7 @@ function AreaListItem({
   content,
   editable = false,
   selectOptions = [],
+  displayIndex = false,
   onClickDelete,
   options,
   value,
@@ -53,6 +56,8 @@ function AreaListItem({
   const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     onClickDelete && onClickDelete(id);
   };
+  const layoutState = useAppSelector((state) => state.layoutState);
+  const dispatch = useAppDispatch();
 
   const { data: customTagTypeData } = useGetTagTypeByIdQuery(TagType.Custom);
 
@@ -75,7 +80,7 @@ function AreaListItem({
         padding: 2,
       }}
     >
-      {index && (
+      {displayIndex && (
         <ListItemAvatar>
           <Avatar>{index}</Avatar>
         </ListItemAvatar>
@@ -100,18 +105,24 @@ function AreaListItem({
             }}
             value={value}
             isOptionEqualToValue={(option, value) => {
-              return option.InnerId === value.InnerId;
+              return option.Id === value.Id;
             }}
             renderOption={(props, option, state) => {
               return (
-                <li {...props} id={option.InnerId} key={option.InnerId}>
+                <li
+                  {...props}
+                  id={`area-list-item-li-${option.Id.toString()}`}
+                  key={`area-list-item-li-${option.Id.toString()}`}
+                >
                   <Typography>{option.Name}</Typography>
                 </li>
               );
             }}
             selectOnFocus
             handleHomeEndKeys
-            onChange={onChange}
+            onChange={(event, newValue) => {
+              if (value && typeof newValue === 'object' && newValue && onChange) onChange(value, newValue);
+            }}
             filterOptions={(options, params) => {
               const filtered = filter(
                 options.filter((i) => !selectOptions.some((item) => item.Id === i.Id)),
@@ -119,17 +130,14 @@ function AreaListItem({
               );
 
               const { inputValue } = params;
-              // Suggest the creation of a new value
               const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
               if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
                 filtered.push({
-                  InnerId: value && value.InnerId !== NIL ? value.InnerId : NIL,
-                  Id: NIL,
+                  Id: layoutState.listIndex,
                   Name: inputValue,
                   Type: customTagTypeData?.result,
                 });
               }
-
               return filtered;
             }}
           />

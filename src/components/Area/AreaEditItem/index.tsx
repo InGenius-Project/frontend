@@ -108,8 +108,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     if (customTagTypeData?.result) {
       dispatch(
         pushListItem({
-          InnerId: NIL,
-          Id: NIL,
+          Id: layoutState.listIndex,
           Name: '',
           Type: customTagTypeData.result,
         }),
@@ -119,28 +118,20 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   const handleListItemDragEnd = (item: string[]) => {
     const newListItem = item
-      .map((id) => (layoutState.listItems || []).find((item) => item.InnerId === id))
+      .map((id) => (layoutState.listItems || []).find((item) => item.Id === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setListItem(newListItem));
   };
 
   const handleListRemoveClick = (id: string) => {
-    dispatch(setListItem((layoutState.listItems || []).filter((i) => i.InnerId !== id)));
+    console.log(id);
+    dispatch(setListItem((layoutState.listItems || []).filter((i) => i.Id !== id)));
   };
 
-  const handleListItemChange = (event: React.SyntheticEvent<Element, Event>, value: string | IInnerTag | null) => {
+  const handleListItemChange = (value: IInnerTag, newValue: IInnerTag) => {
     if (typeof value === 'object' && value) {
-      dispatch(updateListItem(value));
-    } else if (typeof value === 'string' && customTagTypeData?.result) {
-      dispatch(
-        updateListItem({
-          InnerId: NIL,
-          Id: NIL,
-          Name: value,
-          Type: customTagTypeData.result,
-        }),
-      );
+      dispatch(setListItem((layoutState.listItems || []).map((i) => (i.Id === value.Id ? newValue : i))));
     }
   };
 
@@ -288,29 +279,23 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
         >
           <DragDropContainer
             droppableId={uuid()}
-            items={(layoutState.listItems || []).map((item) => item.InnerId)}
+            items={layoutState.listItems?.map((i) => i.Id.toString()) || []}
             spacing={0}
             onDragEnd={handleListItemDragEnd}
           >
             {layoutState.listItems &&
-              layoutState.listItems.map((i) => (
+              layoutState.listItems.map((i, index) => (
                 <AreaListItem
-                  options={
-                    tagsData && tagsData.result
-                      ? tagsData.result.map((t: any) => ({
-                          ...t,
-                          InnerId: uuid(),
-                        }))
-                      : []
-                  }
+                  index={index}
+                  options={tagsData?.result || []}
                   value={i}
                   selectOptions={layoutState.listItems || []}
                   onChange={handleListItemChange}
                   title={layoutState.title}
                   content={i.Name}
                   editable
-                  key={i.InnerId}
-                  id={i.InnerId}
+                  key={`area-list-item-${i.Id.toString()}`}
+                  id={i.Id.toString()}
                   onClickDelete={handleListRemoveClick}
                 />
               ))}

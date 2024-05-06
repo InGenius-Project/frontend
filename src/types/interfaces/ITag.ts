@@ -11,10 +11,9 @@ export interface ITagPost {
 }
 
 export interface IInnerTag {
-  Id: string;
+  Id: string | number;
   Name: string;
   Type: ITagType;
-  InnerId: string;
 }
 
 export interface ITagType {

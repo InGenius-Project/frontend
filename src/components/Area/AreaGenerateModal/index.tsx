@@ -301,6 +301,7 @@ function AreaGenerateaModal() {
                   editable
                   renderInput={<TextField variant="standard" defaultValue={t.title} />}
                   onClickDelete={handleClickDeleteItem}
+                  displayIndex
                 />
               ))}
             </DragDropContainer>

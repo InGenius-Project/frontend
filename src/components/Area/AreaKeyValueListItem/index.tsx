@@ -77,7 +77,7 @@ function AreaKeyValueListItem({
             pr: '88px',
           }}
         >
-          <Autocomplete
+          {/* <Autocomplete
             multiple
             options={options || []}
             value={(item.Key || []).map((i) => ({
@@ -101,7 +101,7 @@ function AreaKeyValueListItem({
             sx={{
               flex: isMobile ? '1 0 auto' : '0 0 15em',
             }}
-          />
+          /> */}
 
           <Divider orientation="vertical" flexItem />
           <TextField
