@@ -130,7 +130,8 @@ const layoutSlice = createSlice({
 
       const layoutType = action.payload.LayoutType;
 
-      // TODO: state init
+      state = initialState;
+
       var parseArea: ILayout = {
         ...state,
         areaId: Id,

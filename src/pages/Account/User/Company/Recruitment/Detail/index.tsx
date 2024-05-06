@@ -7,7 +7,7 @@ import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/search
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import StarIcon from '@mui/icons-material/Star';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Chip, Container, Stack, Tab, Tabs, Typography, useTheme } from '@mui/material';
+import { Box, Chip, Container, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -44,7 +44,7 @@ function CompanyRecruitmentDetail() {
     },
   );
 
-  const { data: allRelativeResumesData } = useSearchRelativeResumesQuery(
+  const { data: allRelativeResumesData, refetch: refetchRelativeResumeAll } = useSearchRelativeResumesQuery(
     {
       recruitmentId: recruitmentId || NIL,
       searchAll: true,
@@ -68,6 +68,7 @@ function CompanyRecruitmentDetail() {
           .unwrap()
           .then(() => {
             refetchRelativeResume();
+            refetchRelativeResumeAll();
           });
     });
   };
@@ -75,20 +76,25 @@ function CompanyRecruitmentDetail() {
   return (
     <Container>
       <Stack spacing={1}>
-        <Stack direction={'row'} spacing={1}>
+        <Stack direction={'row'} spacing={1} flexWrap={'wrap'} gap={1}>
           <Typography variant="h5">
-            與{' '}
-            <Chip
-              label={recruitmentData?.result?.Name}
-              sx={{
-                fontSize: theme.typography.h5.fontSize,
-              }}
-            />{' '}
+            與
+            <Tooltip title={recruitmentData?.result?.Name}>
+              <Chip
+                label={recruitmentData?.result?.Name}
+                sx={{
+                  fontSize: theme.typography.h5.fontSize,
+                  maxWidth: '15em',
+                }}
+              />
+            </Tooltip>
             相關的履歷
           </Typography>
-          <LoadingButton variant="contained" onClick={handleAnalyze} startIcon={<AutoAwesome />}>
-            一鍵分析履歷
-          </LoadingButton>
+          <Box>
+            <LoadingButton variant="contained" onClick={handleAnalyze} startIcon={<AutoAwesome />}>
+              一鍵分析履歷
+            </LoadingButton>
+          </Box>
         </Stack>
         <Tabs
           value={tab}

@@ -5,7 +5,7 @@ import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
 import { useSearchRelativeRecruitmentQuery } from '@/features/api/resume/searchRelativeRecruitment';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Chip, Container, Stack, Tab, Tabs, Typography, useTheme } from '@mui/material';
+import { Chip, Container, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -69,13 +69,16 @@ function InternResumeDetail() {
       <Stack spacing={1}>
         <Stack direction="row" spacing={1}>
           <Typography variant="h5">
-            與{' '}
-            <Chip
-              label={resumeData?.result?.Title}
-              sx={{
-                fontSize: theme.typography.h5.fontSize,
-              }}
-            />{' '}
+            與
+            <Tooltip title={resumeData?.result?.Title}>
+              <Chip
+                label={resumeData?.result?.Title}
+                sx={{
+                  fontSize: theme.typography.h5.fontSize,
+                  maxWidth: '15em',
+                }}
+              />
+            </Tooltip>
             相關的職缺
           </Typography>
 

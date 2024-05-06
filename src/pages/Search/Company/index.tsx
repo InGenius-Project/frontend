@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 function SearchCompany() {
   const { companyId } = useParams<{ companyId: string }>();
 
-  const { data: companyData } = useGetUserProfileQuery(companyId || '', {
+  const { data: companyData, isLoading } = useGetUserProfileQuery(companyId || '', {
     skip: !companyId || companyId === '',
   });
 
@@ -24,6 +24,7 @@ function SearchCompany() {
         <Stack spacing={1}>
           {/* TODO: Profile Item */}
           <UserProfileItem
+            isLoading={isLoading}
             user={companyData?.result}
             avatar={<UserAvatar uri={companyData?.result?.Avatar?.Uri} alt={companyData?.result?.Username} />}
           />

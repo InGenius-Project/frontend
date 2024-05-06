@@ -25,17 +25,7 @@ import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
 import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-  createFilterOptions,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
 import { NIL, v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
