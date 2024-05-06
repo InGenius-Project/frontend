@@ -20,7 +20,7 @@ function ManageProfileEmptyItem() {
         }}
       />
 
-      <Typography variant="body1">找不到任何的應徵履歷</Typography>
+      <Typography variant="body1">找不到任何的履歷</Typography>
     </Stack>
   );
 }
