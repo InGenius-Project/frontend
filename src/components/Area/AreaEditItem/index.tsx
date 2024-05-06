@@ -18,8 +18,6 @@ import {
   setKetValueListItems,
   setListItem,
   setTitle,
-  updateKeyValueListItem,
-  updateListItem,
 } from '@/features/layout/layoutSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
@@ -27,7 +25,7 @@ import { IInnerKeyValueItem } from '@/types/interfaces/IArea';
 import { IInnerTag } from '@/types/interfaces/ITag';
 import { Box, Button, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
-import { NIL, v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import AreaKeyValueListItem from '../AreaKeyValueListItem';
 import AreaListItem from '../AreaListItem';
 import AreaUnsplashImageModal from '../AreaUnsplashImageModal';
@@ -74,30 +72,29 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   // #region KeyValueList event
 
-  const handleKeyValueListItemDragEnd = (item: string[]) => {
-    const newListItems = item
-      .map((id) => layoutState.keyValueListItems.find((item) => item.InnerId === id))
-      .filter(isNotNullOrUndefined);
-
-    dispatch(setKetValueListItems(newListItems));
-  };
-
-  const handleKeyValueListItemChange = (item: IInnerKeyValueItem) => {
-    dispatch(updateKeyValueListItem(item));
-  };
-
   const handleKeyValueListAddClick = () => {
     dispatch(
       pushKeyValueListItem({
-        Id: NIL,
-        InnerId: uuid(),
+        Id: layoutState.keyValueListIndex,
         Value: '',
       }),
     );
   };
 
+  const handleKeyValueListItemDragEnd = (item: string[]) => {
+    const newListItems = item
+      .map((id) => layoutState.keyValueListItems.find((item) => item.Id === id))
+      .filter(isNotNullOrUndefined);
+
+    dispatch(setKetValueListItems(newListItems));
+  };
+
+  const handleKeyValueListItemChange = (item: IInnerKeyValueItem, newItem: IInnerKeyValueItem) => {
+    dispatch(setKetValueListItems((layoutState.keyValueListItems || []).map((i) => (i.Id === item.Id ? newItem : i))));
+  };
+
   const handleKeyValueLitRemove = (id: string) => {
-    dispatch(setKetValueListItems((layoutState.keyValueListItems || []).filter((i) => i.InnerId !== id)));
+    dispatch(setKetValueListItems((layoutState.keyValueListItems || []).filter((i) => i.Id !== id)));
   };
   // #endregion
 
@@ -232,14 +229,14 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
         >
           <DragDropContainer
             droppableId={uuid()}
-            items={layoutState.keyValueListItems.map((item) => item.InnerId)}
+            items={layoutState.keyValueListItems.map((item) => item.Id.toString())}
             spacing={0}
             onDragEnd={handleKeyValueListItemDragEnd}
           >
             {layoutState.keyValueListItems.map((item) => (
               <AreaKeyValueListItem
-                id={item.InnerId}
-                key={item.InnerId}
+                id={item.Id.toString()}
+                key={item.Id}
                 item={item}
                 options={
                   tagsData?.result

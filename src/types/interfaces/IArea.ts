@@ -148,8 +148,8 @@ export interface IKeyValueItem {
   Value: string;
 }
 
-export interface IInnerKeyValueItem extends IKeyValueItem {
-  InnerId: string;
+export interface IInnerKeyValueItem extends Omit<IKeyValueItem, 'Id'> {
+  Id: string | number;
 }
 
 export interface IKeyValueItemPostDTO {

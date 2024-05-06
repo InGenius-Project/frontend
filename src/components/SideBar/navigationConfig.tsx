@@ -25,7 +25,7 @@ const navigationConfig = [
         value: 'Profile',
         icon: (
           <LeftIcon>
-            <OwnerAvatar size="2em" />
+            <OwnerAvatar size="1.5em" />
           </LeftIcon>
         ),
       },
@@ -75,9 +75,7 @@ const navigationConfig = [
         value: 'Profile',
         icon: (
           <LeftIcon>
-            <Box width="24px" height="24px">
-              <OwnerAvatar />
-            </Box>
+            <OwnerAvatar size="1.5em" />
           </LeftIcon>
         ),
       },

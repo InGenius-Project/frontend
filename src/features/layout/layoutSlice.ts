@@ -26,6 +26,7 @@ interface ILayout {
   listItems?: Array<IInnerTag>;
   listIndex: number;
   keyValueListItems: Array<IInnerKeyValueItem>;
+  keyValueListIndex: number;
 }
 
 const initialState: ILayout = {
@@ -39,6 +40,7 @@ const initialState: ILayout = {
   image: undefined,
   listItems: undefined,
   listIndex: 0,
+  keyValueListIndex: 0,
   keyValueListItems: [],
 };
 
@@ -105,23 +107,14 @@ const layoutSlice = createSlice({
     pushKeyValueListItem: (state, action: PayloadAction<IInnerKeyValueItem>) => {
       state.keyValueListItems ??= [];
 
-      state.keyValueListItems.push(action.payload);
-    },
-    updateKeyValueListItem: (state, action: PayloadAction<IInnerKeyValueItem>) => {
-      state.keyValueListItems ??= [];
-
-      var index = state.keyValueListItems.findIndex((item) => item.InnerId === action.payload.InnerId);
-
-      // Find the empty Items if not exist
-      if (index === -1) {
-        index = state.keyValueListItems?.findIndex((item) => item.InnerId === NIL);
-      }
-
-      if (index !== -1) {
-        return {
-          ...state,
-          keyValueListItems: state.keyValueListItems.map((item, i) => (i === index ? action.payload : item)),
-        };
+      if (typeof action.payload.Id === 'number') {
+        state.keyValueListIndex += 1;
+        state.keyValueListItems.push({
+          ...action.payload,
+          Id: state.listIndex,
+        });
+      } else {
+        state.keyValueListItems.push(action.payload);
       }
     },
     setLayoutByArea: (state, action: PayloadAction<IArea>) => {
@@ -186,7 +179,6 @@ export const {
   setLayoutByArea,
   setKetValueListItems,
   pushKeyValueListItem,
-  updateKeyValueListItem,
   setImage,
   setListIndex,
 } = layoutSlice.actions;
@@ -249,7 +241,10 @@ export const getUpdatedAreas = (state: RootState, newAreaSequence: number) => {
       selectLayoutType(state) === LayoutType.KeyValueList
         ? {
             Id: NIL,
-            Items: layoutState.keyValueListItems.map(({ InnerId, Id, ...i }) => i) as IKeyValueItem[], // WARN: Id is not providded
+            Items: layoutState.keyValueListItems.map(({ Id, ...i }) => ({
+              ...i,
+              Id: typeof Id === 'number' ? NIL : Id,
+            })) as IKeyValueItem[], // WARN: Id is not providded
           }
         : undefined,
   };
@@ -315,7 +310,10 @@ export const getUpdatedArea = (state: RootState) => {
       selectLayoutType(state) === LayoutType.KeyValueList
         ? {
             Id: layoutState.id,
-            Items: layoutState.keyValueListItems.map(({ InnerId, Id, ...i }) => i) as IKeyValueItem[], // WARN: Id is not providded
+            Items: layoutState.keyValueListItems.map(({ Id, ...i }) => ({
+              ...i,
+              Id: typeof Id === 'number' ? NIL : Id,
+            })) as IKeyValueItem[], // WARN: Id is not providded
           }
         : undefined,
   };

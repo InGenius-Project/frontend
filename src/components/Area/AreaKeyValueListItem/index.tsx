@@ -1,5 +1,5 @@
 import { IInnerKeyValueItem, IKeyValueItem } from '@/types/interfaces/IArea';
-import { IInnerTag } from '@/types/interfaces/ITag';
+import { IInnerTag, ITag } from '@/types/interfaces/ITag';
 import ClearIcon from '@mui/icons-material/Clear';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import {
@@ -23,11 +23,11 @@ const filter = createFilterOptions<IInnerTag>({});
 type AreaKeyValueListItemProps = {
   id: string;
   item: IInnerKeyValueItem;
+  options?: ITag[];
   editable?: boolean;
   onClickDelete?: (id: string) => void;
-  onChange?: (item: IInnerKeyValueItem) => void;
+  onChange?: (item: IInnerKeyValueItem, newItem: IInnerKeyValueItem) => void;
   control?: React.ReactNode;
-  options?: IInnerTag[];
 } & Partial<DraggableProvidedDragHandleProps>;
 
 function AreaKeyValueListItem({
@@ -77,18 +77,15 @@ function AreaKeyValueListItem({
             pr: '88px',
           }}
         >
-          {/* <Autocomplete
+          <Autocomplete
             multiple
             options={options || []}
-            value={(item.Key || []).map((i) => ({
-              ...i,
-              InnerId: uuid(),
-            }))}
+            value={item.Key}
             fullWidth={isMobile}
             filterSelectedOptions
             onChange={(_, i) => {
               onChange &&
-                onChange({
+                onChange(item, {
                   ...item,
                   Key: i,
                 });
@@ -101,17 +98,17 @@ function AreaKeyValueListItem({
             sx={{
               flex: isMobile ? '1 0 auto' : '0 0 15em',
             }}
-          /> */}
+          />
 
           <Divider orientation="vertical" flexItem />
           <TextField
             variant="standard"
-            key={`value-${item.InnerId}`}
+            key={`value-${item.Id}`}
             value={item.Value}
             onChange={(e) => {
               e.preventDefault();
               onChange &&
-                onChange({
+                onChange(item, {
                   ...item,
                   Value: e.target.value,
                 });

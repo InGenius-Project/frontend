@@ -90,16 +90,7 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
           </React.Fragment>
         ))}
       {a.isLayoutType(LayoutType.KeyValueList) &&
-        area.KeyValueListLayout?.Items?.map((i) => (
-          <AreaKeyValueListItem
-            item={{
-              ...i,
-              InnerId: uuid(),
-            }}
-            id={i.Id}
-            key={i.Id}
-          />
-        ))}
+        area.KeyValueListLayout?.Items?.map((i) => <AreaKeyValueListItem item={i} id={i.Id} key={i.Id} />)}
     </Stack>
   );
 }

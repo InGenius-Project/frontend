@@ -8,13 +8,20 @@ export const postKeyValueListLayoutApi = baseApi.injectEndpoints({
       query: ({ AreaId: areaId, ...body }) => ({
         url: `/area/KeyValueListLayout`,
         method: 'POST',
-        body,
+        body: {
+          ...body,
+          Items: body.Items?.map((i) => ({
+            ...i,
+            Id: null,
+          })),
+          Id: null,
+        },
         params: {
           areaId,
         },
       }),
       invalidatesTags: (result, error, arg) => {
-        return [{ type: 'Area', id: arg.AreaId }];
+        return [{ type: 'Area', id: arg.AreaId }, { type: 'Area' }, { type: 'User' }];
       },
     }),
   }),
