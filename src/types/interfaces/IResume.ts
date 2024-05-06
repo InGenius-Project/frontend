@@ -1,4 +1,5 @@
 import { IWithAreas } from './IArea';
+import { IRecruitment } from './IRecruitment';
 import { IUserInfo } from './IUser';
 
 export interface IResume extends IWithAreas {
@@ -6,6 +7,7 @@ export interface IResume extends IWithAreas {
   ModifiedAt: string;
   Visibility: boolean;
   User: IUserInfo;
+  Recruitments?: IRecruitment[];
 }
 
 export interface IResumePost {

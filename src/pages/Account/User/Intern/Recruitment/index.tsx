@@ -2,7 +2,7 @@ import ApplyButton from '@/components/Button/ApplyButton';
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetFavRecruitmentQuery } from '@/features/api/user/getFavRecruitments';
-import { Stack } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function InternRecruitment() {
@@ -10,6 +10,8 @@ function InternRecruitment() {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleClickRecruitmentSearch = () => {};
 
   return (
     <>
@@ -27,7 +29,13 @@ function InternRecruitment() {
                   },
                 });
               }}
-              control={<ApplyButton recruitmentId={r.Id} />}
+              control={
+                (r.Resumes || []).length === 0 ? (
+                  <ApplyButton recruitmentId={r.Id} />
+                ) : (
+                  <Chip label={`已應徵`} onClick={handleClickRecruitmentSearch} />
+                )
+              }
             />
           ))
         ) : (

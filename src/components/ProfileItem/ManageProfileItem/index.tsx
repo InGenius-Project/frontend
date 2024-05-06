@@ -40,7 +40,6 @@ function ManageProfileItem({ resume }: ManageProfileItemProps) {
             <ArticleIcon onClick={() => navigate(`Resume/${resume.Id}`)} />
           </IconButton>
         </Stack>
-        <Chip label="尚未應徵"></Chip>
       </Stack>
     </Paper>
   );
