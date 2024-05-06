@@ -23,6 +23,7 @@ import {
 } from '@/features/generate/generateSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { LayoutType } from '@/types/enums/LayoutType';
+import { AreaGenType } from '@/types/interfaces/IArea';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -31,7 +32,7 @@ import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { resolve } from 'node:path/win32';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
+import { NIL, v4 as uuid } from 'uuid';
 
 const PromptButtonBase = styled(Button)(({ theme }) => ({
   width: '100%',
@@ -155,7 +156,9 @@ function AreaGenerateaModal() {
             genRes.result?.forEach((a) => {
               postArea({
                 ...a,
-                ResumeId: res.result?.Id,
+                Id: NIL,
+                RecruitmentId: type === AreaGenType.Recruitment ? res.result?.Id : undefined,
+                ResumeId: type === AreaGenType.Resume ? res.result?.Id : undefined,
               })
                 .unwrap()
                 .then(async (areaRes) => {
@@ -197,8 +200,12 @@ function AreaGenerateaModal() {
                       a.KeyValueListLayout &&
                         areaRes.result?.Id &&
                         postKeyValueListLayout({
-                          ...a.KeyValueListLayout,
                           AreaId: areaRes.result?.Id,
+                          Items: (a.KeyValueListLayout.Items || []).map((i) => ({
+                            Id: i.Id,
+                            TagIds: i.Key?.map((k) => k.Id) || [],
+                            Value: i.Value,
+                          })),
                         });
                       break;
                     default:
