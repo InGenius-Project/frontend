@@ -28,7 +28,7 @@ import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, MenuItem, Paper, Select, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
@@ -89,6 +89,7 @@ function AreaGenerateaModal() {
   const handleClickPromptButton = (label: string | undefined) => {
     dispatch(setPrompt(label || ''));
   };
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const [postResume] = usePostResumeMutation();
   const [postTextLayout] = usePostTextLayoutMutation();
@@ -131,11 +132,21 @@ function AreaGenerateaModal() {
   };
 
   const handleClickGenerateTitle = () => {
+    if (!prompt || prompt.trim() === '') {
+      setError('請輸入履歷描述');
+      return;
+    }
+
     dispatch(setTitleOnly(true));
     generateArea(generateAreaPost);
   };
 
   const handleClickGenerate = () => {
+    if (!prompt || prompt.trim() === '') {
+      setError('請輸入履歷描述');
+      return;
+    }
+
     generateAreaByTitle(generateAreaByTitlePost)
       .unwrap()
       .then((genRes) => {
@@ -247,7 +258,12 @@ function AreaGenerateaModal() {
               required
               variant="standard"
               fullWidth
-              onChange={(e) => dispatch(setPrompt(e.target.value))}
+              onChange={(e) => {
+                dispatch(setPrompt(e.target.value));
+                setError(undefined);
+              }}
+              helperText={error}
+              error={!!error}
             />
           </Grid>
           <Grid mobile>
