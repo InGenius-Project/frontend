@@ -75,7 +75,7 @@ export default function CompanyRecruitment() {
                     {r.Enable ? '停用' : '啟用'}
                   </MenuItem>
                   <MenuItem onClick={() => navigate(`Edit/${r.Id}`)}>編輯</MenuItem>
-                  <MenuItem onClick={() => navigate(`Apply/${r.Id}`)}>應徵</MenuItem>
+                  <MenuItem onClick={() => navigate(`Detail/${r.Id}`)}>分析</MenuItem>
                   <MenuItem onClick={() => handleClickDelete(r.Id)}>刪除</MenuItem>
                 </Stack>
               ) : (
@@ -94,7 +94,7 @@ export default function CompanyRecruitment() {
                   </IconButton>
                   <Badge badgeContent={(r.Resumes || [])?.length} color="primary">
                     <IconButton>
-                      <AnalyticsOutlinedIcon onClick={() => navigate(`Apply/${r.Id}`)} />
+                      <AutoAwesome onClick={() => navigate(`Detail/${r.Id}`)} />
                     </IconButton>
                   </Badge>
                   <IconButton onClick={() => handleClickDelete(r.Id)}>

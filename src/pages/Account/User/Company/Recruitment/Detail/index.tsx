@@ -1,6 +1,5 @@
 import ManageProfileEmptyItem from '@/components/ProfileItem/ManageProfileEmptyItem';
 import ManageProfileItem from '@/components/ProfileItem/ManageProfileItem';
-import RecruitmentEmpty from '@/components/Recruitment/RecruitmentEmpty';
 import { ResumeItem } from '@/components/Resume';
 import { useLazyAnalyzeApplyedResumeQuery } from '@/features/api/recruitment/analyzeApplyedResume';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
@@ -8,7 +7,7 @@ import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/search
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import StarIcon from '@mui/icons-material/Star';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Chip, Container, Divider, Stack, Tab, Tabs, Typography, useTheme } from '@mui/material';
+import { Chip, Container, Stack, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -20,7 +19,7 @@ enum RelativeResumeTab {
   Relative,
 }
 
-function RecruitmentApply() {
+function CompanyRecruitmentDetail() {
   const { recruitmentId } = useParams();
 
   const [analyzeApplyedResume] = useLazyAnalyzeApplyedResumeQuery();
@@ -148,4 +147,4 @@ function RecruitmentApply() {
     </Container>
   );
 }
-export default RecruitmentApply;
+export default CompanyRecruitmentDetail;

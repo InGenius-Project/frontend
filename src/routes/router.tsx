@@ -1,41 +1,40 @@
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ForgetPassword from '@/pages/Account/ForgetPassword';
-import InternApply from '@/pages/Account/User/Intern/Recruitment/Apply';
+import Community from '@/pages/Account/User/Community';
+import CommunityCreate from '@/pages/Account/User/Community/Create';
+import CommunityDetail from '@/pages/Account/User/Community/Detail';
+import CompanyRecruitment from '@/pages/Account/User/Company/Recruitment';
+import CompanyRecruitmentDetail from '@/pages/Account/User/Company/Recruitment/Detail';
+import ApplyResume from '@/pages/Account/User/Company/Recruitment/Detail/Resume';
+import RecruitmentEdit from '@/pages/Account/User/Company/Recruitment/Edit';
+import CompanyRecruitmentGenerat from '@/pages/Account/User/Company/Recruitment/Generate';
+import Init from '@/pages/Account/User/Intern/Init';
+import InitSchool from '@/pages/Account/User/Intern/Init/School';
+import InitSkill from '@/pages/Account/User/Intern/Init/Skill';
 import InternRecruitment from '@/pages/Account/User/Intern/Recruitment';
+import InternApply from '@/pages/Account/User/Intern/Recruitment/Apply';
+import Resume from '@/pages/Account/User/Intern/Resume';
+import ResumeRelative from '@/pages/Account/User/Intern/Resume/Detail';
+import ResumeEdit from '@/pages/Account/User/Intern/Resume/Edit';
+import ResumeGenerate from '@/pages/Account/User/Intern/Resume/Generate';
 import ManageArea from '@/pages/Account/User/Manage/Area';
 import ManageAreaList from '@/pages/Account/User/Manage/Area/List';
 import ManageTag from '@/pages/Account/User/Manage/Tag';
 import Message from '@/pages/Account/User/Message';
 import Profile from '@/pages/Account/User/Profile';
-import RecruitmentEdit from '@/pages/Account/User/Company/Recruitment/Edit';
-import Resume from '@/pages/Account/User/Intern/Resume';
-import ResumeEdit from '@/pages/Account/User/Intern/Resume/Edit';
 import Search from '@/pages/Search';
 import SearchCompany from '@/pages/Search/Company';
+import SearchRecruitment from '@/pages/Search/Recruitment';
 import { Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Root from '../pages';
 import Login from '../pages/Account/Login';
 import Register from '../pages/Account/Register';
 import AuthRoute from './AuthRoute';
+import InternRoute from './InternRoute';
 import InternalUserRoute from './InternalUserRoute';
 import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
-import RecruitmentApply from '@/pages/Account/User/Company/Recruitment/Apply';
-import CompanyRecruitment from '@/pages/Account/User/Company/Recruitment';
-import SearchRecruitment from '@/pages/Search/Recruitment';
-import ApplyResume from '@/pages/Account/User/Company/Recruitment/Apply/Resume';
-import ResumeGenerate from '@/pages/Account/User/Intern/Resume/Generate';
-import InternRoute from './InternRoute';
-import Init from '@/pages/Account/User/Intern/Init';
-import InitSkill from '@/pages/Account/User/Intern/Init/Skill';
-import InitSchool from '@/pages/Account/User/Intern/Init/School';
-import CompanyRecruitmentGenerat from '@/pages/Account/User/Company/Recruitment/Generate';
-import Community from '@/pages/Account/User/Community';
-import CommunityDetail from '@/pages/Account/User/Community/Detail';
-import CommunityCreate from '@/pages/Account/User/Community/Create';
-import SearchRecruitmentRelative from '@/pages/Search/Relative/Recruitment';
-import SearchResumeRelative from '@/pages/Search/Relative/Resume';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -90,6 +89,9 @@ export const routes = (
                 <Route element={<ResumeEdit />} path="" />
               </Route>
               <Route path="Generate" element={<ResumeGenerate />} handle={{ crumb: '建立履歷' }} />
+              <Route path="Detail/:resumeId" element={<ResumeRelative />} handle={{ crumb: '履歷分析' }}>
+                {' '}
+              </Route>
             </Route>
           </Route>
 
@@ -105,8 +107,8 @@ export const routes = (
                 <Route path="" element={<RecruitmentEdit />} />
               </Route>
               <Route path="Generate" handle={{ crumb: '建立職缺' }} element={<CompanyRecruitmentGenerat />}></Route>
-              <Route path="Apply/:recruitmentId?" handle={{ crumb: '應徵資訊' }}>
-                <Route path="" element={<RecruitmentApply />} />
+              <Route path="Detail/:recruitmentId?" handle={{ crumb: '應徵履歷分析' }}>
+                <Route path="" element={<CompanyRecruitmentDetail />} />
                 <Route path="Resume/:resumeId" element={<ApplyResume />} handle={{ crumb: '履歷資訊' }} />
               </Route>
             </Route>
@@ -133,10 +135,6 @@ export const routes = (
       <Route path="" element={<Search />} />
       <Route path="Recruitment/:recruitmentId" element={<SearchRecruitment />} />
       <Route path="Company/:companyId" element={<SearchCompany />} />
-      <Route path="Relative">
-        <Route path="Resume/:recruitmentId" element={<SearchResumeRelative />}></Route>
-        <Route path="Recruitment/:resumeId" element={<SearchRecruitmentRelative />}></Route>
-      </Route>
     </Route>
   </Route>
 );

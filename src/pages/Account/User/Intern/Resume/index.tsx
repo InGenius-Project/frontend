@@ -6,6 +6,7 @@ import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useAppSelector } from '@/features/store';
 import AddIcon from '@mui/icons-material/Add';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Mail from '@mui/icons-material/Mail';
@@ -102,14 +103,14 @@ export default function Resume() {
 
                     <IconButton
                       onClick={() =>
-                        navigate(`/Search/Relative/Recruitment/${r.Id}`, {
+                        navigate(`Detail/${r.Id}`, {
                           state: {
                             from: location,
                           },
                         })
                       }
                     >
-                      <Mail />
+                      <AutoAwesome />
                     </IconButton>
                   </Stack>
                 )
