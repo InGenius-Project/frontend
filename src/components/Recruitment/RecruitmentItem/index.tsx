@@ -48,7 +48,7 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
     >
       <Stack direction={'row'} spacing={1} alignItems={'center'}>
         <Box sx={{ width: '2em', height: '2em', flex: '0 0 auto' }}>
-          <UserAvatar uri={undefined} alt={recruitment.Publisher?.Username} />
+          <UserAvatar uri={recruitment.Publisher?.Avatar?.Uri} alt={recruitment.Publisher?.Username} />
         </Box>
 
         <Box sx={{ flex: '1 1 auto' }}>

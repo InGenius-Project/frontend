@@ -274,6 +274,7 @@ export default function ImageCrop({
                 padding: 0,
                 width: 'inherit',
                 height: 'inherit',
+                objectFit: 'cover',
               }}
             />
             <VisuallyHiddenInput

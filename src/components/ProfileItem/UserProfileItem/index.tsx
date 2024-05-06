@@ -42,6 +42,7 @@ const UserProfileItem = forwardRef<HTMLDivElement, UserProfileItemProps>(
           sx={{
             width: '100%',
             position: 'absolute',
+            height: 'var(--ing-height-profile-cover)',
             top: 0,
             left: 0,
             zIndex: 1,
