@@ -57,7 +57,7 @@ const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick 
               <Typography variant="caption" component={'span'}>
                 相關標籤:
               </Typography>
-              {resume.Keywords?.map((k) => <Chip label={k.Id} icon={<Tag />} />)}
+              {resume.Keywords?.slice(0, 4).map((k) => <Chip label={k.Id} icon={<Tag />} />)}
             </Stack>
             {/* <Typography variant="caption">上次編輯時間: {getTimeDiffer(resume.ModifiedAt) || '?'}</Typography> */}
           </Stack>
