@@ -46,6 +46,7 @@ function AreaListItem({
   options,
   value,
   onChange,
+  renderInput,
   title = '',
   ...props
 }: AreaListItemProps) {
@@ -80,57 +81,61 @@ function AreaListItem({
         </ListItemAvatar>
       )}
       {editable ? (
-        <Autocomplete
-          freeSolo
-          sx={{ width: '20em' }}
-          options={options || []}
-          renderInput={(params) => (
-            <TextField {...params} variant="standard" fullWidth placeholder={`請輸入${title}`} />
-          )}
-          getOptionLabel={(option) => {
-            if (typeof option === 'string') {
-              return option;
-            }
-            if (option.Name) {
-              return option.Name;
-            }
-            return '';
-          }}
-          value={value}
-          isOptionEqualToValue={(option, value) => {
-            return option.InnerId === value.InnerId;
-          }}
-          renderOption={(props, option, state) => {
-            return (
-              <li {...props} id={option.InnerId} key={option.InnerId}>
-                <Typography>{option.Name}</Typography>
-              </li>
-            );
-          }}
-          selectOnFocus
-          handleHomeEndKeys
-          onChange={onChange}
-          filterOptions={(options, params) => {
-            const filtered = filter(
-              options.filter((i) => !selectOptions.some((item) => item.Id === i.Id)),
-              params,
-            );
+        !renderInput ? (
+          <Autocomplete
+            freeSolo
+            sx={{ width: '20em' }}
+            options={options || []}
+            renderInput={(params) => (
+              <TextField {...params} variant="standard" fullWidth placeholder={`請輸入${title}`} />
+            )}
+            getOptionLabel={(option) => {
+              if (typeof option === 'string') {
+                return option;
+              }
+              if (option.Name) {
+                return option.Name;
+              }
+              return '';
+            }}
+            value={value}
+            isOptionEqualToValue={(option, value) => {
+              return option.InnerId === value.InnerId;
+            }}
+            renderOption={(props, option, state) => {
+              return (
+                <li {...props} id={option.InnerId} key={option.InnerId}>
+                  <Typography>{option.Name}</Typography>
+                </li>
+              );
+            }}
+            selectOnFocus
+            handleHomeEndKeys
+            onChange={onChange}
+            filterOptions={(options, params) => {
+              const filtered = filter(
+                options.filter((i) => !selectOptions.some((item) => item.Id === i.Id)),
+                params,
+              );
 
-            const { inputValue } = params;
-            // Suggest the creation of a new value
-            const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
-            if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
-              filtered.push({
-                InnerId: value && value.InnerId !== NIL ? value.InnerId : NIL,
-                Id: NIL,
-                Name: inputValue,
-                Type: customTagTypeData?.result,
-              });
-            }
+              const { inputValue } = params;
+              // Suggest the creation of a new value
+              const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
+              if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
+                filtered.push({
+                  InnerId: value && value.InnerId !== NIL ? value.InnerId : NIL,
+                  Id: NIL,
+                  Name: inputValue,
+                  Type: customTagTypeData?.result,
+                });
+              }
 
-            return filtered;
-          }}
-        />
+              return filtered;
+            }}
+          />
+        ) : (
+          renderInput
+        )
       ) : (
         <Typography variant="body1">{content}</Typography>
       )}

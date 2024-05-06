@@ -28,6 +28,7 @@ import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, MenuItem, Paper, Select, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { resolve } from 'node:path/win32';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -99,19 +100,6 @@ function AreaGenerateaModal() {
   const [pushEmptyAreasContianer] = usePushEmptyAreasContainerMutation();
   const [postArea] = usePostAreaMutation();
 
-  useEffect(() => {
-    if (generateAreaTitles?.result) {
-      dispatch(
-        setTitles(
-          generateAreaTitles.result.map((a) => ({
-            id: uuid(),
-            title: a.Title,
-          })),
-        ),
-      );
-    }
-  }, [dispatch, generateAreaTitles]);
-
   const handleDragEnd = (items: string[]) => {
     const reorderedTitles = items
       .map((itemId) => {
@@ -138,7 +126,18 @@ function AreaGenerateaModal() {
     }
 
     dispatch(setTitleOnly(true));
-    generateArea(generateAreaPost);
+    generateArea(generateAreaPost)
+      .unwrap()
+      .then((res) => {
+        dispatch(
+          setTitles(
+            res.result?.map((a) => ({
+              id: uuid(),
+              title: a.Title,
+            })),
+          ),
+        );
+      });
   };
 
   const handleClickGenerate = () => {
