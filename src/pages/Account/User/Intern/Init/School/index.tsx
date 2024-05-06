@@ -94,7 +94,11 @@ function InitSchool() {
                 Value: yearState || '',
               },
             ],
-          });
+          })
+            .unwrap()
+            .then(() => {
+              navigate('/Account/User/Intern/Init/Skill');
+            });
         }
       });
   };

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser, IUserInfo } from '@/types/interfaces/IUser';
 import { IToken } from '@/types/interfaces/IToken';
+import { baseApi } from '../api/baseApi';
 
 type userSliceType = {
   User?: IUserInfo;
@@ -27,6 +28,8 @@ export const userSlice = createSlice({
     },
     logout: () => {
       localStorage.removeItem('accessToken');
+      baseApi.util.resetApiState();
+
       return initialState;
     },
   },

@@ -52,6 +52,7 @@ export default function Header() {
   const handleChange = (e: SelectChangeEvent<UserRole>) => {
     setRole((e.target as any).value);
     const loginData = UserRoleLoginData.find((u) => u.Id === e.target.value);
+
     login({
       email: loginData?.Email || '',
       password: loginData?.password || '',
@@ -59,12 +60,12 @@ export default function Header() {
   };
 
   const handleLogout = () => {
+    setNavAnchorEl(null);
     dispatch(logout()); // initial state
-    baseApi.util.resetApiState(); // reset cache
   };
 
   const handleNavigate = (value: string) => {
-    handleNavClose();
+    setNavAnchorEl(null);
     navigate(`/Account/User/${value}`);
   };
 
@@ -124,63 +125,44 @@ export default function Header() {
 
               {/* User Navigate */}
               {isMobile ? (
-                <IconButton onClick={handleNavClick}>
-                  <MenuIcon />
-                </IconButton>
+                <>
+                  <IconButton onClick={handleNavClick}>
+                    <MenuIcon />
+                  </IconButton>
+                  <Drawer open={open} onClose={handleNavClose} anchor="right">
+                    {getNavigationConfig(userState?.Role || 0)?.map((item) => {
+                      return (
+                        <MenuItem
+                          key={`header-menu-item-${item.value}`}
+                          onClick={() => handleNavigate(item.value)}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            gap: theme.spacing(1),
+                          }}
+                        >
+                          {item.icon}
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Drawer>
+                </>
               ) : (
-                <Button
-                  variant="text"
-                  startIcon={
-                    <Box sx={{ width: '1.5em', height: '1.5em' }}>
-                      <OwnerAvatar />
-                    </Box>
-                  }
-                  endIcon={<ArrowDropDownIcon />}
-                  onClick={handleNavClick}
-                >
-                  {userState.Username}
-                </Button>
-              )}
-              {isMobile ? (
-                <Drawer open={open} onClose={handleNavClose} anchor="right">
-                  {getNavigationConfig(userState?.Role || 0)?.map((item) => {
-                    return (
-                      <MenuItem
-                        key={`header-menu-item-${item.value}`}
-                        onClick={() => handleNavigate(item.value)}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          gap: theme.spacing(1),
-                        }}
-                      >
-                        {item.icon}
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Drawer>
-              ) : (
-                <Menu anchorEl={navAnchorEl} open={open} onClose={handleNavClose}>
-                  {getNavigationConfig(userState?.Role || 0)?.map((item) => {
-                    return (
-                      <MenuItem
-                        key={`header-menu-item-${item.value}`}
-                        onClick={() => handleNavigate(item.value)}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          gap: theme.spacing(1),
-                        }}
-                      >
-                        {item.icon}
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-
-                  <MenuItem onClick={handleLogout}>登出</MenuItem>
-                </Menu>
+                <>
+                  <Button
+                    variant="text"
+                    startIcon={
+                      <Box sx={{ width: '1.5em', height: '1.5em' }}>
+                        <OwnerAvatar />
+                      </Box>
+                    }
+                    endIcon={<ArrowDropDownIcon />}
+                    onClick={handleNavClick}
+                  >
+                    {userState.Username}
+                  </Button>
+                </>
               )}
             </Stack>
           ) : (
@@ -189,6 +171,27 @@ export default function Header() {
             </Button>
           )}
         </Box>
+
+        <Menu anchorEl={navAnchorEl} open={!isMobile && open} onClose={handleNavClose}>
+          {getNavigationConfig(userState?.Role || 0)?.map((item) => {
+            return (
+              <MenuItem
+                key={`header-menu-item-${item.value}`}
+                onClick={() => handleNavigate(item.value)}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: theme.spacing(1),
+                }}
+              >
+                {item.icon}
+                {item.name}
+              </MenuItem>
+            );
+          })}
+
+          <MenuItem onClick={handleLogout}>登出</MenuItem>
+        </Menu>
       </Box>
     </Container>
   );
