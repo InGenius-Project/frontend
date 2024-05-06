@@ -22,7 +22,7 @@ export const handlers = [
     return new Response(JSON.stringify(mockGenerationArea));
   }),
   http.post(baseUrl + '/api/Area/Generation/Title', () => {
-    return new Response(JSON.stringify(mockGenerationArea));
+    return new Response(JSON.stringify(mockGenerateAreaByTitle));
   }),
   // http.get(baseUrl + '/api/Chat/Groups/', () => {
   //   return new Response(JSON.stringify(generateChatGroups));

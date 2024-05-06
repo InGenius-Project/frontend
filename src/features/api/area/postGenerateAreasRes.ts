@@ -18,6 +18,7 @@ export const pushEmptyAreasContianerApi = baseApi.injectEndpoints({
               Title: `${state.userState.User?.Username}的履歷`,
               Visibility: false,
             },
+            method: 'POST',
           };
         } else {
           return {
@@ -27,6 +28,7 @@ export const pushEmptyAreasContianerApi = baseApi.injectEndpoints({
               Name: `${state.userState.User?.Username}的職缺`,
               Enable: false,
             },
+            method: 'POST',
           };
         }
       },
