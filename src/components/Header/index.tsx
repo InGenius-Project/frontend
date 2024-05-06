@@ -146,6 +146,7 @@ export default function Header() {
                         </MenuItem>
                       );
                     })}
+                    <MenuItem onClick={handleLogout}>登出</MenuItem>
                   </Drawer>
                 </>
               ) : (
