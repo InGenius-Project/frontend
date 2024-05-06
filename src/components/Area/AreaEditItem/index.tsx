@@ -47,8 +47,6 @@ type AreaEditItemProps = {
   loading?: boolean;
 };
 
-const filter = createFilterOptions<IInnerTag>();
-
 export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps) {
   const dispatch = useAppDispatch();
   const layoutState = useAppSelector((state) => state.layoutState);
@@ -131,7 +129,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
 
   const handleListItemDragEnd = (item: string[]) => {
     const newListItem = item
-      .map((id) => (layoutState.listItems || []).find((item) => item.Id === id))
+      .map((id) => (layoutState.listItems || []).find((item) => item.InnerId === id))
       .filter(isNotNullOrUndefined);
 
     dispatch(setListItem(newListItem));
@@ -147,7 +145,7 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
     } else if (typeof value === 'string' && customTagTypeData?.result) {
       dispatch(
         updateListItem({
-          InnerId: uuid(),
+          InnerId: NIL,
           Id: NIL,
           Name: value,
           Type: customTagTypeData.result,
@@ -307,69 +305,23 @@ export default function AreaEditItem({ onAddClick, loading }: AreaEditItemProps)
             {layoutState.listItems &&
               layoutState.listItems.map((i) => (
                 <AreaListItem
+                  options={
+                    tagsData && tagsData.result
+                      ? tagsData.result.map((t: any) => ({
+                          ...t,
+                          InnerId: uuid(),
+                        }))
+                      : []
+                  }
+                  value={i}
+                  selectOptions={layoutState.listItems || []}
+                  onChange={handleListItemChange}
+                  title={layoutState.title}
                   content={i.Name}
                   editable
                   key={i.InnerId}
                   id={i.InnerId}
                   onClickDelete={handleListRemoveClick}
-                  renderInput={
-                    <Autocomplete
-                      freeSolo
-                      sx={{ width: '20em' }}
-                      options={
-                        tagsData && tagsData.result
-                          ? tagsData.result.map((t: any) => ({
-                              ...t,
-                              InnerId: i.InnerId,
-                            }))
-                          : []
-                      }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="standard"
-                          fullWidth
-                          placeholder={`請輸入${layoutState.title}`}
-                        />
-                      )}
-                      getOptionLabel={(option) => {
-                        if (typeof option === 'string') {
-                          return option;
-                        }
-                        if (option.Name) {
-                          return option.Name;
-                        }
-                        return '';
-                      }}
-                      value={i}
-                      isOptionEqualToValue={(option, value) => {
-                        return option.InnerId === value.InnerId;
-                      }}
-                      selectOnFocus
-                      handleHomeEndKeys
-                      onChange={handleListItemChange}
-                      filterOptions={(options, params) => {
-                        const filtered = filter(
-                          options.filter((i) => !layoutState.listItems?.some((item) => item.Id === i.Id)),
-                          params,
-                        );
-
-                        const { inputValue } = params;
-                        // Suggest the creation of a new value
-                        const isExisting = options.some((option: IInnerTag) => inputValue === option.Name);
-                        if (inputValue !== '' && !isExisting && customTagTypeData?.result) {
-                          filtered.push({
-                            InnerId: NIL,
-                            Id: NIL,
-                            Name: inputValue,
-                            Type: customTagTypeData?.result,
-                          });
-                        }
-
-                        return filtered;
-                      }}
-                    />
-                  }
                 />
               ))}
           </DragDropContainer>

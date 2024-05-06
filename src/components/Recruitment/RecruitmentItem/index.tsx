@@ -45,9 +45,6 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
         position: 'relative',
         borderRadius: 'var(--ing-borderRadius-sm)',
         padding: theme.spacing(2),
-        '&:hover': {
-          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-        },
       }}
     >
       <Stack direction={'row'} spacing={1} alignItems={'center'}>

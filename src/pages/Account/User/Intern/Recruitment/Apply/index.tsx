@@ -2,31 +2,52 @@ import { chatUrl } from '@/assets/utils/urls';
 import { RecruitmentItem } from '@/components/Recruitment';
 import { SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import ResumeItem, { SkeletonResumeItem } from '@/components/Resume/ResumeItem';
+import { useInviteUserToGroupMutation } from '@/features/api/chat/inviteUserToGroup';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSendRecruitmentApplyMutation } from '@/features/api/recruitment/sendRecruitmentApply';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
-import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { Box, Button, Checkbox, Paper, Stack, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { v4 as uuid } from 'uuid';
-import { useParams } from 'react-router-dom';
 import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
 import { IChatGroupInfo } from '@/types/interfaces/IChat';
+import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
-  inviteUserToGroupApi,
-  useInviteUserToGroupMutation,
-} from './../../../../../../features/api/chat/inviteUserToGroup';
+  Box,
+  Button,
+  Checkbox,
+  IconButton,
+  MenuItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
 
 function InternApply() {
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || '', {
     skip: !recruitmentId,
   });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
   const [sendRecruitmentApply] = useSendRecruitmentApplyMutation();
   const { data: resumesData } = useGetResumesQuery(null);
   const [checkedResumeId, setCheckedResumeId] = useState<string>('');
   const [messageState, setMessageState] = useState<string>();
   const [inviteUserToGroup] = useInviteUserToGroupMutation();
+
+  const handleNavigateSearchRecruitment = () =>
+    navigate(`/Search/Recruitment/${recruitmentData?.result?.Id}`, {
+      state: {
+        from: location,
+      },
+    });
 
   const handleSubmit = async () => {
     if (recruitmentId && checkedResumeId) {
@@ -68,7 +89,18 @@ function InternApply() {
       >
         <Typography variant="subtitle1">Step 1: 確認職缺</Typography>
         {recruitmentData?.result ? (
-          <RecruitmentItem recruitment={recruitmentData?.result} />
+          <RecruitmentItem
+            recruitment={recruitmentData?.result}
+            control={
+              isMobile ? (
+                <MenuItem onClick={handleNavigateSearchRecruitment}>前往職缺頁面</MenuItem>
+              ) : (
+                <IconButton onClick={handleNavigateSearchRecruitment}>
+                  <OpenInNewIcon />
+                </IconButton>
+              )
+            }
+          />
         ) : (
           <SkeletonRecruitmentItem />
         )}
