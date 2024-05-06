@@ -9,6 +9,7 @@ export const getInvitedChatGroupsApi = baseApi.injectEndpoints({
         url: `Chat/Groups/Invited`,
         method: 'GET',
       }),
+      providesTags: ['ChatGroup'],
     }),
   }),
 });

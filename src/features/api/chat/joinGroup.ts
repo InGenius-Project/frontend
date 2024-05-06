@@ -4,12 +4,14 @@ import { baseApi } from '../baseApi';
 
 export const joinGroupApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    joinGroup: builder.query<IResponse<IChatGroup>, { groupId: string }>({
+    joinGroup: builder.mutation<IResponse<IChatGroup>, { groupId: string }>({
       query: ({ groupId }) => ({
         url: `Chat/Groups/Join/${groupId}`,
+        method: 'POST',
       }),
+      invalidatesTags: ['ChatGroup'],
     }),
   }),
 });
 
-export const { useJoinGroupQuery, usePrefetch, useLazyJoinGroupQuery } = joinGroupApi;
+export const { useJoinGroupMutation, usePrefetch } = joinGroupApi;

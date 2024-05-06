@@ -6,6 +6,7 @@ import { useInviteUserToGroupMutation } from '@/features/api/chat/inviteUserToGr
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSendRecruitmentApplyMutation } from '@/features/api/recruitment/sendRecruitmentApply';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
+import { useGetUserQuery } from '@/features/api/user/getUser';
 import ChatReceiveMethod from '@/types/enums/ChatReceiveMethod';
 import { IChatGroupInfo } from '@/types/interfaces/IChat';
 import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
@@ -25,9 +26,11 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 
 function InternApply() {
+  const { data: userData } = useGetUserQuery();
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
   const { data: recruitmentData } = useGetRecruitmentByIdQuery(recruitmentId || '', {
     skip: !recruitmentId,
@@ -71,11 +74,18 @@ function InternApply() {
               inviteUserToGroup({
                 groupId: msg.Id,
                 userId: recruitmentData?.result?.PublisherId,
-              });
+              })
+                .unwrap()
+                .then(() => {
+                  c.invoke('SendMessageToGroup', messageState, msg.Id);
+                });
           });
 
           await c.start();
-          await c.invoke('AddGroup', uuid(), true); //TODO: GroupName unique
+          await c.invoke('AddGroup', userData?.result?.Username + '-' + recruitmentData?.result?.Name, true); //TODO: GroupName unique
+
+          navigate('/Account/User/Intern/Recruitment');
+          toast.success('應徵成功');
         });
     }
   };
