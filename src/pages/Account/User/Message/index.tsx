@@ -77,6 +77,7 @@ function Message() {
           direction: 'row',
           gap: 2,
           height: 'var(--ing-height-user-inner)',
+          width: '100%',
         }}
       >
         {/* leftside panel */}

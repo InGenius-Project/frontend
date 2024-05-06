@@ -13,7 +13,7 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Badge, Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Resume() {
   const theme = useTheme();
@@ -23,6 +23,7 @@ export default function Resume() {
   const [deleteResume] = useDeleteResumeMutation();
   const [postResume, { isLoading: isAddingNewResume }] = usePostResumeMutation();
   const navigate = useNavigate();
+  const location = useLocation();
   const confirm = useConfirm();
 
   const handleAddNewResumeClick = () => {
@@ -99,11 +100,17 @@ export default function Resume() {
                       <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
                     </IconButton>
 
-                    <Badge color="primary" badgeContent={(r.Recruitments || []).length}>
-                      <IconButton onClick={() => navigate('/Account/User/Intern/Recruitment')}>
-                        <Mail />
-                      </IconButton>
-                    </Badge>
+                    <IconButton
+                      onClick={() =>
+                        navigate(`/Search/Relative/Recruitment/${r.Id}`, {
+                          state: {
+                            from: location,
+                          },
+                        })
+                      }
+                    >
+                      <Mail />
+                    </IconButton>
                   </Stack>
                 )
               }

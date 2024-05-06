@@ -57,6 +57,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
       sx={{
         p: 1,
         height: 'var(--ing-height-user-inner)',
+        width: '100%',
       }}
     >
       <MessageModelHeader
@@ -71,6 +72,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
             flex: '1 1 auto',
             overflowY: 'scroll',
             px: 1,
+            width: '100%',
           }}
           ref={listRef}
         >

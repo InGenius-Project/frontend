@@ -7,9 +7,8 @@ import { AreaType } from '@/types/enums/AreaType';
 import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import MoreVert from '@mui/icons-material/MoreVert';
 import TagIcon from '@mui/icons-material/Tag';
-import { Box, Chip, IconButton, Link, Menu, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, Link, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { useUpdateEffect } from 'ahooks';
@@ -48,8 +47,8 @@ export default function RecruitmentItem({ control, editable, recruitment, onChan
       }}
     >
       <Stack direction={'row'} spacing={1} alignItems={'center'}>
-        <Box sx={{ width: '2em', height: '2em' }}>
-          <UserAvatar uri={recruitment.Publisher?.Avatar?.Uri} alt={recruitment.Publisher?.Username} />
+        <Box sx={{ width: '2em', height: '2em', flex: '0 0 auto' }}>
+          <UserAvatar uri={undefined} alt={recruitment.Publisher?.Username} />
         </Box>
 
         <Box sx={{ flex: '1 1 auto' }}>

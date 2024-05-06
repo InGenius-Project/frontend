@@ -15,8 +15,14 @@ function MessageModelInput({ onSend }: MessageModelInputProps) {
   });
 
   return (
-    <Stack spacing={1}>
+    <Stack
+      spacing={1}
+      sx={{
+        width: '100%',
+      }}
+    >
       <TextField
+        fullWidth
         value={message}
         InputProps={{
           endAdornment: (

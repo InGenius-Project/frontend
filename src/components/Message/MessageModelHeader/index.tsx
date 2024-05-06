@@ -1,6 +1,6 @@
 import { UserAvatarGroup } from '@/components/UserAvatar';
 import { IOwnerUser } from '@/types/interfaces/IUser';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
 type MessageModelHeaderProps = {
@@ -11,6 +11,9 @@ type MessageModelHeaderProps = {
 };
 
 function MessageModelHeader({ groupName, role, users, control }: MessageModelHeaderProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
+
   return (
     <Box
       sx={{
@@ -21,7 +24,7 @@ function MessageModelHeader({ groupName, role, users, control }: MessageModelHea
         width: '100%',
       }}
     >
-      <UserAvatarGroup users={users} />
+      {!isMobile && <UserAvatarGroup users={users} />}
       <Stack
         sx={{
           flex: '1 1 auto',
