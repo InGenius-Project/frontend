@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/features/store';
 import { IOwnerUser } from '@/types/interfaces/IUser';
-import { Avatar, AvatarGroup } from '@mui/material';
+import { Avatar, AvatarGroup, Box } from '@mui/material';
 import React from 'react';
 
 function stringToColor(string: string) {
@@ -38,17 +38,22 @@ function UserAvatar({ uri, alt, size }: UserAvatarProps) {
       sx={{
         width: size ? size : '100%',
         height: size ? size : '100%',
+        fontSize: '1em',
         bgcolor: uri ? undefined : stringToColor(alt || ''),
       }}
     >
-      {uri ? <></> : stringAvatar(alt || '')}
+      <Box sx={{ fontSize: '0.8em' }}>{uri ? <></> : stringAvatar(alt || '')}</Box>
     </Avatar>
   );
 }
 
-export function OwnerAvatar() {
+type OwnerAvatarProps = {
+  size?: string;
+};
+
+export function OwnerAvatar({ size }: OwnerAvatarProps) {
   const userState = useAppSelector((state) => state.userState);
-  return <UserAvatar uri={userState.User?.Avatar?.Uri} alt={userState.User?.Username} />;
+  return <UserAvatar uri={userState.User?.Avatar?.Uri} alt={userState.User?.Username} size={size} />;
 }
 
 type UserAvatarGroupProps = {
@@ -61,7 +66,7 @@ export function UserAvatarGroup({ users }: UserAvatarGroupProps) {
       {users && React.isValidElement(users) ? (
         <Avatar>{users}</Avatar>
       ) : users && Array.isArray(users) ? (
-        users.map((user) => <UserAvatar key={user.Id} uri={user.Avatar?.Uri} alt={user.Username} size="2em" />)
+        users.map((user) => <UserAvatar key={user.Id} uri={user.Avatar?.Uri} alt={user.Username} size={'2em'} />)
       ) : (
         <Avatar />
       )}

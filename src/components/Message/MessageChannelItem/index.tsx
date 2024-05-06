@@ -36,14 +36,11 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
 
       if (type === 'invited') {
         return (
-          <Box
-            sx={{
-              width: '3em',
-              height: '3em',
-            }}
-          >
-            <UserAvatar uri={chatGroupInfo?.Owner?.Avatar?.Uri} alt={chatGroupInfo?.Owner?.Username}></UserAvatar>
-          </Box>
+          <UserAvatar
+            uri={chatGroupInfo?.Owner?.Avatar?.Uri}
+            alt={chatGroupInfo?.Owner?.Username}
+            size="3em"
+          ></UserAvatar>
         );
       }
 

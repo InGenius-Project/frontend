@@ -153,11 +153,7 @@ export default function Header() {
                 <>
                   <Button
                     variant="text"
-                    startIcon={
-                      <Box sx={{ width: '1.5em', height: '1.5em' }}>
-                        <OwnerAvatar />
-                      </Box>
-                    }
+                    startIcon={<OwnerAvatar size="2em" />}
                     endIcon={<ArrowDropDownIcon />}
                     onClick={handleNavClick}
                   >

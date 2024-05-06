@@ -25,7 +25,7 @@ const navigationConfig = [
         value: 'Profile',
         icon: (
           <LeftIcon>
-            <OwnerAvatar />
+            <OwnerAvatar size="2em" />
           </LeftIcon>
         ),
       },

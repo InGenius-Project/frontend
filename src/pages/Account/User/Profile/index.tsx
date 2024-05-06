@@ -64,14 +64,17 @@ export default function Profile() {
     [uploadAvatar],
   );
 
-  const handleBackgroundCropDone = useCallback(async (image: IImageInfo | undefined) => {
-    var blob = await fetch(image?.Uri || '').then((r) => r.blob());
+  const handleBackgroundCropDone = useCallback(
+    async (image: IImageInfo | undefined) => {
+      var blob = await fetch(image?.Uri || '').then((r) => r.blob());
 
-    postBackground({
-      Image: blob,
-      Uri: image?.Uri || '',
-    });
-  }, []);
+      postBackground({
+        Image: blob,
+        Uri: image?.Uri || '',
+      });
+    },
+    [postBackground],
+  );
 
   const { run: handleChangeUserName } = useDebounceFn((userName: string) => {
     postUser({
@@ -95,7 +98,11 @@ export default function Profile() {
             circularCrop
             image={userData?.result?.Avatar || undefined}
             onCropDone={handleAvatarCropDone}
-            altComponent={<OwnerAvatar />}
+            altComponent={
+              <Box sx={{ fontSize: '3em' }}>
+                <OwnerAvatar size="150px" />
+              </Box>
+            }
           />
         }
         cover={
