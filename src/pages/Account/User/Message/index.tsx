@@ -41,7 +41,7 @@ function Message() {
     dispatch(setGroupId('ai'));
   }, [dispatch]);
 
-  // connect to chat server
+  // subscribe chat event
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -80,7 +80,7 @@ function Message() {
           width: '100%',
         }}
       >
-        {/* leftside panel */}
+        {/* Left panel */}
         <Stack
           sx={{
             py: !isMobile ? 2 : 1,
@@ -89,6 +89,7 @@ function Message() {
           }}
           spacing={1}
         >
+          {/* Left Header */}
           <Stack
             direction={'row'}
             sx={{
@@ -120,7 +121,7 @@ function Message() {
           >
             {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
               <>
-                {/* AI Channer */}
+                {/* AI Channel */}
                 <MessageChannelItem
                   avatar={
                     <Logo
@@ -142,6 +143,8 @@ function Message() {
                     CreateTime: '',
                   }}
                 />
+
+                {/* Normal Channel */}
                 {(chatGroupsData?.result || []).length > 0 ? (
                   chatGroupsData?.result?.map((c, index) => {
                     return (
@@ -163,6 +166,7 @@ function Message() {
               </>
             )}
 
+            {/* Invited Channel */}
             {pageState === MessagePage.InvitedChatGroups && (
               <>
                 {invitedChatGroupsData?.result?.map((c) => {

@@ -83,7 +83,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
                 label={message.Message}
                 avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
                 align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
-                time={new Date(new ChatMessage(message).SendTime)}
+                time={message.SendTime}
               />
             ))
           ) : (
