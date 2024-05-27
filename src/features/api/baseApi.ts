@@ -24,19 +24,21 @@ const baseQuery = fetchBaseQuery({
   paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
 });
 
+export const apiTags = [
+  'User',
+  'Resume',
+  'ResumeLists',
+  'Area',
+  'AreaType',
+  'Recruitment',
+  'RecruitmentLists',
+  'TagType',
+  'Tag',
+  'ChatGroup',
+];
+
 export const baseApi = createApi({
   baseQuery,
   endpoints: () => ({}),
-  tagTypes: [
-    'User',
-    'Resume',
-    'ResumeLists',
-    'Area',
-    'AreaType',
-    'Recruitment',
-    'RecruitmentLists',
-    'TagType',
-    'Tag',
-    'ChatGroup',
-  ],
+  tagTypes: apiTags,
 });
