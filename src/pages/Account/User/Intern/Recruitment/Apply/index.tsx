@@ -89,9 +89,7 @@ function InternApply() {
     }
   };
 
-  return (recruitmentData?.result?.Resumes || []).length === 0 ? (
-    <Navigate to="/Account/User/Intern/Recruitment" replace={true} state={{ from: location }} />
-  ) : (
+  return (
     <Stack spacing={1}>
       <Paper
         sx={{
