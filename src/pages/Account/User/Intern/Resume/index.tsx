@@ -9,10 +9,9 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import Mail from '@mui/icons-material/Mail';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Badge, Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useLocation, useNavigate } from 'react-router-dom';
 

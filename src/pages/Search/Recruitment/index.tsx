@@ -5,7 +5,7 @@ import BackButton from '@/components/Button/BackButton';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useGetSaftyReportQuery } from '@/features/api/recruitment/getSaftyReport';
-import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Chip, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 function SearchRecruitment() {
@@ -29,7 +29,13 @@ function SearchRecruitment() {
             <InternRecruitmentItem
               key={recruitmentData?.result.Id}
               recruitment={recruitmentData?.result}
-              control={<ApplyButton recruitmentId={recruitmentId || ''} />}
+              control={
+                (recruitmentData?.result?.Resumes || []).length === 0 ? (
+                  <ApplyButton recruitmentId={recruitmentId || ''} />
+                ) : (
+                  <Chip label="已應徵" />
+                )
+              }
             />
           )}
           {saftyReportData?.result && (

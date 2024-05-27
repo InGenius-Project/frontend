@@ -24,10 +24,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
 
 function InternApply() {
   const { data: userData } = useGetUserQuery();
@@ -90,7 +89,9 @@ function InternApply() {
     }
   };
 
-  return (
+  return (recruitmentData?.result?.Resumes || []).length === 0 ? (
+    <Navigate to="/Account/User/Intern/Recruitment" replace={true} state={{ from: location }} />
+  ) : (
     <Stack spacing={1}>
       <Paper
         sx={{
