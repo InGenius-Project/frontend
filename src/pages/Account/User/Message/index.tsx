@@ -5,6 +5,7 @@ import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyIte
 import MessageModel from '@/components/Message/MessageModel';
 import { useGetChatGroupsQuery } from '@/features/api/chat/getChatGroups';
 import { useGetInvitedChatGroupsQuery } from '@/features/api/chat/getInvitedChatGroups';
+import { useGetPrivateChatGroupQuery } from '@/features/api/chat/getPrivateChatGroups';
 import { selectConn, setGroupId } from '@/features/message/messageSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { ChatMessage } from '@/types/classes/ChatMessage';
@@ -27,7 +28,7 @@ export type MessageReceiveHandle = {
 function Message() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
-  const { data: chatGroupsData } = useGetChatGroupsQuery(null);
+  const { data: chatGroupsData } = useGetPrivateChatGroupQuery();
   const { data: invitedChatGroupsData } = useGetInvitedChatGroupsQuery();
   const [pageState, setPageState] = useState<MessagePage>(MessagePage.AIChat);
   const conn = useAppSelector(selectConn);
