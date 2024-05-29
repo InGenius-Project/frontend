@@ -38,6 +38,7 @@ export default function Root() {
         SortBy: SearchSortBy.CreatedTime,
         OrderBy: SearchOrderBy.Desc,
         Query: keyword,
+        from: location,
       },
     });
   };

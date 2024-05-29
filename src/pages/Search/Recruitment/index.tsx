@@ -26,17 +26,7 @@ function SearchRecruitment() {
         <Divider />
         <Stack spacing={1}>
           {recruitmentData?.result && (
-            <InternRecruitmentItem
-              key={recruitmentData?.result.Id}
-              recruitment={recruitmentData?.result}
-              control={
-                (recruitmentData?.result?.Resumes || []).length === 0 ? (
-                  <ApplyButton recruitmentId={recruitmentId || ''} />
-                ) : (
-                  <Chip label="已應徵" />
-                )
-              }
-            />
+            <InternRecruitmentItem key={recruitmentData?.result.Id} recruitment={recruitmentData?.result} />
           )}
           {saftyReportData?.result && (
             <Paper sx={{ padding: 3 }}>

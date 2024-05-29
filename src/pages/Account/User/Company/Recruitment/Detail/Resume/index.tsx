@@ -1,6 +1,7 @@
 import AreaDisplayItem from '@/components/Area/AreaDisplayItem';
+import BackButton from '@/components/Button/BackButton';
 import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
-import { Paper, Stack } from '@mui/material';
+import { Box, Paper, Stack } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { NIL } from 'uuid';
 
@@ -12,6 +13,9 @@ function ApplyResume() {
 
   return (
     <Stack spacing={1}>
+      <Box>
+        <BackButton />
+      </Box>
       {resumeData?.result?.Areas?.map((area) => {
         return (
           <Paper sx={{ padding: 3 }} key={area.Id}>

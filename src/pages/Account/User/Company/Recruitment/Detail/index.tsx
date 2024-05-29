@@ -7,11 +7,12 @@ import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/search
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import StarIcon from '@mui/icons-material/Star';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, Chip, Container, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
+import { Box, Chip, Container, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NIL } from 'uuid';
+import ArticleIcon from '@mui/icons-material/Article';
 
 enum RelativeResumeTab {
   All,
@@ -21,6 +22,8 @@ enum RelativeResumeTab {
 
 function CompanyRecruitmentDetail() {
   const { recruitmentId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [analyzeApplyedResume] = useLazyAnalyzeApplyedResumeQuery();
 
@@ -121,7 +124,7 @@ function CompanyRecruitmentDetail() {
           >
             {resumes.length > 0 ? (
               resumes.map((r) => {
-                return <ManageProfileItem resume={r} />;
+                return <ManageProfileItem key={r.Id} resume={r} />;
               })
             ) : (
               <ManageProfileEmptyItem />
@@ -132,7 +135,27 @@ function CompanyRecruitmentDetail() {
         {tab === RelativeResumeTab.Applied && (
           <Stack spacing={1}>
             {relativeResumesData?.result && relativeResumesData.result.length > 0 ? (
-              <>{relativeResumesData?.result.map((r) => <ResumeItem key={r.Id} resume={r} />)}</>
+              <>
+                {relativeResumesData?.result.map((r) => (
+                  <ResumeItem
+                    key={r.Id}
+                    resume={r}
+                    control={
+                      <IconButton>
+                        <ArticleIcon
+                          onClick={() =>
+                            navigate(`Resume/${r.Id}`, {
+                              state: {
+                                from: location,
+                              },
+                            })
+                          }
+                        />
+                      </IconButton>
+                    }
+                  />
+                ))}
+              </>
             ) : (
               <ManageProfileEmptyItem />
             )}
@@ -143,7 +166,27 @@ function CompanyRecruitmentDetail() {
           <>
             <Stack direction="row" spacing={1}></Stack>
             {allRelativeResumesData?.result && allRelativeResumesData.result.length > 0 ? (
-              <>{allRelativeResumesData?.result.map((r) => <ResumeItem key={r.Id} resume={r} />)}</>
+              <>
+                {allRelativeResumesData?.result.map((r) => (
+                  <ResumeItem
+                    key={r.Id}
+                    resume={r}
+                    control={
+                      <IconButton>
+                        <ArticleIcon
+                          onClick={() =>
+                            navigate(`Resume/${r.Id}`, {
+                              state: {
+                                from: location,
+                              },
+                            })
+                          }
+                        />
+                      </IconButton>
+                    }
+                  />
+                ))}
+              </>
             ) : (
               <ManageProfileEmptyItem />
             )}

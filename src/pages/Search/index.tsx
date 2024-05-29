@@ -1,3 +1,4 @@
+import BackButton from '@/components/Button/BackButton';
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import RecruitmentSearchingItem from '@/components/Recruitment/RecruitmentSearchingItem';
@@ -59,6 +60,9 @@ function Search() {
   return (
     <Container sx={{ py: 1 }}>
       <Stack spacing={1}>
+        <Box>
+          <BackButton />
+        </Box>
         <TextField
           placeholder="Ask AI: 我想要找一個台北南港區的暑期實習..."
           fullWidth

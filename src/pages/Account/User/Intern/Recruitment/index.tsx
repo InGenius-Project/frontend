@@ -2,16 +2,17 @@ import ApplyButton from '@/components/Button/ApplyButton';
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetFavRecruitmentQuery } from '@/features/api/user/getFavRecruitments';
-import { Chip, Stack } from '@mui/material';
+import { Chip, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 function InternRecruitment() {
   const { data: recruitmentData, isLoading } = useGetFavRecruitmentQuery();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleClickRecruitmentSearch = () => {};
 
   return (
     <>
@@ -22,19 +23,12 @@ function InternRecruitment() {
             <InternRecruitmentItem
               key={r.Id}
               recruitment={r}
-              onClick={() => {
+              onClick={() =>
                 navigate(`/Search/Recruitment/${r.Id}`, {
                   state: {
                     from: location,
                   },
-                });
-              }}
-              control={
-                (r.Resumes || []).length === 0 ? (
-                  <ApplyButton recruitmentId={r.Id} />
-                ) : (
-                  <Chip label={`已應徵`} onClick={handleClickRecruitmentSearch} />
-                )
+                })
               }
             />
           ))

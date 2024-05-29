@@ -6,13 +6,14 @@ import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useAppSelector } from '@/features/store';
+import { IResumePost } from '@/types/interfaces/IResume';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Button, IconButton, MenuItem, Stack, Tooltip, useMediaQuery, useTheme } from '@mui/material';
+import { Button, IconButton, MenuItem, Stack, Switch, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -93,6 +94,16 @@ export default function Resume() {
                   </Stack>
                 ) : (
                   <Stack direction={'row'} spacing={1}>
+                    <Switch
+                      checked={r.Visibility}
+                      onChange={(e) =>
+                        postResume({
+                          ...r,
+                          Visibility: e.target.checked,
+                        })
+                      }
+                    />
+
                     <EditTooltipWrapper>
                       <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
                         <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
