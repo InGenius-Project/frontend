@@ -14,6 +14,8 @@ export default function getTimeDiffer(time: string): string {
     const year = timeFormat.getFullYear();
     const month = timeFormat.getMonth() + 1;
     const day = timeFormat.getDate();
-    return `${year}/${month}/${day}`;
+    const hour = timeFormat.getHours();
+    const min = timeFormat.getMinutes();
+    return `${year}/${month}/${day} ${hour}:${min}`;
   }
 }
