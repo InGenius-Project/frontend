@@ -1,7 +1,10 @@
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { IChatMessage } from '@/types/interfaces/IChat';
-import { Avatar, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
+import { initializeState } from '@/features/layout/layoutSlice';
+import RichTextEditor from '@/components/RichTextEditor';
+import UserAvatar from '@/components/UserAvatar';
 
 type CommunityMessageItemProps = {
   message: IChatMessage;
@@ -20,10 +23,12 @@ function CommunityMessageItem({ message }: CommunityMessageItemProps) {
         p: 1,
       }}
     >
-      <Avatar />
+      <Box>
+        <UserAvatar uri={message.Sender.Avatar?.Uri} alt={message.Sender.Username} size={'2em'} />
+      </Box>
       <Stack>
         <Typography variant="caption">{m.Sender.Username}</Typography>
-        <Typography variant="body1">{m.Message}</Typography>
+        <RichTextEditor initJsonString={m.Message} initMarkdownString={m.Message}></RichTextEditor>
       </Stack>
       <Typography variant="caption">{m.getTimeDiffer()}</Typography>
     </Stack>

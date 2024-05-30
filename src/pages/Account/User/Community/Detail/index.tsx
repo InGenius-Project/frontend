@@ -1,4 +1,5 @@
 import CommunityMessageItem from '@/components/Community/CommunityMessageItem';
+import RichTextEditor from '@/components/RichTextEditor';
 import UserAvatar, { OwnerAvatar } from '@/components/UserAvatar';
 import { useGetChatGroupQuery } from '@/features/api/chat/getChatGroup';
 import { selectConn } from '@/features/message/messageSlice';
@@ -81,8 +82,11 @@ function CommunityDetail() {
         }}
       >
         <Stack spacing={1}>
+          {/* Title */}
           <Typography variant="h4">{chatGroupData?.result?.GroupName || '沒有標題'}</Typography>
+          {/* Description */}
           <Typography variant="h6">{chatGroupData?.result?.Description}</Typography>
+          {/* Owner Info */}
           <Stack
             direction={'row'}
             spacing={1}
@@ -104,7 +108,16 @@ function CommunityDetail() {
             <Typography variant="body1">{chatGroupData?.result?.Owner?.Username}</Typography>
             <Typography variant="caption">{firstMessage?.getTimeDiffer()}</Typography>
           </Stack>
-          <Typography variant="body1">{firstMessage?.Message || '此貼文沒有內容'}</Typography>
+          {/* Content */}
+          {firstMessage?.Message ? (
+            <RichTextEditor
+              initJsonString={firstMessage?.Message}
+              initMarkdownString={firstMessage?.Message}
+            ></RichTextEditor>
+          ) : (
+            <Typography variant="body1">此貼文沒有內容</Typography>
+          )}
+          {/* Apply Count */}
           <Typography variant="caption">{(chatGroupData?.result?.Messages || []).length - 1 || 0}則回覆</Typography>
         </Stack>
       </Paper>
@@ -124,29 +137,30 @@ function CommunityDetail() {
               </Button>
             </Box>
 
-            <TextField
-              placeholder="輸入留言..."
-              value={input}
-              fullWidth
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSend();
-                }
+            <Stack
+              direction={'row'}
+              sx={{
+                p: 1,
               }}
-              InputProps={{
-                startAdornment: (
-                  <Box sx={{ width: '1.5em', height: '1.5em', mr: 1 }}>
-                    <OwnerAvatar />
-                  </Box>
-                ),
-                endAdornment: (
-                  <IconButton onClick={handleSend}>
-                    <Send />
-                  </IconButton>
-                ),
-              }}
-            />
+            >
+              <Box sx={{ width: '2em', height: '2em', mr: 1 }}>
+                <OwnerAvatar />
+              </Box>
+              <TextField
+                placeholder="輸入留言..."
+                value={input}
+                fullWidth
+                multiline
+                onChange={(e) => setInput(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={handleSend}>
+                      <Send />
+                    </IconButton>
+                  ),
+                }}
+              />
+            </Stack>
             {messageState?.map((message) => <CommunityMessageItem message={message} key={message.Id} />)}
           </Stack>
         </Paper>
