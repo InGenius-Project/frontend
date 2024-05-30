@@ -5,6 +5,7 @@ import MessageChannelEmptyItem from '@/components/Message/MessageChannelEmptyIte
 import MessageModel from '@/components/Message/MessageModel';
 import { useGetChatGroupsQuery } from '@/features/api/chat/getChatGroups';
 import { useGetInvitedChatGroupsQuery } from '@/features/api/chat/getInvitedChatGroups';
+import { useGetPrivateChatGroupQuery } from '@/features/api/chat/getPrivateChatGroups';
 import { selectConn, setGroupId } from '@/features/message/messageSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store';
 import { ChatMessage } from '@/types/classes/ChatMessage';
@@ -27,7 +28,7 @@ export type MessageReceiveHandle = {
 function Message() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
-  const { data: chatGroupsData } = useGetChatGroupsQuery(null);
+  const { data: chatGroupsData } = useGetPrivateChatGroupQuery();
   const { data: invitedChatGroupsData } = useGetInvitedChatGroupsQuery();
   const [pageState, setPageState] = useState<MessagePage>(MessagePage.AIChat);
   const conn = useAppSelector(selectConn);
@@ -41,7 +42,7 @@ function Message() {
     dispatch(setGroupId('ai'));
   }, [dispatch]);
 
-  // connect to chat server
+  // subscribe chat event
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -80,7 +81,7 @@ function Message() {
           width: '100%',
         }}
       >
-        {/* leftside panel */}
+        {/* Left panel */}
         <Stack
           sx={{
             py: !isMobile ? 2 : 1,
@@ -89,6 +90,7 @@ function Message() {
           }}
           spacing={1}
         >
+          {/* Left Header */}
           <Stack
             direction={'row'}
             sx={{
@@ -120,7 +122,7 @@ function Message() {
           >
             {(pageState === MessagePage.ChatGroups || pageState === MessagePage.AIChat) && (
               <>
-                {/* AI Channer */}
+                {/* AI Channel */}
                 <MessageChannelItem
                   avatar={
                     <Logo
@@ -142,6 +144,8 @@ function Message() {
                     CreateTime: '',
                   }}
                 />
+
+                {/* Normal Channel */}
                 {(chatGroupsData?.result || []).length > 0 ? (
                   chatGroupsData?.result?.map((c, index) => {
                     return (
@@ -163,6 +167,7 @@ function Message() {
               </>
             )}
 
+            {/* Invited Channel */}
             {pageState === MessagePage.InvitedChatGroups && (
               <>
                 {invitedChatGroupsData?.result?.map((c) => {

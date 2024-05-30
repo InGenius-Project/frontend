@@ -1,16 +1,14 @@
+import getTimeDiffer from '@/assets/utils/getTimeDiffer';
 import RichTextEditor from '@/components/RichTextEditor';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 interface MessageItemProps {
   align?: 'left' | 'right';
   label: string;
   avatar?: React.ReactNode;
-  time?: Date;
+  time?: string;
 }
-
-const timeZone = import.meta.env.VITE_APP_TIMEZONE;
 
 function MessageItem({ align = 'left', label, avatar, time }: MessageItemProps) {
   const theme = useTheme();
@@ -63,16 +61,7 @@ function MessageItem({ align = 'left', label, avatar, time }: MessageItemProps) 
         }}
         color={align === 'left' ? 'default' : 'primary'}
       />
-      <Typography variant={'caption'}>
-        {time
-          ? time.toLocaleString('zh-TW', {
-              timeZone: timeZone,
-              hourCycle: 'h24',
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          : ''}
-      </Typography>
+      <Typography variant={'caption'}>{time ? getTimeDiffer(time) : ''}</Typography>
     </Box>
   );
 }

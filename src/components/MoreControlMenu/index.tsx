@@ -7,6 +7,7 @@ function MoreControlMenu({ children }: React.PropsWithChildren) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openControl = Boolean(anchorEl);
   const handleOpenControl = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   const handleCloseControl = () => {

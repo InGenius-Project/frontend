@@ -1,3 +1,4 @@
+import ApplyButton from '@/components/Button/ApplyButton';
 import MoreControlMenu from '@/components/MoreControlMenu';
 import UserAvatar from '@/components/UserAvatar';
 import { useGetRecruitmentAreaByAreaTypeQuery } from '@/features/api/area/getRecruimentAreaByAreaType';
@@ -8,7 +9,7 @@ import { IRecruitment } from '@/types/interfaces/IRecruitment';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import TagIcon from '@mui/icons-material/Tag';
-import { Box, Chip, Link, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, Link, MenuItem, Skeleton, Stack, TextField, useMediaQuery, useTheme } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { useUpdateEffect } from 'ahooks';
@@ -128,6 +129,8 @@ type InternRecruitmentItemProps = {
 
 export function InternRecruitmentItem({ editable, recruitment, onClick, control }: InternRecruitmentItemProps) {
   const [checked, setChecked] = useState(recruitment.IsUserFav || false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const [removeFavRecruitment] = useRemoveFavRecruitmentMutation();
   const [addFavRecruitment] = useAddFavRecruitmentMutation();
@@ -150,8 +153,33 @@ export function InternRecruitmentItem({ editable, recruitment, onClick, control 
         recruitment={recruitment}
         editable={editable}
         control={
-          <Stack spacing={1} direction={'row'} onClick={(e) => e.stopPropagation()}>
-            <Checkbox icon={<FavoriteBorder />} checked={checked} checkedIcon={<Favorite />} onChange={handleChange} />
+          <Stack spacing={1} direction={isMobile ? 'column' : 'row'}>
+            {isMobile ? (
+              <MenuItem onClick={(e) => e.stopPropagation()}>
+                <Checkbox
+                  checked={checked}
+                  disableRipple
+                  disableTouchRipple
+                  onChange={handleChange}
+                  icon={<Typography>收藏</Typography>}
+                  checkedIcon={<Typography>取消收藏</Typography>}
+                />
+              </MenuItem>
+            ) : (
+              <Checkbox
+                icon={<FavoriteBorder />}
+                checkedIcon={<Favorite />}
+                checked={checked}
+                onChange={handleChange}
+                onClick={(e) => e.stopPropagation()}
+              ></Checkbox>
+            )}
+
+            {(recruitment.Resumes || []).length === 0 ? (
+              <ApplyButton recruitmentId={recruitment.Id || ''} />
+            ) : (
+              !isMobile && <Chip label="已應徵" />
+            )}
             {control}
           </Stack>
         }

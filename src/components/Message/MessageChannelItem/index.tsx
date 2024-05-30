@@ -44,7 +44,7 @@ const MessageChannelItem = forwardRef<MessageReceiveHandle, MessageChannelItemPr
         );
       }
 
-      const firstUser = chatGroupInfo?.Users.filter((user) => user.Id === userData?.result?.Id)[0];
+      const firstUser = chatGroupInfo?.Users.filter((user) => user.Id !== userData?.result?.Id)[0] || userData?.result;
       return (
         <Box
           sx={{

@@ -6,7 +6,7 @@ import { useAppSelector } from '@/features/store';
 import { MessageReceiveHandle } from '@/pages/Account/User/Message';
 import { ChatMessage } from '@/types/classes/ChatMessage';
 import { IChatMessage } from '@/types/interfaces/IChat';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, Stack, Typography } from '@mui/material';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { NIL } from 'uuid';
 import MessageEmpty from '../MessageEmpty';
@@ -83,11 +83,11 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
                 label={message.Message}
                 avatar={<UserAvatar uri={message.Sender?.Avatar?.Uri} alt={message.Sender.Username} />}
                 align={message.SenderId === userData?.result?.Id ? 'right' : 'left'}
-                time={new Date(new ChatMessage(message).SendTime)}
+                time={message.SendTime}
               />
             ))
           ) : (
-            <MessageEmpty label={chatGroupData?.result?.GroupName} />
+            <MessageEmpty />
           )}
         </Stack>
       ) : (
@@ -98,7 +98,8 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
             alignItems: 'center',
           }}
         >
-          <Typography variant={'body1'}>Connecting...</Typography>
+          <CircularProgress />
+          <Typography variant={'body1'}>連線中...</Typography>
         </Box>
       )}
       <MessageModelInput onSend={handleSend} />

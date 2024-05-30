@@ -53,6 +53,9 @@ export default function Header() {
     setRole((e.target as any).value);
     const loginData = UserRoleLoginData.find((u) => u.Id === e.target.value);
 
+    dispatch(logout()); // initial state
+    dispatch(baseApi.util.resetApiState()); // reset api state
+
     login({
       email: loginData?.Email || '',
       password: loginData?.password || '',
@@ -61,7 +64,10 @@ export default function Header() {
 
   const handleLogout = () => {
     setNavAnchorEl(null);
+
     dispatch(logout()); // initial state
+
+    dispatch(baseApi.util.resetApiState()); // reset api state
   };
 
   const handleNavigate = (value: string) => {

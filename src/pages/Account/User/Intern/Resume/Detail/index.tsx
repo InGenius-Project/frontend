@@ -8,7 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Chip, Container, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NIL } from 'uuid';
 
 enum RecruitmentTab {
@@ -55,14 +55,16 @@ function InternResumeDetail() {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (location.state.from.pathname === '/Account/User/Intern/Resume') {
+    if (location.state?.from?.pathname === '/Account/User/Intern/Resume') {
       setValue(RecruitmentTab.Other);
     }
-  }, [location.state.from.pathname]);
+  }, [location.state?.from?.pathname]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: RecruitmentTab) => {
     setValue(newValue);
   };
+
+  const navigate = useNavigate();
 
   return (
     <Container>
@@ -106,14 +108,40 @@ function InternResumeDetail() {
         {value === 0 && (
           <Stack spacing={1}>
             {(resumeData?.result?.Recruitments || []).length > 0 &&
-              resumeData?.result?.Recruitments?.map((r) => <InternRecruitmentItem key={r.Id} recruitment={r} />)}
+              resumeData?.result?.Recruitments?.map((r) => (
+                <InternRecruitmentItem
+                  key={r.Id}
+                  recruitment={r}
+                  onClick={() => {
+                    navigate(`/Search/Recruitment/${r.Id}`, {
+                      state: {
+                        from: location,
+                      },
+                    });
+                  }}
+                />
+              ))}
           </Stack>
         )}
 
         {value === 1 && (
           <Stack spacing={1}>
             {relativeRecruitmentData?.result && relativeRecruitmentData.result.length > 0 ? (
-              <>{relativeRecruitmentData?.result.map((r) => <InternRecruitmentItem key={r.Id} recruitment={r} />)}</>
+              <>
+                {relativeRecruitmentData?.result.map((r) => (
+                  <InternRecruitmentItem
+                    key={r.Id}
+                    recruitment={r}
+                    onClick={() => {
+                      navigate(`/Search/Recruitment/${r.Id}`, {
+                        state: {
+                          from: location,
+                        },
+                      });
+                    }}
+                  />
+                ))}
+              </>
             ) : (
               <RecruitmentEmpty />
             )}

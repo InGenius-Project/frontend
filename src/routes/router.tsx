@@ -35,6 +35,7 @@ import InternalUserRoute from './InternalUserRoute';
 import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
+import CompanyUserRoute from './CompanyUserRoute';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -95,7 +96,7 @@ export const routes = (
             </Route>
           </Route>
 
-          <Route path="Company">
+          <Route path="Company" element={<CompanyUserRoute />}>
             <Route
               path="Recruitment"
               handle={{

@@ -5,7 +5,7 @@ import BackButton from '@/components/Button/BackButton';
 import { InternRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useGetSaftyReportQuery } from '@/features/api/recruitment/getSaftyReport';
-import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Chip, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 function SearchRecruitment() {
@@ -26,11 +26,7 @@ function SearchRecruitment() {
         <Divider />
         <Stack spacing={1}>
           {recruitmentData?.result && (
-            <InternRecruitmentItem
-              key={recruitmentData?.result.Id}
-              recruitment={recruitmentData?.result}
-              control={<ApplyButton recruitmentId={recruitmentId || ''} />}
-            />
+            <InternRecruitmentItem key={recruitmentData?.result.Id} recruitment={recruitmentData?.result} />
           )}
           {saftyReportData?.result && (
             <Paper sx={{ padding: 3 }}>

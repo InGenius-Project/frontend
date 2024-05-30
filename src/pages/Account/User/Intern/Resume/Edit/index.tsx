@@ -1,5 +1,6 @@
 import AreaEditor from '@/components/Area/AreaEditor';
 import { ResumeItem } from '@/components/Resume';
+import { DeleteTooltipWrapper } from '@/components/Tooltip';
 import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
 import { useGetResumeByIdQuery } from '@/features/api/resume/getResumeById';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
@@ -86,9 +87,11 @@ export default function ResumeEdit() {
               </>
             ) : (
               <Stack direction={'row'}>
-                <IconButton onClick={handleClickDelete}>
-                  <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
-                </IconButton>
+                <DeleteTooltipWrapper>
+                  <IconButton onClick={handleClickDelete}>
+                    <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
+                  </IconButton>
+                </DeleteTooltipWrapper>
               </Stack>
             )
           }

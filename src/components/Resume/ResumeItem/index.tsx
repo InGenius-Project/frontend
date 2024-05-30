@@ -57,7 +57,11 @@ const ResumeItem = ({ resume, onChangeTitle, editable = false, control, onClick 
               <Typography variant="caption" component={'span'}>
                 相關標籤:
               </Typography>
-              {resume.Keywords?.slice(0, 4).map((k) => <Chip label={k.Id} icon={<Tag />} />)}
+              {(resume.Keywords || []).length > 0 ? (
+                resume.Keywords?.slice(0, 4).map((k) => <Chip label={k.Id} icon={<Tag />} />)
+              ) : (
+                <Chip label="此履歷尚未曝光，暫無標籤" />
+              )}
             </Stack>
             {/* <Typography variant="caption">上次編輯時間: {getTimeDiffer(resume.ModifiedAt) || '?'}</Typography> */}
           </Stack>

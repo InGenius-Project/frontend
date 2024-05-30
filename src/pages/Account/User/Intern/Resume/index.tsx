@@ -1,18 +1,19 @@
 import FullScreenLoader from '@/components/FullScreenLoader';
 import { ResumeItem } from '@/components/Resume';
 import ResumeEmpty from '@/components/Resume/ResumeEmpty';
+import { DeleteTooltipWrapper, EditTooltipWrapper } from '@/components/Tooltip';
 import { useDeleteResumeMutation } from '@/features/api/resume/deleteResume';
 import { useGetResumesQuery } from '@/features/api/resume/getResumes';
 import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import { useAppSelector } from '@/features/store';
+import { IResumePost } from '@/types/interfaces/IResume';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import Mail from '@mui/icons-material/Mail';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Badge, Button, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Button, IconButton, MenuItem, Stack, Switch, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -93,25 +94,41 @@ export default function Resume() {
                   </Stack>
                 ) : (
                   <Stack direction={'row'} spacing={1}>
-                    <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
-                      <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
-                    </IconButton>
-
-                    <IconButton onClick={() => handleDeleteClick(r.Id)}>
-                      <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
-                    </IconButton>
-
-                    <IconButton
-                      onClick={() =>
-                        navigate(`Detail/${r.Id}`, {
-                          state: {
-                            from: location,
-                          },
+                    <Switch
+                      checked={r.Visibility}
+                      onChange={(e) =>
+                        postResume({
+                          ...r,
+                          Visibility: e.target.checked,
                         })
                       }
-                    >
-                      <AutoAwesome />
-                    </IconButton>
+                    />
+
+                    <EditTooltipWrapper>
+                      <IconButton onClick={() => navigate(`Edit/${r.Id}`)}>
+                        <ModeEditOutlineOutlinedIcon></ModeEditOutlineOutlinedIcon>
+                      </IconButton>
+                    </EditTooltipWrapper>
+
+                    <DeleteTooltipWrapper>
+                      <IconButton onClick={() => handleDeleteClick(r.Id)}>
+                        <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
+                      </IconButton>
+                    </DeleteTooltipWrapper>
+
+                    <Tooltip title="履歷分析">
+                      <IconButton
+                        onClick={() =>
+                          navigate(`Detail/${r.Id}`, {
+                            state: {
+                              from: location,
+                            },
+                          })
+                        }
+                      >
+                        <AutoAwesome />
+                      </IconButton>
+                    </Tooltip>
                   </Stack>
                 )
               }

@@ -1,8 +1,9 @@
+import { AddTooltipWrapper, DeleteTooltipWrapper } from '@/components/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Box, Checkbox, CircularProgress, IconButton, Stack, useTheme } from '@mui/material';
+import { Box, Checkbox, CircularProgress, IconButton, Stack, Tooltip, useTheme } from '@mui/material';
 import { motion, useAnimate } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
@@ -68,31 +69,42 @@ const AreaControl = ({
       >
         {/* Adding Button */}
         <Box>
-          <IconButton disabled={disabled} size="small" onClick={onAddClick} onMouseDown={(e) => e.preventDefault()}>
-            {isLoadingAdd ? <CircularProgress size={20} /> : <AddIcon />}
-          </IconButton>
+          <AddTooltipWrapper>
+            <IconButton disabled={disabled} size="small" onClick={onAddClick} onMouseDown={(e) => e.preventDefault()}>
+              {isLoadingAdd ? <CircularProgress size={20} /> : <AddIcon />}
+            </IconButton>
+          </AddTooltipWrapper>
         </Box>
 
         {/* Visibility Button */}
         {isLoadingVisibility ? (
           <CircularProgress size={20} />
         ) : (
-          <Checkbox
-            icon={<VisibilityIcon />}
-            disabled={disabled}
-            checkedIcon={<VisibilityOffIcon />}
-            size="small"
-            checked={!visibledCheckState}
-            onChange={onVisibilityChange}
-            onMouseDown={(e) => e.preventDefault()}
-          />
+          <Tooltip title={disabled ? '公開' : '隱藏'}>
+            <Checkbox
+              icon={<VisibilityIcon />}
+              disabled={disabled}
+              checkedIcon={<VisibilityOffIcon />}
+              size="small"
+              checked={!visibledCheckState}
+              onChange={onVisibilityChange}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </Tooltip>
         )}
 
         {/* Delete Button */}
         <Box>
-          <IconButton size="small" disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onDeleteClick}>
-            {isLoadingDelete ? <CircularProgress size={20} /> : <DeleteIcon />}
-          </IconButton>
+          <DeleteTooltipWrapper>
+            <IconButton
+              size="small"
+              disabled={disabled}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={onDeleteClick}
+            >
+              {isLoadingDelete ? <CircularProgress size={20} /> : <DeleteIcon />}
+            </IconButton>
+          </DeleteTooltipWrapper>
         </Box>
       </Stack>
     </motion.div>
