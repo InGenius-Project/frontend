@@ -7,7 +7,7 @@ import { IChatGroupInfo } from '@/types/interfaces/IChat';
 import { Box, CircularProgress, CssBaseline, Typography, useTheme } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../components/Header';
@@ -35,6 +35,12 @@ export default function MainRoute() {
   const { isLoading, isFetching } = getUserApi.endpoints.getUser.useQuery(undefined, {
     skip: false,
   });
+
+  // Scroll to top when route changes
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const loading = isLoading || isFetching;
 
