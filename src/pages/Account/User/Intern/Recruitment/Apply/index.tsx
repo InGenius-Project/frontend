@@ -134,14 +134,16 @@ function InternApply() {
           }}
         >
           {resumesData && resumesData.result && resumesData.result.length > 0 ? (
-            resumesData.result.map((resume) => (
-              <ResumeItem
-                resume={resume}
-                key={resume.Id}
-                control={<Checkbox checked={checkedResumeId === resume.Id} />}
-                onClick={() => setCheckedResumeId(resume.Id)}
-              ></ResumeItem>
-            ))
+            resumesData.result
+              .filter((r) => r.Visibility === true)
+              .map((resume) => (
+                <ResumeItem
+                  resume={resume}
+                  key={resume.Id}
+                  control={<Checkbox checked={checkedResumeId === resume.Id} />}
+                  onClick={() => setCheckedResumeId(resume.Id)}
+                ></ResumeItem>
+              ))
           ) : (
             <SkeletonResumeItem />
           )}

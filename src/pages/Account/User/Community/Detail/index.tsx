@@ -2,6 +2,8 @@ import CommunityMessageItem from '@/components/Community/CommunityMessageItem';
 import RichTextEditor from '@/components/RichTextEditor';
 import UserAvatar, { OwnerAvatar } from '@/components/UserAvatar';
 import { useGetChatGroupQuery } from '@/features/api/chat/getChatGroup';
+import { useJoinGroupMutation } from '@/features/api/chat/joinGroup';
+import { useGetUserQuery } from '@/features/api/user/getUser';
 import { selectConn } from '@/features/message/messageSlice';
 import { useAppSelector } from '@/features/store';
 import { ChatMessage } from '@/types/classes/ChatMessage';
@@ -19,6 +21,9 @@ function CommunityDetail() {
   const groupId = useAppSelector((state) => state.messageState.groupId);
   const [input, setInput] = useState('');
   const [order, setOrder] = useState(false);
+  const { data: userData } = useGetUserQuery();
+  const [joinGroup] = useJoinGroupMutation();
+
   const { data: chatGroupData, refetch } = useGetChatGroupQuery(
     { groupId: groupId || NIL },
     {
@@ -62,8 +67,14 @@ function CommunityDetail() {
     firstRender.current = false;
   }, [conn]);
 
-  const handleSend = () => {
-    if (!input || input.trim() === '') return;
+  const handleSend = async () => {
+    if (!input || input.trim() === '' || !groupId) return;
+
+    // join group if user not in group
+    if (!chatGroupData?.result?.Users?.find((user) => user.Id === userData?.result?.Id)) {
+      await joinGroup({ groupId });
+    }
+
     setInput('');
     conn.invoke('SendMessageToGroup', input, groupId);
     refetch(); // TODO: remove this
