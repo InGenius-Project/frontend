@@ -1,18 +1,40 @@
 import ManageProfileEmptyItem from '@/components/ProfileItem/ManageProfileEmptyItem';
-import ManageProfileItem from '@/components/ProfileItem/ManageProfileItem';
+import RecruitmentDetailTableRow, {
+  RecruitmentDetailRelativeTableEmptyRow,
+  RecruitmentDetailRelativeTableRow,
+  RecruitmentDetailTableEmptyRow,
+} from '@/components/Recruitment/RecruitmentDetailTableRow';
 import { ResumeItem } from '@/components/Resume';
 import { useLazyAnalyzeApplyedResumeQuery } from '@/features/api/recruitment/analyzeApplyedResume';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/searchRelativeResume';
+import ArticleIcon from '@mui/icons-material/Article';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import StarIcon from '@mui/icons-material/Star';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, Chip, Container, IconButton, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Container,
+  IconButton,
+  Paper,
+  Stack,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tabs,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
-import { useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NIL } from 'uuid';
-import ArticleIcon from '@mui/icons-material/Article';
 
 enum RelativeResumeTab {
   All,
@@ -22,8 +44,7 @@ enum RelativeResumeTab {
 
 function CompanyRecruitmentDetail() {
   const { recruitmentId } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [analyzeApplyedResume] = useLazyAnalyzeApplyedResumeQuery();
 
@@ -57,6 +78,17 @@ function CompanyRecruitmentDetail() {
     },
   );
   const confirm = useConfirm();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === RelativeResumeTab.All.toString()) {
+      setTab(RelativeResumeTab.All);
+    } else if (tab === RelativeResumeTab.Relative.toString()) {
+      setTab(RelativeResumeTab.Relative);
+    } else {
+      setTab(RelativeResumeTab.Applied);
+    }
+  }, [searchParams]);
 
   const relativeResumes = useMemo(() => {
     return relativeResumesData?.result || [];
@@ -102,6 +134,7 @@ function CompanyRecruitmentDetail() {
         <Tabs
           value={tab}
           onChange={(event, value) => {
+            setSearchParams({ tab: value.toString() });
             setTab(value);
           }}
         >
@@ -116,81 +149,93 @@ function CompanyRecruitmentDetail() {
         </Tabs>
 
         {tab === RelativeResumeTab.All && (
-          <Stack
-            spacing={1}
+          <TableContainer
+            component={Paper}
             sx={{
               width: '100%',
             }}
           >
-            {resumes.length > 0 ? (
-              resumes.map((r) => {
-                return <ManageProfileItem key={r.Id} resume={r} />;
-              })
-            ) : (
-              <ManageProfileEmptyItem />
-            )}
-          </Stack>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>使用者</TableCell>
+                  <TableCell>應徵履歷</TableCell>
+                  <TableCell align="right">應徵時間</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {resumes.length > 0 ? (
+                  resumes.map((r) => {
+                    return <RecruitmentDetailTableRow key={r.Id} resume={r} />;
+                  })
+                ) : (
+                  <RecruitmentDetailTableEmptyRow />
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
         {tab === RelativeResumeTab.Applied && (
-          <Stack spacing={1}>
-            {relativeResumesData?.result && relativeResumesData.result.length > 0 ? (
-              <>
-                {relativeResumesData?.result.map((r) => (
-                  <ResumeItem
-                    key={r.Id}
-                    resume={r}
-                    control={
-                      <IconButton>
-                        <ArticleIcon
-                          onClick={() =>
-                            navigate(`Resume/${r.Id}`, {
-                              state: {
-                                from: location,
-                              },
-                            })
-                          }
-                        />
-                      </IconButton>
-                    }
-                  />
-                ))}
-              </>
-            ) : (
-              <ManageProfileEmptyItem />
-            )}
-          </Stack>
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: '100%',
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>使用者</TableCell>
+                  <TableCell>應徵履歷</TableCell>
+                  <TableCell>相關標籤</TableCell>
+                  <TableCell align="right">應徵時間</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {relativeResumesData?.result && relativeResumesData.result.length > 0 ? (
+                  <>
+                    {relativeResumesData?.result.map((r) => (
+                      <RecruitmentDetailRelativeTableRow key={r.Id} resume={r} />
+                    ))}
+                  </>
+                ) : (
+                  <RecruitmentDetailRelativeTableEmptyRow />
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
         {tab === RelativeResumeTab.Relative && (
-          <>
-            <Stack direction="row" spacing={1}></Stack>
-            {allRelativeResumesData?.result && allRelativeResumesData.result.length > 0 ? (
-              <>
-                {allRelativeResumesData?.result.map((r) => (
-                  <ResumeItem
-                    key={r.Id}
-                    resume={r}
-                    control={
-                      <IconButton>
-                        <ArticleIcon
-                          onClick={() =>
-                            navigate(`Resume/${r.Id}`, {
-                              state: {
-                                from: location,
-                              },
-                            })
-                          }
-                        />
-                      </IconButton>
-                    }
-                  />
-                ))}
-              </>
-            ) : (
-              <ManageProfileEmptyItem />
-            )}
-          </>
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: '100%',
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>使用者</TableCell>
+                  <TableCell>應徵履歷</TableCell>
+                  <TableCell>相關標籤</TableCell>
+                  <TableCell align="right">應徵時間</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allRelativeResumesData?.result && allRelativeResumesData.result.length > 0 ? (
+                  <>
+                    {allRelativeResumesData?.result.map((r) => (
+                      <RecruitmentDetailRelativeTableRow key={r.Id} resume={r} />
+                    ))}
+                  </>
+                ) : (
+                  <RecruitmentDetailRelativeTableEmptyRow />
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
       </Stack>
     </Container>
