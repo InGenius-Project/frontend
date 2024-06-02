@@ -47,6 +47,9 @@ import AreaDisplayItem from '../AreaDisplayItem';
 import AreaEditItem from '../AreaEditItem';
 import AreaLayoutItem from '../AreaLayoutItem';
 import AreaNewItem from '../AreaNewItem';
+import { getUserApi } from '@/features/api/user/getUser';
+import { getResumeByIdApi } from '@/features/api/resume/getResumeById';
+import { getRecruitmentByIdApi } from '@/features/api/recruitment/getRecruitmentById';
 
 export type AreaItemProps = {
   area: IArea;
@@ -165,7 +168,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
           if (res.data.result) {
             switch (layoutType) {
               case LayoutType.List:
-                postListLayout({
+                await postListLayout({
                   AreaId: res.data.result.Id,
                   Items: updateArea.ListLayout?.Items?.map((i) => ({
                     Id: i.Id,
@@ -175,13 +178,13 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
                 });
                 break;
               case LayoutType.Text:
-                postTextLayout({
+                await postTextLayout({
                   AreaId: res.data.result.Id,
                   Content: updateArea.TextLayout?.Content || '',
                 });
                 break;
               case LayoutType.KeyValueList:
-                postKeyValueListLayout({
+                await postKeyValueListLayout({
                   AreaId: res.data.result.Id,
                   Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
                     Id: i.Id,
@@ -193,7 +196,7 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
               case LayoutType.ImageText:
                 let blob = await fetch(updateArea.ImageTextLayout?.Image?.Uri || '').then((r) => r.blob());
 
-                postImageTextLayout({
+                await postImageTextLayout({
                   AreaId: res.data.result.Id,
                   Uri: updateArea.ImageTextLayout?.Image?.Uri,
                   Image: blob,
@@ -206,6 +209,11 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
           }
         })
         .then(() => {
+          // TODO: fix this with proper way
+          dispatch(getUserApi.util.resetApiState());
+          dispatch(getResumeByIdApi.util.resetApiState());
+          dispatch(getRecruitmentByIdApi.util.resetApiState());
+
           dispatch(initializeState());
         });
     }, [layoutType, postArea, postListLayout, postTextLayout, postKeyValueListLayout, postImageTextLayout, dispatch]);
