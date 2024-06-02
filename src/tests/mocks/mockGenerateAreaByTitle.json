@@ -1,0 +1,60 @@
+{
+  "statusCode": 200,
+  "message": "POST Request successful.",
+  "isError": false,
+  "result": [
+      {
+          "Id": "52bfeaaa-eeac-4cbc-e4a4-08dc6d7351db",
+          "Sequence": 0,
+          "IsDisplayed": true,
+          "Title": "技能",
+          "LayoutType": 2,
+          "AreaTypeId": 1,
+          "AreaType": {
+              "Id": 1,
+              "Name": "技能",
+              "Value": "skill",
+              "Description": "編輯技能",
+              "UserRole": [
+                  0
+              ],
+              "LayoutType": 2,
+              "ListTagTypes": []
+          },
+          "TextLayout": null,
+          "ImageTextLayout": null,
+          "ListLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Items": [
+                  {
+                      "Id": "7762ff42-7630-4b9e-0544-08dc6d1e84b0",
+                      "Name": "JavaScript",
+                      "TagTypeId": 2,
+                      "Type": {
+                          "Id": 2,
+                          "Name": "技能",
+                          "Value": "skill",
+                          "Color": "#123"
+                      }
+                  },
+                  {
+                      "Id": "13e5a827-d41a-4cd0-3693-08dc6d736729",
+                      "Name": "React",
+                      "TagTypeId": 1,
+                      "Type": {
+                          "Id": 1,
+                          "Name": "自定義",
+                          "Value": "custom",
+                          "Color": "#ffffff"
+                      }
+                  }
+              ]
+          },
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": "6f7cc751-6e7c-4c7c-8b9b-08dc6d0c7a57"
+      }
+      
+  ]
+}

@@ -10,7 +10,6 @@ import { useGenerateAreaMutation } from '@/features/api/area/generateArea';
 import { useGenerateAreaByTitleMutation } from '@/features/api/area/generateAreaByTitle';
 import { usePushEmptyAreasContainerMutation } from '@/features/api/area/postGenerateAreasRes';
 import { usePostKeyValueListLayoutMutation } from '@/features/api/area/postKeyValueListLayout';
-import { usePostResumeMutation } from '@/features/api/resume/postResume';
 import {
   Title,
   selectGenerateArea,
@@ -29,8 +28,7 @@ import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, MenuItem, Paper, Select, Stack, TextField, Typography, styled, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { resolve } from 'node:path/win32';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NIL, v4 as uuid } from 'uuid';
 
@@ -77,7 +75,7 @@ const PromptButton = ({ label, onClick }: PromptButtonProps) => {
 };
 
 function AreaGenerateaModal() {
-  const [generateArea, { data: generateAreaTitles, isLoading: isGeneratingAreaTitle }] = useGenerateAreaMutation();
+  const [generateArea, { isLoading: isGeneratingAreaTitle }] = useGenerateAreaMutation();
   const [generateAreaByTitle, { isLoading: isGeneratingArea }] = useGenerateAreaByTitleMutation();
   const { prompt, areaCount, titles, type } = useAppSelector((state) => state.generateState);
   const typeLabel = useAppSelector(selectGenerateTypeLabel);
@@ -87,13 +85,8 @@ function AreaGenerateaModal() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { User } = useAppSelector((state) => state.userState);
-  const handleClickPromptButton = (label: string | undefined) => {
-    dispatch(setPrompt(label || ''));
-  };
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const [postResume] = usePostResumeMutation();
   const [postTextLayout] = usePostTextLayoutMutation();
   const [postImageTextLayout] = usePostImageTextLayoutMutation();
   const [postListLayout] = usePostListLayoutMutation();
@@ -167,19 +160,7 @@ function AreaGenerateaModal() {
                       a.TextLayout &&
                         areaRes.result?.Id &&
                         postTextLayout({
-                          ...a.TextLayout,
-                          AreaId: areaRes.result?.Id,
-                        });
-                      break;
-                    case LayoutType.List:
-                      a.ListLayout &&
-                        areaRes.result?.Id &&
-                        postListLayout({
-                          ...a.ListLayout?.Items?.map((i) => ({
-                            Id: i.Id,
-                            Name: i.Name,
-                            TaTypeId: i.Type.Id,
-                          })),
+                          Content: a.TextLayout.Content,
                           AreaId: areaRes.result?.Id,
                         });
                       break;
@@ -189,13 +170,26 @@ function AreaGenerateaModal() {
                       a.ImageTextLayout &&
                         areaRes.result?.Id &&
                         postImageTextLayout({
+                          AreaId: areaRes.result?.Id,
+                          Uri: a.ImageTextLayout.Image?.Uri,
+                          Image: blob,
                           AltContent: a.ImageTextLayout.Image?.AltContent || 'Untitled',
                           TextContent: a.ImageTextLayout.TextContent,
-                          Image: blob,
-                          Uri: a.ImageTextLayout.Image?.Uri,
-                          AreaId: areaRes.result?.Id,
                         });
                       break;
+                    case LayoutType.List:
+                      a.ListLayout &&
+                        areaRes.result?.Id &&
+                        postListLayout({
+                          AreaId: areaRes.result?.Id,
+                          Items: a.ListLayout?.Items?.map((i) => ({
+                            Id: i.Id,
+                            Name: i.Name,
+                            TagTypeId: i.Type.Id,
+                          })),
+                        });
+                      break;
+
                     case LayoutType.KeyValueList:
                       a.KeyValueListLayout &&
                         areaRes.result?.Id &&

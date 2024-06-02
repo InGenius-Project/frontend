@@ -167,30 +167,10 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
         .then(async (res: any) => {
           if (res.data.result) {
             switch (layoutType) {
-              case LayoutType.List:
-                await postListLayout({
-                  AreaId: res.data.result.Id,
-                  Items: updateArea.ListLayout?.Items?.map((i) => ({
-                    Id: i.Id,
-                    Name: i.Name,
-                    TagTypeId: i.Type.Id,
-                  })),
-                });
-                break;
               case LayoutType.Text:
                 await postTextLayout({
                   AreaId: res.data.result.Id,
                   Content: updateArea.TextLayout?.Content || '',
-                });
-                break;
-              case LayoutType.KeyValueList:
-                await postKeyValueListLayout({
-                  AreaId: res.data.result.Id,
-                  Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
-                    Id: i.Id,
-                    TagIds: i.Key?.map((k) => k.Id) || [],
-                    Value: i.Value,
-                  })),
                 });
                 break;
               case LayoutType.ImageText:
@@ -204,6 +184,26 @@ const AreaItem = React.forwardRef<HTMLDivElement, PropsWithChildren<AreaItemProp
                   TextContent: updateArea.ImageTextLayout?.TextContent || '',
                 });
 
+                break;
+              case LayoutType.List:
+                await postListLayout({
+                  AreaId: res.data.result.Id,
+                  Items: updateArea.ListLayout?.Items?.map((i) => ({
+                    Id: i.Id,
+                    Name: i.Name,
+                    TagTypeId: i.Type.Id,
+                  })),
+                });
+                break;
+              case LayoutType.KeyValueList:
+                await postKeyValueListLayout({
+                  AreaId: res.data.result.Id,
+                  Items: (updateArea.KeyValueListLayout?.Items || []).map((i) => ({
+                    Id: i.Id,
+                    TagIds: i.Key?.map((k) => k.Id) || [],
+                    Value: i.Value,
+                  })),
+                });
                 break;
             }
           }

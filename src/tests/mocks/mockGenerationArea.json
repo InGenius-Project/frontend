@@ -1,0 +1,288 @@
+{
+  "statusCode": 200,
+  "message": "POST Request successful.",
+  "isError": false,
+  "result": [
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 0,
+          "IsDisplayed": false,
+          "Title": "自我簡介",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 1,
+          "IsDisplayed": false,
+          "Title": "經驗描述",
+          "LayoutType": 1,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": null,
+          "ImageTextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "TextContent": "",
+              "Image": {
+                  "Id": "00000000-0000-0000-0000-000000000000",
+                  "Uri": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3",
+                  "Urls": {
+                      "Raw": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3",
+                      "Full": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3&q=85",
+                      "Regular": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3&q=80&w=1080",
+                      "Small": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3&q=80&w=400",
+                      "Thumb": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA&ixlib=rb-4.0.3&q=80&w=200",
+                      "Download": "https://unsplash.com/photos/bNvRiwzw0xQ/download?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTclQjYlOTMlRTklQTklOTclMjAlRTYlOEYlOEYlRTglQkYlQjB8ZW58MHx8fHwxNzE3MzEzMDg3fDA"
+                  },
+                  "AltContent": null,
+                  "ContentType": "image/jpeg"
+              }
+          },
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 2,
+          "IsDisplayed": false,
+          "Title": "專案經驗",
+          "LayoutType": 1,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": null,
+          "ImageTextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "TextContent": "",
+              "Image": {
+                  "Id": "00000000-0000-0000-0000-000000000000",
+                  "Uri": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3",
+                  "Urls": {
+                      "Raw": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3",
+                      "Full": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3&q=85",
+                      "Regular": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3&q=80&w=1080",
+                      "Small": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3&q=80&w=400",
+                      "Thumb": "https://images.unsplash.com/photo-1600664393123-cf8533f52755?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA&ixlib=rb-4.0.3&q=80&w=200",
+                      "Download": "https://unsplash.com/photos/bNvRiwzw0xQ/download?ixid=M3w1OTQ5OTh8MHwxfHNlYXJjaHwxfHwlRTUlQjAlODglRTYlQTElODglMjAlRTclQjYlOTMlRTklQTklOTd8ZW58MHx8fHwxNzE3MzA5MDk4fDA"
+                  },
+                  "AltContent": null,
+                  "ContentType": "image/jpeg"
+              }
+          },
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 3,
+          "IsDisplayed": false,
+          "Title": "工作經歷",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 4,
+          "IsDisplayed": false,
+          "Title": "證書與認證",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 5,
+          "IsDisplayed": false,
+          "Title": "興趣與專長",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 6,
+          "IsDisplayed": false,
+          "Title": "語言能力",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "Sequence": 7,
+          "IsDisplayed": false,
+          "Title": "職業目標",
+          "LayoutType": 0,
+          "AreaTypeId": null,
+          "AreaType": null,
+          "TextLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Content": null
+          },
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": null
+      },
+      {
+          "Id": "52bfeaaa-eeac-4cbc-e4a4-08dc6d7351db",
+          "Sequence": 8,
+          "IsDisplayed": true,
+          "Title": "技能",
+          "LayoutType": 2,
+          "AreaTypeId": 1,
+          "AreaType": {
+              "Id": 1,
+              "Name": "技能",
+              "Value": "skill",
+              "Description": "編輯技能",
+              "UserRole": [
+                  0
+              ],
+              "LayoutType": 2,
+              "ListTagTypes": []
+          },
+          "TextLayout": null,
+          "ImageTextLayout": null,
+          "ListLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Items": [
+                  {
+                      "Id": "13e5a827-d41a-4cd0-3693-08dc6d736729",
+                      "Name": "React",
+                      "TagTypeId": 1,
+                      "Type": {
+                          "Id": 1,
+                          "Name": "自定義",
+                          "Value": "custom",
+                          "Color": "#ffffff"
+                      }
+                  },
+                  {
+                      "Id": "7762ff42-7630-4b9e-0544-08dc6d1e84b0",
+                      "Name": "JavaScript",
+                      "TagTypeId": 2,
+                      "Type": {
+                          "Id": 2,
+                          "Name": "技能",
+                          "Value": "skill",
+                          "Color": "#123"
+                      }
+                  }
+              ]
+          },
+          "KeyValueListLayout": null,
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": "6f7cc751-6e7c-4c7c-8b9b-08dc6d0c7a57"
+      },
+      {
+          "Id": "94959bbc-e625-4de7-e4a5-08dc6d7351db",
+          "Sequence": 9,
+          "IsDisplayed": true,
+          "Title": "教育背景",
+          "LayoutType": 3,
+          "AreaTypeId": 4,
+          "AreaType": {
+              "Id": 4,
+              "Name": "教育背景",
+              "Value": "education",
+              "Description": "教育背景的描述",
+              "UserRole": [
+                  0,
+                  2,
+                  1
+              ],
+              "LayoutType": 3,
+              "ListTagTypes": []
+          },
+          "TextLayout": null,
+          "ImageTextLayout": null,
+          "ListLayout": null,
+          "KeyValueListLayout": {
+              "Id": "00000000-0000-0000-0000-000000000000",
+              "Items": [
+                  {
+                      "Id": "652dc992-e687-4763-772b-08dc82caf12d",
+                      "Key": [
+                          {
+                              "Id": "ccd3658a-1bac-41f0-f4df-08dc6d1e84af",
+                              "Name": "國立中正大學",
+                              "TagTypeId": 3,
+                              "Type": {
+                                  "Id": 3,
+                                  "Name": "大學",
+                                  "Value": "university",
+                                  "Color": "#ffffff"
+                              }
+                          }
+                      ],
+                      "Value": "大三"
+                  }
+              ]
+          },
+          "ResumeId": null,
+          "RecruitmentId": null,
+          "UserId": "6f7cc751-6e7c-4c7c-8b9b-08dc6d0c7a57"
+      }
+  ]
+}

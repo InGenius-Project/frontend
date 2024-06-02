@@ -1,8 +1,7 @@
 import { baseUrl } from '@/assets/utils/urls';
 import { http } from 'msw';
-import { mockRecruitments } from './mocks/mockRecruitments';
-import { mockGenerationArea } from './mocks/mockgenerationArea';
-import { mockGenerateAreaByTitle } from './mocks/mockgenerateAreaByTitle';
+import mockGenerateAreaByTitle from './mocks/mockGenerateAreaByTitle.json';
+import mockGenerationArea from './mocks/mockGenerationArea.json';
 
 export const handlers = [
   // http.get(baseUrl + '/api/Resume/6cafb84d-0a6b-41fa-b306-fb356f2af502/Relative', () => {
@@ -14,12 +13,12 @@ export const handlers = [
   // http.get(baseUrl + '/api/Tag?typeId=4', () => {
   //   return new Response(JSON.stringify(generateTags));
   // }),
-  // http.post(baseUrl + '/api/Area/Generation/Title', () => {
-  //   return new Response(JSON.stringify(generateArea));
-  // }),
-  // http.post(baseUrl + '/api/Area/Generation', () => {
-  //   return new Response(JSON.stringify(mockGenerationArea));
-  // }),
+  http.post(baseUrl + '/api/Area/Generation/Title', () => {
+    return new Response(JSON.stringify(mockGenerateAreaByTitle));
+  }),
+  http.post(baseUrl + '/api/Area/Generation', () => {
+    return new Response(JSON.stringify(mockGenerationArea));
+  }),
   // http.post(baseUrl + '/api/Area/Generation/Title', () => {
   //   return new Response(JSON.stringify(mockGenerateAreaByTitle));
   // }),

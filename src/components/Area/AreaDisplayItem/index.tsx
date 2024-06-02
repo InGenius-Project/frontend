@@ -60,6 +60,7 @@ function AreaDisplayItem({ area, onClick, editable = false }: AreaDisplayItemPro
               style={{
                 width: '15vw',
                 height: '15vw',
+                objectFit: 'cover',
               }}
             />
           ) : (
