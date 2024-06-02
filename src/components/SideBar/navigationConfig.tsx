@@ -116,6 +116,15 @@ const navigationConfig = [
     role: UserRole.InternalUser,
     items: [
       {
+        name: '個人首頁',
+        value: 'Profile',
+        icon: (
+          <LeftIcon>
+            <OwnerAvatar size="1.5em" />
+          </LeftIcon>
+        ),
+      },
+      {
         name: '標籤管理',
         value: 'Manage/Tag',
         icon: (
