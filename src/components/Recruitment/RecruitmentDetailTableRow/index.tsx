@@ -4,6 +4,7 @@ import { Chip, Stack, TableCell, TableRow, Typography } from '@mui/material';
 import Link from '@mui/material/Link';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import getTimeDiffer from './../../../assets/utils/getTimeDiffer';
+import Tag from '@mui/icons-material/Tag';
 
 type RecruitmentDetailTableRowProps = {
   resume: IResume;
@@ -79,7 +80,7 @@ export function RecruitmentDetailRelativeTableRow({ resume }: RecruitmentDetailT
         <Stack spacing={1} direction={'row'}>
           {resume.Keywords?.slice(0, 4).map((tag, index) => (
             <Typography key={`${tag.Id}-${index}`} variant="caption">
-              <Chip label={tag.Id} />
+              <Chip label={tag.Id} icon={<Tag />} />
             </Typography>
           ))}
         </Stack>
