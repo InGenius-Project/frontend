@@ -3,7 +3,7 @@ import InitContainer from '@/components/InitContainer';
 import { usePostAreaMutation, usePostListLayoutMutation } from '@/features/api/area';
 import { useGetUserAreaByAreaTypeQuery } from '@/features/api/area/getUserAreaByAreaTpe';
 import { useGetTagsQuery } from '@/features/api/tag/getTags';
-import { useGetUserQuery } from '@/features/api/user/getUser';
+import { getUserApi, useGetUserQuery } from '@/features/api/user/getUser';
 import { AreasType, setAreaType } from '@/features/areas/areasSlice';
 import { useAppDispatch } from '@/features/store';
 import { AreaType } from '@/types/enums/AreaType';
@@ -62,6 +62,9 @@ function InitSkill() {
           })
             .unwrap()
             .then(() => {
+              // TODO: remove below line for better solution
+              dispatch(getUserApi.util.resetApiState());
+
               navigate('/Account/User');
             });
         }

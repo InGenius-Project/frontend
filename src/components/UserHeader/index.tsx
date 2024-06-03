@@ -2,9 +2,10 @@ import { Stack, Breadcrumbs, Checkbox, Link, useTheme, useMediaQuery } from '@mu
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import { Cycle } from 'framer-motion';
-import { UIMatch, useMatches } from 'react-router-dom';
+import { UIMatch, useLocation, useMatches } from 'react-router-dom';
 import { AgnosticBaseRouteObject } from '@remix-run/router/dist/utils';
 import { Link as RouterLink } from 'react-router-dom';
+import BackButton from '../Button/BackButton';
 
 type UserHeaderProps = {
   toggle: boolean;
@@ -24,6 +25,10 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
       pathname: match.pathname,
     }));
 
+  const location = useLocation();
+  const from =
+    ((location.state as any)?.from.pathname as string) + ((location.state as any)?.from.search as string) || '/';
+
   return (
     <Stack
       direction={'row'}
@@ -32,6 +37,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
         height: 'var(--ing-height-user-header)',
       }}
       id={'userHeader'}
+      spacing={1}
     >
       {!isMobile && (
         <Checkbox
@@ -44,6 +50,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
           }}
         />
       )}
+
       <Breadcrumbs>
         {crumbs.map((crumb, index) => (
           <Link
@@ -57,6 +64,7 @@ export default function UserHeader({ toggle, onToggle }: UserHeaderProps) {
           </Link>
         ))}
       </Breadcrumbs>
+      {crumbs.length > 1 && from !== '/' && <BackButton />}
     </Stack>
   );
 }

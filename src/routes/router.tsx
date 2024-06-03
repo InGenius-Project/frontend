@@ -36,6 +36,7 @@ import MainRoute from './MainRoute';
 import UnAuthRoute from './UnAuthRoute';
 import UserRoute from './UserRoute';
 import CompanyUserRoute from './CompanyUserRoute';
+import SearchUser from '@/pages/Search/User';
 
 declare module '@remix-run/router/dist/utils' {
   type AgnosticBaseRouteObject = {
@@ -136,6 +137,7 @@ export const routes = (
       <Route path="" element={<Search />} />
       <Route path="Recruitment/:recruitmentId" element={<SearchRecruitment />} />
       <Route path="Company/:companyId" element={<SearchCompany />} />
+      <Route path="User/:userId" element={<SearchUser />} />
     </Route>
   </Route>
 );

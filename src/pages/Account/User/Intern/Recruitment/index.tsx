@@ -1,15 +1,11 @@
-import ApplyButton from '@/components/Button/ApplyButton';
 import RecruitmentEmptyItem from '@/components/Recruitment/RecruitmentEmpty';
 import { InternRecruitmentItem, SkeletonRecruitmentItem } from '@/components/Recruitment/RecruitmentItem';
 import { useGetFavRecruitmentQuery } from '@/features/api/user/getFavRecruitments';
-import { Chip, IconButton, MenuItem, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 function InternRecruitment() {
   const { data: recruitmentData, isLoading } = useGetFavRecruitmentQuery();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('tablet'));
 
   const navigate = useNavigate();
   const location = useLocation();
