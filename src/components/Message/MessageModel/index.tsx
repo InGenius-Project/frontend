@@ -21,7 +21,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
   const groupId = useAppSelector(selectGroupId);
   const [messageState, setMessages] = useState<IChatMessage[]>([]);
   const conn = useAppSelector(selectConn);
-  const { data: chatGroupData } = useGetChatGroupQuery(
+  const { data: chatGroupData, refetch } = useGetChatGroupQuery(
     { groupId: groupId || NIL },
     {
       skip: !groupId,
@@ -49,6 +49,7 @@ const MessageModel = forwardRef<MessageReceiveHandle, MessageModelProps>(({}, re
 
   const handleSend = (message: string) => {
     conn?.invoke('SendMessageToGroup', message, groupId);
+    refetch();
   };
 
   return (
