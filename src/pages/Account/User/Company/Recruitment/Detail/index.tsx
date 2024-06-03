@@ -1,14 +1,11 @@
-import ManageProfileEmptyItem from '@/components/ProfileItem/ManageProfileEmptyItem';
 import RecruitmentDetailTableRow, {
   RecruitmentDetailRelativeTableEmptyRow,
   RecruitmentDetailRelativeTableRow,
   RecruitmentDetailTableEmptyRow,
 } from '@/components/Recruitment/RecruitmentDetailTableRow';
-import { ResumeItem } from '@/components/Resume';
 import { useLazyAnalyzeApplyedResumeQuery } from '@/features/api/recruitment/analyzeApplyedResume';
 import { useGetRecruitmentByIdQuery } from '@/features/api/recruitment/getRecruitmentById';
 import { useSearchRelativeResumesQuery } from '@/features/api/recruitment/searchRelativeResume';
-import ArticleIcon from '@mui/icons-material/Article';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
 import StarIcon from '@mui/icons-material/Star';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -16,7 +13,6 @@ import {
   Box,
   Chip,
   Container,
-  IconButton,
   Paper,
   Stack,
   Tab,
@@ -33,7 +29,7 @@ import {
 } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { NIL } from 'uuid';
 
 enum RelativeResumeTab {

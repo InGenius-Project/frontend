@@ -8,7 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Chip, Container, Stack, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { NIL } from 'uuid';
 
 enum RecruitmentTab {
@@ -61,8 +61,22 @@ function InternResumeDetail() {
   }, [location.state?.from?.pathname]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: RecruitmentTab) => {
+    setSearchParam({
+      tab: newValue.toString(),
+    });
     setValue(newValue);
   };
+
+  const [searchParam, setSearchParam] = useSearchParams();
+
+  useEffect(() => {
+    const params = searchParam.get('tab');
+    if (params === RecruitmentTab.Applied.toString()) {
+      setValue(RecruitmentTab.Applied);
+    } else {
+      setValue(RecruitmentTab.Other);
+    }
+  }, [searchParam]);
 
   const navigate = useNavigate();
 
