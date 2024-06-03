@@ -115,7 +115,7 @@ function Search() {
           justifyContent: 'center',
         }}
       >
-        <Pagination count={searchRecruitmentsData?.result?.MaxPage} page={Page} onChange={handleChangePage} />
+        <Pagination count={searchRecruitmentsData?.result?.Total} page={Page} onChange={handleChangePage} />
       </Box>
     </Container>
   );
