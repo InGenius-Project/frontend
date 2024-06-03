@@ -54,7 +54,7 @@ function Search() {
   };
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setParam({ Page: value.toString() });
+    setParam({ ...params, Page: value.toString() });
   };
 
   return (
