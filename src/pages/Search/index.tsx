@@ -54,7 +54,13 @@ function Search() {
   };
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setParam({ ...params, Page: value.toString() });
+    setParam({
+      Query: params.get('Query') || Query || '',
+      PageSize: params.get('PageSize') || String(PageSize),
+      SortBy: (params.get('SortBy') as SearchSortBy) || SortBy,
+      OrderBy: (params.get('OrderBy') as SearchOrderBy) || OrderBy,
+      Page: value.toString(),
+    });
   };
 
   return (
